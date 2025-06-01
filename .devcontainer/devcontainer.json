@@ -1,0 +1,30 @@
+{
+  "name": "hirokazu-rpg-dev",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "app",
+  "workspaceFolder": "/app",
+  "mounts": [
+  "source=${localWorkspaceFolder},target=/app,type=bind"
+  ],
+  "postCreateCommand": "npm install",
+  "forwardPorts": [3000],                    
+  "portsAttributes": {                      
+    "3000": {                           
+      "label": "Dev Server",          
+      "onAutoForward": "notify"          
+    }                            
+  },  
+  "features": {
+    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {}
+  },
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "esbenp.prettier-vscode",
+        "dbaeumer.vscode-eslint"
+      ]
+    }
+  }
+}
+
