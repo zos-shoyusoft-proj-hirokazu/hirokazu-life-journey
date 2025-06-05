@@ -37,6 +37,8 @@ function preload() {
     
     // ★★★ 実際のPNGファイルを読み込み ★★★
     this.load.image('GK_A2_C_autotile', 'assets/GK_A2_C_autotile.png');
+    this.load.image('Preview_RPGMakerVXAce', 'assets/Preview_RPGMakerVXAce.png');
+    this.load.image('Preview', 'assets/Preview.png');
     this.load.image('GK_JC_A5_2', 'assets/GK_JC_A5_2.png');
     this.load.image('GK_JC_B_2', 'assets/GK_JC_B_2.png');
     this.load.image('tiles', 'assets/tiles.png');
@@ -76,6 +78,10 @@ function create() {
             // タイルセット名に応じて適切な画像を割り当て
             if (name.includes('GK_A2_C') || name === 'GK_A2_C_autotile') {
                 tileset = map.addTilesetImage(name, 'GK_A2_C_autotile', 32, 32);
+            } else if (name.includes('Preview_RPGMaker') || name === 'Preview_RPGMakerVXAce') {
+                tileset = map.addTilesetImage(name, 'Preview_RPGMakerVXAce', 32, 32);
+            } else if (name.includes('Preview') || name === 'Preview') {
+                tileset = map.addTilesetImage(name, 'Preview', 32, 32);
             } else if (name.includes('GK_JC_A5') || name === 'GK_JC_A5_2') {
                 tileset = map.addTilesetImage(name, 'GK_JC_A5_2', 32, 32);
             } else if (name.includes('GK_JC_B') || name === 'GK_JC_B_2') {
