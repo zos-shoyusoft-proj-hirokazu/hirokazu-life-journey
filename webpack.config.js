@@ -9,13 +9,28 @@ module.exports = {
     clean: true
   },
   devServer: {
-    static: path.resolve(__dirname, 'dist'),
+    static: [
+      {
+        directory: path.resolve(__dirname, 'dist'),
+        publicPath: '/'
+      },
+    {
+      directory: path.resolve(__dirname, 'src'),
+      publicPath: '/'
+    }
+  ],
     port: 3000,
     host: '0.0.0.0',
-    hot: false,
-    liveReload: false,                     
-    client: false  
+    hot: true,
+    liveReload: true,                     
+    watchFiles: ['src/**/*'] ,
   },
+
+  watchOptions: {
+    poll: 1000,
+    ignored: /node_modules/
+  } ,
+
   plugins: [
     new HtmlWebpackPlugin({
       template: './src/index.html',
