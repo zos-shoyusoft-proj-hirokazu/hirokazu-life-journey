@@ -157,6 +157,39 @@ QRコードスキャン → オープニング動画 →　ステージセレク
 ### 5.1 画面レイアウト
 
 #### RPGモード
+
+OP画面
+
+![OP画面 drawio](https://github.com/user-attachments/assets/247a55cb-e51a-41f1-80c1-f8c948eeb8dd)
+
+
+ステージセレクト画面
+
+![ステージセレクト drawio](https://github.com/user-attachments/assets/fc6ade93-0aff-4ea8-ac21-6fca49137547)
+
+
+ゲームマップ画面
+
+![ゲームマップ](https://github.com/user-attachments/assets/baea85ad-3f6c-4295-bab8-91848cf5046c)
+
+
+ADV画面
+
+![会話画面](https://github.com/user-attachments/assets/8b5b7fbf-b0c0-48bc-b931-4659e295c1d4)
+
+
+戦闘画面候補１（保留）
+
+![戦闘画面候補１ drawio](https://github.com/user-attachments/assets/ebf0a344-dabb-48fc-a23b-4c0cb302b8bb)
+
+戦闘画面候補２（保留）
+
+![戦闘画面候補２ drawio](https://github.com/user-attachments/assets/b0bcc1d8-4342-4b6f-988d-901e47adebf0)
+
+エンディング
+
+![エンディング drawio](https://github.com/user-attachments/assets/4ee9d5d0-b4aa-4a32-94b8-490150baf2c5)
+
 ```
 
 ![ゲームマップ](./image/ゲームマップ.drawio.png)
