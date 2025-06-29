@@ -177,8 +177,11 @@ OP画面
 
 ![ゲームマップ](https://github.com/user-attachments/assets/baea85ad-3f6c-4295-bab8-91848cf5046c)
 
+npc基本会話１
 
-ADV画面
+![川室結婚RPGイメージ-ページ8 drawio](https://github.com/user-attachments/assets/15bf50cb-5cda-46a7-a7aa-3efa3684eee0)
+
+npcイベント画面（ADV画面パート）
 
 ![会話画面](https://github.com/user-attachments/assets/8b5b7fbf-b0c0-48bc-b931-4659e295c1d4)
 
