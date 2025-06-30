@@ -1,5 +1,3 @@
-import Phaser from 'phaser';
-
 // デバイスサイズを自動検出する関数
 function getGameDimensions() {
     const windowWidth = window.innerWidth;
