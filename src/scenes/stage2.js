@@ -1,4 +1,4 @@
-import Phaser from 'phaser';
+
 import { MapManager } from '../managers/MapManager.js';
 import { PlayerController } from '../controllers/PlayerController.js';
 import { TouchControlManager } from '../controllers/TouchControlManager.js';
