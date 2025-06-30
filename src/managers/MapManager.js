@@ -1,8 +1,11 @@
+import { CollisionManager } from './CollisionManager.js';
+
 export class MapManager {
     constructor(scene) {
         this.scene = scene;
         this.map = null;
         this.layers = [];
+        //this.collisionManager = new CollisionManager(scene);
     }
 
     createMap() {
@@ -27,11 +30,16 @@ export class MapManager {
     }
 
     createTilesets() {
+        console.log('=== createTilesets開始 ===');
         const availableTilesets = [];
+        
+        console.log('this.map.tilesets:', this.map.tilesets);
+        console.log('tilesets length:', this.map.tilesets.length);
         
         // === データ定義エリア ===
         // タイルセットマッピング定義
         const tilesetMappings = {
+            '[A]Grass1_pipo': '[A]Grass1_pipo',
             'backgraund': 'pipo-map001_at-kusa',
             'GK_A2_C_autotile': 'GK_A2_C_autotile',
             'Preview_RPGMakerVXAce': 'Preview_RPGMakerVXAce',
@@ -81,18 +89,27 @@ export class MapManager {
                 availableTilesets.push(tileset);
             }
         });
+        console.log('Final availableTilesets:', availableTilesets);
+        console.log('availableTilesets length:', availableTilesets.length);
 
         return availableTilesets;
     }
 
     createLayers(availableTilesets) {
+        console.log('=== createLayers開始 ===');
+        console.log('availableTilesets:', availableTilesets);
+        console.log('this.map.layers:', this.map.layers);
+        console.log('layers length:', this.map.layers.length);
         // === データ定義エリア ===
         const baseDepth = -1000;
         const depthStep = 100;
 
         // === 処理エリア ===
         this.map.layers.forEach((layerData, index) => {
+            console.log(`Processing layer ${index}:`, layerData.name);
+
             const layer = this.map.createLayer(layerData.name, availableTilesets, 0, 0);
+            console.log('Created layer result:', layer);
             
             if (layer) {
                 // 基本設定
@@ -107,6 +124,8 @@ export class MapManager {
                 
                 // デバッグ出力
                 console.log(`Layer created: ${layerData.name}, depth: ${depth}`, layer);
+            } else {
+                console.error(`Failed to create layer: ${layerData.name}`);
             }
         });
     }
@@ -160,6 +179,9 @@ export class MapManager {
         console.log('=== placeObjects開始 ===');
         console.log('map.objects:', this.map.objects);
 
+        // 当たり判定用のグループを作成
+        this.objectGroup = this.scene.physics.add.staticGroup();
+
         this.map.objects.forEach(objectLayer => {
             console.log(`Layer: ${objectLayer.name}, objects: ${objectLayer.objects.length}`);
 
@@ -168,16 +190,61 @@ export class MapManager {
                 const imageKey = obj.name;
                 console.log(`  Object ${objIndex}: ${obj.name} → ${imageKey} at (${obj.x}, ${obj.y})`);
 
-                console.log(`  チェック: this.scene.textures.exists('${imageKey}') =`, this.scene.textures.exists(imageKey));
-            
+                console.log('チェック: this.scene.textures.exists(\'' + imageKey + '\') = ', this.scene.textures.exists(imageKey));
+
+
+                console.log('obj.properties:', obj.properties);
+                console.log('obj.properties.collides:', obj.properties?.collides);
+                console.log('条件チェック結果:', obj.properties && obj.properties.collides);
+
+                // ★★★ 追加：obj.typeのデバッグ ★★★
+                console.log('obj.type:', obj.type);
+
+                // ★★★ ここに新しいデバッグを追加 ★★★
+                console.log('=== objType判定詳細デバッグ ===');
+                console.log('obj.type:', obj.type);
+                console.log('typeof obj.type:', typeof obj.type);
+                console.log('obj.type === "npc":', obj.type === 'npc');
+                console.log('obj.type && obj.type.trim() !== "":', obj.type && obj.type.trim() !== '');
+
                 // 画像が読み込まれているかチェック
                 if (this.scene.textures.exists(imageKey)) {
                     console.log(`✅ Image ${imageKey} exists`);
-                    const sprite = this.scene.add.sprite(obj.x, obj.y, imageKey);
+                    // 第4引数に1を追加（スプライトシートの2番目のフレームを指定）
+                    const sprite = this.scene.add.sprite(obj.x, obj.y, imageKey, 1);
+                    // 基準点を左上に設定（Tiledの座標と合わせるため）
+                    sprite.setOrigin(0, 0);
                     sprite.setScale(1);
-                    console.log(`✅ Sprite created`);
+
+                    // プロパティ配列からcollidesを検索
+                    let hasCollision = false;
+                    if (obj.properties && Array.isArray(obj.properties)) {
+                        const collidesProp = obj.properties.find(prop => prop.name === 'collides');
+                        hasCollision = collidesProp && collidesProp.value === true;
+                    }
+
+                    if (hasCollision) {
+                        console.log('this.scene.collisionManager:', this.scene.collisionManager);
+                        // Classプロパティからtypeを判定
+                        let objType = obj.type || 'wall';  // デフォルト
+                                                
+                        // 最終的なobjTypeのデバッグ
+                        console.log(`Final objType for ${imageKey}: ${objType}`);
+
+
+                        this.scene.collisionManager.addObjectToCollision(sprite, {
+                            type: objType,
+                            width: obj.width || 32,
+                            height: obj.height || 32,
+                            name: obj.name
+                        });  
+                        console.log(`Added collision to ${imageKey} as ${objType}`);
+
+                    } else {
+                        console.log(`No collision for ${imageKey}`); 
+                    }
                 } else {
-                    console.log(`❌ Image ${imageKey} NOT found!`);
+                    console.log('❌ Image ' + imageKey + ' NOT found!');
                 }
             });
         });
@@ -225,4 +292,8 @@ export class MapManager {
             console.error('Fallback also failed:', fallbackError);
         }
     }
+        // 当たり判定グループを取得するメソッド
+        getObjectGroup() {
+            return this.objectGroup;
+        }
 }

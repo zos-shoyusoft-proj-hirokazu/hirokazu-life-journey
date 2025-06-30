@@ -1,10 +1,8 @@
-let currentStage = 1;
-
 import { startPhaserGame } from './index.js';
 
-function startGame() {
+function startGame(stageNumber) {
     console.log("ゲーム開始！");
-    startPhaserGame(); // ← ここでPhaserゲームを起動 本来は分けないといけなくて強制敵にindex.jsを読み込んでる
+    startPhaserGame(stageNumber); // ← ここでPhaserゲームを起動 本来は分けないといけなくて強制敵にindex.jsを読み込んでる
 }
 
 // ステージデータを読み込む関数（仮）
@@ -29,10 +27,9 @@ function hideStageSelect() {
 
 // ステージを開始する関数
 function startStage(stageNumber) {
-    currentStage = stageNumber;
     loadStageData(stageNumber);
     hideStageSelect();
-    startGame();
+    startGame(stageNumber);
 }
 
 

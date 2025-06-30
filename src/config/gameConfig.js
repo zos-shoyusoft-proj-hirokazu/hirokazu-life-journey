@@ -1,5 +1,4 @@
 import Phaser from 'phaser';
-import { MainScene } from '../scenes/MainScene.js';
 
 // デバイスサイズを自動検出する関数
 function getGameDimensions() {
@@ -52,5 +51,4 @@ export const gameConfig = {
             debug: false
         }
     },
-    scene: MainScene
 };

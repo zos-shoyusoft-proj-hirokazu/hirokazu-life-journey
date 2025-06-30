@@ -16,6 +16,15 @@ export class TouchControlManager {
     setupTouchControls() {
         // タップ移動
         this.scene.input.on('pointerdown', (pointer) => {
+            console.log('TouchControl: pointerdown detected');
+            console.log('Dialog active:', this.scene.dialogSystem && this.scene.dialogSystem.isDialogActive());
+    
+            if (this.scene.dialogSystem && this.scene.dialogSystem.isDialogActive()) {
+                console.log('TouchControl: Skipping movement because dialog is active');
+                return; // プレイヤー移動処理のみスキップ
+            }
+            
+            console.log('TouchControl: Processing click for movement');
             this.touchStartX = pointer.x;
             this.touchStartY = pointer.y;
             this.isPointerDown = true;
@@ -33,6 +42,9 @@ export class TouchControlManager {
 
         // マウス/指の移動中
         this.scene.input.on('pointermove', (pointer) => {
+            if (this.scene.dialogSystem && this.scene.dialogSystem.isDialogActive()) {
+                return;
+            }
             if (this.isPointerDown) {
                 // 移動中は目標座標を更新
                 this.targetX = pointer.worldX;
@@ -42,6 +54,9 @@ export class TouchControlManager {
 
         // スワイプ操作
         this.scene.input.on('pointerup', (pointer) => {
+            if (this.scene.dialogSystem && this.scene.dialogSystem.isDialogActive()) {
+                return;
+            }
             this.isPointerDown = false;
 
             const deltaX = pointer.x - this.touchStartX;
@@ -55,6 +70,10 @@ export class TouchControlManager {
     }
 
     handleSwipe(deltaX, deltaY) {
+        // 最初に追加
+        if (this.scene.dialogSystem && this.scene.dialogSystem.isDialogActive()) {
+            return;
+        }
         const speed = 600;
         let vx = 0, vy = 0;
         
@@ -75,6 +94,11 @@ export class TouchControlManager {
     }
 
     startContinuousMovement() {
+        if (this.scene.dialogSystem && this.scene.dialogSystem.isDialogActive()) {
+            this.player.setVelocity(0, 0);
+            return;
+        }
+
         if (!this.isPointerDown) return;
         
         const playerX = this.player.x;

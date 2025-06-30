@@ -1,5 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   entry: './src/index.js',
@@ -13,11 +14,7 @@ module.exports = {
       {
         directory: path.resolve(__dirname, 'dist'),
         publicPath: '/'
-      },
-    {
-      directory: path.resolve(__dirname, 'src'),
-      publicPath: '/'
-    }
+      }
   ],
     port: 3000,
     host: '0.0.0.0',
@@ -35,6 +32,11 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: './src/index.html',
       title: 'ひろかずRPG'
+    }),
+    new CopyWebpackPlugin({
+      patterns: [
+        { from: 'src/assets', to: 'assets' }
+      ]
     })
   ],
   mode: 'development'

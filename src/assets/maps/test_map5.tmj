@@ -141,12 +141,72 @@
                  "height":49.3333333333331,
                  "id":4,
                  "name":"kuccoro1",
+                 "properties":[
+                        {
+                         "name":"collides",
+                         "type":"bool",
+                         "value":true
+                        }],
                  "rotation":0,
-                 "type":"",
+                 "type":"npc",
                  "visible":true,
                  "width":80,
                  "x":983.333333333333,
                  "y":596.666666666667
+                }, 
+                {
+                 "height":0,
+                 "id":33,
+                 "name":"kuccoro2",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"collides",
+                         "type":"bool",
+                         "value":true
+                        }],
+                 "rotation":0,
+                 "type":"npc",
+                 "visible":true,
+                 "width":0,
+                 "x":356.5,
+                 "y":52
+                }, 
+                {
+                 "height":0,
+                 "id":34,
+                 "name":"kuccoro",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"collides",
+                         "type":"bool",
+                         "value":true
+                        }],
+                 "rotation":0,
+                 "type":"npc",
+                 "visible":true,
+                 "width":0,
+                 "x":426.5,
+                 "y":48
+                }, 
+                {
+                 "height":0,
+                 "id":35,
+                 "name":"kuccoro",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"collides",
+                         "type":"bool",
+                         "value":true
+                        }],
+                 "rotation":0,
+                 "type":"npc",
+                 "visible":true,
+                 "width":0,
+                 "x":487,
+                 "y":52.5
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -164,8 +224,14 @@
                  "id":8,
                  "name":"friend2_6",
                  "point":true,
+                 "properties":[
+                        {
+                         "name":"collides",
+                         "type":"bool",
+                         "value":true
+                        }],
                  "rotation":0,
-                 "type":"",
+                 "type":"npc",
                  "visible":true,
                  "width":0,
                  "x":1018,
@@ -176,8 +242,14 @@
                  "id":10,
                  "name":"friend2_5",
                  "point":true,
+                 "properties":[
+                        {
+                         "name":"collides",
+                         "type":"bool",
+                         "value":true
+                        }],
                  "rotation":0,
-                 "type":"",
+                 "type":"npc",
                  "visible":true,
                  "width":0,
                  "x":1035.33333333333,
@@ -188,8 +260,14 @@
                  "id":11,
                  "name":"friend2_4",
                  "point":true,
+                 "properties":[
+                        {
+                         "name":"collides",
+                         "type":"bool",
+                         "value":true
+                        }],
                  "rotation":0,
-                 "type":"",
+                 "type":"npc",
                  "visible":true,
                  "width":0,
                  "x":1008,
@@ -200,8 +278,14 @@
                  "id":12,
                  "name":"friend2_3",
                  "point":true,
+                 "properties":[
+                        {
+                         "name":"collides",
+                         "type":"bool",
+                         "value":true
+                        }],
                  "rotation":0,
-                 "type":"",
+                 "type":"npc",
                  "visible":true,
                  "width":0,
                  "x":897.333333333333,
@@ -212,7 +296,7 @@
                  "id":19,
                  "name":"friend2_2",
                  "rotation":0,
-                 "type":"",
+                 "type":"npc",
                  "visible":true,
                  "width":190,
                  "x":569,
@@ -222,8 +306,14 @@
                  "height":204.333333333333,
                  "id":20,
                  "name":"friend2_1",
+                 "properties":[
+                        {
+                         "name":"collides",
+                         "type":"bool",
+                         "value":true
+                        }],
                  "rotation":0,
-                 "type":"",
+                 "type":"npc",
                  "visible":true,
                  "width":39.6666666666666,
                  "x":683.666666666667,
@@ -249,15 +339,21 @@
         {
          "draworder":"topdown",
          "id":4,
-         "name":"friend1",
+         "name":"enemy",
          "objects":[
                 {
                  "height":0,
                  "id":7,
-                 "name":"friend1_1",
+                 "name":"enemy1",
                  "point":true,
+                 "properties":[
+                        {
+                         "name":"collides",
+                         "type":"bool",
+                         "value":true
+                        }],
                  "rotation":0,
-                 "type":"",
+                 "type":"enemy",
                  "visible":true,
                  "width":0,
                  "x":1136,
@@ -270,7 +366,7 @@
          "y":0
         }],
  "nextlayerid":10,
- "nextobjectid":29,
+ "nextobjectid":36,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",
