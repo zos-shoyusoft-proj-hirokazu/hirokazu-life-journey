@@ -3,7 +3,7 @@ export const Stage1DialogData = {
     'kuccoro1': {
         name: 'くっころ1',
         messages: [
-            'こんにちは！',
+            'クンニちわ！',
             '今日はいい天気ですね',
             'また会いましょう！'
         ]
