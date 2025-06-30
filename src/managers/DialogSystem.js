@@ -1,5 +1,3 @@
-import Phaser from 'phaser';
-
 export class DialogSystem {
     constructor(scene, stageData) { 
         console.log('NEW DialogSystem created for scene:', scene.scene.key);
