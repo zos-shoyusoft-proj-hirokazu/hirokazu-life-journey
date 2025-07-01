@@ -35,7 +35,8 @@ module.exports = {
     }),
     new CopyWebpackPlugin({
       patterns: [
-        { from: 'src/assets', to: 'assets' }
+        { from: 'src/assets', to: 'assets' }, // ゲーム用アセットのコピー
+        { from: 'public', to: '.' }           // PWA用ファイル（manifest.json, sw.jsなど）のコピー
       ]
     })
   ],
