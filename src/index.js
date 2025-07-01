@@ -1,4 +1,4 @@
-import Phaser from 'phaser';
+
 import './stageSelect.js';
 import { gameConfig } from './config/gameConfig.js';
 

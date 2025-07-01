@@ -122,6 +122,10 @@ retro game style, [キャラクター詳細を記述]
 
 
 # 開発サーバー起動
+
+distファイルを作って、ビルドする必要がある
+npm run build
+実行
 npm run dev
 
 
