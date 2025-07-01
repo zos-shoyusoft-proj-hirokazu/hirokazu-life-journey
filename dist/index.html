@@ -80,4 +80,48 @@
             #fullscreen-button {
                 display: none;
             }
-        }</style><script defer="defer" src="bundle.js"></script></head><body><button id="fullscreen-button" onclick="toggleFullscreen()">全画面</button><div id="game-container"></div><script src="https://cdn.jsdelivr.net/npm/phaser@3.70.0/dist/phaser.min.js"></script><div id="stage-select"><h2>ステージ選択</h2><div class="stage-buttons"><button id="stage1">ステージ 1</button> <button id="stage2">ステージ 2</button> <button id="stage3">ステージ 3</button></div></div><script src="bundle.js"></script></body></html>
+        }</style><script defer="defer" src="bundle.js"></script></head><body><button id="fullscreen-button" onclick="toggleFullscreen()">全画面</button><div id="game-container"></div><script src="https://cdn.jsdelivr.net/npm/phaser@3.70.0/dist/phaser.min.js"></script><div id="stage-select"><h2>ステージ選択</h2><div class="stage-buttons"><button id="stage1">ステージ 1</button> <button id="stage2">ステージ 2</button> <button id="stage3">ステージ 3</button></div></div><script>// フルスクリーン機能の切り替え
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                if (document.documentElement.requestFullscreen) {
+                    document.documentElement.requestFullscreen();
+                } else if (document.documentElement.webkitRequestFullscreen) {
+                    document.documentElement.webkitRequestFullscreen();
+                } else if (document.documentElement.msRequestFullscreen) {
+                    document.documentElement.msRequestFullscreen();
+                }
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                } else if (document.msExitFullscreen) {
+                    document.msExitFullscreen();
+                }
+            }
+        }
+        // 画面の向きを縦に固定
+        if (screen.orientation && screen.orientation.lock) {
+            screen.orientation.lock('portrait').catch(() => {
+                // ロックできない場合は無視
+            });
+        }
+        // タッチイベントのデフォルト動作を無効化
+        document.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+        }, { passive: false });
+        document.addEventListener('touchmove', function(e) {
+            e.preventDefault();
+        }, { passive: false });
+        // PWAとしてインストール可能にするためのService Worker登録
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(function(registration) {
+                        console.log('SW registered: ', registration);
+                    })
+                    .catch(function(registrationError) {
+                        console.log('SW registration failed: ', registrationError);
+                    });
+            });
+        }</script><script src="bundle.js"></script></body></html>
