@@ -1,0 +1,1 @@
+const CACHE_NAME="hirokazu-game-v1",urlsToCache=["/","/src/index.html","/src/index.js"];self.addEventListener("install",(function(e){e.waitUntil(caches.open(CACHE_NAME).then((function(e){return e.addAll(urlsToCache)})))})),self.addEventListener("fetch",(function(e){e.respondWith(caches.match(e.request).then((function(n){return n||fetch(e.request)})))}));
