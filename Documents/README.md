@@ -122,16 +122,14 @@ retro game style, [キャラクター詳細を記述]
 
 
 # 開発サーバー起動
+以下を実行
+npm run deploy
+    →npm run buildが実行されdistフォルダにビルドファイルを作成する
+    →gh-pages -d distが実行されdist/の中身がgh-pageブランチにデプロイされる
 
-
-
-distファイルを作って、ビルドする必要がある
-npm run build
-実行
+開発環境での実行
 npm run dev
-
-*デプロイ方法
-
+    →http://127.0.0.1:8080で自ブラウザで接続
 
 
 ### 4 git クローン手順
