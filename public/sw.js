@@ -2,9 +2,9 @@
 const CACHE_NAME = 'hirokazu-game-v1';
 // キャッシュするファイルのリスト
 const urlsToCache = [
-  '/',
-  '/src/index.html',
-  '/src/index.js',
+  './',
+  './index.html',
+  './bundle.js',
   // 他のアセットファイルも必要に応じて追加
 ];
 
