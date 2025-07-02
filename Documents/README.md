@@ -127,6 +127,9 @@ npm run deploy
     →npm run buildが実行されdistフォルダにビルドファイルを作成する
     →gh-pages -d distが実行されdist/の中身がgh-pageブランチにデプロイされる
 
+
+    ああああああ
+
 開発環境での実行
 npm run dev
     →http://127.0.0.1:8080で自ブラウザで接続
