@@ -1,4 +1,4 @@
-<!doctype html><html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="mobile-web-app-capable" content="yes"><meta name="theme-color" content="#000000"><meta name="description" content="Hirokazu Life Journey - ゲーム"><link rel="manifest" href="/manifest.json"><title>Hirokazu Life Journey</title><style>/* 全体のリセットとスマホ最適化 */
+<!doctype html><html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="mobile-web-app-capable" content="yes"><meta name="theme-color" content="#000000"><meta name="description" content="Hirokazu Life Journey - ゲーム"><link rel="manifest" href="./manifest.json"><title>Hirokazu Life Journey</title><style>/* 全体のリセットとスマホ最適化 */
         * {
             margin: 0;
             padding: 0;
@@ -116,7 +116,7 @@
         // PWAとしてインストール可能にするためのService Worker登録
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', function() {
-                navigator.serviceWorker.register('/sw.js')
+                navigator.serviceWorker.register('./sw.js')
                     .then(function(registration) {
                         console.log('SW registered: ', registration);
                     })
@@ -124,4 +124,4 @@
                         console.log('SW registration failed: ', registrationError);
                     });
             });
-        }</script><script src="bundle.js"></script></body></html>
+        }</script><script src="./bundle.js"></script></body></html>
