@@ -1,0 +1,213 @@
+{ "compressionlevel":-1,
+ "height":10,
+ "infinite":false,
+ "layers":[
+        {
+         "data":[9, 9, 9, 9, 9, 9, 9, 9, 9, 9,
+            9, 9, 9, 9, 9, 9, 9, 9, 9, 9,
+            9, 9, 9, 9, 9, 9, 9, 9, 9, 9,
+            9, 9, 9, 9, 9, 9, 9, 9, 9, 9,
+            9, 9, 9, 9, 9, 9, 9, 9, 9, 9,
+            9, 9, 9, 9, 9, 9, 9, 9, 9, 9,
+            9, 9, 9, 9, 9, 9, 9, 9, 9, 9,
+            9, 9, 9, 9, 9, 9, 9, 9, 9, 9,
+            9, 9, 9, 9, 9, 9, 9, 9, 9, 9,
+            9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+         "height":10,
+         "id":1,
+         "name":"\u30bf\u30a4\u30eb\u30ec\u30a4\u30e4\u30fc1",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":10,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 979, 980, 981, 0, 0, 0, 0, 0, 0,
+            0, 1039, 1040, 1041, 0, 0, 0, 0, 0, 0,
+            0, 1099, 1100, 1101, 0, 0, 0, 0, 0, 0,
+            0, 1159, 1160, 1161, 0, 0, 0, 0, 0, 0,
+            0, 1219, 1220, 1221, 0, 0, 0, 0, 0, 0,
+            0, 1279, 1280, 1281, 0, 0, 0, 0, 0, 0,
+            466, 467, 466, 467, 466, 467, 466, 467, 466, 467,
+            526, 527, 526, 527, 526, 527, 526, 527, 526, 527,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+         "height":10,
+         "id":2,
+         "name":"\u30bf\u30a4\u30eb\u30ec\u30a4\u30e4\u30fc2",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":10,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":3,
+         "name":"\u30aa\u30d6\u30b8\u30a7\u30af\u30c8\u30ec\u30a4\u30e4\u30fc1",
+         "objects":[
+                {
+                 "height":0,
+                 "id":2,
+                 "name":"kuccoro3",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"collides",
+                         "type":"bool",
+                         "value":true
+                        }],
+                 "rotation":0,
+                 "type":"npc",
+                 "visible":true,
+                 "width":0,
+                 "x":79,
+                 "y":208
+                }, 
+                {
+                 "height":0,
+                 "id":3,
+                 "name":"kuccoro2",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"collides",
+                         "type":"bool",
+                         "value":true
+                        }],
+                 "rotation":0,
+                 "type":"npc",
+                 "visible":true,
+                 "width":0,
+                 "x":193,
+                 "y":207
+                }, 
+                {
+                 "height":0,
+                 "id":4,
+                 "name":"kuccoro1",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"collides",
+                         "type":"bool",
+                         "value":true
+                        }],
+                 "rotation":0,
+                 "type":"npc",
+                 "visible":true,
+                 "width":0,
+                 "x":274,
+                 "y":199
+                }, 
+                {
+                 "height":38,
+                 "id":8,
+                 "name":"hanni",
+                 "properties":[
+                        {
+                         "name":"collides",
+                         "type":"bool",
+                         "value":true
+                        }],
+                 "rotation":0,
+                 "type":"npc",
+                 "visible":true,
+                 "width":84,
+                 "x":177,
+                 "y":259
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "class":"enemy",
+         "draworder":"topdown",
+         "id":4,
+         "name":"\u30aa\u30d6\u30b8\u30a7\u30af\u30c8\u30ec\u30a4\u30e4\u30fc2",
+         "objects":[
+                {
+                 "height":0,
+                 "id":10,
+                 "name":"enemy2",
+                 "point":true,
+                 "rotation":0,
+                 "type":"enemy",
+                 "visible":true,
+                 "width":0,
+                 "x":182,
+                 "y":79
+                }, 
+                {
+                 "height":56,
+                 "id":11,
+                 "name":"enemy1",
+                 "properties":[
+                        {
+                         "name":"collides",
+                         "type":"bool",
+                         "value":true
+                        }],
+                 "rotation":0,
+                 "type":"enemy",
+                 "visible":true,
+                 "width":71,
+                 "x":230,
+                 "y":43
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }],
+ "nextlayerid":5,
+ "nextobjectid":12,
+ "orientation":"orthogonal",
+ "renderorder":"right-down",
+ "tiledversion":"1.11.2",
+ "tileheight":32,
+ "tilesets":[
+        {
+         "columns":2,
+         "firstgid":1,
+         "image":"..\/..\/taild\/\u30a6\u30c7\u30a3\u30bf2_32x32mapchip_20210215\/\u30a6\u30c7\u30a3\u30bf2_32x32mapchip_20210215\/MapChip\/[A]Grass1_pipo.png",
+         "imageheight":160,
+         "imagewidth":64,
+         "margin":0,
+         "name":"[A]Grass1_pipo",
+         "spacing":0,
+         "tilecount":10,
+         "tileheight":32,
+         "tilewidth":32
+        }, 
+        {
+         "columns":60,
+         "firstgid":11,
+         "image":"..\/..\/taild\/Free_Version\/Tilemap\/Tilemap.png",
+         "imageheight":768,
+         "imagewidth":1920,
+         "margin":0,
+         "name":"Tilemap",
+         "properties":[
+                {
+                 "name":"collides",
+                 "type":"bool",
+                 "value":true
+                }],
+         "spacing":0,
+         "tilecount":1440,
+         "tileheight":32,
+         "tilewidth":32
+        }],
+ "tilewidth":32,
+ "type":"map",
+ "version":"1.10",
+ "width":10
+}
