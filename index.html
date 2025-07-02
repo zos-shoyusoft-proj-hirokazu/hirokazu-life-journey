@@ -106,13 +106,6 @@
                 // ロックできない場合は無視
             });
         }
-        // タッチイベントのデフォルト動作を無効化
-        document.addEventListener('touchstart', function(e) {
-            e.preventDefault();
-        }, { passive: false });
-        document.addEventListener('touchmove', function(e) {
-            e.preventDefault();
-        }, { passive: false });
         // PWAとしてインストール可能にするためのService Worker登録
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', function() {
