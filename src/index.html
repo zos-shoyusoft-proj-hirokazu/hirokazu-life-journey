@@ -14,7 +14,7 @@
     <!-- サイトの説明 -->
     <meta name="description" content="Hirokazu Life Journey - ゲーム">
     <!-- PWA用マニフェストファイルの読み込み -->
-    <link rel="manifest" href="/manifest.json">
+    <link rel="manifest" href="./manifest.json">
     
     <title>Hirokazu Life Journey</title>
     
@@ -157,7 +157,7 @@
         // PWAとしてインストール可能にするためのService Worker登録
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', function() {
-                navigator.serviceWorker.register('/sw.js')
+                navigator.serviceWorker.register('./sw.js')
                     .then(function(registration) {
                         console.log('SW registered: ', registration);
                     })
@@ -167,6 +167,6 @@
             });
         }
     </script>
-    <script src="bundle.js"></script>
+    <script src="./bundle.js"></script>
 </body>
 </html>
