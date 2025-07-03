@@ -40,10 +40,6 @@ export class TouchControlManager {
         this.stickCircle.setScrollFactor(0); // カメラに固定
         this.stickCircle.setStrokeStyle(2, 0xaaaaaa); // 枠線を追加
         this.stickCircle.setDepth(1001); // ベースより前面に
-        this.stickCircle.setInteractive();
-        
-        // ドラッグ可能にする
-        this.scene.input.setDraggable(this.stickCircle);
         
         // スティックの初期位置
         this.centerX = padX;
@@ -53,29 +49,66 @@ export class TouchControlManager {
         // 現在の入力状態
         this.currentInput = { x: 0, y: 0 };
         
-        // ドラッグイベント
-        this.stickCircle.on('drag', (pointer, dragX, dragY) => {
-            // デバッグ情報を追加
-            console.log(`Drag event - pointer: (${pointer.x}, ${pointer.y}), drag: (${dragX}, ${dragY}), center: (${this.centerX}, ${this.centerY})`);
-            this.updateStick(dragX, dragY);
+        // タッチ状態
+        this.isStickActive = false;
+        this.currentPointerId = null;
+        
+        // ベースエリアでのタッチ操作を監視（より大きなエリアで受け付け）
+        const touchArea = this.scene.add.circle(padX, padY, 80, 0x000000, 0.01); // 透明な大きなエリア
+        touchArea.setScrollFactor(0);
+        touchArea.setDepth(999);
+        touchArea.setInteractive();
+        
+        // タッチイベントの設定
+        touchArea.on('pointerdown', (pointer) => {
+            if (this.currentPointerId === null) {
+                this.startStickControl(pointer);
+            }
         });
         
-        this.stickCircle.on('dragstart', (pointer) => {
-            // ドラッグ開始時の視覚的フィードバック
-            this.stickCircle.setAlpha(1.0);
-            this.baseCircle.setAlpha(0.8);
-            console.log(`Drag start at: (${pointer.x}, ${pointer.y})`);
+        // グローバルなタッチイベントも監視
+        this.scene.input.on('pointermove', (pointer) => {
+            if (this.isStickActive && pointer.id === this.currentPointerId) {
+                this.updateStick(pointer.x, pointer.y);
+            }
         });
         
-        this.stickCircle.on('dragend', () => {
-            this.resetStick();
-            // ドラッグ終了時の視覚的フィードバック
-            this.stickCircle.setAlpha(0.9);
-            this.baseCircle.setAlpha(0.6);
+        this.scene.input.on('pointerup', (pointer) => {
+            if (this.isStickActive && pointer.id === this.currentPointerId) {
+                this.endStickControl();
+            }
         });
         
         // 画面リサイズ時の対応
         this.scene.scale.on('resize', this.handleResize, this);
+    }
+    
+    startStickControl(pointer) {
+        this.isStickActive = true;
+        this.currentPointerId = pointer.id;
+        
+        // 視覚的フィードバック
+        this.stickCircle.setAlpha(1.0);
+        this.baseCircle.setAlpha(0.8);
+        
+        // 初期位置を設定
+        this.updateStick(pointer.x, pointer.y);
+        
+        console.log(`Stick control started at: (${pointer.x}, ${pointer.y})`);
+    }
+    
+    endStickControl() {
+        this.isStickActive = false;
+        this.currentPointerId = null;
+        
+        // スティックをリセット
+        this.resetStick();
+        
+        // 視覚的フィードバック
+        this.stickCircle.setAlpha(0.9);
+        this.baseCircle.setAlpha(0.6);
+        
+        console.log('Stick control ended');
     }
     
     handleResize() {
@@ -93,17 +126,17 @@ export class TouchControlManager {
         console.log(`Gamepad repositioned to: ${this.centerX}, ${this.centerY}`);
     }
 
-    updateStick(dragX, dragY) {
+    updateStick(touchX, touchY) {
         // 中心からの距離を計算
-        const deltaX = dragX - this.centerX;
-        const deltaY = dragY - this.centerY;
+        const deltaX = touchX - this.centerX;
+        const deltaY = touchY - this.centerY;
         const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
         
-        console.log(`updateStick - delta: (${deltaX.toFixed(1)}, ${deltaY.toFixed(1)}), distance: ${distance.toFixed(1)}`);
+        console.log(`updateStick - touch: (${touchX.toFixed(1)}, ${touchY.toFixed(1)}), delta: (${deltaX.toFixed(1)}, ${deltaY.toFixed(1)}), distance: ${distance.toFixed(1)}`);
         
         // 最大距離内に制限
-        let finalX = dragX;
-        let finalY = dragY;
+        let finalX = touchX;
+        let finalY = touchY;
         
         if (distance > this.maxDistance) {
             const angle = Math.atan2(deltaY, deltaX);
@@ -173,119 +206,4 @@ export class TouchControlManager {
         }
         this.scene.scale.off('resize', this.handleResize, this);
     }
-
-    // setupTouchControls() {
-    //     // タップ移動
-    //     this.scene.input.on('pointerdown', (pointer) => {
-    //         console.log('TouchControl: pointerdown detected');
-    //         console.log('Dialog active:', this.scene.dialogSystem && this.scene.dialogSystem.isDialogActive());
-    
-    //         if (this.scene.dialogSystem && this.scene.dialogSystem.isDialogActive()) {
-    //             console.log('TouchControl: Skipping movement because dialog is active');
-    //             return; // プレイヤー移動処理のみスキップ
-    //         }
-            
-    //         console.log('TouchControl: Processing click for movement');
-    //         this.touchStartX = pointer.x;
-    //         this.touchStartY = pointer.y;
-    //         this.isPointerDown = true;
-            
-    //         this.targetX = pointer.worldX;
-    //         this.targetY = pointer.worldY;
-
-    //         // 継続移動の開始（0.1秒後から開始して重複を避ける）
-    //         this.scene.time.delayedCall(100, () => {
-    //             if (this.isPointerDown) {
-    //                 this.startContinuousMovement();
-    //             }
-    //         });
-    //     });
-
-    //     // マウス/指の移動中
-    //     this.scene.input.on('pointermove', (pointer) => {
-    //         if (this.scene.dialogSystem && this.scene.dialogSystem.isDialogActive()) {
-    //             return;
-    //         }
-    //         if (this.isPointerDown) {
-    //             // 移動中は目標座標を更新
-    //             this.targetX = pointer.worldX;
-    //             this.targetY = pointer.worldY;
-    //         }
-    //     });
-
-    //     // スワイプ操作
-    //     this.scene.input.on('pointerup', (pointer) => {
-    //         if (this.scene.dialogSystem && this.scene.dialogSystem.isDialogActive()) {
-    //             return;
-    //         }
-    //         this.isPointerDown = false;
-
-    //         const deltaX = pointer.x - this.touchStartX;
-    //         const deltaY = pointer.y - this.touchStartY;
-    //         const minSwipeDistance = 50;
-            
-    //         if (Math.abs(deltaX) > minSwipeDistance || Math.abs(deltaY) > minSwipeDistance) {
-    //             this.handleSwipe(deltaX, deltaY);
-    //         }
-    //     });
-    // }
-
-    // handleSwipe(deltaX, deltaY) {
-    //     // 最初に追加
-    //     if (this.scene.dialogSystem && this.scene.dialogSystem.isDialogActive()) {
-    //         return;
-    //     }
-    //     const speed = 600;
-    //     let vx = 0, vy = 0;
-        
-    //     if (Math.abs(deltaX) > Math.abs(deltaY)) {
-    //         // 横方向のスワイプ
-    //         vx = deltaX > 0 ? speed : -speed;
-    //     } else {
-    //         // 縦方向のスワイプ
-    //         vy = deltaY > 0 ? speed : -speed;
-    //     }
-        
-    //     this.player.setVelocity(vx, vy);
-        
-    //     // 0.3秒後に停止
-    //     this.scene.time.delayedCall(300, () => {
-    //         this.player.setVelocity(0, 0);
-    //     });
-    // }
-
-    // startContinuousMovement() {
-    //     if (this.scene.dialogSystem && this.scene.dialogSystem.isDialogActive()) {
-    //         this.player.setVelocity(0, 0);
-    //         return;
-    //     }
-
-    //     if (!this.isPointerDown) return;
-        
-    //     const playerX = this.player.x;
-    //     const playerY = this.player.y;
-        
-    //     // プレイヤーから目標地点への方向を計算
-    //     const deltaX = this.targetX - playerX;
-    //     const deltaY = this.targetY - playerY;
-    //     const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-        
-    //     if (distance > 10) { // 最小移動距離
-    //         const speed = 300;
-    //         this.player.setVelocity(
-    //             (deltaX / distance) * speed,
-    //             (deltaY / distance) * speed
-    //         );
-    //     } else {
-    //         // 目標地点に到達したら停止
-    //         this.player.setVelocity(0, 0);
-    //     }
-        
-    //     // 継続的に更新（60FPSで更新）
-    //     this.scene.time.delayedCall(16, () => {
-    //         if (this.isPointerDown) {
-    //             this.startContinuousMovement();
-    //         }
-    //     });
-    // }
 }
