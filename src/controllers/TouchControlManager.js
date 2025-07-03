@@ -27,8 +27,6 @@ export class TouchControlManager {
         const padX = gameWidth - margin;
         const padY = gameHeight - margin;
         
-        console.log(`Virtual gamepad position: ${padX}, ${padY} (screen: ${gameWidth}x${gameHeight})`);
-        
         // 外側の円（ベース）
         this.baseCircle = this.scene.add.circle(padX, padY, 50, 0x333333, 0.6);
         this.baseCircle.setScrollFactor(0); // カメラに固定
@@ -93,8 +91,6 @@ export class TouchControlManager {
         
         // 初期位置を設定
         this.updateStick(pointer.x, pointer.y);
-        
-        console.log(`Stick control started at: (${pointer.x}, ${pointer.y})`);
     }
     
     endStickControl() {
@@ -107,8 +103,6 @@ export class TouchControlManager {
         // 視覚的フィードバック
         this.stickCircle.setAlpha(0.9);
         this.baseCircle.setAlpha(0.6);
-        
-        console.log('Stick control ended');
     }
     
     handleResize() {
@@ -122,8 +116,6 @@ export class TouchControlManager {
         
         this.baseCircle.setPosition(this.centerX, this.centerY);
         this.stickCircle.setPosition(this.centerX, this.centerY);
-        
-        console.log(`Gamepad repositioned to: ${this.centerX}, ${this.centerY}`);
     }
 
     updateStick(touchX, touchY) {
@@ -131,8 +123,6 @@ export class TouchControlManager {
         const deltaX = touchX - this.centerX;
         const deltaY = touchY - this.centerY;
         const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-        
-        console.log(`updateStick - touch: (${touchX.toFixed(1)}, ${touchY.toFixed(1)}), delta: (${deltaX.toFixed(1)}, ${deltaY.toFixed(1)}), distance: ${distance.toFixed(1)}`);
         
         // 最大距離内に制限
         let finalX = touchX;
@@ -142,7 +132,6 @@ export class TouchControlManager {
             const angle = Math.atan2(deltaY, deltaX);
             finalX = this.centerX + Math.cos(angle) * this.maxDistance;
             finalY = this.centerY + Math.sin(angle) * this.maxDistance;
-            console.log(`Constrained to: (${finalX.toFixed(1)}, ${finalY.toFixed(1)}), angle: ${(angle * 180 / Math.PI).toFixed(1)}°`);
         }
         
         // スティックの位置を更新
@@ -171,8 +160,6 @@ export class TouchControlManager {
         const velocityX = normalizedX * speed;
         const velocityY = normalizedY * speed;
         
-        console.log(`Input - normalized: (${normalizedX.toFixed(2)}, ${normalizedY.toFixed(2)}), velocity: (${velocityX.toFixed(1)}, ${velocityY.toFixed(1)})`);
-        
         this.player.setVelocity(velocityX, velocityY);
     }
     
@@ -187,8 +174,6 @@ export class TouchControlManager {
         
         // プレイヤーを停止
         this.player.setVelocity(0, 0);
-        
-        console.log('Joystick reset');
     }
     
     // 現在の入力状態を取得（他のシステムから参照可能）

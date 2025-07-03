@@ -14,4 +14,7 @@ module.exports = {
       'quotes': ['error', 'single'],
       'no-unused-vars': 'error',
     },
+    globals: {
+      Phaser: 'readonly'
+  },
   };

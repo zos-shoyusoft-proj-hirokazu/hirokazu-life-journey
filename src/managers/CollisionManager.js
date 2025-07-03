@@ -1,6 +1,3 @@
-import { DialogSystem } from './DialogSystem.js';
-
-// 純粋な当たり判定システムのみ
 export class CollisionManager {
     constructor(scene) {
         this.scene = scene;
@@ -80,20 +77,19 @@ export class CollisionManager {
     }
 
     collectItem(player, item) {
-        const itemId = item.getData('itemId');
-        
-        console.log(`Collected ${itemId}`);
         item.destroy();
     }
 
     startConversation(npcId) {
-        console.log(`Starting conversation with ${npcId}`);
+        // NPCをプレイヤーの方向に向かせる
+        if (this.scene.playerController && this.scene.playerController.player && this.scene.mapManager) {
+            const playerPos = this.scene.playerController.getPosition();
+            this.scene.mapManager.makeNpcFacePlayer(npcId, playerPos.x, playerPos.y);
+        }
         
         // 追加：nullチェック
         if (this.dialogSystem) {
             this.dialogSystem.startDialog(npcId);
-        } else {
-            console.error('DialogSystem is not initialized in CollisionManager');
         }
     }
     
