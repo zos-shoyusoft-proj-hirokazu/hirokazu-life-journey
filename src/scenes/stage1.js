@@ -90,6 +90,11 @@ export class Stage1 extends Phaser.Scene {
             this.playerController = new PlayerController(this);
             this.playerController.createPlayer(100, 100);
 
+            // キーボード入力設定
+            console.log('Setting up InputManager');
+            this.inputManager = new InputManager();
+            this.inputManager.setupKeyboard(this, this.playerController);
+
             // タッチコントロールマネージャーを初期化
             console.log('Creating TouchControlManager');
             this.touchControlManager = new TouchControlManager(this, this.playerController.player);
@@ -104,10 +109,6 @@ export class Stage1 extends Phaser.Scene {
             this.cameraManager = new CameraManager();
             this.cameraManager.setupCamera(this, this.mapManager.map, this.playerController.player);
 
-            // キーボード入力設定
-            console.log('Setting up InputManager');
-            this.inputManager = new InputManager();
-            this.inputManager.setupKeyboard(this, this.playerController);
 
             // 当たり判定設定
             console.log('Setting up all collisions');

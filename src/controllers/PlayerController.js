@@ -15,7 +15,8 @@ export class PlayerController {
 
         // プレイヤーの物理設定
         this.player.setCollideWorldBounds(true); // 画面端で止まる
-        this.player.setBounce(0.2); // 少し跳ね返る
+        this.player.setBounce(0); // 跳ね返りを無効化（滑らかな動きのため）
+        this.player.setDrag(200); // 慣性を追加して滑らかに停止
     }
 
     setInputKeys(cursors, wasd) {

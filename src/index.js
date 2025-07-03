@@ -1,4 +1,3 @@
-
 import './stageSelect.js';
 import { gameConfig } from './config/gameConfig.js';
 
@@ -24,6 +23,10 @@ export function startPhaserGame(stageNumber) {
     };
     
     new Phaser.Game(config);
+    window._startPhaserGameCount = (window._startPhaserGameCount || 0) + 1;
+    console.log('startPhaserGame call count:', window._startPhaserGameCount);
+    console.trace();
+
 }
 
 // 画面向き変更の検知（グローバル設定）

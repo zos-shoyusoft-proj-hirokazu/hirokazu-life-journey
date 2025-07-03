@@ -14,8 +14,15 @@ module.exports = {
       {
         directory: path.resolve(__dirname, 'dist'),
         publicPath: '/'
+      },
+    ],
+    client: {
+      webSocketURL: {
+        hostname: 'localhost',
+        port: 8080, // ←ホスト側のポートに合わせる
+        protocol: 'ws'
       }
-  ],
+    },
     port: 3000,
     host: '0.0.0.0',
     hot: true,

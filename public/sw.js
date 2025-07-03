@@ -1,5 +1,5 @@
-// キャッシュ名の設定
-const CACHE_NAME = 'hirokazu-game-v1';
+// キャッシュ名の設定（タイムスタンプを追加してキャッシュを強制更新）
+const CACHE_NAME = `hirokazu-game-v${Date.now()}`;
 // キャッシュするファイルのリスト
 const urlsToCache = [
   './',
@@ -10,6 +10,8 @@ const urlsToCache = [
 
 // Service Workerのインストール時にキャッシュを作成
 self.addEventListener('install', function(event) {
+  // 即座に新しいService Workerをアクティブにする
+  self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(function(cache) {
@@ -18,17 +20,39 @@ self.addEventListener('install', function(event) {
   );
 });
 
-// ネットワークリクエスト時にキャッシュを優先して返す
+// 新しいService Workerがアクティブになったときに古いキャッシュを削除
+self.addEventListener('activate', function(event) {
+  event.waitUntil(
+    caches.keys().then(function(cacheNames) {
+      return Promise.all(
+        cacheNames.map(function(cacheName) {
+          if (cacheName !== CACHE_NAME) {
+            return caches.delete(cacheName);
+          }
+        })
+      );
+    })
+  );
+});
+
+// ネットワーク優先戦略（開発時用）
 self.addEventListener('fetch', function(event) {
   event.respondWith(
-    caches.match(event.request)
+    fetch(event.request)
       .then(function(response) {
-        // キャッシュがあればそれを返す。なければネットワークから取得
-        if (response) {
-          return response;
+        // ネットワークから取得できた場合、キャッシュを更新して返す
+        if (response.status === 200) {
+          const responseClone = response.clone();
+          caches.open(CACHE_NAME)
+            .then(function(cache) {
+              cache.put(event.request, responseClone);
+            });
         }
-        return fetch(event.request);
-      }
-    )
+        return response;
+      })
+      .catch(function() {
+        // ネットワークがない場合のみキャッシュから返す
+        return caches.match(event.request);
+      })
   );
 }); 

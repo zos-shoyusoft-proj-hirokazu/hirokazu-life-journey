@@ -107,14 +107,17 @@
             });
         }
         // タッチイベントのデフォルト動作を無効化
-        document.addEventListener('touchstart', function(e) {
-            e.preventDefault();
-        }, { passive: false });
-        document.addEventListener('touchmove', function(e) {
-            e.preventDefault();
-        }, { passive: false });
+        // document.addEventListener('touchstart', function(e) {
+        //     e.preventDefault();
+        // }, { passive: false });
+        // document.addEventListener('touchmove', function(e) {
+        //     e.preventDefault();
+        // }, { passive: false });
+        
+        
         // PWAとしてインストール可能にするためのService Worker登録
-        if ('serviceWorker' in navigator) {
+        // 開発時（localhost/127.0.0.1）ではサービスワーカーを無効化
+        if ('serviceWorker' in navigator && !window.location.hostname.includes('localhost') && !window.location.hostname.includes('127.0.0.1')) {
             window.addEventListener('load', function() {
                 navigator.serviceWorker.register('./sw.js')
                     .then(function(registration) {
@@ -124,4 +127,6 @@
                         console.log('SW registration failed: ', registrationError);
                     });
             });
+        } else if (window.location.hostname.includes('localhost') || window.location.hostname.includes('127.0.0.1')) {
+            console.log('開発環境のため、サービスワーカーは無効化されています');
         }</script><script src="./bundle.js"></script></body></html>
