@@ -7,7 +7,9 @@ import { InputManager } from '../managers/InputManager.js';
 import { CollisionManager } from '../managers/CollisionManager.js';
 import { BehaviorManager_Stage1 } from '../data/stage1/BehaviorManager_Stage1.js'; 
 import { DialogSystem } from '../managers/DialogSystem.js';
-import { Stage1DialogData } from '../data/stage1/dialogs.js'; 
+import { Stage1DialogData } from '../data/stage1/dialogs.js';
+import { ConversationTrigger } from '../managers/ConversationTrigger.js';
+import { ConversationScene } from '../managers/ConversationScene.js'; 
 
 export class Stage1 extends Phaser.Scene {
     constructor() {
@@ -23,6 +25,9 @@ export class Stage1 extends Phaser.Scene {
         this.collisionManager = null;
         this.behaviorManager = null; // 追加：BehaviorManagerの変数宣言
         this.dialogSystem = null;
+        
+        // 新しい会話システム
+        this.conversationTrigger = null;
     }
 
     preload() {
@@ -60,6 +65,14 @@ export class Stage1 extends Phaser.Scene {
         this.load.on('complete', () => {
             console.log('All assets loaded successfully');
         });
+        
+        // 新しい会話システム用の画像
+        this.load.image('heroine_happy', 'assets/characters/heroine_happy.png');
+        this.load.image('heroine_smile', 'assets/characters/heroine_smile.png');
+        this.load.image('heroine_normal', 'assets/characters/heroine_normal.png');
+        this.load.image('school_classroom', 'assets/backgrounds/school_classroom.png');
+        this.load.image('textbox', 'assets/ui/textbox.png');
+        this.load.image('namebox', 'assets/ui/namebox.png');
     }
 
     create() {
@@ -114,6 +127,15 @@ export class Stage1 extends Phaser.Scene {
             console.log('Setting up all collisions');
             this.collisionManager.setupAllCollisions(this.playerController.player, this.mapManager);
 
+            // 10.新しい会話システムを初期化
+            this.conversationTrigger = new ConversationTrigger(this);
+            
+            // 11. ConversationSceneを動的に追加
+            this.scene.add('ConversationScene', ConversationScene);
+
+            // 12.会話イベントを設定
+            this.setupConversationEvents();
+
             console.log('=== Scene creation completed ===');
 
         } catch (error) {
@@ -122,8 +144,57 @@ export class Stage1 extends Phaser.Scene {
         }
     }
 
+    // 会話イベントの設定
+    setupConversationEvents() {
+        // 1. 特定のNPCをクリックした時にギャルゲ風会話を開始
+        this.setupNpcConversations();
+        
+        // 2. 特定のエリアに入った時にイベント発動
+        this.setupAreaTriggers();
+        
+        // 3. 特定の座標に近づいた時にイベント発動
+        this.setupProximityTriggers();
+    }
+
+    // NPCとの会話設定
+    setupNpcConversations() {
+        // 既存のNPCに新しい会話データを設定
+        // 例：hanniというNPCにギャルゲ風会話を設定
+        const hanniSprite = this.mapManager.getNpcSprite('hanni');
+        if (hanniSprite) {
+            this.conversationTrigger.setupNpcClickHandler(hanniSprite, 'first_meeting');
+        }
+    }
+
+    // エリアトリガーの設定
+    setupAreaTriggers() {
+        // 例：特定の場所に入ると会話イベントが発生
+        this.conversationTrigger.setupAreaTrigger(
+            200, 200,    // x, y座標
+            64, 64,      // width, height
+            'after_school' // 会話イベントID
+        );
+    }
+
+    // 近接トリガーの設定
+    setupProximityTriggers() {
+        // 例：特定の座標に近づくと会話イベントが発生
+        this.conversationTrigger.setupProximityTrigger(
+            300, 300,    // 対象座標
+            50,          // 半径
+            'library_scene' // 会話イベントID
+        );
+    }
+
     update() {
         try {
+            // 会話中は移動を停止
+            if (this.conversationTrigger && this.conversationTrigger.isActive()) {
+                this.playerController.player.setVelocity(0, 0);
+                return;
+            }
+            
+            // 既存のダイアログシステムチェック
             if (this.dialogSystem && this.dialogSystem.isDialogActive()) {
                 this.playerController.player.setVelocity(0, 0);
                 return;
