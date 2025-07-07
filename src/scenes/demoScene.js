@@ -12,7 +12,7 @@ export class DemoScene extends Phaser.Scene {
     }
 
     create() {
-        const { width, height } = this.sys.game.config;
+        const { width, height } = this.sys.game.canvas;
         
         // タイトル
         this.add.text(width / 2, 100, 'ギャルゲ風会話システム デモ', {

@@ -9,6 +9,14 @@ module.exports = {
     path: path.resolve(__dirname, 'dist'),
     clean: true
   },
+  
+  // パフォーマンス警告を抑制
+  performance: {
+    hints: false,
+    maxEntrypointSize: 512000,
+    maxAssetSize: 512000,
+  },
+  
   devServer: {
     static: [
       {

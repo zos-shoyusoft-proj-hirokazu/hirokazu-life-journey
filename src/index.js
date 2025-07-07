@@ -15,37 +15,56 @@ function initializeGame() {
     
     const config = {
         ...gameConfig,
-        scene: [Stage1, Stage2, Stage3, DemoScene]  // 主要シーンのみ登録
+        scene: []  // 空で開始（軽量化）
     };
     
     gameInstance = new Phaser.Game(config);
     console.log('Phaser Game initialized (one-time only)');
     return gameInstance;
 }
-
-// ゲーム開始関数（シーン切り替えのみ）
+// ゲーム開始関数（動的シーン読み込み）
 export function startPhaserGame(stageNumber) {
     // 初回のみゲーム初期化
     const game = initializeGame();
     
-    let sceneKey;
+    let sceneClass, sceneKey;
     switch(stageNumber) {
-        case 1: sceneKey = 'Stage1Scene'; break;
-        case 2: sceneKey = 'Stage2Scene'; break;
-        case 3: sceneKey = 'Stage3Scene'; break;
-        case 'demo': sceneKey = 'DemoScene'; break;
-        case 'stage1_enhanced': sceneKey = 'Stage1Scene'; break;
-        default: sceneKey = 'Stage1Scene';
+        case 1: sceneClass = Stage1; sceneKey = 'Stage1Scene'; break;
+        case 2: sceneClass = Stage2; sceneKey = 'Stage2Scene'; break;
+        case 3: sceneClass = Stage3; sceneKey = 'Stage3Scene'; break;
+        case 'demo': sceneClass = DemoScene; sceneKey = 'DemoScene'; break;
+        case 'stage1_enhanced': sceneClass = Stage1; sceneKey = 'Stage1Scene'; break;
+        default: sceneClass = Stage1; sceneKey = 'Stage1Scene';
     }
     
-    // 既存のアクティブシーンを停止して新しいシーンを開始
-    const activeScenes = game.scene.getScenes(true); // アクティブなシーンを取得
+    // 既存のアクティブシーンを完全に停止・削除
+    const activeScenes = game.scene.getScenes(true);
     activeScenes.forEach(scene => {
+        console.log(`Stopping and removing scene: ${scene.scene.key}`);
         game.scene.stop(scene.scene.key);
+        // シーンを完全に削除
+        if (scene.scene.key !== sceneKey) {
+            game.scene.remove(scene.scene.key);
+        }
     });
-    game.scene.start(sceneKey);
     
-    console.log(`Started scene: ${sceneKey}`);
+    // ConversationSceneも確実に停止・削除
+    if (game.scene.getScene('ConversationScene')) {
+        game.scene.stop('ConversationScene');
+        game.scene.remove('ConversationScene');
+    }
+    
+    // 少し待ってからシーンを追加（完全なクリーンアップを確保）
+    setTimeout(() => {
+        // シーンを動的に追加
+        if (!game.scene.getScene(sceneKey)) {
+            game.scene.add(sceneKey, sceneClass);
+        }
+        
+        // シーンを開始
+        game.scene.start(sceneKey);
+        console.log(`Started scene: ${sceneKey} (fully cleaned)`);
+    }, 50);
 }
 
 // 画面向き変更の検知（グローバル設定）

@@ -64,7 +64,7 @@ export class TouchControlManager {
             }
         });
         
-        // グローバルなタッチイベントも監視
+        // グローバルなタッチイベントも監視（スロットリング削除でより滑らか）
         this.scene.input.on('pointermove', (pointer) => {
             if (this.isStickActive && pointer.id === this.currentPointerId) {
                 this.updateStick(pointer.x, pointer.y);
@@ -147,20 +147,24 @@ export class TouchControlManager {
         this.currentInput.y = normalizedY;
         
         // デッドゾーンを追加（小さな入力を無視）
-        const deadZone = 0.1; // デッドゾーンを10%に縮小
+        const deadZone = 0.05; // デッドゾーンを5%に縮小（より敏感に）
         const inputMagnitude = Math.sqrt(normalizedX * normalizedX + normalizedY * normalizedY);
         
         if (inputMagnitude < deadZone) {
-            this.player.setVelocity(0, 0);
+            // PlayerControllerと同じ方法で停止
+            this.player.setVelocityX(0);
+            this.player.setVelocityY(0);
             return;
         }
         
         // スピードを上げる
-        const speed = 350; // 250から350に増加
+        const speed = 450; // 350から450に増加
         const velocityX = normalizedX * speed;
         const velocityY = normalizedY * speed;
         
-        this.player.setVelocity(velocityX, velocityY);
+        // PlayerControllerと同じ方法で設定（別々に）
+        this.player.setVelocityX(velocityX);
+        this.player.setVelocityY(velocityY);
     }
     
     resetStick() {
@@ -172,8 +176,9 @@ export class TouchControlManager {
         this.currentInput.x = 0;
         this.currentInput.y = 0;
         
-        // プレイヤーを停止
-        this.player.setVelocity(0, 0);
+        // プレイヤーを停止（PlayerControllerと同じ方法）
+        this.player.setVelocityX(0);
+        this.player.setVelocityY(0);
     }
     
     // 現在の入力状態を取得（他のシステムから参照可能）

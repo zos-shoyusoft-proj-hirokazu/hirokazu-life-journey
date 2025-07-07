@@ -7,23 +7,30 @@ export class ConversationScene extends Phaser.Scene {
         this.textSpeed = 30; // ms per character
     }
 
-    preload() {
-        // 立ち絵の読み込み
-        this.load.image('heroine_happy', 'assets/characters/heroine_happy.png');
-        this.load.image('heroine_smile', 'assets/characters/heroine_smile.png');
-        this.load.image('heroine_normal', 'assets/characters/heroine_normal.png');
-        
-        // 背景の読み込み
-        this.load.image('school_classroom', 'assets/backgrounds/school_classroom.png');
-        
-        // UI要素の読み込み
-        this.load.image('textbox', 'assets/ui/textbox.png');
-        this.load.image('namebox', 'assets/ui/namebox.png');
-    }
+
 
     create() {
-        // 画面サイズを取得
-        const { width, height } = this.sys.game.config;
+        // シーンが正しく初期化されているかチェック
+        if (!this.sys) {
+            console.error('[ConversationScene] this.sys が undefined です');
+            return;
+        }
+        
+        if (!this.sys.game) {
+            console.error('[ConversationScene] this.sys.game が undefined です');
+            return;
+        }
+        
+        // 前回のデータをクリーンアップ
+        this.cleanupCharacterSprites();
+        if (this.currentTextTimer) {
+            this.currentTextTimer.destroy();
+            this.currentTextTimer = null;
+        }
+        
+        // 画面サイズを取得（安全なアクセス）
+        const width = this.sys?.game?.canvas?.width || this.sys?.game?.config?.width || 800;
+        const height = this.sys?.game?.canvas?.height || this.sys?.game?.config?.height || 600;
         
         // 背景を設定
         this.background = this.add.image(width / 2, height / 2, 'school_classroom');
@@ -60,15 +67,32 @@ export class ConversationScene extends Phaser.Scene {
         
         // クリックでテキスト進行
         this.input.on('pointerdown', () => {
-            console.log('クリックイベント発生');
             this.nextDialog();
         });
         
         // スペースキーでも進行
         this.input.keyboard.on('keydown-SPACE', () => {
-            console.log('スペースキーイベント発生');
             this.nextDialog();
         });
+        
+        // UI作成完了フラグを設定
+        this.isUICreated = true;
+    }
+    
+    // UIをリセット（再作成せずに初期化）
+    resetUI() {
+        // テキストをクリア
+        if (this.dialogText) {
+            this.dialogText.setText('');
+        }
+        if (this.nameText) {
+            this.nameText.setText('');
+        }
+        
+        // 背景を初期状態に戻す
+        if (this.background) {
+            this.background.setTexture('school_classroom');
+        }
     }
 
     // 会話開始
@@ -84,27 +108,18 @@ export class ConversationScene extends Phaser.Scene {
 
     // 次の会話に進む
     nextDialog() {
-        console.log('nextDialog() 呼び出し');
-        console.log('現在のインデックス:', this.currentConversationIndex);
-        console.log('会話総数:', this.currentConversation?.conversations?.length);
-        console.log('テキストアニメーション中:', this.isTextAnimating);
-        
         if (this.isTextAnimating) {
             // テキストアニメーション中なら即座に完了
-            console.log('テキストアニメーションを完了');
             this.completeTextAnimation();
             return;
         }
         
         this.currentConversationIndex++;
-        console.log('次のインデックス:', this.currentConversationIndex);
         
         if (this.currentConversationIndex < this.currentConversation.conversations.length) {
-            console.log('次の会話を表示');
             this.showDialog();
         } else {
             // 会話終了
-            console.log('会話終了');
             this.endConversation();
         }
     }
@@ -137,42 +152,49 @@ export class ConversationScene extends Phaser.Scene {
         
         if (character && expression) {
             const spriteKey = `${character}_${expression}`;
-            const { width, height } = this.sys.game.config;
-            
-            // 既存のキャラクターがいる場合は削除
-            if (this.characterSprites[character]) {
-                this.characterSprites[character].destroy();
-            }
-            
-            // 新しいスプライトを作成
-            const sprite = this.add.image(0, 0, spriteKey);
+            const width = this.sys?.game?.canvas?.width || this.sys?.game?.config?.width || 800;
+            const height = this.sys?.game?.canvas?.height || this.sys?.game?.config?.height || 600;
             
             // キャラクターの位置を決定（複数キャラクター対応）
             const characterPositions = {
                 'heroine': { x: width * 0.7, y: height * 0.4 },
                 'friend': { x: width * 0.3, y: height * 0.4 },
-                'teacher': { x: width * 0.5, y: height * 0.4 }
+                'teacher': { x: width * 0.5, y: height * 0.4 },
+                'kawamuro': { x: width * 0.7, y: height * 0.4 },
+                'daichi': { x: width * 0.3, y: height * 0.4 },
+                'naoki': { x: width * 0.5, y: height * 0.4 }
             };
             
             const position = characterPositions[character] || { x: width * 0.7, y: height * 0.4 };
-            sprite.setPosition(position.x, position.y);
-            sprite.setOrigin(0.5, 0.5);
-            sprite.setDisplaySize(400, 600);
             
-            this.characterContainer.add(sprite);
-            this.characterSprites[character] = sprite;
-            
-            // 立ち絵の登場アニメーション
-            sprite.setAlpha(0);
-            sprite.setScale(0.8);
-            this.tweens.add({
-                targets: sprite,
-                alpha: 1,
-                scaleX: 1,
-                scaleY: 1,
-                duration: 500,
-                ease: 'Power2'
-            });
+            // 既存のキャラクターがいる場合は、テクスチャのみ変更
+            if (this.characterSprites[character]) {
+                const existingSprite = this.characterSprites[character];
+                // テクスチャが変更されている場合のみ更新
+                if (existingSprite.texture.key !== spriteKey) {
+                    existingSprite.setTexture(spriteKey);
+                }
+            } else {
+                // 新しいスプライトを作成（最初から正しい位置で作成）
+                const sprite = this.add.image(position.x, position.y, spriteKey);
+                sprite.setOrigin(0.5, 0.5);
+                sprite.setDisplaySize(400, 600);
+                
+                this.characterContainer.add(sprite);
+                this.characterSprites[character] = sprite;
+                
+                // 立ち絵の登場アニメーション
+                sprite.setAlpha(0);
+                sprite.setScale(0.8);
+                this.tweens.add({
+                    targets: sprite,
+                    alpha: 1,
+                    scaleX: 1,
+                    scaleY: 1,
+                    duration: 500,
+                    ease: 'Power2'
+                });
+            }
             
             // 話していないキャラクターを少し暗くする
             this.dimOtherCharacters(character);
@@ -193,11 +215,24 @@ export class ConversationScene extends Phaser.Scene {
         }
     }
 
+    // スマホ最適化：軽量テキストアニメーション
+    isMobile() {
+        return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    }
+
     // テキストアニメーション
     animateText(text) {
         this.isTextAnimating = true;
         this.dialogText.setText('');
         
+        if (this.isMobile()) {
+            // スマホ版：アニメーション無効（即座に全文表示）
+            this.dialogText.setText(text);
+            this.isTextAnimating = false;
+            return;
+        }
+        
+        // PC版：通常のアニメーション
         let currentText = '';
         let charIndex = 0;
         
@@ -239,7 +274,17 @@ export class ConversationScene extends Phaser.Scene {
     
     // 会話終了
     endConversation() {
-        console.log('会話終了');
+        // スプライトをクリーンアップ
+        this.cleanupCharacterSprites();
+        
+        // テキストアニメーションタイマーをクリーンアップ
+        if (this.currentTextTimer) {
+            this.currentTextTimer.destroy();
+            this.currentTextTimer = null;
+        }
+        
+        // UI要素をリセット（削除はしない）
+        this.resetUI();
         
         // 会話終了イベントを発火
         this.events.emit('conversationEnded');
@@ -248,5 +293,82 @@ export class ConversationScene extends Phaser.Scene {
         this.scene.stop();
         // 必要に応じて他のシーンを開始
         // this.scene.start('GameScene');
+    }
+    
+    // キャラクタースプライトのクリーンアップ
+    cleanupCharacterSprites() {
+        if (this.characterSprites) {
+            Object.values(this.characterSprites).forEach(sprite => {
+                if (sprite && sprite.destroy) {
+                    sprite.destroy();
+                }
+            });
+            this.characterSprites = {};
+        }
+        
+        if (this.characterContainer) {
+            this.characterContainer.removeAll();
+        }
+    }
+    
+    // 画面リサイズ時の対応
+    resize(gameSize) {
+        const { width, height } = gameSize;
+        
+        // 背景のリサイズ
+        if (this.background) {
+            this.background.setPosition(width / 2, height / 2);
+            this.background.setDisplaySize(width, height);
+        }
+        
+        // テキストボックスのリサイズ
+        if (this.textbox) {
+            this.textbox.setPosition(width / 2, height - 150);
+            this.textbox.setDisplaySize(width - 100, 200);
+        }
+        
+        // 名前ボックスのリサイズ
+        if (this.namebox) {
+            this.namebox.setPosition(150, height - 230);
+        }
+        
+        // テキストのリサイズ
+        if (this.dialogText) {
+            this.dialogText.setPosition(width / 2, height - 150);
+            this.dialogText.setWordWrapWidth(width - 200);
+        }
+        
+        // 名前テキストのリサイズ
+        if (this.nameText) {
+            this.nameText.setPosition(150, height - 230);
+        }
+        
+        // キャラクタースプライトの位置調整
+        this.repositionCharacterSprites();
+    }
+    
+    // キャラクタースプライトの位置調整
+    repositionCharacterSprites() {
+        if (this.characterSprites) {
+            const width = this.sys?.game?.canvas?.width || this.sys?.game?.config?.width || 800;
+            const height = this.sys?.game?.canvas?.height || this.sys?.game?.config?.height || 600;
+            
+            const characterPositions = {
+                'heroine': { x: width * 0.7, y: height * 0.4 },
+                'friend': { x: width * 0.3, y: height * 0.4 },
+                'teacher': { x: width * 0.5, y: height * 0.4 },
+                'kawamuro': { x: width * 0.7, y: height * 0.4 },
+                'daichi': { x: width * 0.3, y: height * 0.4 },
+                'naoki': { x: width * 0.5, y: height * 0.4 }
+            };
+            
+            Object.keys(this.characterSprites).forEach(character => {
+                const sprite = this.characterSprites[character];
+                const position = characterPositions[character] || { x: width * 0.7, y: height * 0.4 };
+                if (sprite && sprite.setPosition) {
+                    sprite.setPosition(position.x, position.y);
+                }
+            });
+        }
     }
 } 

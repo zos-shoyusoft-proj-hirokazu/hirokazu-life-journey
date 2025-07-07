@@ -76,20 +76,48 @@ export class BehaviorManager_Stage1 {
 
     // === 個別アニメーション定義 ===
 
+    // スマホ最適化：軽量アニメーション
+    isMobile() {
+        return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    }
+
     // Kuccoro1のアニメーション
     setupKuccoro1Animation(sprite) {
-        this.scene.tweens.add({
-            targets: sprite,
-            y: sprite.y + 5,
-            duration: 1500,
-            yoyo: true,
-            repeat: -1,
-            ease: 'Sine.easeInOut'
-        });
+        // 既にアニメーションが実行中の場合はスキップ
+        if (sprite.hasAnimation) {
+            return;
+        }
+        sprite.hasAnimation = true;
+        
+        if (this.isMobile()) {
+            // スマホ版：軽量化
+            this.scene.tweens.add({
+                targets: sprite,
+                y: sprite.y + 3,
+                duration: 3000,
+                yoyo: true,
+                repeat: -1,
+                ease: 'Linear'
+            });
+        } else {
+            // PC版：通常
+            this.scene.tweens.add({
+                targets: sprite,
+                y: sprite.y + 5,
+                duration: 1500,
+                yoyo: true,
+                repeat: -1,
+                ease: 'Sine.easeInOut'
+            });
+        }
     }
 
     // Kuccoro2のアニメーション
     setupKuccoro2Animation(sprite) {
+        if (this.isMobile()) {
+            // スマホ版：アニメーション無効
+            return;
+        }
         this.scene.tweens.add({
             targets: sprite,
             x: sprite.x + 20,
@@ -102,6 +130,10 @@ export class BehaviorManager_Stage1 {
 
     // Kuccoro3のアニメーション
     setupKuccoro3Animation(sprite) {
+        if (this.isMobile()) {
+            // スマホ版：アニメーション無効
+            return;
+        }
         this.scene.tweens.add({
             targets: sprite,
             rotation: Math.PI * 2,
@@ -161,7 +193,6 @@ export class BehaviorManager_Stage1 {
 
     // 会話開始処理
     startConversation(npcId) {
-        console.log(`Starting conversation with ${npcId}`);
         // CollisionManagerの会話システムを使用
         if (this.scene.collisionManager) {
             this.scene.collisionManager.startConversation(npcId);

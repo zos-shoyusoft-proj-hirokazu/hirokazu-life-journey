@@ -101,14 +101,19 @@ export class Stage3 extends Phaser.Scene {
     }
 
 
-    update() {
+        update() {
         // プレイヤーの更新
         this.playerController.update();
 
-        // UIManagerのupdatePlayerPositionメソッドを使用
-        if (this.uiManager) {
-            this.uiManager.updatePlayerPosition(this.playerController.player);
-    }
+        // スマホ最適化：UI更新を60FPSから30FPSに制限
+        if (!this.updateCounter) this.updateCounter = 0;
+        this.updateCounter++;
+        
+        if (this.updateCounter % 2 === 0) {  // 2フレームに1回実行
+            if (this.uiManager) {
+                this.uiManager.updatePlayerPosition(this.playerController.player);
+            }
+        }
     }
 
     resize(gameSize) {

@@ -154,7 +154,9 @@ export class MapManager {
                         });  
                     }
                 } else {
-                    console.warn(`Image not found: ${imageKey}`);
+                    console.warn(`Image not found: ${imageKey} - スプライト作成をスキップします`);
+                    // 存在しないテクスチャの場合はスプライトを作成しない
+                    // これにより左上に白い画像が表示されることを防ぐ
                 }
             });
         });

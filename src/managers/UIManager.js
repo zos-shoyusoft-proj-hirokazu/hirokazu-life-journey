@@ -26,8 +26,22 @@ export class UIManager {
     }
     
     updatePlayerPosition(player) {
+        // プレイヤーが移動した時の情報を記録（ログは削除）
+        if (!this.lastPlayerX || !this.lastPlayerY || 
+            Math.abs(player.x - this.lastPlayerX) > 1 || 
+            Math.abs(player.y - this.lastPlayerY) > 1) {
+            this.lastPlayerX = player.x;
+            this.lastPlayerY = player.y;
+        }
+        
+        // 座標表示を両方のデバイスで表示
         if (this.playerPosText) {
             this.playerPosText.setText(`ひろかず位置: X=${Math.round(player.x)}, Y=${Math.round(player.y)}`);
         }
+    }
+    
+    // モバイル判定
+    isMobile() {
+        return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
     }
 }

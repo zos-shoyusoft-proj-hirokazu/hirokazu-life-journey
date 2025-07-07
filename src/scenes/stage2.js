@@ -119,7 +119,9 @@ export class Stage2 extends Phaser.Scene {
     update() {
         // ダイアログが表示中はプレイヤーの動きを止める
         if (this.dialogSystem && this.dialogSystem.isDialogActive()) {
-            this.playerController.player.setVelocity(0, 0);
+            // 統一された方法で停止
+            this.playerController.player.setVelocityX(0);
+            this.playerController.player.setVelocityY(0);
             return;
         }
     
@@ -128,9 +130,14 @@ export class Stage2 extends Phaser.Scene {
             this.playerController.update();
         }
     
-        // UIManagerのupdatePlayerPositionメソッドを使用
-        if (this.uiManager && this.playerController) {
-            this.uiManager.updatePlayerPosition(this.playerController.player);
+        // スマホ最適化：UI更新を60FPSから30FPSに制限
+        if (!this.updateCounter) this.updateCounter = 0;
+        this.updateCounter++;
+        
+        if (this.updateCounter % 2 === 0) {  // 2フレームに1回実行
+            if (this.uiManager && this.playerController) {
+                this.uiManager.updatePlayerPosition(this.playerController.player);
+            }
         }
     }
 

@@ -9,7 +9,12 @@ export class PlayerController {
 
     createPlayer(x, y) {
         // プレイヤー（新郎）作成 - 物理オブジェクトとして
-        this.player = this.scene.physics.add.sprite(x, y, null);
+        // nullテクスチャの代わりに、透明な1x1ピクセルのテクスチャを作成
+        if (!this.scene.textures.exists('player_placeholder')) {
+            this.scene.textures.addBase64('player_placeholder', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==');
+        }
+        
+        this.player = this.scene.physics.add.sprite(x, y, 'player_placeholder');
         this.player.setDisplaySize(30, 30);
         this.player.setTint(0xff0000);
 
@@ -25,31 +30,38 @@ export class PlayerController {
     }
 
     update() {
-        if (!this.player || !this.cursors || !this.wasd) return;
+        // 初期化チェック
+        if (!this.player || !this.cursors || !this.wasd) {
+            return;
+        }
+
+        let velocityX = 0;
+        let velocityY = 0;
 
         // 左右移動
         if (this.cursors.left.isDown || this.wasd.A.isDown) {
-            this.player.setVelocityX(-this.speed);
+            velocityX = -this.speed;
         } else if (this.cursors.right.isDown || this.wasd.D.isDown) {
-            this.player.setVelocityX(this.speed);
-        } else {
-            this.player.setVelocityX(0);
+            velocityX = this.speed;
         }
 
         // 上下移動
         if (this.cursors.up.isDown || this.wasd.W.isDown) {
-            this.player.setVelocityY(-this.speed);
+            velocityY = -this.speed;
         } else if (this.cursors.down.isDown || this.wasd.S.isDown) {
-            this.player.setVelocityY(this.speed);
-        } else {
-            this.player.setVelocityY(0);
+            velocityY = this.speed;
         }
+
+        // 実際の速度設定
+        this.player.setVelocityX(velocityX);
+        this.player.setVelocityY(velocityY);
     }
 
-    // タッチ操作用のメソッド
+    // タッチ操作用のメソッド（統一された方法）
     setVelocity(vx, vy) {
         if (this.player) {
-            this.player.setVelocity(vx, vy);
+            this.player.setVelocityX(vx);
+            this.player.setVelocityY(vy);
         }
     }
 

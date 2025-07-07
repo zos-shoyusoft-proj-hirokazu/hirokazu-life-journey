@@ -28,6 +28,9 @@ export class Stage1 extends Phaser.Scene {
         
         // 新しい会話システム
         this.conversationTrigger = null;
+        
+        // パフォーマンス最適化用のフレームカウンター
+        this.updateCounter = 0;
     }
 
     preload() {
@@ -67,9 +70,16 @@ export class Stage1 extends Phaser.Scene {
         });
         
         // 新しい会話システム用の画像
-        this.load.image('heroine_happy', 'assets/characters/heroine_happy.png');
-        this.load.image('heroine_smile', 'assets/characters/heroine_smile.png');
-        this.load.image('heroine_normal', 'assets/characters/heroine_normal.png');
+        this.load.image('kawamuro_A', 'assets/characters/portraits/kawamuro_A.png');
+        this.load.image('kawamuro_B', 'assets/characters/portraits/kawamuro_B.png');
+        this.load.image('kawamuro_C', 'assets/characters/portraits/kawamuro_C.png');
+        this.load.image('kawamuro_D', 'assets/characters/portraits/kawamuro_D.png');
+        this.load.image('kawamuro_E', 'assets/characters/portraits/kawamuro_E.png');
+        this.load.image('kawamuro_F', 'assets/characters/portraits/kawamuro_F.png');
+        this.load.image('daichi_A', 'assets/characters/portraits/daichi_A.png');
+        this.load.image('naoki_A', 'assets/characters/portraits/naoki_A.png');
+        
+        // 会話システム用の背景とUI要素
         this.load.image('school_classroom', 'assets/backgrounds/school_classroom.png');
         this.load.image('textbox', 'assets/ui/textbox.png');
         this.load.image('namebox', 'assets/ui/namebox.png');
@@ -78,65 +88,50 @@ export class Stage1 extends Phaser.Scene {
     create() {
         try {
             // CollisionManagerを初期化
-            console.log('Before creating CollisionManager');
             this.collisionManager = new CollisionManager(this);
-            console.log('CollisionManager created:', this.collisionManager);
             this.collisionManager.setupCollisionGroups();
 
             // DialogSystemを初期化（Stage1専用データを渡す）
-            console.log('Creating DialogSystem for Stage1');
             this.dialogSystem = new DialogSystem(this, Stage1DialogData);
             this.collisionManager.setDialogSystem(this.dialogSystem); 
 
             // 追加：BehaviorManager_Stage1を初期化
-            console.log('Creating BehaviorManager_Stage1');
             this.behaviorManager = new BehaviorManager_Stage1(this);
 
             // マップマネージャーを初期化
             this.mapManager = new MapManager(this);
-            console.log('MapManager created, calling createMap()');
             this.mapManager.createMap();
-            console.log('MapManager: createMap completed');
 
             // プレイヤーコントローラーを初期化
-            console.log('Creating PlayerController');
             this.playerController = new PlayerController(this);
             this.playerController.createPlayer(100, 100);
 
             // キーボード入力設定
-            console.log('Setting up InputManager');
             this.inputManager = new InputManager();
             this.inputManager.setupKeyboard(this, this.playerController);
 
             // タッチコントロールマネージャーを初期化
-            console.log('Creating TouchControlManager');
             this.touchControlManager = new TouchControlManager(this, this.playerController.player);
 
             // UI要素を作成
-            console.log('Creating UIManager');
             this.uiManager = new UIManager();
             this.uiManager.createUI(this);
 
             // カメラ設定
-            console.log('Setting up CameraManager');
             this.cameraManager = new CameraManager();
             this.cameraManager.setupCamera(this, this.mapManager.map, this.playerController.player);
 
-
             // 当たり判定設定
-            console.log('Setting up all collisions');
             this.collisionManager.setupAllCollisions(this.playerController.player, this.mapManager);
 
-            // 10.新しい会話システムを初期化
+            // 新しい会話システムを初期化
             this.conversationTrigger = new ConversationTrigger(this);
             
-            // 11. ConversationSceneを動的に追加
+            // ConversationSceneを動的に追加
             this.scene.add('ConversationScene', ConversationScene);
 
-            // 12.会話イベントを設定
+            // 会話イベントを設定
             this.setupConversationEvents();
-
-            console.log('=== Scene creation completed ===');
 
         } catch (error) {
             console.error('Error during scene creation:', error);
@@ -162,7 +157,18 @@ export class Stage1 extends Phaser.Scene {
         // 例：hanniというNPCにギャルゲ風会話を設定
         const hanniSprite = this.mapManager.getNpcSprite('hanni');
         if (hanniSprite) {
-            this.conversationTrigger.setupNpcClickHandler(hanniSprite, 'first_meeting');
+            this.conversationTrigger.setupNpcClickHandler(hanniSprite, 'kawamuro_scene');
+        }
+        
+        // 他のNPCにも会話を設定
+        const kuccoroSprite = this.mapManager.getNpcSprite('kuccoro');
+        if (kuccoroSprite) {
+            this.conversationTrigger.setupNpcClickHandler(kuccoroSprite, 'daichi_scene');
+        }
+        
+        const kuccoro1Sprite = this.mapManager.getNpcSprite('kuccoro1');
+        if (kuccoro1Sprite) {
+            this.conversationTrigger.setupNpcClickHandler(kuccoro1Sprite, 'naoki_scene');
         }
     }
 
@@ -187,30 +193,16 @@ export class Stage1 extends Phaser.Scene {
     }
 
     update() {
-        try {
-            // 会話中は移動を停止
-            if (this.conversationTrigger && this.conversationTrigger.isActive()) {
-                this.playerController.player.setVelocity(0, 0);
-                return;
-            }
+        // フレームごとに更新が必要な要素のみを更新
+        this.updateCounter++;
+        
+        // 30FPSに制限（60FPSの半分）
+        if (this.updateCounter % 2 === 0) {
+            // プレイヤー移動処理
+            this.playerController.update();
             
-            // 既存のダイアログシステムチェック
-            if (this.dialogSystem && this.dialogSystem.isDialogActive()) {
-                this.playerController.player.setVelocity(0, 0);
-                return;
-            }
-            
-            // プレイヤーの更新
-            if (this.playerController) {
-                this.playerController.update();
-            }
-
-            // UIManagerのupdatePlayerPositionメソッドを使用
-            if (this.uiManager && this.playerController) {
-                this.uiManager.updatePlayerPosition(this.playerController.player);
-            }
-        } catch (error) {
-            console.error('Error during update:', error);
+            // UI更新
+            this.uiManager.updatePlayerPosition(this.playerController.player);
         }
     }
 
