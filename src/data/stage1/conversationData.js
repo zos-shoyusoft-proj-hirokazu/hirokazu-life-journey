@@ -60,7 +60,7 @@ export const conversationData = {
             },
             {
                 'speaker': '河室',
-                'character': 'heroine',
+                'character': 'kawamuro',
                 'text': 'あ、あなたが転校生の方ですね！',
                 'expression': 'F'
             },
