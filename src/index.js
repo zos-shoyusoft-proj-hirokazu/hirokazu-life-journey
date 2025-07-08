@@ -19,9 +19,14 @@ function initializeGame() {
     };
     
     gameInstance = new Phaser.Game(config);
+    
+    // グローバルに公開（リサイズ処理用）
+    window.gameInstance = gameInstance;
+    
     console.log('Phaser Game initialized (one-time only)');
     return gameInstance;
 }
+
 // ゲーム開始関数（動的シーン読み込み）
 export function startPhaserGame(stageNumber) {
     // 初回のみゲーム初期化
@@ -70,6 +75,9 @@ export function startPhaserGame(stageNumber) {
 // 画面向き変更の検知（グローバル設定）
 window.addEventListener('orientationchange', () => {
     setTimeout(() => {
-        window.location.reload();
-    }, 100);
+        // ページリロードを無効化（リサイズ処理で対応）
+        if (window.gameInstance && window.gameInstance.scale) {
+            window.gameInstance.scale.resize(window.innerWidth, window.innerHeight);
+        }
+    }, 500);
 });

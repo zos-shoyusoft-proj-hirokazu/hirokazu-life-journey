@@ -1,9 +1,33 @@
-// デバイスサイズを自動検出する関数
+// デバイスサイズを自動検出する関数（ブラウザUI除外）
 function getGameDimensions() {
-    const windowWidth = window.innerWidth;
-    const windowHeight = window.innerHeight;
+    // 実際の表示可能エリアを取得（ブラウザのタブバー、アドレスバーなどを除外）
+    let windowWidth, windowHeight;
     
-    // スマホの実際のサイズをそのまま使用（アスペクト比強制なし）
+    if (document.fullscreenElement) {
+        // フルスクリーン時は screen.width/height を使用
+        windowWidth = screen.width;
+        windowHeight = screen.height;
+    } else {
+        // 通常時は window.innerHeight から更にブラウザUIを除外
+        windowWidth = window.innerWidth;
+        
+        // ブラウザUIを考慮した実際の表示エリア高さを計算
+        // visualViewportがサポートされている場合は使用
+        if (window.visualViewport) {
+            windowHeight = window.visualViewport.height;
+        } else {
+            // フォールバック: innerHeightから推定でブラウザUI分を除外
+            windowHeight = window.innerHeight;
+            
+            // モバイルブラウザの場合は更に調整
+            if (/Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                // モバイルの場合、アドレスバーなどを考慮
+                windowHeight = Math.min(window.innerHeight, window.screen.height - 100);
+            }
+        }
+    }
+    
+    // 実際の画面サイズをそのまま使用（黒い部分を無くすため）
     let gameWidth = windowWidth;
     let gameHeight = windowHeight;
     
@@ -13,7 +37,11 @@ function getGameDimensions() {
     
     console.log('=== Game Dimensions ===');
     console.log('Window Size:', windowWidth, 'x', windowHeight);
+    console.log('Screen Size:', screen.width, 'x', screen.height);
     console.log('Game Size:', gameWidth, 'x', gameHeight);
+    console.log('Fullscreen:', !!document.fullscreenElement);
+    console.log('Visual Viewport:', window.visualViewport ? 
+        `${window.visualViewport.width}x${window.visualViewport.height}` : 'Not supported');
     
     return { width: gameWidth, height: gameHeight };
 }
@@ -29,11 +57,17 @@ export const gameConfig = {
     backgroundColor: '#87CEEB',
     parent: 'game-container',
     scale: {
-        mode: Phaser.Scale.FIT, // 画面にフィットさせる
+        mode: Phaser.Scale.RESIZE, // 画面全体を使用（黒い部分を無くす）
         autoCenter: Phaser.Scale.CENTER_BOTH,
-        // スマホ向けの追加設定
+        // 画面全体使用のための設定
         expandParent: true,
-        fullscreenTarget: 'game-container'
+        fullscreenTarget: 'game-container',
+        // リサイズ時の追加設定
+        resizeCallback: function () {
+            // 画面リサイズ時の処理をここで行う
+            const newDimensions = getGameDimensions();
+            console.log('Game resized to:', newDimensions.width, 'x', newDimensions.height);
+        }
     },
     physics: {
         default: 'arcade',
