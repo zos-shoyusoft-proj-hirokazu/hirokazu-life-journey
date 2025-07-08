@@ -50,7 +50,7 @@ export class DialogSystem {
             0x000000, 
             0.8
         );
-        bg.setStrokeStyle(2, 0xffffff);
+        // bg.setStrokeStyle(2, 0xffffff); // 枠線を削除
 
         // テキストをコンテナ内の相対座標で作成
         this.dialogText = this.scene.add.text(

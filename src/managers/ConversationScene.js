@@ -32,36 +32,54 @@ export class ConversationScene extends Phaser.Scene {
         const width = this.sys?.game?.canvas?.width || this.sys?.game?.config?.width || 800;
         const height = this.sys?.game?.canvas?.height || this.sys?.game?.config?.height || 600;
         
-        // 背景を設定
-        this.background = this.add.image(width / 2, height / 2, 'school_classroom');
-        this.background.setDisplaySize(width, height);
+        // 背景を設定（デフォルトは透明な背景）
+        this.background = this.add.rectangle(width / 2, height / 2, width, height, 0x000000, 0.5);
+        this.background.setOrigin(0.5, 0.5);
         
         // 立ち絵用のコンテナ
         this.characterContainer = this.add.container(0, 0);
         
-        // テキストボックスの設定
-        this.textbox = this.add.image(width / 2, height - 150, 'textbox');
+        // テキストボックスの設定（画像がない場合は黒い四角形で代替）
+        if (this.textures.exists('textbox')) {
+            this.textbox = this.add.image(width / 2, height - 60, 'textbox');
+        } else {
+            // 代替：黒い四角形を作成（スマホ対応）
+            const textboxWidth = Math.min(width - 40, 700); // PCでは大きく、スマホでは小さく
+            const textboxHeight = Math.min(150, height * 0.25); // 画面高の最大25%
+            this.textbox = this.add.rectangle(width / 2, height - 60, textboxWidth, textboxHeight, 0x000000, 0.8);
+        }
         this.textbox.setOrigin(0.5, 0.5);
-        this.textbox.setDisplaySize(width - 100, 200);
         
-        // 名前ボックスの設定
-        this.namebox = this.add.image(150, height - 230, 'namebox');
+        // 名前ボックスの設定（画像がない場合は黒い四角形で代替）
+        if (this.textures.exists('namebox')) {
+            this.namebox = this.add.image(width * 0.2, height - 100, 'namebox');
+        } else {
+            // 代替：黒い四角形を作成（スマホ対応）
+            const nameboxWidth = Math.min(200, width * 0.4); // PCでは200px、スマホでは画面幅の40%
+            const nameboxHeight = Math.min(50, height * 0.08); // 画面高の最大8%
+            this.namebox = this.add.rectangle(width * 0.2, height - 100, nameboxWidth, nameboxHeight, 0x000000, 0.8);
+        }
         this.namebox.setOrigin(0.5, 0.5);
-        this.namebox.setDisplaySize(250, 60);
         
         // テキスト表示用
-        this.dialogText = this.add.text(width / 2, height - 150, '', {
-            fontSize: '24px',
-            fill: '#000000',
-            wordWrap: { width: width - 200, useAdvancedWrap: true }
+        const textWrapWidth = Math.min(width - 80, 600); // PCでは大きく、スマホでは小さく
+        const fontSize = width < 600 ? '18px' : '24px'; // スマホでは小さいフォント
+        this.dialogText = this.add.text(width / 2, height - 60, '', {
+            fontSize: fontSize,
+            fill: '#ffffff',
+            lineSpacing: 8,
+            padding: { x: 10, y: 10 },
+            wordWrap: { width: textWrapWidth, useAdvancedWrap: true }
         });
         this.dialogText.setOrigin(0.5, 0.5);
         
         // 名前表示用
-        this.nameText = this.add.text(150, height - 230, '', {
-            fontSize: '20px',
+        const nameFontSize = width < 600 ? '16px' : '20px'; // スマホでは小さいフォント
+        this.nameText = this.add.text(width * 0.2, height - 100, '', {
+            fontSize: nameFontSize,
             fill: '#ffffff',
-            fontStyle: 'bold'
+            fontStyle: 'bold',
+            padding: { x: 10, y: 10 }
         });
         this.nameText.setOrigin(0.5, 0.5);
         
@@ -89,9 +107,10 @@ export class ConversationScene extends Phaser.Scene {
             this.nameText.setText('');
         }
         
-        // 背景を初期状態に戻す
+        // 背景を削除（初期状態に戻す）
         if (this.background) {
-            this.background.setTexture('school_classroom');
+            this.background.destroy();
+            this.background = null;
         }
     }
 
@@ -178,7 +197,7 @@ export class ConversationScene extends Phaser.Scene {
                 // 新しいスプライトを作成（最初から正しい位置で作成）
                 const sprite = this.add.image(position.x, position.y, spriteKey);
                 sprite.setOrigin(0.5, 0.5);
-                sprite.setDisplaySize(400, 600);
+                // 立ち絵は元のサイズで表示（引き延ばしなし）
                 
                 this.characterContainer.add(sprite);
                 this.characterSprites[character] = sprite;
@@ -268,7 +287,26 @@ export class ConversationScene extends Phaser.Scene {
     // 背景を更新
     updateBackground(backgroundKey) {
         if (backgroundKey && this.textures.exists(backgroundKey)) {
-            this.background.setTexture(backgroundKey);
+            // 既存の背景を削除
+            if (this.background) {
+                this.background.destroy();
+            }
+            
+            // 新しい背景画像を作成
+            const width = this.sys?.game?.canvas?.width || this.sys?.game?.config?.width || 800;
+            const height = this.sys?.game?.canvas?.height || this.sys?.game?.config?.height || 600;
+            
+            this.background = this.add.image(width / 2, height / 2, backgroundKey);
+            this.background.setOrigin(0.5, 0.5);
+            
+            // スマホ画面に合わせて背景をスケール
+            const scaleX = width / this.background.width;
+            const scaleY = height / this.background.height;
+            const scale = Math.max(scaleX, scaleY);
+            this.background.setScale(scale);
+            
+            // 背景を最背面に移動
+            this.background.setDepth(-1);
         }
     }
     
@@ -318,29 +356,46 @@ export class ConversationScene extends Phaser.Scene {
         // 背景のリサイズ
         if (this.background) {
             this.background.setPosition(width / 2, height / 2);
-            this.background.setDisplaySize(width, height);
+            const scaleX = width / this.background.width;
+            const scaleY = height / this.background.height;
+            const scale = Math.max(scaleX, scaleY);
+            this.background.setScale(scale);
         }
         
-        // テキストボックスのリサイズ
+        // テキストボックスのリサイズ（スマホ対応）
         if (this.textbox) {
-            this.textbox.setPosition(width / 2, height - 150);
-            this.textbox.setDisplaySize(width - 100, 200);
+            this.textbox.setPosition(width / 2, height - 60);
+            const textboxWidth = Math.min(width - 40, 700);
+            const textboxHeight = Math.min(150, height * 0.25);
+            this.textbox.setDisplaySize(textboxWidth, textboxHeight);
         }
         
-        // 名前ボックスのリサイズ
+        // 名前ボックスのリサイズ（スマホ対応）
         if (this.namebox) {
-            this.namebox.setPosition(150, height - 230);
+            this.namebox.setPosition(width * 0.2, height - 100);
+            const nameboxWidth = Math.min(200, width * 0.4);
+            const nameboxHeight = Math.min(50, height * 0.08);
+            this.namebox.setDisplaySize(nameboxWidth, nameboxHeight);
         }
         
-        // テキストのリサイズ
+        // テキストのリサイズ（スマホ対応）
         if (this.dialogText) {
-            this.dialogText.setPosition(width / 2, height - 150);
-            this.dialogText.setWordWrapWidth(width - 200);
+            this.dialogText.setPosition(width / 2, height - 60);
+            const textWrapWidth = Math.min(width - 80, 600);
+            this.dialogText.setWordWrapWidth(textWrapWidth);
+            
+            // フォントサイズも調整
+            const fontSize = width < 600 ? '18px' : '24px';
+            this.dialogText.setFontSize(fontSize);
         }
         
-        // 名前テキストのリサイズ
+        // 名前テキストのリサイズ（スマホ対応）
         if (this.nameText) {
-            this.nameText.setPosition(150, height - 230);
+            this.nameText.setPosition(width * 0.2, height - 100);
+            
+            // フォントサイズも調整
+            const nameFontSize = width < 600 ? '16px' : '20px';
+            this.nameText.setFontSize(nameFontSize);
         }
         
         // キャラクタースプライトの位置調整

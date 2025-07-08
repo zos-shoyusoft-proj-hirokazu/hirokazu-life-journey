@@ -13,7 +13,7 @@ export class BehaviorManager_Stage2 {
                 this.setupNpcBehavior(sprite, obj);
                 break;
             case 'item':
-                this.setupItemBehavior(sprite, obj);
+                this.setupItemBehavior(sprite);
                 break;
             case 'enemy':
                 this.setupEnemyBehavior(sprite, obj);
@@ -47,7 +47,7 @@ export class BehaviorManager_Stage2 {
     }
 
     // アイテムの動作設定
-    setupItemBehavior(sprite, obj) {
+    setupItemBehavior(sprite) {
         // Stage2のアイテムは特別なエフェクト
         this.scene.tweens.add({
             targets: sprite,
@@ -173,7 +173,6 @@ export class BehaviorManager_Stage2 {
 
     // 会話開始処理
     startConversation(npcId) {
-        console.log(`Starting conversation with ${npcId}`);
         // CollisionManagerの会話システムを使用
         if (this.scene.collisionManager) {
             this.scene.collisionManager.startConversation(npcId);

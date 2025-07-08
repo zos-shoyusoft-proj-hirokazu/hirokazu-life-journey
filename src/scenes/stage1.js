@@ -80,7 +80,7 @@ export class Stage1 extends Phaser.Scene {
         this.load.image('naoki_A', 'assets/characters/portraits/naoki_A.png');
         
         // 会話システム用の背景とUI要素
-        this.load.image('school_classroom', 'assets/backgrounds/school_classroom.png');
+        this.load.image('test_1', 'assets/backgrounds/background_test.png');
         this.load.image('textbox', 'assets/ui/textbox.png');
         this.load.image('namebox', 'assets/ui/namebox.png');
     }
@@ -157,19 +157,14 @@ export class Stage1 extends Phaser.Scene {
         // 例：hanniというNPCにギャルゲ風会話を設定
         const hanniSprite = this.mapManager.getNpcSprite('hanni');
         if (hanniSprite) {
-            this.conversationTrigger.setupNpcClickHandler(hanniSprite, 'kawamuro_scene');
+            this.conversationTrigger.setupNpcClickHandler(hanniSprite, 'demo_chinpo');
         }
         
-        // 他のNPCにも会話を設定
-        const kuccoroSprite = this.mapManager.getNpcSprite('kuccoro');
-        if (kuccoroSprite) {
-            this.conversationTrigger.setupNpcClickHandler(kuccoroSprite, 'daichi_scene');
-        }
-        
-        const kuccoro1Sprite = this.mapManager.getNpcSprite('kuccoro1');
-        if (kuccoro1Sprite) {
-            this.conversationTrigger.setupNpcClickHandler(kuccoro1Sprite, 'naoki_scene');
-        }
+        // // 他のNPCにも会話を設定
+        // const kuccoroSprite = this.mapManager.getNpcSprite('kuccoro');
+        // if (kuccoroSprite) {
+        //     this.conversationTrigger.setupNpcClickHandler(kuccoroSprite, 'daichi_scene');
+        // }
     }
 
     // エリアトリガーの設定
@@ -178,7 +173,7 @@ export class Stage1 extends Phaser.Scene {
         this.conversationTrigger.setupAreaTrigger(
             200, 200,    // x, y座標
             64, 64,      // width, height
-            'after_school' // 会話イベントID
+            'after_chinpo' // 会話イベントID
         );
     }
 
