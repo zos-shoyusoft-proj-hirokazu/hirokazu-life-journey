@@ -5,7 +5,7 @@ import { Stage1 } from './scenes/stage1.js';
 import { Stage2 } from './scenes/stage2.js';
 import { Stage3 } from './scenes/stage3.js';
 import { DemoScene } from './scenes/demoScene.js';
-import { MiemachiStage } from './scenes/MiemachiStage.js';
+import { createMapStage } from './scenes/MapSelectionStage.js';
 
 // グローバルなゲームインスタンス（1つだけ）
 let gameInstance = null;
@@ -40,7 +40,7 @@ export function startPhaserGame(stageNumber) {
         case 3: sceneClass = Stage3; sceneKey = 'Stage3Scene'; break;
         case 'demo': sceneClass = DemoScene; sceneKey = 'DemoScene'; break;
         case 'stage1_enhanced': sceneClass = Stage1; sceneKey = 'Stage1Scene'; break;
-        case 'miemachi': sceneClass = MiemachiStage; sceneKey = 'MiemachiStage'; break;
+        case 'miemachi': sceneClass = createMapStage('miemachi', 'MiemachiStage'); sceneKey = 'MiemachiStage'; break;
         default: sceneClass = Stage1; sceneKey = 'Stage1Scene';
     }
     

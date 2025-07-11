@@ -123,8 +123,8 @@ export class Stage1 extends Phaser.Scene {
             this.uiManager.createUI(this);
 
             // カメラ設定
-            this.cameraManager = new CameraManager();
-            this.cameraManager.setupCamera(this, this.mapManager.map, this.playerController.player);
+                    this.cameraManager = new CameraManager(this);
+        this.cameraManager.setupCamera(this, this.mapManager.map, this.playerController.player);
 
             // 当たり判定設定
             this.collisionManager.setupAllCollisions(this.playerController.player, this.mapManager);

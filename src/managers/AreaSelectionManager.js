@@ -15,9 +15,12 @@ export class AreaSelectionManager {
         this.touchThreshold = 200; // タップ判定の閾値（ミリ秒）
     }
 
-    setupAreas(tilemap) {
-        // Tiledマップからエリアデータを抽出
-        this.extractAreasFromTilemap(tilemap);
+    setupAreas(areas) {
+        // スケール済みのエリアデータを直接使用
+        this.areas = areas.map(area => ({
+            ...area,
+            description: this.getAreaDescription(area.name)
+        }));
         
         // エリアマーカーを作成
         this.createAreaMarkers();
@@ -28,27 +31,7 @@ export class AreaSelectionManager {
         console.log(`Setup ${this.areas.length} areas for selection`);
     }
 
-    extractAreasFromTilemap(tilemap) {
-        // オブジェクトレイヤーからエリアデータを抽出
-        const objectLayer = tilemap.getObjectLayer('miemachi');
-        
-        if (objectLayer) {
-            this.areas = objectLayer.objects.map(obj => ({
-                id: obj.id,
-                name: obj.name,
-                x: obj.x,
-                y: obj.y,
-                width: obj.width || 32,
-                height: obj.height || 32,
-                type: obj.type || 'location',
-                description: this.getAreaDescription(obj.name)
-            }));
-            
-            console.log('Extracted areas:', this.areas);
-        } else {
-            console.warn('Object layer "miemachi" not found');
-        }
-    }
+
 
     getAreaDescription(areaName) {
         // エリアの説明を取得
@@ -84,11 +67,11 @@ export class AreaSelectionManager {
         const marker = this.scene.add.group();
         
         // 背景円
-        const background = this.scene.add.circle(area.x, area.y, 20, 0x4169E1, 0.7);
+        const background = this.scene.add.circle(area.x, area.y, 10, 0x4169E1, 0.7);
         background.setStrokeStyle(2, 0xFFFFFF);
         
         // テキストラベル
-        const label = this.scene.add.text(area.x, area.y - 30, area.description, {
+        const label = this.scene.add.text(area.x, area.y - 18, area.description, {
             fontSize: '12px',
             fill: '#000000',
             backgroundColor: '#FFFFFF',
@@ -119,7 +102,7 @@ export class AreaSelectionManager {
         background.on('pointerover', () => {
             if (!this.isMobile) {
                 background.setScale(1.2);
-                background.setTint(0xFFD700);
+                background.setFillStyle(0xFFD700, 0.7);
                 label.setStyle({ fill: '#FF0000' });
             }
         });
@@ -127,7 +110,7 @@ export class AreaSelectionManager {
         background.on('pointerout', () => {
             if (!this.isMobile) {
                 background.setScale(1);
-                background.clearTint();
+                background.setFillStyle(0x4169E1, 0.7);
                 label.setStyle({ fill: '#000000' });
             }
         });
@@ -141,7 +124,7 @@ export class AreaSelectionManager {
             }
             
             // 視覚的フィードバック
-            background.setTint(0xFF0000);
+            background.setFillStyle(0xFF0000, 0.7);
             this.scene.tweens.add({
                 targets: background,
                 scaleX: 1.3,
@@ -165,7 +148,7 @@ export class AreaSelectionManager {
             }
             
             // 色を戻す
-            background.clearTint();
+            background.setFillStyle(0x4169E1, 0.7);
         });
     }
 
@@ -191,21 +174,32 @@ export class AreaSelectionManager {
     }
 
     selectArea(area) {
-        if (!this.isInteractive) return;
-        
-        console.log(`Area selected: ${area.name}`);
-        
-        // 選択されたエリアを記録
-        this.selectedArea = area;
-        
-        // 選択エフェクトを表示
-        this.showSelectionEffect(area);
-        
-        // 音効果を再生
-        this.playSelectionSound();
-        
-        // 選択後の処理を実行
-        this.handleAreaSelection(area);
+        try {
+            console.log('AreaSelectionManager: selectArea called with area:', area);
+            
+            if (!this.isInteractive) {
+                console.log('AreaSelectionManager: Not interactive, returning');
+                return;
+            }
+            
+            console.log(`AreaSelectionManager: Area selected: ${area.name}`);
+            
+            // 選択されたエリアを記録
+            this.selectedArea = area;
+            
+            // 選択エフェクトを表示（確認ダイアログを含む）
+            console.log('AreaSelectionManager: Showing selection effect');
+            this.showSelectionEffect(area);
+            
+            // 音効果を再生
+            console.log('AreaSelectionManager: Playing selection sound');
+            this.playSelectionSound();
+            
+            console.log('AreaSelectionManager: selectArea completed');
+            
+        } catch (error) {
+            console.error('AreaSelectionManager: Error in selectArea:', error);
+        }
     }
 
     showSelectionEffect(area) {
@@ -281,7 +275,7 @@ export class AreaSelectionManager {
         // ボタンイベント
         yesButton.on('pointerdown', () => {
             dialog.destroy();
-            this.scene.selectArea(area);
+            this.handleAreaSelection(area);
         });
         
         noButton.on('pointerdown', () => {
@@ -302,8 +296,21 @@ export class AreaSelectionManager {
         
         // 少し遅延を入れてから移動
         this.scene.time.delayedCall(1000, () => {
-            this.scene.navigateToArea(area);
+            this.navigateToArea(area);
         });
+    }
+
+    navigateToArea(area) {
+        // 選択した場所に応じて次のマップまたはシーンに移動
+        console.log(`Navigating to area: ${area.name}`);
+        
+        // エリアオブジェクトがsceneプロパティを持っている場合
+        if (area.scene) {
+            this.scene.scene.start(area.scene);
+        } else {
+            // 従来の方法でフォールバック
+            console.log(`Area ${area.name} not implemented yet`);
+        }
     }
 
     playSelectionSound() {
@@ -332,19 +339,27 @@ export class AreaSelectionManager {
 
     // タッチイベントを処理
     handleTouchAt(worldX, worldY) {
-        // タッチ位置に近いエリアを検索
-        const touchedArea = this.findAreaAtPosition(worldX, worldY);
-        
-        if (touchedArea) {
-            this.selectArea(touchedArea);
-        } else {
-            console.log(`No area found at position: ${worldX}, ${worldY}`);
+        try {
+            console.log('AreaSelectionManager: handleTouchAt called with:', worldX, worldY);
+            
+            // タッチ位置に近いエリアを検索
+            const touchedArea = this.findAreaAtPosition(worldX, worldY);
+            
+            if (touchedArea) {
+                console.log('AreaSelectionManager: Found area:', touchedArea.name, touchedArea);
+                this.selectArea(touchedArea);
+            } else {
+                console.log(`AreaSelectionManager: No area found at position: ${worldX}, ${worldY}`);
+            }
+            
+        } catch (error) {
+            console.error('AreaSelectionManager: Error in handleTouchAt:', error);
         }
     }
     
     // 指定された座標に近いエリアを検索
     findAreaAtPosition(worldX, worldY) {
-        const tapRadius = 40; // タップ判定の半径
+        const tapRadius = 20; // タップ判定の半径（青い丸のサイズ10+余裕10）
         
         for (let area of this.areas) {
             const distance = Math.sqrt(

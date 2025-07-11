@@ -151,9 +151,11 @@ export class TouchControlManager {
         const inputMagnitude = Math.sqrt(normalizedX * normalizedX + normalizedY * normalizedY);
         
         if (inputMagnitude < deadZone) {
-            // PlayerControllerと同じ方法で停止
-            this.player.setVelocityX(0);
-            this.player.setVelocityY(0);
+            // PlayerControllerと同じ方法で停止（プレイヤーが存在する場合のみ）
+            if (this.player && this.player.setVelocityX) {
+                this.player.setVelocityX(0);
+                this.player.setVelocityY(0);
+            }
             return;
         }
         
@@ -162,9 +164,11 @@ export class TouchControlManager {
         const velocityX = normalizedX * speed;
         const velocityY = normalizedY * speed;
         
-        // PlayerControllerと同じ方法で設定（別々に）
-        this.player.setVelocityX(velocityX);
-        this.player.setVelocityY(velocityY);
+        // PlayerControllerと同じ方法で設定（プレイヤーが存在する場合のみ）
+        if (this.player && this.player.setVelocityX) {
+            this.player.setVelocityX(velocityX);
+            this.player.setVelocityY(velocityY);
+        }
     }
     
     resetStick() {
@@ -176,9 +180,11 @@ export class TouchControlManager {
         this.currentInput.x = 0;
         this.currentInput.y = 0;
         
-        // プレイヤーを停止（PlayerControllerと同じ方法）
-        this.player.setVelocityX(0);
-        this.player.setVelocityY(0);
+        // プレイヤーを停止（プレイヤーが存在する場合のみ）
+        if (this.player && this.player.setVelocityX) {
+            this.player.setVelocityX(0);
+            this.player.setVelocityY(0);
+        }
     }
     
     // 現在の入力状態を取得（他のシステムから参照可能）
@@ -233,20 +239,36 @@ export class TouchControlManager {
     
     // エリア選択用のタッチハンドラ
     handleAreaSelectionTouch(pointer) {
-        // タッチ開始時刻を記録
-        this.touchStartTime = Date.now();
-        
-        // ワールド座標に変換
-        const worldX = this.scene.cameras.main.getWorldPoint(pointer.x, pointer.y).x;
-        const worldY = this.scene.cameras.main.getWorldPoint(pointer.x, pointer.y).y;
-        
-        // エリアマネージャーに座標を渡す
-        if (this.areaSelectionManager) {
-            this.areaSelectionManager.handleTouchAt(worldX, worldY);
+        try {
+            console.log('TouchControlManager: Touch detected at screen:', pointer.x, pointer.y);
+            
+            // タッチ開始時刻を記録
+            this.touchStartTime = Date.now();
+            
+            // カメラの存在確認
+            if (!this.scene.cameras || !this.scene.cameras.main) {
+                console.error('TouchControlManager: Camera not available');
+                return;
+            }
+            
+            // ワールド座標に変換
+            const worldPoint = this.scene.cameras.main.getWorldPoint(pointer.x, pointer.y);
+            const worldX = worldPoint.x;
+            const worldY = worldPoint.y;
+            
+            console.log('TouchControlManager: World coordinates:', worldX, worldY);
+            
+            // エリアマネージャーに座標を渡す
+            if (this.areaSelectionManager) {
+                this.areaSelectionManager.handleTouchAt(worldX, worldY);
+            }
+            
+            // 視覚的フィードバック
+            this.showTouchFeedback(worldX, worldY);
+            
+        } catch (error) {
+            console.error('TouchControlManager: Error in handleAreaSelectionTouch:', error);
         }
-        
-        // 視覚的フィードバック
-        this.showTouchFeedback(worldX, worldY);
     }
     
     // タッチフィードバックを表示
