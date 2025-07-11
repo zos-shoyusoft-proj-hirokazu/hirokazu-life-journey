@@ -186,6 +186,101 @@ export class TouchControlManager {
         return { ...this.currentInput };
     }
     
+    // エリア選択用のタッチコントロールを有効化
+    enableAreaSelection(areaSelectionManager) {
+        this.areaSelectionManager = areaSelectionManager;
+        
+        // 通常のゲームパッドを非表示にする
+        this.hideVirtualGamepad();
+        
+        // エリア選択用のタッチイベントを設定
+        this.setupAreaSelectionTouch();
+        
+        console.log('TouchControlManager: Area selection enabled');
+    }
+    
+    // バーチャルゲームパッドを非表示
+    hideVirtualGamepad() {
+        if (this.baseCircle) {
+            this.baseCircle.setVisible(false);
+        }
+        if (this.stickCircle) {
+            this.stickCircle.setVisible(false);
+        }
+    }
+    
+    // バーチャルゲームパッドを表示
+    showVirtualGamepad() {
+        if (this.baseCircle) {
+            this.baseCircle.setVisible(true);
+        }
+        if (this.stickCircle) {
+            this.stickCircle.setVisible(true);
+        }
+    }
+    
+    // エリア選択用のタッチイベントを設定
+    setupAreaSelectionTouch() {
+        // タッチイベントを設定
+        this.scene.input.on('pointerdown', (pointer) => {
+            this.handleAreaSelectionTouch(pointer);
+        });
+        
+        // 長押し検出用
+        this.touchStartTime = 0;
+        this.longPressThreshold = 500; // 500msで長押し判定
+    }
+    
+    // エリア選択用のタッチハンドラ
+    handleAreaSelectionTouch(pointer) {
+        // タッチ開始時刻を記録
+        this.touchStartTime = Date.now();
+        
+        // ワールド座標に変換
+        const worldX = this.scene.cameras.main.getWorldPoint(pointer.x, pointer.y).x;
+        const worldY = this.scene.cameras.main.getWorldPoint(pointer.x, pointer.y).y;
+        
+        // エリアマネージャーに座標を渡す
+        if (this.areaSelectionManager) {
+            this.areaSelectionManager.handleTouchAt(worldX, worldY);
+        }
+        
+        // 視覚的フィードバック
+        this.showTouchFeedback(worldX, worldY);
+    }
+    
+    // タッチフィードバックを表示
+    showTouchFeedback(worldX, worldY) {
+        // タッチ位置にリップルエフェクトを表示
+        const ripple = this.scene.add.circle(worldX, worldY, 10, 0x00FF00, 0.7);
+        
+        // アニメーション
+        this.scene.tweens.add({
+            targets: ripple,
+            scaleX: 5,
+            scaleY: 5,
+            alpha: 0,
+            duration: 400,
+            ease: 'Power2',
+            onComplete: () => {
+                ripple.destroy();
+            }
+        });
+    }
+    
+    // エリア選択モードを無効化
+    disableAreaSelection() {
+        this.areaSelectionManager = null;
+        
+        // 通常のゲームパッドを再表示
+        this.showVirtualGamepad();
+        
+        // タッチイベントを削除
+        this.scene.input.off('pointerdown');
+        
+        console.log('TouchControlManager: Area selection disabled');
+    }
+    
     // ジョイスティックを破棄
     destroy() {
         if (this.baseCircle) {

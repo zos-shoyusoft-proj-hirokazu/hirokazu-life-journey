@@ -10,7 +10,7 @@ import { DialogSystem } from '../managers/DialogSystem.js';
 import { Stage1DialogData } from '../data/stage1/dialogs.js';
 import { ConversationTrigger } from '../managers/ConversationTrigger.js';
 import { ConversationScene } from '../managers/ConversationScene.js'; 
-import { AudioManager } from '../managers/AudioManager.js';
+//import { AudioManager } from '../managers/AudioManager.js';
 
 export class Stage1 extends Phaser.Scene {
     constructor() {

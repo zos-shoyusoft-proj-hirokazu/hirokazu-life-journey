@@ -41,7 +41,9 @@ showStageSelect();
 const stage1 = document.getElementById('stage1');
 const stage2 = document.getElementById('stage2');
 const stage3 = document.getElementById('stage3');
+const miemachi = document.getElementById('miemachi');
 
 if (stage1) stage1.addEventListener('click', () => startStage(1));
 if (stage2) stage2.addEventListener('click', () => startStage(2));
 if (stage3) stage3.addEventListener('click', () => startStage(3));
+if (miemachi) miemachi.addEventListener('click', () => startStage('miemachi'));
