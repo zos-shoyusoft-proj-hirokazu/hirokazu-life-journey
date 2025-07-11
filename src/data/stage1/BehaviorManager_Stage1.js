@@ -47,7 +47,7 @@ export class BehaviorManager_Stage1 {
     }
 
     // アイテムの動作設定
-    setupItemBehavior(sprite, obj) {
+    setupItemBehavior(sprite) {
         // アイテムの光るエフェクト
         this.scene.tweens.add({
             targets: sprite,

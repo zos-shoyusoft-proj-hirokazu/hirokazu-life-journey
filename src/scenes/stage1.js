@@ -10,6 +10,7 @@ import { DialogSystem } from '../managers/DialogSystem.js';
 import { Stage1DialogData } from '../data/stage1/dialogs.js';
 import { ConversationTrigger } from '../managers/ConversationTrigger.js';
 import { ConversationScene } from '../managers/ConversationScene.js'; 
+import { AudioManager } from '../managers/AudioManager.js';
 
 export class Stage1 extends Phaser.Scene {
     constructor() {
@@ -87,6 +88,10 @@ export class Stage1 extends Phaser.Scene {
 
     create() {
         try {
+
+            // メニューBGMを開始
+            this.audioManager.playBgm('bgm_menu', 0.3);
+
             // CollisionManagerを初期化
             this.collisionManager = new CollisionManager(this);
             this.collisionManager.setupCollisionGroups();

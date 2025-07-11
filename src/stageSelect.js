@@ -1,7 +1,7 @@
 import { startPhaserGame } from './index.js';
 
 function startGame(stageNumber) {
-    console.log("ゲーム開始！");
+    console.log('ゲーム開始！');
     startPhaserGame(stageNumber); // ← ここでPhaserゲームを起動 本来は分けないといけなくて強制敵にindex.jsを読み込んでる
 }
 
