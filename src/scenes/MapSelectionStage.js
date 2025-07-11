@@ -3,10 +3,15 @@ import { UIManager } from '../managers/UIManager.js';
 import { AudioManager } from '../managers/AudioManager.js';
 import { MapManager } from '../managers/MapManager.js';
 import { CameraManager } from '../managers/CameraManager.js';
+import { AreaConfig } from '../config/AreaConfig.js';
 
-export class MiemachiStage extends Phaser.Scene {
-    constructor() {
-        super({ key: 'MiemachiStage' });
+export class MapSelectionStage extends Phaser.Scene {
+    constructor(config) {
+        super({ key: config.sceneKey });
+        
+        // 設定を保存
+        this.mapConfig = config.mapConfig;
+        this.mapId = config.mapId;
         
         // マネージャーの初期化
         this.mapManager = null;
@@ -20,26 +25,24 @@ export class MiemachiStage extends Phaser.Scene {
     }
 
     preload() {
-        // マップファイルを読み込み
-        this.load.tilemapTiledJSON('miemachi_map', 'assets/maps/miemachi/bunngo_mie_city.tmj');
-        
-        // タイルセット画像を読み込み
-        this.load.image('bunngooonoshimiemachi', 'assets/maps/miemachi/bunngooonoshimiemachi.png');
+        // 設定ファイルから動的にアセットを読み込み
+        this.load.tilemapTiledJSON(this.mapConfig.mapKey, `assets/maps/${this.mapId}/${this.mapConfig.mapKey}.tmj`);
+        this.load.image(this.mapConfig.tilesetKey, `assets/maps/${this.mapId}/${this.mapConfig.tilesetKey}.png`);
         
         // UI要素とアイコン
         this.load.image('area_marker', 'assets/ui/area_marker.png');
         this.load.image('selection_circle', 'assets/ui/selection_circle.png');
         this.load.image('back_button', 'assets/ui/back_button.png');
         
-        // エラーハンドリング - 画像が見つからない場合の代替
+        // エラーハンドリング
         this.load.on('fileerror', (file) => {
             console.warn(`File not found: ${file.key}, using fallback`);
             this.mapManager?.createFallbackImage(file.key);
         });
         
-        // デバッグ用：読み込み完了を確認
+        // デバッグ用
         this.load.on('complete', () => {
-            console.log('MiemachiStage assets loaded successfully');
+            console.log(`${this.mapConfig.mapTitle} assets loaded successfully`);
         });
     }
 
@@ -50,7 +53,7 @@ export class MiemachiStage extends Phaser.Scene {
             
             // マップマネージャーを初期化
             this.mapManager = new MapManager(this);
-            this.mapManager.createMap('miemachi_map', 'bunngooonoshimiemachi');
+            this.mapManager.createMap(this.mapConfig.mapKey, this.mapConfig.tilesetKey);
             
             // カメラマネージャーを初期化
             this.cameraManager = new CameraManager(this);
@@ -59,26 +62,40 @@ export class MiemachiStage extends Phaser.Scene {
             
             // エリア選択システムを初期化
             this.areaSelectionManager = new AreaSelectionManager(this);
-            this.areaSelectionManager.setupAreas(this.mapManager.getAreas());
+            
+            // 設定ファイルからエリア情報を取得し、マップエリアとマージ
+            const mapAreas = this.mapManager.getAreas();
+            const configAreas = this.mapConfig.areas;
+            
+            // エリア情報をマージ（座標はマップから、シーン情報は設定から）
+            const mergedAreas = mapAreas.map(mapArea => {
+                const configArea = configAreas.find(config => config.name === mapArea.name);
+                return {
+                    ...mapArea,
+                    scene: configArea?.scene || null
+                };
+            });
+            
+            this.areaSelectionManager.setupAreas(mergedAreas);
             
             // タッチイベントを直接設定
             this.setupTouchEvents();
             
             // UI要素を作成
             this.uiManager = new UIManager();
-            this.uiManager.createMapUI(this, '三重町マップ');
+            this.uiManager.createMapUI(this, this.mapConfig.mapTitle);
             
             // オーディオマネージャーを初期化
             this.audioManager = new AudioManager(this);
-            this.audioManager.playBgm('miemachi_theme', 0.5);
+            this.audioManager.playBgm(`${this.mapId}_theme`, 0.5);
             
             // リサイズイベントを設定
             this.scale.on('resize', this.handleResize, this);
             
-            console.log('MiemachiStage created successfully');
+            console.log(`${this.mapConfig.mapTitle} created successfully`);
             
         } catch (error) {
-            console.error('Error creating MiemachiStage:', error);
+            console.error(`Error creating ${this.mapConfig.mapTitle}:`, error);
             console.error('Stack trace:', error.stack);
         }
     }
@@ -92,11 +109,11 @@ export class MiemachiStage extends Phaser.Scene {
 
     handleTouch(pointer) {
         try {
-            console.log('MiemachiStage: Touch detected at screen:', pointer.x, pointer.y);
+            console.log(`${this.mapConfig.mapTitle}: Touch detected at screen:`, pointer.x, pointer.y);
             
             // カメラの存在確認
             if (!this.cameras || !this.cameras.main) {
-                console.error('MiemachiStage: Camera not available');
+                console.error(`${this.mapConfig.mapTitle}: Camera not available`);
                 return;
             }
             
@@ -105,7 +122,7 @@ export class MiemachiStage extends Phaser.Scene {
             const worldX = worldPoint.x;
             const worldY = worldPoint.y;
             
-            console.log('MiemachiStage: World coordinates:', worldX, worldY);
+            console.log(`${this.mapConfig.mapTitle}: World coordinates:`, worldX, worldY);
             
             // エリアマネージャーに座標を渡す
             if (this.areaSelectionManager) {
@@ -116,7 +133,7 @@ export class MiemachiStage extends Phaser.Scene {
             this.showTouchFeedback(worldX, worldY);
             
         } catch (error) {
-            console.error('MiemachiStage: Error in handleTouch:', error);
+            console.error(`${this.mapConfig.mapTitle}: Error in handleTouch:`, error);
         }
     }
 
@@ -150,13 +167,25 @@ export class MiemachiStage extends Phaser.Scene {
             if (this.areaSelectionManager) {
                 this.areaSelectionManager.destroy();
                 this.areaSelectionManager = new AreaSelectionManager(this);
-                this.areaSelectionManager.setupAreas(this.mapManager.getAreas());
+                
+                // エリア情報を再取得
+                const mapAreas = this.mapManager.getAreas();
+                const configAreas = this.mapConfig.areas;
+                const mergedAreas = mapAreas.map(mapArea => {
+                    const configArea = configAreas.find(config => config.name === mapArea.name);
+                    return {
+                        ...mapArea,
+                        scene: configArea?.scene || null
+                    };
+                });
+                
+                this.areaSelectionManager.setupAreas(mergedAreas);
             }
             
             // UIの更新
             this.uiManager?.updateMapUI(gameSize);
             
-            console.log(`MiemachiStage resized to: ${gameSize.width}x${gameSize.height}`);
+            console.log(`${this.mapConfig.mapTitle} resized to: ${gameSize.width}x${gameSize.height}`);
             
         } catch (error) {
             console.error('Error handling resize:', error);
@@ -169,22 +198,6 @@ export class MiemachiStage extends Phaser.Scene {
         this.cameraManager?.update();
     }
 
-    // 旧バージョンとの互換性のため残すメソッド（将来的に削除予定）
-    selectArea(area) {
-        console.warn('selectArea is deprecated. Use areaSelectionManager.selectArea instead.');
-        this.areaSelectionManager?.selectArea(area);
-    }
-
-    showSelectionEffect(area) {
-        console.warn('showSelectionEffect is deprecated. Use areaSelectionManager.showSelectionEffect instead.');
-        this.areaSelectionManager?.showSelectionEffect(area);
-    }
-
-    navigateToArea(area) {
-        console.warn('navigateToArea is deprecated. Use areaSelectionManager.navigateToArea instead.');
-        this.areaSelectionManager?.navigateToArea(area);
-    }
-
     destroy() {
         // マネージャーのクリーンアップ
         this.mapManager?.destroy();
@@ -193,4 +206,19 @@ export class MiemachiStage extends Phaser.Scene {
         this.cameraManager?.destroy();
         this.audioManager?.destroy();
     }
+}
+
+// 設定ファイルベースでマップシーンを作成するヘルパー関数
+export function createMapStage(mapId, sceneKey) {
+    const mapConfig = AreaConfig[mapId];
+    if (!mapConfig) {
+        console.error(`Map config not found for: ${mapId}`);
+        return null;
+    }
+    
+    return new MapSelectionStage({
+        sceneKey: sceneKey,
+        mapConfig: mapConfig,
+        mapId: mapId
+    });
 } 
