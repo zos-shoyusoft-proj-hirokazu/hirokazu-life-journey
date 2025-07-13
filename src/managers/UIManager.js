@@ -37,46 +37,45 @@ export class UIManager {
             return;
         }
         
-        // 画面の左上に戻るボタンを配置
-        
-        // 戻るボタンの背景
-        this.backButton = scene.add.rectangle(70, 30, 120, 40, 0x000000, 0.7);
-        this.backButton.setOrigin(0.5);
-        this.backButton.setStrokeStyle(2, 0xffffff);
-        this.backButton.setScrollFactor(0); // カメラに固定
-        this.backButton.setDepth(1000); // 他のオブジェクトより手前に表示
-        
-        // 戻るボタンのテキスト
-        this.backButtonText = scene.add.text(70, 30, '戻る', {
-            fontSize: '16px',
-            fill: '#ffffff',
-            fontWeight: 'bold'
-        });
-        this.backButtonText.setOrigin(0.5);
-        this.backButtonText.setScrollFactor(0); // カメラに固定
-        this.backButtonText.setDepth(1001); // ボタンより手前に表示
-        
-        // インタラクティブにする
-        this.backButton.setInteractive();
-        this.backButton.on('pointerdown', () => {
-            // 戻るボタンがクリックされました
+        // 角丸背景に修正
+        this.backButtonGraphics = scene.add.graphics();
+        this.backButtonGraphics.fillStyle(0x000000, 0.7);
+        this.backButtonGraphics.fillRoundedRect(-45, -20, 80, 40, 5); // 指示通り
+        this.backButtonGraphics.setPosition(50, 25);
+        this.backButtonGraphics.setDepth(1000);
+        this.backButtonGraphics.setScrollFactor(0);
+        // インタラクティブ化（ヒットエリアも完全に同じ座標・サイズにする）
+        this.backButtonGraphics.setInteractive(new Phaser.Geom.Rectangle(-45, -20, 80, 40), Phaser.Geom.Rectangle.Contains);
+        this.backButtonGraphics.on('pointerdown', () => {
             if (window.returnToStageSelect) {
                 window.returnToStageSelect();
             }
         });
-        
-        // ホバーエフェクト
-        this.backButton.on('pointerover', () => {
-            this.backButton.setFillStyle(0x333333, 0.8);
+        this.backButtonGraphics.on('pointerover', () => {
+            this.backButtonGraphics.clear();
+            this.backButtonGraphics.fillStyle(0x333333, 0.8);
+            this.backButtonGraphics.fillRoundedRect(-45, -20, 80, 40, 5);
+        });
+        this.backButtonGraphics.on('pointerout', () => {
+            this.backButtonGraphics.clear();
+            this.backButtonGraphics.fillStyle(0x000000, 0.7);
+            this.backButtonGraphics.fillRoundedRect(-45, -20, 80, 40, 5);
         });
         
-        this.backButton.on('pointerout', () => {
-            this.backButton.setFillStyle(0x000000, 0.7);
+        // 戻るボタンのテキスト
+        this.backButtonText = scene.add.text(45, 34, '戻る', {
+            fontSize: '16px',
+            fill: '#ffffff',
+            fontWeight: 'bold',
+            fixedHeight: 40
         });
+        this.backButtonText.setOrigin(0.5, 0.4);
+        this.backButtonText.setScrollFactor(0); // カメラに固定
+        this.backButtonText.setDepth(1001); // ボタンより手前に表示
         
         // 画面リサイズ時の位置調整
         scene.scale.on('resize', () => {
-            if (scene && scene.cameras && scene.cameras.main && this.backButton && this.backButtonText) {
+            if (scene && scene.cameras && scene.cameras.main && this.backButtonGraphics) {
                 // 左上の位置は固定なので調整不要
             }
         });
@@ -171,7 +170,7 @@ ${areaDescription}`);
                 }
             };
             destroyIfExists('playerPosText');
-            destroyIfExists('backButton');
+            destroyIfExists('backButtonGraphics'); // 新しいプロパティを追加
             destroyIfExists('backButtonText');
             destroyIfExists('titleText');
             destroyIfExists('instructionText');
