@@ -10,7 +10,7 @@ import { DialogSystem } from '../managers/DialogSystem.js';
 import { Stage1DialogData } from '../data/stage1/dialogs.js';
 import { ConversationTrigger } from '../managers/ConversationTrigger.js';
 import { ConversationScene } from '../managers/ConversationScene.js'; 
-//import { AudioManager } from '../managers/AudioManager.js';
+import { AudioManager } from '../managers/AudioManager.js';
 
 export class Stage1 extends Phaser.Scene {
     constructor() {
@@ -26,6 +26,7 @@ export class Stage1 extends Phaser.Scene {
         this.collisionManager = null;
         this.behaviorManager = null; // 追加：BehaviorManagerの変数宣言
         this.dialogSystem = null;
+        this.audioManager = null; 
         
         // 新しい会話システム
         this.conversationTrigger = null;
@@ -37,10 +38,19 @@ export class Stage1 extends Phaser.Scene {
     preload() {
         // マップファイルを読み込み
         this.load.tilemapTiledJSON('map', 'assets/maps/stage1.tmj');
-        
+        //マップ読み込み
         this.load.image('[A]Grass1_pipo', 'assets/maps/tilesets/stage1/[A]Grass1_pipo.png');
         this.load.image('Tilemap', 'assets/maps/tilesets/stage1/Tilemap.png');
-
+        
+        //BGM読み込み（デバッグ用ログ付き）
+        console.log('BGM読み込み開始');
+        this.load.audio('bgm_menu', 'assets/audio/bgm/stage1/kessen_diaruga.mp3');
+        
+        // BGM読み込み完了をチェック
+        this.load.on('filecomplete-audio-bgm_menu', () => {
+            console.log('BGM bgm_menu の読み込み完了');
+        });
+        
         // スプライトシート用の共通設定
         const SPRITE_CONFIG = { frameWidth: 32, frameHeight: 32 };
 
@@ -89,6 +99,8 @@ export class Stage1 extends Phaser.Scene {
     create() {
         try {
 
+            // AudioManagerを初期化
+            this.audioManager = new AudioManager(this);
             // メニューBGMを開始
             this.audioManager.playBgm('bgm_menu', 0.3);
 
