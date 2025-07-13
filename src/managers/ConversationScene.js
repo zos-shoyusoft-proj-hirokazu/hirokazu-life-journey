@@ -71,7 +71,8 @@ export class ConversationScene extends Phaser.Scene {
             fill: '#ffffff',
             lineSpacing: 8,
             padding: { x: 10, y: 10 },
-            wordWrap: { width: textWrapWidth, useAdvancedWrap: true }
+            wordWrap: { width: textWrapWidth, useAdvancedWrap: true },
+            fixedHeight: 50
         });
         this.dialogText.setOrigin(0.5, 0.5);
         
@@ -81,9 +82,10 @@ export class ConversationScene extends Phaser.Scene {
             fontSize: nameFontSize,
             fill: '#ffffff',
             fontStyle: 'bold',
-            padding: { x: 10, y: 10 }
+            padding: { x: 10, y: 10 },
+            fixedHeight: 50
         });
-        this.nameText.setOrigin(0.5, 0.5);
+        this.nameText.setOrigin(0.5, 0.2);
         
         // クリックでテキスト進行（多重登録防止）
         this.input.removeAllListeners('pointerdown');
@@ -279,6 +281,8 @@ export class ConversationScene extends Phaser.Scene {
         
         this.currentTextTimer = timer;
     }
+    
+
 
     // テキストアニメーション完了
     completeTextAnimation() {

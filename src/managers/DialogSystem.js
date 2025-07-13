@@ -222,7 +222,6 @@ export class DialogSystem {
             text: message
         });
         this.dialogText.setText(message);
-        
     }
 
     nextDialog() {
