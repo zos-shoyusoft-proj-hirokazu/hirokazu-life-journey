@@ -32,21 +32,21 @@ export class Stage3 extends Phaser.Scene {
         // BGM読み込み
         this.load.audio('bgm_stage3', 'assets/audio/bgm/stage1/kessen_diaruga.mp3');
         
-        // マップ用のタイル
-        this.load.image('GK_A2_C_autotile', 'assets/GK_A2_JC_autotile.png');
-        this.load.image('Preview_RPGMakerVXAce', 'assets/Preview_RPGMakerVXAce.png');
-        this.load.image('Preview', 'assets/Preview.png');
-        this.load.image('GK_JC_A5_2', 'assets/GK_JC_A5_2.png');
-        this.load.image('GK_JC_B_2', 'assets/GK_JC_B_2.png');
-        this.load.image('tiles', 'assets/tiles.png');
-        this.load.image('Tilemap', 'assets/Tilemap.png');
-        this.load.image('pipo-map001_at-kusa', 'assets/pipo-map001_at-kusa.png');
+        // // マップ用のタイル
+        // this.load.image('GK_A2_C_autotile', 'assets/GK_A2_JC_autotile.png');
+        // this.load.image('Preview_RPGMakerVXAce', 'assets/Preview_RPGMakerVXAce.png');
+        // this.load.image('Preview', 'assets/Preview.png');
+        // this.load.image('GK_JC_A5_2', 'assets/GK_JC_A5_2.png');
+        // this.load.image('GK_JC_B_2', 'assets/GK_JC_B_2.png');
+        // this.load.image('tiles', 'assets/tiles.png');
+        // this.load.image('Tilemap', 'assets/Tilemap.png');
+        // this.load.image('pipo-map001_at-kusa', 'assets/pipo-map001_at-kusa.png');
 
-        // NPC画像を読み込み
-        const SPRITE_CONFIG = { frameWidth: 32, frameHeight: 32 };
-        this.load.spritesheet('friend1', 'assets/characters/npcs/pipo-charachip007a.png', SPRITE_CONFIG);
-        this.load.spritesheet('friend2', 'assets/characters/npcs/pipo-charachip007e.png', SPRITE_CONFIG);
-        this.load.spritesheet('kuccoro', 'assets/characters/npcs/pipo-charachip022a.png', SPRITE_CONFIG);
+        // // NPC画像を読み込み
+        // const SPRITE_CONFIG = { frameWidth: 32, frameHeight: 32 };
+        // this.load.spritesheet('friend1', 'assets/characters/npcs/pipo-charachip007a.png', SPRITE_CONFIG);
+        // this.load.spritesheet('friend2', 'assets/characters/npcs/pipo-charachip007e.png', SPRITE_CONFIG);
+        // this.load.spritesheet('kuccoro', 'assets/characters/npcs/pipo-charachip022a.png', SPRITE_CONFIG);
 
         // デバッグ用：読み込み完了を確認
         this.load.on('complete', () => {
