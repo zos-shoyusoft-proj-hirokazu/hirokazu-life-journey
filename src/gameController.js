@@ -11,10 +11,8 @@ let gameInstance = null;
 // ゲーム初期化（初回のみ）
 function initializeGame() {
     if (window.game) {
-        console.log('[GameInit] 既存のwindow.gameを返します');
         return window.game;
     }
-    console.log('[GameInit] 新しいPhaser.Gameインスタンスを作成します');
     const config = {
         ...gameConfig,
         scene: []  // 空で開始（軽量化）
@@ -27,7 +25,6 @@ function initializeGame() {
 
 // ゲーム開始関数（動的シーン読み込み）
 export function startPhaserGame(stageNumber) {
-    console.log(`[GameStart] ステージ${stageNumber}のゲームを開始`);
     const game = initializeGame();
 
     let sceneClass, sceneKey;
@@ -40,5 +37,4 @@ export function startPhaserGame(stageNumber) {
         default: sceneClass = Stage1; sceneKey = 'Stage1Scene';
     }
     game.scene.add(sceneKey, sceneClass, true);
-    console.log(`[GameStart] シーン${sceneKey}を追加・開始`);
 } 

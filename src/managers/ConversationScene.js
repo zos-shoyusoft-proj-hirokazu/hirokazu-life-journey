@@ -5,6 +5,8 @@ export class ConversationScene extends Phaser.Scene {
         this.currentConversation = null;
         this.isTextAnimating = false;
         this.textSpeed = 30; // ms per character
+        this.originalBgm = null; // 元のBGMを保存
+        this.eventBgm = null; // イベント用BGM
     }
 
 
@@ -83,7 +85,8 @@ export class ConversationScene extends Phaser.Scene {
         });
         this.nameText.setOrigin(0.5, 0.5);
         
-        // クリックでテキスト進行
+        // クリックでテキスト進行（多重登録防止）
+        this.input.removeAllListeners('pointerdown');
         this.input.on('pointerdown', () => {
             this.nextDialog();
         });
@@ -116,29 +119,30 @@ export class ConversationScene extends Phaser.Scene {
 
     // 会話開始
     startConversation(conversationData) {
+        console.log('[ConversationScene] startConversation:', conversationData);
         this.currentConversation = conversationData;
         this.currentConversationIndex = 0;
         
         // 背景を変更
         this.updateBackground(conversationData.background);
         
+        // イベント用BGMに切り替え
+        this.switchToEventBgm(conversationData.bgm);
+        
         this.showDialog();
     }
 
     // 次の会話に進む
     nextDialog() {
+        console.log('[ConversationScene] nextDialog called', this.currentConversationIndex);
         if (this.isTextAnimating) {
-            // テキストアニメーション中なら即座に完了
             this.completeTextAnimation();
             return;
         }
-        
         this.currentConversationIndex++;
-        
         if (this.currentConversationIndex < this.currentConversation.conversations.length) {
             this.showDialog();
         } else {
-            // 会話終了
             this.endConversation();
         }
     }
@@ -146,13 +150,16 @@ export class ConversationScene extends Phaser.Scene {
     // 会話表示
     showDialog() {
         const dialog = this.currentConversation.conversations[this.currentConversationIndex];
-        
+        console.log('[ConversationScene] showDialog', {
+            index: this.currentConversationIndex,
+            speaker: dialog?.speaker,
+            text: dialog?.text,
+            conversation: dialog
+        });
         // 立ち絵の更新
         this.updateCharacterSprite(dialog.character, dialog.expression);
-        
         // 名前の表示
         this.nameText.setText(dialog.speaker);
-        
         // テキストのアニメーション表示
         this.animateText(dialog.text);
     }
@@ -310,23 +317,66 @@ export class ConversationScene extends Phaser.Scene {
         }
     }
     
+    // イベント用BGMに切り替え
+    switchToEventBgm(eventBgmKey) {
+        console.log('[ConversationScene] switchToEventBgm called:', eventBgmKey);
+        const mainScene = this.scene.get('Stage1Scene') || this.scene.get('Stage2Scene') || this.scene.get('Stage3Scene');
+        if (mainScene && mainScene.audioManager) {
+            this.originalBgm = mainScene.audioManager.bgm;
+            if (eventBgmKey) {
+                mainScene.audioManager.playBgm(eventBgmKey, 0.3, true);
+            } else {
+                mainScene.audioManager.playBgm('bgm_event', 0.3, true);
+            }
+        }
+    }
+
+    // 元のBGMに戻す
+    restoreOriginalBgm() {
+        const mainScene = this.scene.get('Stage1Scene') || this.scene.get('Stage2Scene') || this.scene.get('Stage3Scene');
+        if (mainScene && mainScene.audioManager) {
+            mainScene.audioManager.stopBgm(false);
+            const originalBgmKey = this.getOriginalBgmKey();
+            if (originalBgmKey) {
+                mainScene.audioManager.playBgm(originalBgmKey, 0.3, true);
+            }
+        }
+    }
+
+    // 元のBGMのキーを取得
+    getOriginalBgmKey() {
+        const mainScene = this.scene.get('Stage1Scene') || this.scene.get('Stage2Scene') || this.scene.get('Stage3Scene');
+        if (mainScene) {
+            if (mainScene.scene.key === 'Stage1Scene') {
+                return 'bgm_kessen_diaruga';
+            } else if (mainScene.scene.key === 'Stage2Scene') {
+                return 'bgm_stage2';
+            } else if (mainScene.scene.key === 'Stage3Scene') {
+                return 'bgm_stage3';
+            }
+        }
+        return 'bgm_kessen_diaruga'; // デフォルト
+    }
+    
     // 会話終了
     endConversation() {
+        console.log('[ConversationScene] endConversation called', {
+            index: this.currentConversationIndex,
+            length: this.currentConversation?.conversations?.length,
+            stack: new Error().stack
+        });
+        this.restoreOriginalBgm(); // イベント終了時にBGMを元に戻す
         // スプライトをクリーンアップ
         this.cleanupCharacterSprites();
-        
         // テキストアニメーションタイマーをクリーンアップ
         if (this.currentTextTimer) {
             this.currentTextTimer.destroy();
             this.currentTextTimer = null;
         }
-        
         // UI要素をリセット（削除はしない）
         this.resetUI();
-        
         // 会話終了イベントを発火
         this.events.emit('conversationEnded');
-        
         // 元のシーンに戻る、または次のイベントに移行
         this.scene.stop();
         // 必要に応じて他のシーンを開始

@@ -35,18 +35,14 @@ function startStage(stageNumber) {
 
 // ゲーム中からステージ選択に戻るためのグローバル関数
 function returnToStageSelect() {
-    console.log('[戻る] ゲームのクリーンアップ開始');
     if (window.game && window.game.destroy) {
         window.game.destroy(true);
-        console.log('[戻る] ゲームインスタンスをdestroyしました');
         window.game = null;
         if (typeof window.gameInstance !== 'undefined') {
             window.gameInstance = null;
-            console.log('[戻る] window.gameInstanceもnullにしました');
         }
     }
     showStageSelect();
-    console.log('[戻る] ステージ選択画面を表示');
 }
 
 // グローバルに公開

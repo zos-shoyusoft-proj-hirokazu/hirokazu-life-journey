@@ -33,24 +33,18 @@ export class AudioManager {
      * BGMを再生
      * @param {string} key - BGMのキー
      * @param {number} volume - 音量（0-1）
-     * @param {boolean} fade - フェードイン/アウト
+     * @param {boolean} fadeIn - フェードイン/アウト
      */
     playBgm(key, volume = this.bgmVolume, fadeIn = true) {
         if (this.bgm) {
-            if (fadeIn) {
-                this.scene.tweens.add({
-                    targets: this.bgm,
-                    volume: 0,
-                    duration: 500,
-                    onComplete: () => {
-                        this.bgm.stop();
-                        this.startNewBgm(key, volume, fadeIn);
-                    }
-                });
-            } else {
-                this.bgm.stop();
-                this.startNewBgm(key, volume, fadeIn);
+            if (this.bgm.key === key) {
+                // すでに同じBGMなら何もしない
+                return;
             }
+            // stopBgmのonCompleteで新しいBGMを再生
+            this.stopBgm(fadeIn, () => {
+                this.startNewBgm(key, volume, fadeIn);
+            });
         } else {
             this.startNewBgm(key, volume, fadeIn);
         }
@@ -65,6 +59,7 @@ export class AudioManager {
     startNewBgm(key, volume, fadeIn) {
         if (!this.isBgmMuted) {
             try {
+                console.log('[AudioManager] sound cache keys:', Object.keys(this.scene.cache.audio.entries.entries));
                 this.bgm = this.scene.sound.add(key, {
                     loop: true,
                     volume: fadeIn ? 0 : volume
@@ -76,9 +71,12 @@ export class AudioManager {
                         volume: volume,
                         duration: 500
                     });
+                } else {
+                    this.bgm.setVolume(volume);
                 }
+                console.log('[AudioManager] BGM started:', key);
             } catch (error) {
-                console.error(`BGM ${key} の再生に失敗しました:`, error);
+                console.error(`[AudioManager] BGM ${key} の再生に失敗しました:`, error);
             }
         }
     }
@@ -87,8 +85,9 @@ export class AudioManager {
      * BGMを停止
      * @param {boolean} fade - フェードアウト
      */
-    stopBgm(fade = true) {
+    stopBgm(fade = true, onComplete) {
         if (this.bgm) {
+            console.log('[AudioManager] stopBgm:', this.bgm.key, new Error().stack);
             if (fade) {
                 this.scene.tweens.add({
                     targets: this.bgm,
@@ -97,12 +96,18 @@ export class AudioManager {
                     onComplete: () => {
                         this.bgm.stop();
                         this.bgm = null;
+                        console.log('[AudioManager] BGM stopped (fade)');
+                        if (onComplete) onComplete();
                     }
                 });
             } else {
                 this.bgm.stop();
                 this.bgm = null;
+                console.log('[AudioManager] BGM stopped');
+                if (onComplete) onComplete();
             }
+        } else if (onComplete) {
+            onComplete();
         }
     }
 

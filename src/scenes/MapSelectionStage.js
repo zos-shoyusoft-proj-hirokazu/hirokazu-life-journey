@@ -30,12 +30,9 @@ export class MapSelectionStage extends Phaser.Scene {
         this.load.image(this.mapConfig.tilesetKey, `assets/maps/${this.mapId}/${this.mapConfig.tilesetKey}.png`);
         
         // UI要素とアイコン
-        this.load.image('area_marker', 'assets/ui/area_marker.png');
-        this.load.image('selection_circle', 'assets/ui/selection_circle.png');
-        this.load.image('back_button', 'assets/ui/back_button.png');
         
-        // BGMの読み込み
-        this.load.audio('bgm_menu', 'assets/audio/bgm/stage1/kessen_diaruga.mp3');
+        // BGMの読み込み（設定に基づいて動的に）
+        this.loadBgmFiles();
         
         // エラーハンドリング
         this.load.on('fileerror', (file) => {
@@ -46,6 +43,29 @@ export class MapSelectionStage extends Phaser.Scene {
         // デバッグ用
         this.load.on('complete', () => {
         });
+    }
+
+    // BGMファイルを動的に読み込む
+    loadBgmFiles() {
+        // 基本BGM
+        this.load.audio('bgm_menu', 'assets/audio/bgm/stage1/kessen_diaruga.mp3');
+        
+        // イベント用BGM読み込み
+        // this.load.audio('bgm_event_school', 'assets/audio/bgm/events/school_event.mp3');
+        // this.load.audio('bgm_event_romantic', 'assets/audio/bgm/events/romantic_event.mp3');
+        // this.load.audio('bgm_event', 'assets/audio/bgm/events/default_event.mp3'); // デフォルトイベントBGM
+        
+        // マップ固有のBGMがあれば読み込み
+        if (this.mapConfig.bgm) {
+            this.load.audio(`bgm_${this.mapId}`, this.mapConfig.bgm);
+        }
+        
+        // マップ固有のイベントBGMがあれば読み込み
+        if (this.mapConfig.eventBgm) {
+            Object.keys(this.mapConfig.eventBgm).forEach(eventKey => {
+                this.load.audio(`bgm_event_${eventKey}`, this.mapConfig.eventBgm[eventKey]);
+            });
+        }
     }
 
     create() {

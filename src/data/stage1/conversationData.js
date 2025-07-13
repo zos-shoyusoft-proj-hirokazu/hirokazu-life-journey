@@ -3,6 +3,7 @@ export const conversationData = {
     // demoちんぽ
     'demo_chinpo': {
         'background': 'test_1',
+        'bgm': 'bgm_demo_chinpo', // イベント専用BGM
         'conversations': [
             {
                 'speaker': 'ひろかず',
@@ -51,6 +52,7 @@ export const conversationData = {
     // 初回出会いのイベント
     'after_chinpo': {
         'background': 'test_1',
+        'bgm': 'bgm_demo_chinpo', // ロマンチックなイベントBGM
         'conversations': [
             {
                 'speaker': '河室',

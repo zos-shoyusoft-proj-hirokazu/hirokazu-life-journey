@@ -210,15 +210,17 @@ export class DialogSystem {
 
 
     showMessage() {
-
-        // 全てのメッセージを表示し終えた場合は会話終了
+        if (!this.currentDialog || !this.currentDialog.messages) return;
         if (this.currentTextIndex >= this.currentDialog.messages.length) {
             this.endDialog();
             return;
         }
-
-        // 現在のメッセージを取得して表示
         const message = this.currentDialog.messages[this.currentTextIndex];
+        console.log('[DialogSystem] showMessage', {
+            index: this.currentTextIndex,
+            name: this.currentDialog.name,
+            text: message
+        });
         this.dialogText.setText(message);
         
     }

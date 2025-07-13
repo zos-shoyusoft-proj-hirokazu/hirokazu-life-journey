@@ -22,14 +22,6 @@ export const Stage1DialogData = {
             'イグイグイグぅぅ！'
         ]
     },
-    'hanni': {
-        name: 'はんに',
-        messages: [
-            'ようこそ、Stage1へ！',
-            'このエリアには色々な仲間がいますよ',
-            'みんなと話してみてくださいね'
-        ]
-    },
     'enemy1': {
         name: '敵1',
         messages: [
