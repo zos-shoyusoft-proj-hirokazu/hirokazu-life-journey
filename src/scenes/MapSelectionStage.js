@@ -34,6 +34,9 @@ export class MapSelectionStage extends Phaser.Scene {
         this.load.image('selection_circle', 'assets/ui/selection_circle.png');
         this.load.image('back_button', 'assets/ui/back_button.png');
         
+        // BGMの読み込み
+        this.load.audio('bgm_menu', 'assets/audio/bgm/stage1/kessen_diaruga.mp3');
+        
         // エラーハンドリング
         this.load.on('fileerror', (file) => {
             console.warn(`File not found: ${file.key}, using fallback`);
@@ -42,7 +45,6 @@ export class MapSelectionStage extends Phaser.Scene {
         
         // デバッグ用
         this.load.on('complete', () => {
-            console.log(`${this.mapConfig.mapTitle} assets loaded successfully`);
         });
     }
 
@@ -84,15 +86,17 @@ export class MapSelectionStage extends Phaser.Scene {
             // UI要素を作成
             this.uiManager = new UIManager();
             this.uiManager.createMapUI(this, this.mapConfig.mapTitle);
+            this.uiManager.createBackButton(this); // 右上の戻るボタンを追加
             
-            // オーディオマネージャーを初期化
+            // AudioManagerを初期化
             this.audioManager = new AudioManager(this);
-            this.audioManager.playBgm(`${this.mapId}_theme`, 0.5);
+            this.audioManager.playBgm('bgm_menu', 0.3);
             
             // リサイズイベントを設定
             this.scale.on('resize', this.handleResize, this);
             
-            console.log(`${this.mapConfig.mapTitle} created successfully`);
+            // シーンシャットダウン時のクリーンアップ登録
+            this.events.on('shutdown', this.shutdown, this);
             
         } catch (error) {
             console.error(`Error creating ${this.mapConfig.mapTitle}:`, error);
@@ -109,7 +113,6 @@ export class MapSelectionStage extends Phaser.Scene {
 
     handleTouch(pointer) {
         try {
-            console.log(`${this.mapConfig.mapTitle}: Touch detected at screen:`, pointer.x, pointer.y);
             
             // カメラの存在確認
             if (!this.cameras || !this.cameras.main) {
@@ -121,8 +124,6 @@ export class MapSelectionStage extends Phaser.Scene {
             const worldPoint = this.cameras.main.getWorldPoint(pointer.x, pointer.y);
             const worldX = worldPoint.x;
             const worldY = worldPoint.y;
-            
-            console.log(`${this.mapConfig.mapTitle}: World coordinates:`, worldX, worldY);
             
             // エリアマネージャーに座標を渡す
             if (this.areaSelectionManager) {
@@ -185,8 +186,6 @@ export class MapSelectionStage extends Phaser.Scene {
             // UIの更新
             this.uiManager?.updateMapUI(gameSize);
             
-            console.log(`${this.mapConfig.mapTitle} resized to: ${gameSize.width}x${gameSize.height}`);
-            
         } catch (error) {
             console.error('Error handling resize:', error);
         }
@@ -199,12 +198,21 @@ export class MapSelectionStage extends Phaser.Scene {
     }
 
     destroy() {
-        // マネージャーのクリーンアップ
-        this.mapManager?.destroy();
-        this.areaSelectionManager?.destroy();
-        this.uiManager?.destroy();
-        this.cameraManager?.destroy();
-        this.audioManager?.destroy();
+        this.shutdown();
+        super.destroy();
+    }
+
+    shutdown() {
+        if (this.audioManager && this.audioManager.stopAll) {
+            this.audioManager.stopAll();
+            if (this.audioManager.bgm && this.audioManager.bgm.destroy) {
+                this.audioManager.bgm.destroy();
+                this.audioManager.bgm = null;
+            }
+        }
+        if (this.sound) {
+            this.sound.stopAll();
+        }
     }
 }
 

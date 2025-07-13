@@ -35,14 +35,6 @@ function getGameDimensions() {
     gameWidth = Math.max(320, gameWidth);
     gameHeight = Math.max(240, gameHeight);
     
-    console.log('=== Game Dimensions ===');
-    console.log('Window Size:', windowWidth, 'x', windowHeight);
-    console.log('Screen Size:', screen.width, 'x', screen.height);
-    console.log('Game Size:', gameWidth, 'x', gameHeight);
-    console.log('Fullscreen:', !!document.fullscreenElement);
-    console.log('Visual Viewport:', window.visualViewport ? 
-        `${window.visualViewport.width}x${window.visualViewport.height}` : 'Not supported');
-    
     return { width: gameWidth, height: gameHeight };
 }
 
@@ -65,8 +57,6 @@ export const gameConfig = {
         // リサイズ時の追加設定
         resizeCallback: function () {
             // 画面リサイズ時の処理をここで行う
-            const newDimensions = getGameDimensions();
-            console.log('Game resized to:', newDimensions.width, 'x', newDimensions.height);
         }
     },
     physics: {

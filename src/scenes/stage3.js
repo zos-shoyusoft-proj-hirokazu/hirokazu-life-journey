@@ -5,6 +5,7 @@ import { UIManager } from '../managers/UIManager.js';
 import { CameraManager } from '../managers/CameraManager.js';
 import { InputManager } from '../managers/InputManager.js';
 import { CollisionManager } from '../managers/CollisionManager.js';
+import { AudioManager } from '../managers/AudioManager.js';
 
 
 
@@ -20,11 +21,16 @@ export class Stage3 extends Phaser.Scene {
         this.cameraManager = null;
         this.inputManager = null;
         this.collisionManager = null;
+        this.audioManager = null;
+        this.updateCounter = 0;
     }
 
     preload() {
         // マップファイルを読み込み
         this.load.tilemapTiledJSON('map', 'assets/test_map5.tmj');
+        
+        // BGM読み込み
+        this.load.audio('bgm_stage3', 'assets/audio/bgm/stage1/kessen_diaruga.mp3');
         
         // マップ用のタイル
         this.load.image('GK_A2_C_autotile', 'assets/GK_A2_JC_autotile.png');
@@ -36,40 +42,30 @@ export class Stage3 extends Phaser.Scene {
         this.load.image('Tilemap', 'assets/Tilemap.png');
         this.load.image('pipo-map001_at-kusa', 'assets/pipo-map001_at-kusa.png');
 
-
-        // スプライトシート用の共通設定
+        // NPC画像を読み込み
         const SPRITE_CONFIG = { frameWidth: 32, frameHeight: 32 };
+        this.load.spritesheet('friend1', 'assets/characters/npcs/pipo-charachip007a.png', SPRITE_CONFIG);
+        this.load.spritesheet('friend2', 'assets/characters/npcs/pipo-charachip007e.png', SPRITE_CONFIG);
+        this.load.spritesheet('kuccoro', 'assets/characters/npcs/pipo-charachip022a.png', SPRITE_CONFIG);
 
-        // スプライトシートとして読み込み
-        this.load.spritesheet('enemy1', 'assets/pipo-charachip005a.png', SPRITE_CONFIG);
-        this.load.spritesheet('friend2_6', 'assets/pipo-charachip007a.png', SPRITE_CONFIG);
-        this.load.spritesheet('friend2_5', 'assets/pipo-charachip007a.png', SPRITE_CONFIG);
-        this.load.spritesheet('friend2_4', 'assets/pipo-charachip007a.png', SPRITE_CONFIG);
-        this.load.spritesheet('friend2_3', 'assets/pipo-charachip007a.png', SPRITE_CONFIG);
-        this.load.spritesheet('friend2_2', 'assets/pipo-charachip007a.png', SPRITE_CONFIG);
-        this.load.spritesheet('friend2_1', 'assets/pipo-charachip007a.png', SPRITE_CONFIG);
-        this.load.spritesheet('kuccoro1', 'assets/pipo-charachip022a.png', SPRITE_CONFIG);
-        this.load.spritesheet('kuccoro', 'assets/pipo-charachip022e.png', SPRITE_CONFIG);
-        this.load.spritesheet('kuccoro2', 'assets/pipo-charachip024d.png', SPRITE_CONFIG);
-                
         // デバッグ用：読み込み完了を確認
         this.load.on('complete', () => {
-            console.log('All assets loaded successfully');
+            // アセット読み込み完了
         });
     }
 
     create() {
+        // AudioManagerを初期化
+        this.audioManager = new AudioManager(this);
+        this.audioManager.playBgm('bgm_stage3', 0.3);
+        
         // マップマネージャーを初期化
         // CollisionManagerを使った当たり判定
-        console.log('Before creating CollisionManager');
         this.collisionManager = new CollisionManager(this);
-        console.log('CollisionManager created:', this.collisionManager);
         this.collisionManager.setupCollisionGroups();
-
+        
         this.mapManager = new MapManager(this);
-        console.log('MapManager: placeObjectsを呼ぶ前');
         this.mapManager.createMap();
-        console.log('MapManager: placeObjectsを呼んだ後');
 
         // プレイヤーコントローラーを初期化
         this.playerController = new PlayerController(this);
@@ -90,39 +86,75 @@ export class Stage3 extends Phaser.Scene {
         this.inputManager = new InputManager();
         this.inputManager.setupKeyboard(this, this.playerController);
 
-        console.log('setupCollisionGroups completed');
         this.collisionManager.setupAllCollisions(this.playerController.player, this.mapManager);
-
-
-        console.log('=== 読み込まれた画像 ===');
-        console.log('friend1 exists:', this.textures.exists('friend1'));
-        console.log('friend2 exists:', this.textures.exists('friend2'));
-        console.log('kuccoro exists:', this.textures.exists('kuccoro'));
+        // シーンシャットダウン時のクリーンアップ登録
+        this.events.on('shutdown', this.shutdown, this);
     }
 
+    shutdown() {
+        if (this.audioManager && this.audioManager.stopAll) {
+            this.audioManager.stopAll();
+            if (this.audioManager.bgm && this.audioManager.bgm.destroy) {
+                this.audioManager.bgm.destroy();
+                this.audioManager.bgm = null;
+            }
+        }
+        if (this.sound) {
+            this.sound.stopAll();
+        }
+    }
 
-        update() {
+    update() {
         // プレイヤーの更新
-        this.playerController.update();
+        if (this.playerController) {
+            this.playerController.update();
+        }
 
         // スマホ最適化：UI更新を60FPSから30FPSに制限
         if (!this.updateCounter) this.updateCounter = 0;
         this.updateCounter++;
         
         if (this.updateCounter % 2 === 0) {  // 2フレームに1回実行
-            if (this.uiManager) {
+            if (this.uiManager && this.playerController) {
                 this.uiManager.updatePlayerPosition(this.playerController.player);
             }
         }
     }
 
     resize(gameSize) {
-        const width = gameSize.width;
-        const height = gameSize.height;
+        const { width, height } = gameSize;
         
         // カメラサイズを更新
         this.cameras.resize(width, height);
+    }
+    
+    // シーン破棄時のクリーンアップ
+    destroy() {
+        this.shutdown();
+        // MapManagerのクリーンアップ
+        if (this.mapManager && this.mapManager.destroy) {
+            this.mapManager.destroy();
+        }
         
-        console.log(`Game resized to: ${width}x${height}`);
+        // AudioManagerのクリーンアップ
+        if (this.audioManager && this.audioManager.destroy) {
+            this.audioManager.destroy();
+        }
+        
+        // その他のマネージャーのクリーンアップ
+        if (this.touchControlManager && this.touchControlManager.destroy) {
+            this.touchControlManager.destroy();
+        }
+        
+        if (this.collisionManager && this.collisionManager.destroy) {
+            this.collisionManager.destroy();
+        }
+        
+        if (this.dialogSystem && this.dialogSystem.destroy) {
+            this.dialogSystem.destroy();
+        }
+        
+        // 親クラスのdestroy()を呼び出し
+        super.destroy();
     }
 }

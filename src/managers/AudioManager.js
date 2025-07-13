@@ -35,25 +35,24 @@ export class AudioManager {
      * @param {number} volume - 音量（0-1）
      * @param {boolean} fade - フェードイン/アウト
      */
-    playBgm(key, volume = this.bgmVolume, fade = true) {
-        // 既存のBGMを停止
+    playBgm(key, volume = this.bgmVolume, fadeIn = true) {
         if (this.bgm) {
-            if (fade) {
+            if (fadeIn) {
                 this.scene.tweens.add({
                     targets: this.bgm,
                     volume: 0,
                     duration: 500,
                     onComplete: () => {
                         this.bgm.stop();
-                        this.startNewBgm(key, volume, fade);
+                        this.startNewBgm(key, volume, fadeIn);
                     }
                 });
             } else {
                 this.bgm.stop();
-                this.startNewBgm(key, volume, fade);
+                this.startNewBgm(key, volume, fadeIn);
             }
         } else {
-            this.startNewBgm(key, volume, fade);
+            this.startNewBgm(key, volume, fadeIn);
         }
     }
 
@@ -63,26 +62,24 @@ export class AudioManager {
      * @param {number} volume - 音量
      * @param {boolean} fade - フェードイン
      */
-    startNewBgm(key, volume, fade) {
-        if (this.isBgmMuted) return;
-        
-        try {
-            this.bgm = this.scene.sound.add(key, {
-                loop: true,
-                volume: fade ? 0 : volume
-            });
-            
-            this.bgm.play();
-            
-            if (fade) {
-                this.scene.tweens.add({
-                    targets: this.bgm,
-                    volume: volume,
-                    duration: 500
+    startNewBgm(key, volume, fadeIn) {
+        if (!this.isBgmMuted) {
+            try {
+                this.bgm = this.scene.sound.add(key, {
+                    loop: true,
+                    volume: fadeIn ? 0 : volume
                 });
+                this.bgm.play();
+                if (fadeIn) {
+                    this.scene.tweens.add({
+                        targets: this.bgm,
+                        volume: volume,
+                        duration: 500
+                    });
+                }
+            } catch (error) {
+                console.error(`BGM ${key} の再生に失敗しました:`, error);
             }
-        } catch (error) {
-            console.error(`BGM ${key} の再生に失敗しました:`, error);
         }
     }
 

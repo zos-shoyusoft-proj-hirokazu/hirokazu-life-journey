@@ -68,4 +68,19 @@ export class PlayerController {
     getPosition() {
         return this.player ? { x: this.player.x, y: this.player.y } : { x: 0, y: 0 };
     }
+    
+    destroy() {
+        try {
+            if (this.player) {
+                this.player.destroy();
+                this.player = null;
+            }
+            
+            this.cursors = null;
+            this.wasd = null;
+            
+        } catch (error) {
+            console.error('Error during PlayerController cleanup:', error);
+        }
+    }
 }

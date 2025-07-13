@@ -33,8 +33,8 @@ module.exports = {
     },
     port: 3000,
     host: '0.0.0.0',
-    hot: true,
-    liveReload: true,                     
+    hot: false,  // HMRを無効化してテスト
+    liveReload: false,  // ライブリロードも無効化してテスト                     
     watchFiles: ['src/**/*'] ,
   },
 

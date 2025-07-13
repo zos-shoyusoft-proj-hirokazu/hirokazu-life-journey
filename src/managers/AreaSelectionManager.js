@@ -27,8 +27,6 @@ export class AreaSelectionManager {
         
         // インタラクションイベントを設定
         this.setupInteractionEvents();
-        
-        console.log(`Setup ${this.areas.length} areas for selection`);
     }
 
 
@@ -167,7 +165,6 @@ export class AreaSelectionManager {
             
             if (deltaX > 10 || deltaY > 10) {
                 // ドラッグと判定
-                console.log('Drag detected, ignoring tap');
                 return;
             }
         });
@@ -175,27 +172,18 @@ export class AreaSelectionManager {
 
     selectArea(area) {
         try {
-            console.log('AreaSelectionManager: selectArea called with area:', area);
-            
             if (!this.isInteractive) {
-                console.log('AreaSelectionManager: Not interactive, returning');
                 return;
             }
-            
-            console.log(`AreaSelectionManager: Area selected: ${area.name}`);
             
             // 選択されたエリアを記録
             this.selectedArea = area;
             
             // 選択エフェクトを表示（確認ダイアログを含む）
-            console.log('AreaSelectionManager: Showing selection effect');
             this.showSelectionEffect(area);
             
             // 音効果を再生
-            console.log('AreaSelectionManager: Playing selection sound');
             this.playSelectionSound();
-            
-            console.log('AreaSelectionManager: selectArea completed');
             
         } catch (error) {
             console.error('AreaSelectionManager: Error in selectArea:', error);
@@ -292,7 +280,6 @@ export class AreaSelectionManager {
 
     handleAreaSelection(area) {
         // エリア選択後の処理
-        console.log(`Handling selection for area: ${area.name}`);
         
         // 少し遅延を入れてから移動
         this.scene.time.delayedCall(1000, () => {
@@ -302,7 +289,6 @@ export class AreaSelectionManager {
 
     navigateToArea(area) {
         // 選択した場所に応じて次のマップまたはシーンに移動
-        console.log(`Navigating to area: ${area.name}`);
         
         // エリアオブジェクトがsceneプロパティを持っている場合
         if (area.scene) {
@@ -320,7 +306,7 @@ export class AreaSelectionManager {
                 this.scene.audioManager.playSe('select_sound', 0.5);
             }
         } catch (error) {
-            console.log('Selection sound not available');
+            // 音声ファイルが見つからない場合は無視
         }
     }
 
@@ -340,16 +326,11 @@ export class AreaSelectionManager {
     // タッチイベントを処理
     handleTouchAt(worldX, worldY) {
         try {
-            console.log('AreaSelectionManager: handleTouchAt called with:', worldX, worldY);
-            
             // タッチ位置に近いエリアを検索
             const touchedArea = this.findAreaAtPosition(worldX, worldY);
             
             if (touchedArea) {
-                console.log('AreaSelectionManager: Found area:', touchedArea.name, touchedArea);
                 this.selectArea(touchedArea);
-            } else {
-                console.log(`AreaSelectionManager: No area found at position: ${worldX}, ${worldY}`);
             }
             
         } catch (error) {
@@ -399,15 +380,6 @@ export class AreaSelectionManager {
                 });
             }
         });
-    }
-    
-    // デバッグ用：エリア情報を表示
-    debugShowAreas() {
-        console.log('=== Area Selection Debug ===');
-        this.areas.forEach((area, index) => {
-            console.log(`Area ${index}: ${area.name} at (${area.x}, ${area.y})`);
-        });
-        console.log('============================');
     }
     
     destroy() {

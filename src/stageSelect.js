@@ -1,14 +1,15 @@
-import { startPhaserGame } from './index.js';
+import { startPhaserGame } from './gameController.js';
+// AudioManagerのimportは不要 - HTMLスクリプトのため
 
 function startGame(stageNumber) {
-    console.log('ゲーム開始！');
     startPhaserGame(stageNumber); // ← ここでPhaserゲームを起動 本来は分けないといけなくて強制敵にindex.jsを読み込んでる
 }
 
-// ステージデータを読み込む関数（仮）
+// ステージデータを読み込む関数
 function loadStageData(stageNumber) {
-    console.log(`ステージ ${stageNumber} のデータを読み込み中...`);
-    // ここにステージデータの読み込み処理を書く
+    // ここで将来的にステージデータを読み込む処理を行う
+    // eslint-disable-next-line no-unused-vars
+    const stage = stageNumber; // 将来的にstageNumberを使ってデータを読み込む予定
 }
 
 // 画面の表示/非表示を切り替える関数（安全版）
@@ -32,18 +33,63 @@ function startStage(stageNumber) {
     startGame(stageNumber);
 }
 
+// ゲーム中からステージ選択に戻るためのグローバル関数
+function returnToStageSelect() {
+    window.location.reload();
+}
 
-// ページ読み込み時の処理
+// グローバルに公開
+window.returnToStageSelect = returnToStageSelect;
+window.showStageSelect = showStageSelect;
+window.hideStageSelect = hideStageSelect;
 
-showStageSelect();
+// ページ読み込み時の処理（重複実行防止）
+if (!window.stageSelectInitialized) {
+    window.stageSelectInitialized = true;
+    
+    showStageSelect();
 
-// ステージボタンにイベントを設定（安全版）
-const stage1 = document.getElementById('stage1');
-const stage2 = document.getElementById('stage2');
-const stage3 = document.getElementById('stage3');
-const miemachi = document.getElementById('miemachi');
+    // ステージボタンにイベントを設定（重複防止版）
+    const stage1 = document.getElementById('stage1');
+    const stage2 = document.getElementById('stage2');
+    const stage3 = document.getElementById('stage3');
+    const miemachi = document.getElementById('miemachi');
 
-if (stage1) stage1.addEventListener('click', () => startStage(1));
-if (stage2) stage2.addEventListener('click', () => startStage(2));
-if (stage3) stage3.addEventListener('click', () => startStage(3));
-if (miemachi) miemachi.addEventListener('click', () => startStage('miemachi'));
+    if (stage1) {
+        // 既存のリスナーを削除してから新しいリスナーを追加
+        stage1.removeEventListener('click', stage1ClickHandler);
+        stage1.addEventListener('click', stage1ClickHandler);
+    }
+    if (stage2) {
+        stage2.removeEventListener('click', stage2ClickHandler);
+        stage2.addEventListener('click', stage2ClickHandler);
+    }
+    if (stage3) {
+        stage3.removeEventListener('click', stage3ClickHandler);
+        stage3.addEventListener('click', stage3ClickHandler);
+    }
+    if (miemachi) {
+        miemachi.removeEventListener('click', miemachiClickHandler);
+        miemachi.addEventListener('click', miemachiClickHandler);
+    }
+    
+} else {
+    // console.log('=== stageSelect.js すでに初期化済み（スキップ） ===');
+}
+
+// イベントハンドラーを関数として定義（重複削除のため）
+function stage1ClickHandler() {
+    startStage(1);
+}
+
+function stage2ClickHandler() {
+    startStage(2);
+}
+
+function stage3ClickHandler() {
+    startStage(3);
+}
+
+function miemachiClickHandler() {
+    startStage('miemachi');
+}

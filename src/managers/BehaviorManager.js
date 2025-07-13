@@ -45,7 +45,6 @@ export class BehaviorManager {
     }
 
     startConversation(npcId) {
-        console.log(`Starting conversation with ${npcId}`);
         // CollisionManagerの会話システムを使用
         if (this.scene.collisionManager) {
             this.scene.collisionManager.startConversation(npcId);

@@ -201,8 +201,6 @@ export class TouchControlManager {
         
         // エリア選択用のタッチイベントを設定
         this.setupAreaSelectionTouch();
-        
-        console.log('TouchControlManager: Area selection enabled');
     }
     
     // バーチャルゲームパッドを非表示
@@ -240,8 +238,6 @@ export class TouchControlManager {
     // エリア選択用のタッチハンドラ
     handleAreaSelectionTouch(pointer) {
         try {
-            console.log('TouchControlManager: Touch detected at screen:', pointer.x, pointer.y);
-            
             // タッチ開始時刻を記録
             this.touchStartTime = Date.now();
             
@@ -255,8 +251,6 @@ export class TouchControlManager {
             const worldPoint = this.scene.cameras.main.getWorldPoint(pointer.x, pointer.y);
             const worldX = worldPoint.x;
             const worldY = worldPoint.y;
-            
-            console.log('TouchControlManager: World coordinates:', worldX, worldY);
             
             // エリアマネージャーに座標を渡す
             if (this.areaSelectionManager) {
@@ -299,8 +293,6 @@ export class TouchControlManager {
         
         // タッチイベントを削除
         this.scene.input.off('pointerdown');
-        
-        console.log('TouchControlManager: Area selection disabled');
     }
     
     // ジョイスティックを破棄

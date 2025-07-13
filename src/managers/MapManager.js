@@ -46,8 +46,6 @@ export class MapManager {
         this.mapWidth = this.tilemap.widthInPixels;
         this.mapHeight = this.tilemap.heightInPixels;
         
-        console.log(`Map size: ${this.mapWidth}x${this.mapHeight}`);
-        
         // スマホ画面に合わせてマップレイヤーをスケール
         this.scaleMapToScreen();
         
@@ -101,8 +99,6 @@ export class MapManager {
         // スケール後のマップサイズを更新
         this.scaledMapWidth = this.mapWidth * this.mapScaleX;
         this.scaledMapHeight = this.mapHeight * this.mapScaleY;
-        
-        console.log(`Map scaled: ${this.mapScaleX.toFixed(2)}x${this.mapScaleY.toFixed(2)}, Screen: ${screenWidth}x${screenHeight}`);
     }
 
     extractAreaData(objectLayerName = 'miemachi') {
@@ -117,21 +113,17 @@ export class MapManager {
                 y: obj.y * this.mapScaleY, // スケールに合わせて座標を調整
                 type: obj.type || 'location'
             }));
-            
-            console.log('Extracted areas (scaled):', this.areas);
         } else {
             console.warn(`Object layer "${objectLayerName}" not found`);
         }
     }
 
-    handleResize(gameSize) {
+    handleResize() {
         // リサイズ時の処理
         this.scaleMapToScreen();
         
         // エリアデータを再計算
         this.extractAreaData();
-        
-        console.log(`MapManager resized to: ${gameSize.width}x${gameSize.height}`);
     }
 
     createFallbackImage(key) {
@@ -296,8 +288,6 @@ export class MapManager {
             depth: -1
         };
 
-        console.log('Trying fallback with single tileset...');
-        
         try {
             const fallbackTileset = this.map.addTilesetImage(
                 fallbackConfig.tilesetName, 
@@ -317,8 +307,6 @@ export class MapManager {
                 this.layers.push(fallbackLayer);
                 fallbackLayer.setDepth(fallbackConfig.depth);
                 fallbackLayer.setCollisionByProperty({ collides: true });
-                
-                console.log('Fallback layer created');
             }
             
         } catch (fallbackError) {
@@ -372,14 +360,59 @@ export class MapManager {
         npcSprite.setFrame(frame);
     }
 
+    // クリーンアップメソッド（シーン切り替え時に使用）
     destroy() {
-        // クリーンアップ
-        this.tilemap = null;
-        this.mapLayer = null;
+        // タイルマップレイヤーを削除
+        if (this.layers && this.layers.length > 0) {
+            this.layers.forEach(layer => {
+                if (layer && layer.destroy) {
+                    layer.destroy();
+                }
+            });
+            this.layers = [];
+        }
+        
+        // マップレイヤーを削除
+        if (this.mapLayer && this.mapLayer.destroy) {
+            this.mapLayer.destroy();
+            this.mapLayer = null;
+        }
+        
+        // タイルマップを削除
+        if (this.tilemap && this.tilemap.destroy) {
+            this.tilemap.destroy();
+            this.tilemap = null;
+        }
+        
+        // 旧バージョン互換性のマップを削除
+        if (this.map && this.map.destroy) {
+            this.map.destroy();
+            this.map = null;
+        }
+        
+        // NPCスプライトを削除
+        if (this.npcSprites) {
+            this.npcSprites.forEach(sprite => {
+                if (sprite && sprite.destroy) {
+                    sprite.destroy();
+                }
+            });
+            this.npcSprites.clear();
+        }
+        
+        // オブジェクトグループを削除
+        if (this.objectGroup && this.objectGroup.destroy) {
+            this.objectGroup.destroy();
+            this.objectGroup = null;
+        }
+        
+        // プロパティをリセット
         this.areas = [];
-        this.map = null;
-        this.layers = [];
-        this.npcSprites.clear();
-        this.objectGroup = null;
+        this.mapWidth = 0;
+        this.mapHeight = 0;
+        this.mapScaleX = 1;
+        this.mapScaleY = 1;
+        this.scaledMapWidth = 0;
+        this.scaledMapHeight = 0;
     }
 }

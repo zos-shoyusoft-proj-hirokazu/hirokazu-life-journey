@@ -9,6 +9,7 @@ import { CollisionManager } from '../managers/CollisionManager.js';
 import { BehaviorManager_Stage2 } from '../data/stage2/BehaviorManager_Stage2.js';
 import { DialogSystem } from '../managers/DialogSystem.js';  // 追加
 import { Stage2DialogData } from '../data/stage2/dialogs.js';  // 追加
+import { AudioManager } from '../managers/AudioManager.js';  // 追加
 
 
 
@@ -25,11 +26,15 @@ export class Stage2 extends Phaser.Scene {
         this.inputManager = null;
         this.collisionManager = null;
         this.dialogSystem = null;  // 追加
+        // グローバルAudioManagerを使用するため、個別のaudioManagerは不要
     }
 
     preload() {
         // マップファイルを読み込み
         this.load.tilemapTiledJSON('map', 'assets/maps/test_map5.tmj');
+
+        // BGM読み込み
+        this.load.audio('bgm_stage2', 'assets/audio/bgm/stage1/kessen_diaruga.mp3');
 
         // マップ用のタイル
         this.load.image('GK_A2_C_autotile', 'assets/maps/tilesets/stage2/GK_A2_JC_autotile.png');
@@ -37,7 +42,6 @@ export class Stage2 extends Phaser.Scene {
         this.load.image('Preview', 'assets/maps/tilesets/stage2/Preview.png');
         this.load.image('GK_JC_A5_2', 'assets/maps/tilesets/stage2/GK_JC_A5_2.png');
         this.load.image('GK_JC_B_2', 'assets/maps/tilesets/stage2/GK_JC_B_2.png');
-        this.load.image('tiles', 'assets/maps/tilesets/stage2/tiles.png');
         this.load.image('Tilemap', 'assets/maps/tilesets/stage2/Tilemap.png');
         this.load.image('pipo-map001_at-kusa', 'assets/maps/tilesets/stage2/pipo-map001_at-kusa.png');
 
@@ -59,31 +63,28 @@ export class Stage2 extends Phaser.Scene {
 
         // デバッグ用：読み込み完了を確認
         this.load.on('complete', () => {
-            console.log('All assets loaded successfully');
+            // アセット読み込み完了
         });
     }
 
     create() {
+        this.audioManager = new AudioManager(this);
+        this.audioManager.playBgm('bgm_stage2', 0.3);
+        
         // マップマネージャーを初期化
         // CollisionManagerを使った当たり判定
-        console.log('Before creating CollisionManager');
         this.collisionManager = new CollisionManager(this);
-        console.log('CollisionManager created:', this.collisionManager);
         this.collisionManager.setupCollisionGroups();
 
         // DialogSystemを初期化（Stage2専用データを渡す）
-        console.log('Stage2: Creating DialogSystem for Stage2');
         this.dialogSystem = new DialogSystem(this, Stage2DialogData);
         this.collisionManager.setDialogSystem(this.dialogSystem); 
 
         // BehaviorManager_Stage2を初期化
-        console.log('Stage2: Creating BehaviorManager_Stage2');
         this.behaviorManager = new BehaviorManager_Stage2(this);
 
         this.mapManager = new MapManager(this);
-        console.log('MapManager: placeObjectsを呼ぶ前');
         this.mapManager.createMap();
-        console.log('MapManager: placeObjectsを呼んだ後');
 
         // プレイヤーコントローラーを初期化
         this.playerController = new PlayerController(this);
@@ -104,15 +105,22 @@ export class Stage2 extends Phaser.Scene {
         this.cameraManager = new CameraManager(this);
         this.cameraManager.setupCamera(this, this.mapManager.map, this.playerController.player);
 
-
-        console.log('setupCollisionGroups completed');
         this.collisionManager.setupAllCollisions(this.playerController.player, this.mapManager);
+        // シーンシャットダウン時のクリーンアップ登録
+        this.events.on('shutdown', this.shutdown, this);
+    }
 
-
-        console.log('=== 読み込まれた画像 ===');
-        console.log('friend1 exists:', this.textures.exists('friend1'));
-        console.log('friend2 exists:', this.textures.exists('friend2'));
-        console.log('kuccoro exists:', this.textures.exists('kuccoro'));
+    shutdown() {
+        if (this.audioManager && this.audioManager.stopAll) {
+            this.audioManager.stopAll();
+            if (this.audioManager.bgm && this.audioManager.bgm.destroy) {
+                this.audioManager.bgm.destroy();
+                this.audioManager.bgm = null;
+            }
+        }
+        if (this.sound) {
+            this.sound.stopAll();
+        }
     }
 
 
@@ -142,12 +150,15 @@ export class Stage2 extends Phaser.Scene {
     }
 
     resize(gameSize) {
-        const width = gameSize.width;
-        const height = gameSize.height;
+        const { width, height } = gameSize;
         
         // カメラサイズを更新
         this.cameras.resize(width, height);
-        
-        console.log(`Game resized to: ${width}x${height}`);
+    }
+    
+    // シーン破棄時のクリーンアップ
+    destroy() {
+        this.shutdown();
+        super.destroy();
     }
 }

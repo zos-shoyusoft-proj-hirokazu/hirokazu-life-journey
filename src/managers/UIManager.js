@@ -1,6 +1,7 @@
 export class UIManager {
     constructor() {
         this.playerPosText = null;
+        this.backButton = null;
     }
     
     createUI(scene) {
@@ -22,6 +23,62 @@ export class UIManager {
             fill: '#000000',
             backgroundColor: '#ffffff',
             padding: { x: 5, y: 5 }
+        });
+        
+        // 戻るボタンを作成
+        this.createBackButton(scene);
+    }
+    
+    // 戻るボタンを作成する関数
+    createBackButton(scene) {
+        // シーンの有効性をチェック
+        if (!scene || !scene.cameras || !scene.cameras.main) {
+            console.warn('UIManager: Scene or camera is not available for back button');
+            return;
+        }
+        
+        // 画面の左上に戻るボタンを配置
+        
+        // 戻るボタンの背景
+        this.backButton = scene.add.rectangle(70, 30, 120, 40, 0x000000, 0.7);
+        this.backButton.setOrigin(0.5);
+        this.backButton.setStrokeStyle(2, 0xffffff);
+        this.backButton.setScrollFactor(0); // カメラに固定
+        this.backButton.setDepth(1000); // 他のオブジェクトより手前に表示
+        
+        // 戻るボタンのテキスト
+        this.backButtonText = scene.add.text(70, 30, '戻る', {
+            fontSize: '16px',
+            fill: '#ffffff',
+            fontWeight: 'bold'
+        });
+        this.backButtonText.setOrigin(0.5);
+        this.backButtonText.setScrollFactor(0); // カメラに固定
+        this.backButtonText.setDepth(1001); // ボタンより手前に表示
+        
+        // インタラクティブにする
+        this.backButton.setInteractive();
+        this.backButton.on('pointerdown', () => {
+            // 戻るボタンがクリックされました
+            if (window.returnToStageSelect) {
+                window.returnToStageSelect();
+            }
+        });
+        
+        // ホバーエフェクト
+        this.backButton.on('pointerover', () => {
+            this.backButton.setFillStyle(0x333333, 0.8);
+        });
+        
+        this.backButton.on('pointerout', () => {
+            this.backButton.setFillStyle(0x000000, 0.7);
+        });
+        
+        // 画面リサイズ時の位置調整
+        scene.scale.on('resize', () => {
+            if (scene && scene.cameras && scene.cameras.main && this.backButton && this.backButtonText) {
+                // 左上の位置は固定なので調整不要
+            }
         });
     }
     
@@ -61,30 +118,7 @@ export class UIManager {
             borderRadius: 8
         }).setOrigin(0.5);
         
-        // 戻るボタン
-        this.backButton = scene.add.text(50, 50, '← 戻る', {
-            fontSize: '16px',
-            fill: '#FFFFFF',
-            backgroundColor: '#FF4444',
-            padding: { x: 10, y: 5 },
-            borderRadius: 8
-        }).setOrigin(0.5);
-        
-        // 戻るボタンのインタラクション
-        this.backButton.setInteractive();
-        this.backButton.on('pointerdown', () => {
-            // ステージ選択画面に戻る
-            scene.scene.start('MenuScene');
-        });
-        
-        // ホバーエフェクト（PC用）
-        this.backButton.on('pointerover', () => {
-            this.backButton.setStyle({ backgroundColor: '#FF6666' });
-        });
-        
-        this.backButton.on('pointerout', () => {
-            this.backButton.setStyle({ backgroundColor: '#FF4444' });
-        });
+        // 戻るボタンは削除 - 右上の戻るボタンのみを使用
         
         // 選択された場所の情報表示用
         this.selectedAreaText = scene.add.text(scene.cameras.main.centerX, scene.cameras.main.height - 50, '', {
@@ -95,7 +129,7 @@ export class UIManager {
             borderRadius: 8
         }).setOrigin(0.5);
         
-        console.log('MapUI created successfully');
+        // MapUI created successfully
     }
     
     // MapUI専用の更新メソッド
@@ -115,25 +149,35 @@ export class UIManager {
             this.selectedAreaText.setPosition(centerX, gameSize.height - 50);
         }
         
-        console.log(`MapUI updated for size: ${gameSize.width}x${gameSize.height}`);
+        // MapUI updated for size
     }
     
     // 選択されたエリアの情報を表示
     showSelectedArea(areaName, areaDescription) {
         if (this.selectedAreaText) {
-            this.selectedAreaText.setText(`選択: ${areaDescription}`);
+            this.selectedAreaText.setText(`エリア: ${areaName}
+${areaDescription}`);
         }
     }
     
-    // 選択されたエリアの情報を非表示
-    hideSelectedArea() {
-        if (this.selectedAreaText) {
-            this.selectedAreaText.setText('');
+    destroy() {
+        if (this._destroyed) return;
+        this._destroyed = true;
+        try {
+            const destroyIfExists = (prop) => {
+                if (this[prop] && typeof this[prop].destroy === 'function') {
+                    this[prop].destroy();
+                    this[prop] = null;
+                }
+            };
+            destroyIfExists('playerPosText');
+            destroyIfExists('backButton');
+            destroyIfExists('backButtonText');
+            destroyIfExists('titleText');
+            destroyIfExists('instructionText');
+            destroyIfExists('selectedAreaText');
+        } catch (error) {
+            console.error('Error during UIManager cleanup:', error);
         }
-    }
-    
-    // モバイル判定
-    isMobile() {
-        return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
     }
 }

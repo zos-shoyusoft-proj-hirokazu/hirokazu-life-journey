@@ -1,7 +1,11 @@
 export class DialogSystem {
     constructor(scene, stageData) { 
-        console.log('NEW DialogSystem created for scene:', scene.scene.key);
-        console.log('Stage data keys:', Object.keys(stageData));
+        // シーンの有効性チェック
+        if (!scene || !scene.scene) {
+            console.error('DialogSystem: Invalid scene provided');
+            return;
+        }
+        
         this.scene = scene;
         this.isActive = false;
         this.dialogContainer = null;
@@ -17,24 +21,25 @@ export class DialogSystem {
     }
 
     setupUI() {
+        // シーンが有効でない場合は処理を停止
+        if (!this.scene || !this.scene.cameras || !this.scene.cameras.main) {
+            console.warn('DialogSystem: Scene or camera is not available');
+            return;
+        }
+
         if (this.dialogContainer) {
             this.dialogContainer.destroy();
         }
 
-        // 2. カメラ情報取得
+        // 2. カメラ情報取得（安全なアクセス）
         const camera = this.scene.cameras.main;
-        const gameWidth = camera.width;
-        const gameHeight = camera.height;
-
-        console.log('=== Dialog UI Setup Debug ===');
-        console.log('gameWidth:', gameWidth, 'gameHeight:', gameHeight);
+        const gameWidth = camera.width || 800;
+        const gameHeight = camera.height || 600;
 
         // 3. レイアウト計算
         const dialogHeight = 120;
         const margin = 20;
         const dialogY = gameHeight - dialogHeight - margin - 20;
-
-        console.log('dialogY:', dialogY);
 
         // コンテナを固定位置に作成
         this.dialogContainer = this.scene.add.container(0, 0);
@@ -105,24 +110,16 @@ export class DialogSystem {
         });
 
         bg.on('pointerdown', (pointer, localX, localY, event) => {
-            console.log('=== Dialog Background Clicked ===');
-            console.log('NPC ID:', this.currentDialog ? 'Active' : 'None');
-            console.log('isActive:', this.isActive);
-            console.log('Click position:', { x: pointer.x, y: pointer.y });
-            console.log('Local position:', { x: localX, y: localY });
-
             
             // イベントの伝播を停止
             if (event && event.stopPropagation) {
                 event.stopPropagation();
-                console.log('Event propagation stopped');
             }
             
             if (this.isActive) {
-                console.log('Calling nextDialog()');
                 this.nextDialog();
             } else {
-                console.log('Dialog not active, ignoring click');
+                // Dialog not active, ignoring click
             }
         });
 
@@ -132,12 +129,10 @@ export class DialogSystem {
         });
 
         this.dialogContainer.on('pointerdown', (pointer, localX, localY, event) => {
-            console.log('=== Dialog Container Clicked ===');
             if (event && event.stopPropagation) {
                 event.stopPropagation();
             }
             if (this.isActive) {
-                console.log('Container click -> calling nextDialog()');
                 this.nextDialog();
             }
         });
@@ -147,8 +142,8 @@ export class DialogSystem {
 
 
         // 位置確認ログ
-        console.log('Dialog container position:', this.dialogContainer.x, this.dialogContainer.y);
-        console.log('Background rectangle bounds:', bg.getBounds());
+        // console.log('Dialog container position:', this.dialogContainer.x, this.dialogContainer.y);
+        // console.log('Background rectangle bounds:', bg.getBounds());
 
         // 8. リサイズイベント設定
         this.scene.scale.off('resize', this.handleResize, this);
@@ -158,19 +153,25 @@ export class DialogSystem {
     //画面リサイズ時の処理
     //@param {Object} gameSize - 新しいゲームサイズ
     
+    // eslint-disable-next-line no-unused-vars
     handleResize(gameSize) {
-        if (!this.dialogContainer) return;
-
-        const newWidth = gameSize.width;
-        const newHeight = gameSize.height;
-        
-        console.log('Dialog resize:', newWidth, newHeight);
+        // シーンが有効でない場合は処理を停止
+        if (!this.scene || !this.scene.cameras || !this.scene.cameras.main || !this.dialogContainer) {
+            console.warn('DialogSystem: Scene, camera, or dialog container is not available for resize');
+            return;
+        }
 
         // UI要素の位置を再計算して更新
         this.setupUI();
     }
 
     setupInput() {
+        // シーンとinputの有効性チェック
+        if (!this.scene || !this.scene.input || !this.scene.input.keyboard) {
+            console.warn('DialogSystem: Scene input is not available');
+            return;
+        }
+        
         this.scene.input.keyboard.on('keydown-SPACE', () => {
             if (this.isActive) {
                 this.nextDialog();
@@ -190,14 +191,6 @@ export class DialogSystem {
 
 
     startDialog(npcId) {
-        console.log('=== NEW CONVERSATION START ===');
-        console.log('Scene:', this.scene.scene.key);
-        console.log('NPC:', npcId);
-        console.log('Available dialogs:', Object.keys(this.dialogs));
-        console.log('DialogSystem.startDialog called with:', npcId);
-        console.log('dialogs:', this.dialogs);
-        console.log('dialog exists:', !!this.dialogs[npcId]);
-        
         // 指定されたNPCの会話データが存在するかチェック
         if (!this.dialogs[npcId]) {
             console.error('No dialog found for:', npcId);
@@ -208,20 +201,16 @@ export class DialogSystem {
         this.currentTextIndex = 0;                 // メッセージ番号をリセット
         this.isActive = true;                      // 会話中フラグをON
         // 強制的にリセット（デバッグ用）
-        console.log('Force reset currentTextIndex to 0');
         this.currentTextIndex = 0;
         
         this.dialogContainer.setVisible(true);     // ウィンドウを表示
         this.showMessage();                        // 最初のメッセージを表示
         
-        console.log('Dialog started for:', npcId);
     }
 
 
     showMessage() {
 
-        console.log('currentTextIndex:', this.currentTextIndex);
-        console.log('message:', this.currentDialog.messages[this.currentTextIndex]);
         // 全てのメッセージを表示し終えた場合は会話終了
         if (this.currentTextIndex >= this.currentDialog.messages.length) {
             this.endDialog();
@@ -232,19 +221,23 @@ export class DialogSystem {
         const message = this.currentDialog.messages[this.currentTextIndex];
         this.dialogText.setText(message);
         
-        console.log('Showing message:', message);
     }
 
     nextDialog() {
-    console.log('nextDialog() called - before increment:', this.currentTextIndex);
     this.currentTextIndex++;
-    console.log('nextDialog() called - after increment:', this.currentTextIndex);
     this.showMessage();
     }
 
     endDialog() {
         this.isActive = false;
-        this.dialogContainer.setVisible(false);
+        if (this.dialogContainer) {
+            this.dialogContainer.setVisible(false);
+        }
+        
+        // イベントリスナーを削除
+        if (this.scene && this.scene.scale) {
+            this.scene.scale.off('resize', this.handleResize, this);
+        }
     }
 
     isDialogActive() {

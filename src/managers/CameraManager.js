@@ -16,7 +16,6 @@ export class CameraManager {
             this.camera.setZoom(this.zoom);
             this.camera.centerOn(mapSize.scaledWidth / 2, mapSize.scaledHeight / 2);
             this.setBounds(0, 0, mapSize.scaledWidth, mapSize.scaledHeight);
-            console.log(`Camera setup: Map ${mapSize.scaledWidth}x${mapSize.scaledHeight}`);
         } 
         // 旧バージョン（Stage1-3用）
         else if (arguments.length === 3) {
@@ -32,8 +31,6 @@ export class CameraManager {
             
             // プレイヤーの移動範囲もマップ内に制限
             scene.physics.world.setBounds(0, 0, mapWidth, mapHeight);
-            
-            console.log(`Legacy camera setup: Map ${mapWidth}x${mapHeight}`);
         }
         else {
             console.error('Invalid arguments for setupCamera');

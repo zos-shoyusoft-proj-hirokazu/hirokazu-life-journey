@@ -26,7 +26,7 @@ export class Stage1 extends Phaser.Scene {
         this.collisionManager = null;
         this.behaviorManager = null; // 追加：BehaviorManagerの変数宣言
         this.dialogSystem = null;
-        this.audioManager = null; 
+        this.audioManager = null;
         
         // 新しい会話システム
         this.conversationTrigger = null;
@@ -42,13 +42,12 @@ export class Stage1 extends Phaser.Scene {
         this.load.image('[A]Grass1_pipo', 'assets/maps/tilesets/stage1/[A]Grass1_pipo.png');
         this.load.image('Tilemap', 'assets/maps/tilesets/stage1/Tilemap.png');
         
-        //BGM読み込み（デバッグ用ログ付き）
-        console.log('BGM読み込み開始');
+        //BGM読み込み
         this.load.audio('bgm_menu', 'assets/audio/bgm/stage1/kessen_diaruga.mp3');
         
         // BGM読み込み完了をチェック
         this.load.on('filecomplete-audio-bgm_menu', () => {
-            console.log('BGM bgm_menu の読み込み完了');
+            // BGM読み込み完了
         });
         
         // スプライトシート用の共通設定
@@ -71,13 +70,13 @@ export class Stage1 extends Phaser.Scene {
         this.load.spritesheet('kuccoro', 'assets/characters/npcs/pipo-charachip022a.png', SPRITE_CONFIG);
 
         // エラーハンドリング
-        this.load.on('fileerror', (file) => {
-            console.error(`Failed to load file: ${file.key} from ${file.url}`);
+        this.load.on('fileerror', () => {
+            // ファイル読み込みエラー処理
         });
                 
         // デバッグ用：読み込み完了を確認
         this.load.on('complete', () => {
-            console.log('All assets loaded successfully');
+            // アセット読み込み完了
         });
         
         // 新しい会話システム用の画像
@@ -98,7 +97,6 @@ export class Stage1 extends Phaser.Scene {
 
     create() {
         try {
-
             // AudioManagerを初期化
             this.audioManager = new AudioManager(this);
             // メニューBGMを開始
@@ -150,10 +148,30 @@ export class Stage1 extends Phaser.Scene {
             // 会話イベントを設定
             this.setupConversationEvents();
 
-        } catch (error) {
-            console.error('Error during scene creation:', error);
-            console.error('Stack trace:', error.stack);
+            // シーンシャットダウン時のクリーンアップ登録
+            this.events.on('shutdown', this.shutdown, this);
+
+        } catch {
+            // エラーハンドリング
         }
+    }
+
+    shutdown() {
+        if (this.audioManager && this.audioManager.stopAll) {
+            this.audioManager.stopAll();
+            if (this.audioManager.bgm && this.audioManager.bgm.destroy) {
+                this.audioManager.bgm.destroy();
+                this.audioManager.bgm = null;
+            }
+        }
+        if (this.sound) {
+            this.sound.stopAll();
+        }
+    }
+
+    destroy() {
+        this.shutdown();
+        super.destroy();
     }
 
     // 会話イベントの設定
@@ -219,12 +237,10 @@ export class Stage1 extends Phaser.Scene {
     }
 
     resize(gameSize) {
-        const width = gameSize.width;
-        const height = gameSize.height;
-        
-        // カメラサイズを更新
+        const { width, height } = gameSize;
         this.cameras.resize(width, height);
-        
-        console.log(`Game resized to: ${width}x${height}`);
     }
+    
+    // destroyメソッド自体を削除
+    // これでPhaserのデフォルトのクリーンアップ挙動に戻す
 }
