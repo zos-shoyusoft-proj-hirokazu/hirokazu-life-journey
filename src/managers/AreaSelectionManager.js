@@ -1,3 +1,5 @@
+import { VisualFeedbackManager } from './VisualFeedbackManager.js';
+
 export class AreaSelectionManager {
     constructor(scene) {
         this.scene = scene;
@@ -13,6 +15,8 @@ export class AreaSelectionManager {
         this.isMobile = this.scene.sys.game.device.input.touch;
         this.touchStartTime = 0;
         this.touchThreshold = 200; // タップ判定の閾値（ミリ秒）
+
+        this.visualFeedback = new VisualFeedbackManager(scene);
     }
 
     setupAreas(areas) {
@@ -34,18 +38,18 @@ export class AreaSelectionManager {
     getAreaDescription(areaName) {
         // エリアの説明を取得
         const descriptions = {
-            'mie_high_school': '三重高等学校',
+            'mie_high_school': '三重中学校',
             'sumiwataru': '澄みわたる',
-            'shigaku': '私学',
-            'Banned_kiku': '禁止菊',
-            'drinking_hope': '飲み希望',
-            'Weeds_burn': '雑草燃焼',
-            'katou_poteto': '加藤ポテト',
+            'shigaku': '志学',
+            'Banned_kiku': '出禁のキク',
+            'drinking_hope': '飲みをしたいなぁ',
+            'Weeds_burn': '雑草がもえるぅぅ',
+            'katou_poteto': 'こうたろうポテト',
             'Tanabata_bamboo': '七夕竹',
-            'bookmarket': '古本市場',
+            'bookmarket': 'ブックマーケット',
             'drink_zutu': '飲み頭痛',
             'ドール': 'ドール',
-            'momoiro': 'ももいろ',
+            'momoiro': '桃色',
             'profile': 'プロフィール'
         };
         
@@ -99,16 +103,14 @@ export class AreaSelectionManager {
         // ホバーエフェクト
         background.on('pointerover', () => {
             if (!this.isMobile) {
-                background.setScale(1.2);
-                background.setFillStyle(0xFFD700, 0.7);
+                this.visualFeedback.showButtonHover(background, 1.2, 0xFFD700, 0.7);
                 label.setStyle({ fill: '#FF0000' });
             }
         });
         
         background.on('pointerout', () => {
             if (!this.isMobile) {
-                background.setScale(1);
-                background.setFillStyle(0x4169E1, 0.7);
+                this.visualFeedback.resetButtonState(background, 1, 0x4169E1, 0.7);
                 label.setStyle({ fill: '#000000' });
             }
         });
@@ -192,22 +194,7 @@ export class AreaSelectionManager {
 
     showSelectionEffect(area) {
         // 選択エフェクトを表示
-        const effect = this.scene.add.circle(area.x, area.y, 30, 0xFFFF00, 0.6);
-        effect.setStrokeStyle(4, 0xFF0000);
-        
-        // パルスアニメーション
-        this.scene.tweens.add({
-            targets: effect,
-            scaleX: 2,
-            scaleY: 2,
-            alpha: 0,
-            duration: 800,
-            ease: 'Power2',
-            onComplete: () => {
-                effect.destroy();
-            }
-        });
-        
+        this.visualFeedback.showSelectionEffect(area.x, area.y);
         // 確認ダイアログを表示
         this.showConfirmDialog(area);
     }
@@ -303,7 +290,7 @@ export class AreaSelectionManager {
         // 選択音を再生
         try {
             if (this.scene.audioManager) {
-                this.scene.audioManager.playSe('select_sound', 0.5);
+                this.scene.audioManager.playSe('se_touch', 0.5);
             }
         } catch (error) {
             // 音声ファイルが見つからない場合は無視
@@ -331,6 +318,11 @@ export class AreaSelectionManager {
             
             if (touchedArea) {
                 this.selectArea(touchedArea);
+            } else {
+                // 背景タッチ時のSE再生
+                if (this.scene.audioManager && this.scene.mapConfig?.se?.map_touch) {
+                    this.scene.audioManager.playSe('se_map_touch', 0.3);
+                }
             }
             
         } catch (error) {

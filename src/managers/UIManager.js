@@ -179,4 +179,4 @@ ${areaDescription}`);
             console.error('Error during UIManager cleanup:', error);
         }
     }
-}
+} 

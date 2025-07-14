@@ -177,18 +177,7 @@ export class DialogSystem {
                 this.nextDialog();
             }
         });
-    
-        // // ダイアログエリアのみクリック可能にする
-        //     this.dialogContainer.setInteractive();
-        //     this.dialogContainer.on('pointerdown', () => {
-        //     console.log('Dialog container clicked!');
-        //     if (this.isActive) {
-        //         console.log('Calling nextDialog()');
-        //         this.nextDialog();
-        //     }
-        // });
     }
-
 
     startDialog(npcId) {
         // 指定されたNPCの会話データが存在するかチェック

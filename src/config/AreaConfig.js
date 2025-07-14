@@ -5,7 +5,15 @@ export const AreaConfig = {
         mapKey: 'bunngo_mie_city',
         tilesetKey: 'bunngooonoshimiemachi',
         mapTitle: '三重町マップ',
-        bgm: 'assets/audio/bgm/stage1/kessen_diaruga.mp3', // マップ固有のBGM
+        bgm: {
+            map: 'assets/audio/bgm/stage1/kessen_diaruga.mp3', // 通常マップBGM
+            battle: 'assets/audio/bgm/stage1/battle.mp3',      // バトルBGM
+            event: 'assets/audio/bgm/stage1/event.mp3'          // イベントBGM
+        },
+        se: {
+            touch: 'assets/audio/se/touch_7.mp3', // ダイアログ用タッチSE
+            map_touch: 'assets/audio/se/touch_2.mp3', // マップ専用タッチSE
+        },
         // eventBgm: {
         //     // エリア固有のイベントBGM
         //     'mie_high_school': 'assets/audio/bgm/events/school_event.mp3',

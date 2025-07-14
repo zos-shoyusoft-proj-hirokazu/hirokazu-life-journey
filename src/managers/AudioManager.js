@@ -117,6 +117,7 @@ export class AudioManager {
      * @param {number} volume - 音量（0-1）
      */
     playSe(key, volume = this.seVolume) {
+        console.log('[SE] playSe called:', key);
         if (this.isSeMuted) return;
         
         try {

@@ -4,6 +4,7 @@ import { AudioManager } from '../managers/AudioManager.js';
 import { MapManager } from '../managers/MapManager.js';
 import { CameraManager } from '../managers/CameraManager.js';
 import { AreaConfig } from '../config/AreaConfig.js';
+import { VisualFeedbackManager } from '../managers/VisualFeedbackManager.js';
 
 export class MapSelectionStage extends Phaser.Scene {
     constructor(config) {
@@ -19,6 +20,7 @@ export class MapSelectionStage extends Phaser.Scene {
         this.uiManager = null;
         this.cameraManager = null;
         this.audioManager = null;
+        this.visualFeedbackManager = null;
         
         // スマホ対応
         this.isMobile = false;
@@ -33,6 +35,9 @@ export class MapSelectionStage extends Phaser.Scene {
         
         // BGMの読み込み（設定に基づいて動的に）
         this.loadBgmFiles();
+
+        // SEの読み込み（設定に基づいて動的に）
+        this.loadSeFiles();
         
         // エラーハンドリング
         this.load.on('fileerror', (file) => {
@@ -45,19 +50,23 @@ export class MapSelectionStage extends Phaser.Scene {
         });
     }
 
+    loadSeFiles() {
+        // AreaConfigからSEを動的に読み込み
+        if (this.mapConfig.se) {
+            Object.keys(this.mapConfig.se).forEach(seKey => {
+                this.load.audio(`se_${seKey}`, this.mapConfig.se[seKey]);
+            });
+        }
+    }
+
     // BGMファイルを動的に読み込む
     loadBgmFiles() {
-        // 基本BGM
-        this.load.audio('bgm_menu', 'assets/audio/bgm/stage1/kessen_diaruga.mp3');
         
-        // イベント用BGM読み込み
-        // this.load.audio('bgm_event_school', 'assets/audio/bgm/events/school_event.mp3');
-        // this.load.audio('bgm_event_romantic', 'assets/audio/bgm/events/romantic_event.mp3');
-        // this.load.audio('bgm_event', 'assets/audio/bgm/events/default_event.mp3'); // デフォルトイベントBGM
-        
-        // マップ固有のBGMがあれば読み込み
-        if (this.mapConfig.bgm) {
-            this.load.audio(`bgm_${this.mapId}`, this.mapConfig.bgm);
+        // bgmがオブジェクト形式なら各用途ごとにロード
+        if (this.mapConfig.bgm && typeof this.mapConfig.bgm === 'object') {
+            Object.keys(this.mapConfig.bgm).forEach(bgmKey => {
+                this.load.audio(`bgm_${bgmKey}`, this.mapConfig.bgm[bgmKey]);
+            });
         }
         
         // マップ固有のイベントBGMがあれば読み込み
@@ -72,23 +81,20 @@ export class MapSelectionStage extends Phaser.Scene {
         try {
             // モバイルデバイスの検出
             this.isMobile = this.sys.game.device.input.touch;
-            
             // マップマネージャーを初期化
             this.mapManager = new MapManager(this);
             this.mapManager.createMap(this.mapConfig.mapKey, this.mapConfig.tilesetKey);
-            
             // カメラマネージャーを初期化
             this.cameraManager = new CameraManager(this);
             this.cameraManager.setBackgroundColor('#87CEEB');
             this.cameraManager.setupCamera(this.mapManager.getMapSize());
-            
             // エリア選択システムを初期化
             this.areaSelectionManager = new AreaSelectionManager(this);
-            
+            // 視覚的フィードバックマネージャーを初期化
+            this.visualFeedbackManager = new VisualFeedbackManager(this);
             // 設定ファイルからエリア情報を取得し、マップエリアとマージ
             const mapAreas = this.mapManager.getAreas();
             const configAreas = this.mapConfig.areas;
-            
             // エリア情報をマージ（座標はマップから、シーン情報は設定から）
             const mergedAreas = mapAreas.map(mapArea => {
                 const configArea = configAreas.find(config => config.name === mapArea.name);
@@ -97,27 +103,20 @@ export class MapSelectionStage extends Phaser.Scene {
                     scene: configArea?.scene || null
                 };
             });
-            
             this.areaSelectionManager.setupAreas(mergedAreas);
-            
             // タッチイベントを直接設定
             this.setupTouchEvents();
-            
             // UI要素を作成
             this.uiManager = new UIManager();
             this.uiManager.createMapUI(this, this.mapConfig.mapTitle);
             this.uiManager.createBackButton(this); // 右上の戻るボタンを追加
-            
             // AudioManagerを初期化
             this.audioManager = new AudioManager(this);
-            this.audioManager.playBgm('bgm_menu', 0.3);
-            
+            this.audioManager.playBgm('bgm_map', 0.3);
             // リサイズイベントを設定
             this.scale.on('resize', this.handleResize, this);
-            
             // シーンシャットダウン時のクリーンアップ登録
             this.events.on('shutdown', this.shutdown, this);
-            
         } catch (error) {
             console.error(`Error creating ${this.mapConfig.mapTitle}:`, error);
             console.error('Stack trace:', error.stack);
@@ -133,47 +132,26 @@ export class MapSelectionStage extends Phaser.Scene {
 
     handleTouch(pointer) {
         try {
-            
             // カメラの存在確認
             if (!this.cameras || !this.cameras.main) {
                 console.error(`${this.mapConfig.mapTitle}: Camera not available`);
                 return;
             }
-            
             // ワールド座標に変換
             const worldPoint = this.cameras.main.getWorldPoint(pointer.x, pointer.y);
             const worldX = worldPoint.x;
             const worldY = worldPoint.y;
-            
             // エリアマネージャーに座標を渡す
             if (this.areaSelectionManager) {
                 this.areaSelectionManager.handleTouchAt(worldX, worldY);
             }
-            
             // 視覚的フィードバック
-            this.showTouchFeedback(worldX, worldY);
-            
+            if (this.visualFeedbackManager) {
+                this.visualFeedbackManager.showTouchRipple(worldX, worldY);
+            }
         } catch (error) {
             console.error(`${this.mapConfig.mapTitle}: Error in handleTouch:`, error);
         }
-    }
-
-    showTouchFeedback(worldX, worldY) {
-        // タッチ位置にリップルエフェクトを表示
-        const ripple = this.add.circle(worldX, worldY, 10, 0x00FF00, 0.7);
-        
-        // アニメーション
-        this.tweens.add({
-            targets: ripple,
-            scaleX: 5,
-            scaleY: 5,
-            alpha: 0,
-            duration: 400,
-            ease: 'Power2',
-            onComplete: () => {
-                ripple.destroy();
-            }
-        });
     }
 
     handleResize(gameSize) {

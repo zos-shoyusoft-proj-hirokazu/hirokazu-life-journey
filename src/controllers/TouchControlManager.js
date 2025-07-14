@@ -1,7 +1,10 @@
+import { VisualFeedbackManager } from '../managers/VisualFeedbackManager.js';
+
 export class TouchControlManager {
     constructor(scene, player) {
         this.scene = scene;
         this.player = player;
+        this.visualFeedback = new VisualFeedbackManager(scene);
         
         // タッチ操作の状態管理
         this.touchStartX = 0;
@@ -15,6 +18,11 @@ export class TouchControlManager {
 
         // 自作バーチャルゲームパッドを追加
         this.setupVirtualGamepad();
+
+        // グローバルなタッチイベントを設定
+        this.scene.input.on('pointerdown', (pointer) => {
+            this.showTouchFeedback(pointer.x, pointer.y);
+        });
     }
 
     setupVirtualGamepad() {
@@ -267,21 +275,10 @@ export class TouchControlManager {
     
     // タッチフィードバックを表示
     showTouchFeedback(worldX, worldY) {
-        // タッチ位置にリップルエフェクトを表示
-        const ripple = this.scene.add.circle(worldX, worldY, 10, 0x00FF00, 0.7);
-        
-        // アニメーション
-        this.scene.tweens.add({
-            targets: ripple,
-            scaleX: 5,
-            scaleY: 5,
-            alpha: 0,
-            duration: 400,
-            ease: 'Power2',
-            onComplete: () => {
-                ripple.destroy();
-            }
-        });
+        this.visualFeedback.showTouchRipple(worldX, worldY);
+        if (this.scene.audioManager && this.scene.audioManager.playSe) {
+            this.scene.audioManager.playSe('touch_se');
+        }
     }
     
     // エリア選択モードを無効化

@@ -95,6 +95,9 @@ export class Stage1 extends Phaser.Scene {
         this.load.image('test_1', 'assets/backgrounds/background_test.png');
         this.load.image('textbox', 'assets/ui/textbox.png');
         this.load.image('namebox', 'assets/ui/namebox.png');
+
+        // SE読み込み
+        this.load.audio('touch_se', 'assets/audio/se/touch_1.mp3'); 
     }
 
     create() {

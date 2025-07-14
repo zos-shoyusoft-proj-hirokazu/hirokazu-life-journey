@@ -1,0 +1,52 @@
+MapSelectionStage.jsの中でcreate()が呼ばれて
+↓
+his.areaSelectionManager = new AreaSelectionManager(this);が呼ばれて
+↓
+AreaSelectionManager.jsからclass AreaSelectionManagerより、インスタンスを作成される
+↓
+MapSelectionStage.jsの中でcreate()でthis.areaSelectionManager.setupAreas(mergedAreas)が呼ばれる
+↓
+setupAreas(areas) からetAreaDescriptionでエリアの表示する名前を取ってきて
+↓
+setupAreas(areas) からcreateAreaMarkers()からループしてcreateAreaMarkerでそれぞれのエリアマーかを作成する
+↓
+その中でhis.setupMarkerHover(background, label);とhis.setupMarkerClick(background);を設定している
+↓
+setupMarkerHover内でshowButtonHoverとresetButtonStateがvisualFeedackManagerで作成される
+↓
+setupAreas(areas) に戻ってsetupMarkerClick(background);にいく
+↓
+setupMarkerClick（）でクリックしたらkground.on('pointerdown', より、エフェクトが出て
+↓
+background.on('pointerup'のときデータがあるときにselectArea(area)に飛ぶ
+↓
+selectArea(area)内で、showSelectionEffect(area)に飛び
+↓
+showSelectionEffect(area) 内でVisualFeedback内のshowSelectionEffect(area.x, area.y);を使う
+↓
+そのあと、is.showConfirmDialog(area)に飛ぶ
+↓
+howConfirmDialog(area) 内で、this.handleAreaSelection(area);のボタンイベントに飛ぶ
+↓
+handleAreaSelection(area)内でthis.navigateToArea(area)に飛んで、
+↓
+navigateToArea(area)に飛ぶ
+↓
+showConfirmDialog(area)のダイアログを表示して、ダイアログを閉じる
+↓
+selectArea(area)内に戻ってきて、playSelectionSound()に飛んで
+↓
+playSelectionSound()内で、this.scene.audioManager.playSe('select_sound', 0.5);で'select_sound'
+が鳴る
+↓
+setupMarkerClick(background)に戻ってきて、ackground.setFillStyle(0x41で色が戻る
+↓
+でsetupAreas(areas)に戻ってきて、今度はhis.setupInteractionEvents(に飛ぶ
+↓
+setupInteractionEvents()で位置をチェックしている
+
+
+
+
+みたいな流れ
+
