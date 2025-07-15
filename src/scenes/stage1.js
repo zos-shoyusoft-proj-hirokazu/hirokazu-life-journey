@@ -97,7 +97,7 @@ export class Stage1 extends Phaser.Scene {
         this.load.image('namebox', 'assets/ui/namebox.png');
 
         // SE読み込み
-        this.load.audio('touch_se', 'assets/audio/se/touch_1.mp3'); 
+        this.load.audio('se_touch_stage1', 'assets/audio/se/touch_1.mp3'); 
     }
 
     create() {
@@ -131,7 +131,7 @@ export class Stage1 extends Phaser.Scene {
             this.inputManager.setupKeyboard(this, this.playerController);
 
             // タッチコントロールマネージャーを初期化
-            this.touchControlManager = new TouchControlManager(this, this.playerController.player);
+            this.touchControlManager = new TouchControlManager(this, this.playerController.player, 'se_touch_stage1');
 
             // UI要素を作成
             this.uiManager = new UIManager();

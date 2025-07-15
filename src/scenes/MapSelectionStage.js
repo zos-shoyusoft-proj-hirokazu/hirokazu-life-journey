@@ -128,6 +128,10 @@ export class MapSelectionStage extends Phaser.Scene {
         this.input.on('pointerdown', (pointer) => {
             this.handleTouch(pointer);
         });
+        
+        // スマホ向けスクロール機能を追加
+        this.cameraManager.setupScrollControls();
+        this.cameraManager.setupPinchZoom();
     }
 
     handleTouch(pointer) {

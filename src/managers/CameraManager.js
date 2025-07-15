@@ -14,10 +14,14 @@ export class CameraManager {
         if (arguments.length === 1 && typeof sceneOrMapSize === 'object' && sceneOrMapSize.width) {
             const mapSize = sceneOrMapSize;
             this.camera.setZoom(this.zoom);
+            
+            // スマホ向け：カメラの移動範囲をマップ全体に設定
+            this.camera.setBounds(0, 0, mapSize.scaledWidth, mapSize.scaledHeight);
+            
+            // 初期位置をマップの中心に設定
             this.camera.centerOn(mapSize.scaledWidth / 2, mapSize.scaledHeight / 2);
-            this.setBounds(0, 0, mapSize.scaledWidth, mapSize.scaledHeight);
         } 
-        // 旧バージョン（Stage1-3用）
+        // 学校などの歩き回るようのステージのcamera
         else if (arguments.length === 3) {
             const scene = sceneOrMapSize;
             const mapWidth = map.widthInPixels;
@@ -37,10 +41,10 @@ export class CameraManager {
         }
     }
 
-    setBounds(x, y, width, height) {
-        this.bounds = { x, y, width, height };
-        this.camera.setBounds(x, y, width, height);
-    }
+    // setBounds(x, y, width, height) {
+    //     this.bounds = { x, y, width, height };
+    //     this.camera.setBounds(x, y, width, height);
+    // }
 
     setZoom(zoom) {
         this.zoom = zoom;
@@ -99,6 +103,71 @@ export class CameraManager {
 
     update() {
         // カメラの更新処理が必要な場合はここに記述
+    }
+
+    setupScrollControls() {
+        let isDragging = false;
+        let dragStart = { x: 0, y: 0 };
+        let cameraStart = { x: 0, y: 0 };
+        
+        this.scene.input.on('pointerdown', (pointer) => {
+            // スクロール開始
+            isDragging = true;
+            dragStart = { x: pointer.x, y: pointer.y };
+            cameraStart = { 
+                x: this.camera.scrollX, 
+                y: this.camera.scrollY 
+            };
+        });
+        
+        this.scene.input.on('pointermove', (pointer) => {
+            if (isDragging) {
+                const deltaX = dragStart.x - pointer.x;
+                const deltaY = dragStart.y - pointer.y;
+                
+                this.camera.setScroll(
+                    cameraStart.x + deltaX,
+                    cameraStart.y + deltaY
+                );
+            }
+        });
+        
+        this.scene.input.on('pointerup', () => {
+            isDragging = false;
+        });
+    }
+    
+    setupPinchZoom() {
+        // ピンチズーム機能（スマホ向け）
+        let initialDistance = 0;
+        let initialZoom = 1;
+        
+        this.scene.input.on('pointerdown', () => {
+            if (this.scene.input.pointers && this.scene.input.pointers.length === 2) {
+                const pointer1 = this.scene.input.pointers[0];
+                const pointer2 = this.scene.input.pointers[1];
+                initialDistance = Phaser.Math.Distance.Between(
+                    pointer1.x, pointer1.y, 
+                    pointer2.x, pointer2.y
+                );
+                initialZoom = this.camera.zoom;
+            }
+        });
+        
+        this.scene.input.on('pointermove', () => {
+            if (this.scene.input.pointers && this.scene.input.pointers.length === 2) {
+                const pointer1 = this.scene.input.pointers[0];
+                const pointer2 = this.scene.input.pointers[1];
+                const currentDistance = Phaser.Math.Distance.Between(
+                    pointer1.x, pointer1.y, 
+                    pointer2.x, pointer2.y
+                );
+                
+                const zoomFactor = currentDistance / initialDistance;
+                const newZoom = Math.max(0.5, Math.min(3.0, initialZoom * zoomFactor));
+                this.camera.setZoom(newZoom);
+            }
+        });
     }
 
     destroy() {

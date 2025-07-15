@@ -6,7 +6,7 @@ export class VisualFeedbackManager {
 
     // タッチリップルエフェクト
     showTouchRipple(x, y, color = 0x00FF00, duration = 400) {
-        const ripple = this.scene.add.circle(x, y, 10, 0x00FF00, 0.7);
+        const ripple = this.scene.add.circle(x, y, 10, color, 0.7);
         ripple.setDepth(9999); // 最前面に
         this.scene.tweens.add({
             targets: ripple,
@@ -21,13 +21,6 @@ export class VisualFeedbackManager {
         });
         this.activeEffects.push(ripple);
         // SE再生はそのまま
-        if (this.scene.audioManager && this.scene.audioManager.playSe) {
-            try {
-                this.scene.audioManager.playSe('se_map_touch', 0.3);
-            } catch (error) {
-                this.scene.audioManager.playSe('se_touch', 0.3);
-            }
-        }
     }
 
     // ボタンホバーエフェクト

@@ -1,9 +1,10 @@
 import { VisualFeedbackManager } from '../managers/VisualFeedbackManager.js';
 
 export class TouchControlManager {
-    constructor(scene, player) {
+    constructor(scene, player, seKey = 'se_touch') {
         this.scene = scene;
         this.player = player;
+        this.seKey = seKey;
         this.visualFeedback = new VisualFeedbackManager(scene);
         
         // タッチ操作の状態管理
@@ -265,7 +266,7 @@ export class TouchControlManager {
                 this.areaSelectionManager.handleTouchAt(worldX, worldY);
             }
             
-            // 視覚的フィードバック
+            // mapをタッチした時のSEとリップルエフェクトを表示
             this.showTouchFeedback(worldX, worldY);
             
         } catch (error) {
@@ -273,11 +274,11 @@ export class TouchControlManager {
         }
     }
     
-    // タッチフィードバックを表示
+    // mapをタッチした時のSEとリップルエフェクトを表示
     showTouchFeedback(worldX, worldY) {
         this.visualFeedback.showTouchRipple(worldX, worldY);
         if (this.scene.audioManager && this.scene.audioManager.playSe) {
-            this.scene.audioManager.playSe('touch_se');
+            this.scene.audioManager.playSe(this.seKey, 0.3);
         }
     }
     

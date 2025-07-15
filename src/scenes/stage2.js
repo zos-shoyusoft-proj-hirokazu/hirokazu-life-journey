@@ -61,6 +61,10 @@ export class Stage2 extends Phaser.Scene {
         this.load.spritesheet('kuccoro', 'assets/characters/npcs/pipo-charachip022e.png', SPRITE_CONFIG);
         this.load.spritesheet('kuccoro2', 'assets/characters/npcs/pipo-charachip024d.png', SPRITE_CONFIG);
 
+
+        // SE読み込み
+        this.load.audio('se_touch_stage2', 'assets/audio/se/touch_3.mp3'); 
+
         // デバッグ用：読み込み完了を確認
         this.load.on('complete', () => {
             // アセット読み込み完了
@@ -95,7 +99,7 @@ export class Stage2 extends Phaser.Scene {
         this.inputManager.setupKeyboard(this, this.playerController);
 
         // タッチコントロールマネージャーを初期化
-        this.touchControlManager = new TouchControlManager(this, this.playerController.player);
+        this.touchControlManager = new TouchControlManager(this, this.playerController.player, 'se_touch_stage2');
 
         // UI要素を作成
         this.uiManager = new UIManager();

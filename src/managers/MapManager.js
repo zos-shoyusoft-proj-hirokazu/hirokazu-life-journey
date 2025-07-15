@@ -79,17 +79,11 @@ export class MapManager {
     }
 
     scaleMapToScreen() {
-        // スマホ画面に合わせてマップレイヤーをスケール
-        const screenWidth = this.scene.scale.width;
-        const screenHeight = this.scene.scale.height;
+        // miemachistage用の固定スケール設定
+        const fixedScale = 1.5; // スマホで見やすいスケール
         
-        // スケール比を計算（画面いっぱいに表示）
-        const scaleX = screenWidth / this.mapWidth;
-        const scaleY = screenHeight / this.mapHeight;
-        
-        // 画面全体を使用するためのスケール
-        this.mapScaleX = scaleX;
-        this.mapScaleY = scaleY;
+        this.mapScaleX = fixedScale;
+        this.mapScaleY = fixedScale;
         
         // マップレイヤーをスケール
         if (this.mapLayer) {

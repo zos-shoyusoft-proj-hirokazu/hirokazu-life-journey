@@ -31,6 +31,9 @@ export class Stage3 extends Phaser.Scene {
         
         // BGM読み込み
         this.load.audio('bgm_stage3', 'assets/audio/bgm/stage1/kessen_diaruga.mp3');
+
+        // SE読み込み
+        this.load.audio('se_touch_stage3', 'assets/audio/se/touch_6.mp3'); 
         
         // // マップ用のタイル
         // this.load.image('GK_A2_C_autotile', 'assets/GK_A2_JC_autotile.png');
@@ -72,7 +75,7 @@ export class Stage3 extends Phaser.Scene {
         this.playerController.createPlayer(100, 100);
 
         // タッチコントロールマネージャーを初期化
-        this.touchControlManager = new TouchControlManager(this, this.playerController.player);
+        this.touchControlManager = new TouchControlManager(this, this.playerController.player, 'se_touch_stage3');
 
         // UI要素を作成
         this.uiManager = new UIManager();
