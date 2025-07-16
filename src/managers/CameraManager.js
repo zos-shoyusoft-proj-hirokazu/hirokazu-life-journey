@@ -7,6 +7,9 @@ export class CameraManager {
         this.zoom = 1;
         this.followTarget = null;
         this.bounds = null;
+        
+        // 初期スケールは未設定（MapManagerで計算される）
+        this.currentScale = null;
     }
 
     setupCamera(sceneOrMapSize, map, player) {
@@ -15,11 +18,24 @@ export class CameraManager {
             const mapSize = sceneOrMapSize;
             this.camera.setZoom(this.zoom);
             
-            // スマホ向け：カメラの移動範囲をマップ全体に設定
-            this.camera.setBounds(0, 0, mapSize.scaledWidth, mapSize.scaledHeight);
+            // マップレイヤーの位置を取得
+            const mapLayer = this.scene.mapManager?.mapLayer;
+            const mapOffsetX = mapLayer ? mapLayer.x : 0;
+            const mapOffsetY = mapLayer ? mapLayer.y : 0;
             
-            // 初期位置をマップの中心に設定
-            this.camera.centerOn(mapSize.scaledWidth / 2, mapSize.scaledHeight / 2);
+            // 全体表示時は画面全体をカメラの境界にする
+            // これにより青い余白が解消される
+            const screenWidth = this.scene.cameras.main.width;
+            const screenHeight = this.scene.cameras.main.height;
+            this.camera.setBounds(0, 0, screenWidth, screenHeight);
+            
+            // カメラをマップの中心に設定
+            this.camera.centerOn(
+                mapOffsetX + mapSize.scaledWidth / 2, 
+                mapOffsetY + mapSize.scaledHeight / 2
+            );
+            
+            console.log(`CameraManager: Initial setup - bounds: (0, 0, ${screenWidth}, ${screenHeight})`);
         } 
         // 学校などの歩き回るようのステージのcamera
         else if (arguments.length === 3) {
@@ -125,16 +141,21 @@ export class CameraManager {
                 const deltaX = dragStart.x - pointer.x;
                 const deltaY = dragStart.y - pointer.y;
                 
-                this.camera.setScroll(
-                    cameraStart.x + deltaX,
-                    cameraStart.y + deltaY
-                );
+                // 新しいスクロール位置を計算
+                const newScrollX = cameraStart.x + deltaX;
+                const newScrollY = cameraStart.y + deltaY;
+                
+                // カメラの境界内でスクロール
+                this.camera.setScroll(newScrollX, newScrollY);
             }
         });
         
         this.scene.input.on('pointerup', () => {
             isDragging = false;
         });
+        
+        // デバッグ用：スクロール機能の設定を確認
+        console.log('Scroll controls setup complete');
     }
     
     setupPinchZoom() {
@@ -168,6 +189,93 @@ export class CameraManager {
                 this.camera.setZoom(newZoom);
             }
         });
+    }
+
+    // スケール切り替え機能
+    toggleMapScale() {
+        // 現在のスケールを取得
+        const currentScale = this.scene.mapManager?.mapScaleX || this.currentScale;
+        
+        if (currentScale === 1.5) {
+            // 1.5倍の場合は全体表示に切り替え
+            // 全体表示用のスケールを計算
+            const screenWidth = this.scene.cameras.main.width;
+            const screenHeight = this.scene.cameras.main.height;
+            const mapWidth = this.scene.mapManager.mapWidth;
+            const mapHeight = this.scene.mapManager.mapHeight;
+            
+            const scaleX = screenWidth / mapWidth;
+            const scaleY = screenHeight / mapHeight;
+            const wholeScale = Math.min(scaleX, scaleY);
+            
+            console.log(`Switching from 1.5 to whole scale: ${wholeScale}`);
+            this.setMapScale(wholeScale);
+        } else {
+            // 全体表示の場合は1.5倍に切り替え
+            console.log('Switching from whole scale to 1.5');
+            this.setMapScale(1.5);
+        }
+    }
+
+    setMapScale(scale) {
+        this.currentScale = scale;
+        
+        if (!this.scene.mapManager || !this.scene.mapManager.mapLayer) {
+            console.error('MapManager or mapLayer not available');
+            return;
+        }
+        
+        // マップレイヤーのスケールを変更
+        this.scene.mapManager.mapLayer.setScale(scale, scale);
+        
+        // MapManagerのスケール値も更新
+        this.scene.mapManager.mapScaleX = scale;
+        this.scene.mapManager.mapScaleY = scale;
+        
+        // マップレイヤーを画面の中心に配置
+        const screenWidth = this.scene.cameras.main.width;
+        const screenHeight = this.scene.cameras.main.height;
+        const mapWidth = this.scene.mapManager.mapWidth;
+        const mapHeight = this.scene.mapManager.mapHeight;
+        
+        const scaledWidth = mapWidth * scale;
+        const scaledHeight = mapHeight * scale;
+        
+        // 画面の中心に配置（正確な中央配置）
+        const mapX = (screenWidth - scaledWidth) / 2;
+        const mapY = (screenHeight - scaledHeight) / 2;
+        
+        // マップレイヤーの位置を設定
+        this.scene.mapManager.mapLayer.setPosition(mapX, mapY);
+
+        // オブジェクトの位置を再計算（マップレイヤーの位置設定後に実行）
+        this.scene.mapManager.updateObjectPositions(scale);
+
+        // スケールに応じてカメラの境界を設定
+        if (scale === 1.5) {
+            // 1.5倍時：マップ全体をカバーする境界
+            this.camera.setBounds(
+                mapX,
+                mapY,
+                scaledWidth,
+                scaledHeight
+            );
+        } else {
+            // 全体表示時：画面全体をカメラの境界にする
+            this.camera.setBounds(0, 0, screenWidth, screenHeight);
+        }
+
+        // カメラをマップの中心に設定
+        this.camera.centerOn(
+            mapX + scaledWidth / 2,
+            mapY + scaledHeight / 2
+        );
+        
+        // デバッグ用：スケール変更を確認
+        const boundsInfo = scale === 1.5 ? 
+            `(${mapX}, ${mapY}, ${scaledWidth}, ${scaledHeight})` : 
+            `(0, 0, ${screenWidth}, ${screenHeight})`;
+        console.log(`CameraManager: Set map scale to ${scale}, bounds: ${boundsInfo}`);
     }
 
     destroy() {

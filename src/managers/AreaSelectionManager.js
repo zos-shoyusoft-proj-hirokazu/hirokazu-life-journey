@@ -20,17 +20,26 @@ export class AreaSelectionManager {
     }
 
     setupAreas(areas) {
+        // 既存のマーカーを完全に削除
+        this.destroy();
+        
         // スケール済みのエリアデータを直接使用
-        this.areas = areas.map(area => ({
-            ...area,
-            description: this.getAreaDescription(area.name)
-        }));
+        if (areas && Array.isArray(areas)) {
+            this.areas = areas.map(area => ({
+                ...area,
+                description: this.getAreaDescription(area.name)
+            }));
+        } else {
+            this.areas = [];
+        }
         
         // エリアマーカーを作成
         this.createAreaMarkers();
         
         // インタラクションイベントを設定
         this.setupInteractionEvents();
+        
+        console.log(`AreaSelectionManager: Setup ${this.areas ? this.areas.length : 0} areas with ${this.areaSprites ? this.areaSprites.length : 0} markers`);
     }
 
 
@@ -57,32 +66,67 @@ export class AreaSelectionManager {
     }
 
     createAreaMarkers() {
+        // 既存のマーカーをクリア
+        this.areaSprites = [];
+        
+        console.log(`AreaSelectionManager: Creating markers for ${this.areas ? this.areas.length : 0} areas`);
+        
+        if (!this.areas || this.areas.length === 0) {
+            console.warn('AreaSelectionManager: No areas available for marker creation');
+            return;
+        }
+        
         // エリアマーカーを作成
-        this.areas.forEach(area => {
-            const marker = this.createAreaMarker(area);
-            this.areaSprites.push(marker);
+        this.areas.forEach((area, index) => {
+            if (area) {
+                console.log(`AreaSelectionManager: Creating marker ${index + 1} for area ${area.name} at (${area.x}, ${area.y})`);
+                const marker = this.createAreaMarker(area);
+                if (marker) {
+                    this.areaSprites.push(marker);
+                }
+            }
         });
+        
+        console.log(`AreaSelectionManager: Created ${this.areaSprites.length} markers`);
     }
 
     createAreaMarker(area) {
         // エリアマーカーを作成
-        const marker = this.scene.add.group();
+        const marker = this.scene.add.container(0, 0);
+        
+        // マーカーに一意のIDを設定
+        marker.setData('markerType', 'areaMarker');
+        marker.setData('areaName', area.name);
+        
+        // 現在のスケールを取得
+        const currentScale = this.scene.mapManager?.mapScaleX || 1;
+        
+        // スケールに応じてマーカーのサイズを調整
+        const circleRadius = 10 * currentScale;
+        const fontSize = Math.max(8, Math.floor(10 * currentScale)) + 'px';
+        const labelOffset = 15 * currentScale;
+        
+        console.log(`AreaSelectionManager: Creating marker for ${area.name} at (${area.x}, ${area.y}) with scale ${currentScale}, radius ${circleRadius}, fontSize ${fontSize}`);
         
         // 背景円
-        const background = this.scene.add.circle(area.x, area.y, 10, 0x4169E1, 0.7);
-        background.setStrokeStyle(2, 0xFFFFFF);
+        const background = this.scene.add.circle(area.x, area.y, circleRadius, 0x4169E1, 0.7);
+        background.setStrokeStyle(2 * currentScale, 0xFFFFFF);
+        background.setData('markerType', 'areaMarker');
+        background.setData('areaName', area.name);
         
-        // テキストラベル
-        const label = this.scene.add.text(area.x, area.y - 18, area.description, {
-            fontSize: '12px',
+        // テキストラベル（円の真上に配置）
+        const label = this.scene.add.text(area.x, area.y - labelOffset, area.description, {
+            fontSize: fontSize,
             fill: '#000000',
             backgroundColor: '#FFFFFF',
-            padding: { x: 4, y: 2 },
-            borderRadius: 4
+            padding: { x: 3 * currentScale, y: 1 * currentScale },
+            borderRadius: 2 * currentScale
         });
-        label.setOrigin(0.5);
+        label.setOrigin(0.5, 0.5);
+        label.setData('markerType', 'areaMarker');
+        label.setData('areaName', area.name);
         
-        // マーカーグループに追加
+        // マーカーコンテナに追加
         marker.add(background);
         marker.add(label);
         
@@ -95,6 +139,8 @@ export class AreaSelectionManager {
         
         // クリック/タップイベント
         this.setupMarkerClick(background);
+        
+        console.log(`AreaSelectionManager: Successfully created marker for ${area.name}`);
         
         return marker;
     }
@@ -356,9 +402,47 @@ export class AreaSelectionManager {
     findAreaByName(name) {
         return this.areas.find(area => area.name === name);
     }
-    
-    // エリアマーカーを再配置
+
+    updateAreaPositions(areas) {
+        // エリアマーカーの位置を更新
+        if (!areas || areas.length === 0) {
+            console.warn('AreaSelectionManager: No areas provided for marker update');
+            return;
+        }
+        
+        console.log(`AreaSelectionManager: Updating positions for ${areas.length} areas`);
+        
+        // 既存のマーカーを完全に削除
+        this.destroy();
+        
+        // 追加のクリーンアップ：マーカー関連のオブジェクトを確実に削除
+        if (this.scene && this.scene.children && this.scene.children.entries) {
+            this.scene.children.entries.forEach(child => {
+                if (child && (child.type === 'Container' || child.type === 'Arc' || child.type === 'Text')) {
+                    // マーカー関連のオブジェクトのみ削除
+                    if (child.destroy) {
+                        child.destroy();
+                    }
+                }
+            });
+        }
+        
+        // エリアデータを更新（座標情報を含む）
+        this.areas = areas.map(area => ({
+            ...area,
+            description: this.getAreaDescription(area.name)
+        }));
+        
+        // 新しいマーカーを作成（エリアの数だけ作成）
+        console.log(`AreaSelectionManager: Creating ${this.areas.length} markers`);
+        this.createAreaMarkers();
+        console.log(`AreaSelectionManager: Updated ${this.areaSprites.length} markers`);
+    }
+
     repositionMarkers() {
+        const currentScale = this.scene.mapManager?.mapScaleX || 1;
+        const labelOffset = 15 * currentScale;
+        
         this.areaSprites.forEach((sprite, index) => {
             if (sprite && this.areas[index]) {
                 const area = this.areas[index];
@@ -366,8 +450,14 @@ export class AreaSelectionManager {
                 sprite.children.entries.forEach(child => {
                     if (child.type === 'Arc') { // 円形マーカー
                         child.setPosition(area.x, area.y);
+                        // サイズも調整
+                        child.setRadius(10 * currentScale);
+                        child.setStrokeStyle(2 * currentScale, 0xFFFFFF);
                     } else if (child.type === 'Text') { // テキストラベル
-                        child.setPosition(area.x, area.y - 30);
+                        child.setPosition(area.x, area.y - labelOffset);
+                        // フォントサイズも調整
+                        const fontSize = Math.max(8, Math.floor(10 * currentScale)) + 'px';
+                        child.setStyle({ fontSize: fontSize });
                     }
                 });
             }
@@ -376,14 +466,54 @@ export class AreaSelectionManager {
     
     destroy() {
         // クリーンアップ
-        this.areaSprites.forEach(sprite => {
-            if (sprite && sprite.destroy) {
-                sprite.destroy();
-            }
-        });
+        if (this.areaSprites && Array.isArray(this.areaSprites)) {
+            this.areaSprites.forEach(sprite => {
+                if (sprite) {
+                    // グループ内の各オブジェクトを個別に削除
+                    if (sprite.children && sprite.children.entries) {
+                        sprite.children.entries.forEach(child => {
+                            if (child && child.destroy) {
+                                child.destroy();
+                            }
+                        });
+                    }
+                    // グループ自体も削除
+                    if (sprite.destroy) {
+                        sprite.destroy();
+                    }
+                }
+            });
+        }
         
-        this.areas = [];
+        // シーンからマーカー関連のオブジェクトを確実に削除
+        if (this.scene && this.scene.children && this.scene.children.entries) {
+            this.scene.children.entries.forEach(child => {
+                if (child && child.getData && child.getData('markerType') === 'areaMarker') {
+                    if (child.destroy) {
+                        child.destroy();
+                    }
+                }
+            });
+        }
+        
+        // 追加のクリーンアップ：コンテナ内のオブジェクトも削除
+        if (this.scene && this.scene.children && this.scene.children.entries) {
+            this.scene.children.entries.forEach(child => {
+                if (child && child.type === 'Container') {
+                    child.each((member) => {
+                        if (member && member.getData && member.getData('markerType') === 'areaMarker') {
+                            if (member.destroy) {
+                                member.destroy();
+                            }
+                        }
+                    });
+                }
+            });
+        }
+        
         this.areaSprites = [];
         this.selectedArea = null;
+        
+        console.log('AreaSelectionManager: Destroyed all markers');
     }
 } 

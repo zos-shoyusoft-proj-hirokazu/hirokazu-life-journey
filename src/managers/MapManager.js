@@ -79,36 +79,82 @@ export class MapManager {
     }
 
     scaleMapToScreen() {
-        // miemachistage用の固定スケール設定
-        const fixedScale = 1.5; // スマホで見やすいスケール
+        // スマホ画面に合わせてマップ全体を表示
+        const screenWidth = this.scene.cameras.main.width;
+        const screenHeight = this.scene.cameras.main.height;
         
-        this.mapScaleX = fixedScale;
-        this.mapScaleY = fixedScale;
+        // マップ全体がスマホに収まるスケールを計算
+        const scaleX = screenWidth / this.mapWidth;
+        const scaleY = screenHeight / this.mapHeight;
+        const scale = Math.min(scaleX, scaleY); // 小さい方を採用
+        
+        // CameraManagerに全体表示用スケールを設定
+        if (this.scene.cameraManager) {
+            this.scene.cameraManager.currentScale = scale;
+            console.log(`MapManager: Set initial scale to ${scale} (whole map view)`);
+        }
+        
+        this.mapScaleX = scale;
+        this.mapScaleY = scale;
         
         // マップレイヤーをスケール
         if (this.mapLayer) {
             this.mapLayer.setScale(this.mapScaleX, this.mapScaleY);
+            
+            // マップを画面の中心に配置
+            const scaledWidth = this.mapWidth * this.mapScaleX;
+            const scaledHeight = this.mapHeight * this.mapScaleY;
+            
+            // 画面の中心に配置（正確な中央配置）
+            const mapX = (screenWidth - scaledWidth) / 2;
+            const mapY = (screenHeight - scaledHeight) / 2;
+            
+            this.mapLayer.setPosition(mapX, mapY);
         }
         
         // スケール後のマップサイズを更新
         this.scaledMapWidth = this.mapWidth * this.mapScaleX;
         this.scaledMapHeight = this.mapHeight * this.mapScaleY;
+        
+        // カメラの境界を再設定
+        if (this.scene.cameraManager) {
+            // 全体表示時は画面全体をカメラの境界にする
+            // これにより青い余白が解消される
+            this.scene.cameraManager.camera.setBounds(0, 0, screenWidth, screenHeight);
+            
+            // カメラをマップの中心に設定
+            const mapOffsetX = this.mapLayer ? this.mapLayer.x : 0;
+            const mapOffsetY = this.mapLayer ? this.mapLayer.y : 0;
+            this.scene.cameraManager.camera.centerOn(
+                mapOffsetX + this.scaledMapWidth / 2, 
+                mapOffsetY + this.scaledMapHeight / 2
+            );
+            
+            console.log(`MapManager: Initial camera bounds: (0, 0, ${screenWidth}, ${screenHeight})`);
+        }
+        
+        // スケール切り替え時は座標のみ再計算
+        this.updateObjectPositions(this.mapScaleX);
     }
 
     extractAreaData(objectLayerName = 'miemachi') {
-        // オブジェクトレイヤーから場所データを抽出
+        // オブジェクトレイヤーから場所データを抽出（初回のみ呼ぶ）
         const objectLayer = this.tilemap.getObjectLayer(objectLayerName);
-        
         if (objectLayer) {
+            // 既存のエリアをクリア
+            this.areas = [];
+            
             this.areas = objectLayer.objects.map(obj => ({
                 id: obj.id,
                 name: obj.name,
-                x: obj.x * this.mapScaleX, // スケールに合わせて座標を調整
-                y: obj.y * this.mapScaleY, // スケールに合わせて座標を調整
+                originalX: obj.x,  // 元の座標を保存
+                originalY: obj.y,  // 元の座標を保存
+                x: obj.x * this.mapScaleX + (this.mapLayer ? this.mapLayer.x : 0),
+                y: obj.y * this.mapScaleY + (this.mapLayer ? this.mapLayer.y : 0),
                 type: obj.type || 'location'
             }));
-        } else {
-            console.warn(`Object layer "${objectLayerName}" not found`);
+            
+            console.log(`MapManager: Extracted ${this.areas.length} areas from object layer`);
         }
     }
 
@@ -156,6 +202,41 @@ export class MapManager {
             scaleX: this.mapScaleX,
             scaleY: this.mapScaleY
         };
+    }
+
+    updateObjectPositions(scale) {
+        // エリアオブジェクトの位置を更新（originalX/originalYを必ず使う）
+        if (this.areas && this.areas.length > 0) {
+            // マップレイヤーの現在の位置を取得（確実に取得）
+            const mapOffsetX = this.mapLayer ? this.mapLayer.x : 0;
+            const mapOffsetY = this.mapLayer ? this.mapLayer.y : 0;
+            
+            console.log(`MapManager: Map layer position - x: ${mapOffsetX}, y: ${mapOffsetY}, scale: ${scale}`);
+            
+            // エリアの座標を更新
+            this.areas.forEach(area => {
+                // originalX/originalYを使用して正確な座標を計算
+                area.x = area.originalX * scale + mapOffsetX;
+                area.y = area.originalY * scale + mapOffsetY;
+                
+                console.log(`MapManager: Area ${area.name} - original: (${area.originalX}, ${area.originalY}), new: (${area.x}, ${area.y})`);
+            });
+            
+            // スケール後のマップサイズを更新
+            this.scaledMapWidth = this.mapWidth * scale;
+            this.scaledMapHeight = this.mapHeight * scale;
+            
+            // エリア選択マネージャーに位置更新を通知（更新されたエリアデータを渡す）
+            if (this.scene.areaSelectionManager) {
+                console.log(`MapManager: Sending ${this.areas.length} areas to AreaSelectionManager`);
+                this.scene.areaSelectionManager.updateAreaPositions([...this.areas]);
+            }
+            
+            // デバッグ用：座標更新を確認
+            console.log(`MapManager: Updated object positions with scale ${scale}, areas count: ${this.areas.length}`);
+        } else {
+            console.warn('MapManager: No areas available for position update');
+        }
     }
 
     // === 旧バージョンとの互換性メソッド ===

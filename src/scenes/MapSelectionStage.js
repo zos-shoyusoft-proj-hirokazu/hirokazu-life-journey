@@ -81,13 +81,21 @@ export class MapSelectionStage extends Phaser.Scene {
         try {
             // モバイルデバイスの検出
             this.isMobile = this.sys.game.device.input.touch;
+            
+            // カメラマネージャーを先に初期化
+            this.cameraManager = new CameraManager(this);
+            this.cameraManager.setBackgroundColor('#87CEEB');
+            
             // マップマネージャーを初期化
             this.mapManager = new MapManager(this);
             this.mapManager.createMap(this.mapConfig.mapKey, this.mapConfig.tilesetKey);
-            // カメラマネージャーを初期化
-            this.cameraManager = new CameraManager(this);
-            this.cameraManager.setBackgroundColor('#87CEEB');
+            
+            // 初期スケールを全体表示に設定（カメラ設定より先に実行）
+            this.mapManager.scaleMapToScreen();
+            
+            // カメラ設定
             this.cameraManager.setupCamera(this.mapManager.getMapSize());
+            
             // エリア選択システムを初期化
             this.areaSelectionManager = new AreaSelectionManager(this);
             // 視覚的フィードバックマネージャーを初期化
@@ -110,6 +118,10 @@ export class MapSelectionStage extends Phaser.Scene {
             this.uiManager = new UIManager();
             this.uiManager.createMapUI(this, this.mapConfig.mapTitle);
             this.uiManager.createBackButton(this); // 右上の戻るボタンを追加
+            
+            // スケール切り替えボタンを追加
+            this.createScaleToggleButton();
+            
             // AudioManagerを初期化
             this.audioManager = new AudioManager(this);
             this.audioManager.playBgm('bgm_map', 0.3);
@@ -158,6 +170,35 @@ export class MapSelectionStage extends Phaser.Scene {
         }
     }
 
+    createScaleToggleButton() {
+        // スケール切り替えボタンを作成（画面座標で固定）
+        const button = this.add.text(10, 50, '拡大', {
+            fontSize: '18px',
+            fill: '#ffffff',
+            backgroundColor: '#666666',
+            padding: { x: 15, y: 8 }
+        });
+        
+        // ボタンをカメラに固定（画面座標で表示）
+        button.setScrollFactor(0);
+        
+        button.setInteractive();
+        button.on('pointerdown', () => {
+            this.cameraManager.toggleMapScale();
+            
+            // ボタンテキストを更新
+            const currentScale = this.cameraManager.scene.mapManager?.mapScaleX || this.cameraManager.currentScale;
+            if (currentScale === 1.5) {
+                button.setText('全体マップ表示');
+            } else {
+                button.setText('拡大');
+            }
+        });
+        
+        // 初期テキストを設定（全体表示から開始）
+        button.setText('拡大');
+    }
+
     handleResize(gameSize) {
         try {
             // マップマネージャーでリサイズ処理
@@ -171,7 +212,7 @@ export class MapSelectionStage extends Phaser.Scene {
                 this.areaSelectionManager.destroy();
                 this.areaSelectionManager = new AreaSelectionManager(this);
                 
-                // エリア情報を再取得
+                // エリア情報を再取得（extractAreaDataは呼ばず、既存のareasを使用）
                 const mapAreas = this.mapManager.getAreas();
                 const configAreas = this.mapConfig.areas;
                 const mergedAreas = mapAreas.map(mapArea => {
