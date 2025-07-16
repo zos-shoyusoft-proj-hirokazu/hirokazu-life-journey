@@ -21,11 +21,11 @@ export class MapManager {
     }
 
     createMap(mapKey, tilesetKey, layerName = 'タイルレイヤー1') {
-        // 新しいMiemachiStage用のマップ作成
+        // 街の概要マップ作成
         if (arguments.length > 0) {
             return this.createNewMap(mapKey, tilesetKey, layerName);
         } else {
-            // 旧バージョンとの互換性：引数なしの場合
+            // 引数なしの場合は実際に歩けるマップを作成
             return this.createLegacyMap();
         }
     }
