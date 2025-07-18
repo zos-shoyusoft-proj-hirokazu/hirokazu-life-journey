@@ -120,6 +120,21 @@
             background: rgba(255, 0, 0, 1);
         }
         
+        .watch-again-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .watch-again-button:hover {
+            background: #1976D2;
+        }
+        
         #stage-select {
             position: fixed;
             top: 0;
@@ -195,7 +210,7 @@
             #game-container {
                 height: -webkit-fill-available;
             }
-        }</style><script defer="defer" src="bundle.js"></script></head><body><button id="fullscreen-button" onclick="toggleFullscreen()">全画面</button><div id="game-container"></div><script src="https://cdn.jsdelivr.net/npm/phaser@3.70.0/dist/phaser.min.js"></script><div id="opening-video" style="display: none;"><div id="video-container"><iframe id="youtube-video" width="100%" height="100%" frameborder="0" allowfullscreen></iframe><button id="skip-video" class="skip-button">スキップ</button></div></div><div id="stage-select"><h2>ステージ選択</h2><div class="stage-buttons"><button id="stage1">ステージ 1</button> <button id="stage2">ステージ 2</button> <button id="stage3">ステージ 3</button> <button id="miemachi">三重町マップ</button></div></div><script>// 実際の表示エリアサイズを取得する関数
+        }</style><script defer="defer" src="bundle.js"></script></head><body><button id="fullscreen-button" onclick="toggleFullscreen()">全画面</button><div id="game-container"></div><script src="https://cdn.jsdelivr.net/npm/phaser@3.70.0/dist/phaser.min.js"></script><div id="opening-video" style="display: none;"><div id="video-container"><iframe id="youtube-video" width="100%" height="100%" frameborder="0" allowfullscreen></iframe><button id="skip-video" class="skip-button">スキップ</button></div></div><div id="stage-select"><h2>ステージ選択</h2><div class="stage-buttons"><button id="stage1">ステージ 1</button> <button id="stage2">ステージ 2</button> <button id="stage3">ステージ 3</button> <button id="miemachi">三重町マップ</button></div><button id="watch-opening-again" class="watch-again-button">オープニング動画をもう一度見る</button></div><script>// 実際の表示エリアサイズを取得する関数
         function getActualViewportSize() {
             let width = window.innerWidth;
             let height;
@@ -304,15 +319,26 @@
             firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
             
             window.onYouTubeIframeAPIReady = function() {
-                new YT.Player('youtube-video', {
+                const player = new YT.Player('youtube-video', {
                     events: {
                         'onStateChange': function(event) {
+                            console.log('YouTube player state changed:', event.data);
                             if (event.data === YT.PlayerState.ENDED) {
+                                console.log('Video ended, hiding opening video');
                                 hideOpeningVideo();
                             }
+                        },
+                        'onReady': function(event) {
+                            console.log('YouTube player ready');
+                        },
+                        'onError': function(event) {
+                            console.log('YouTube player error:', event.data);
                         }
                     }
                 });
+                
+                // グローバルに保存して後でアクセスできるようにする
+                window.youtubePlayer = player;
             };
             
             // エラーをコンソールに表示しないようにする
@@ -321,18 +347,39 @@
                     return;
                 }
             });
+            
+            // YouTubeのpostMessageエラーを無視
+            const originalConsoleError = console.error;
+            console.error = function(...args) {
+                if (args[0] && typeof args[0] === 'string' && args[0].includes('postMessage')) {
+                    return; // YouTubeのpostMessageエラーを無視
+                }
+                originalConsoleError.apply(console, args);
+            };
         }
         
         function hideOpeningVideo() {
+            console.log('hideOpeningVideo called');
             const openingVideo = document.getElementById('opening-video');
             const stageSelect = document.getElementById('stage-select');
             const iframe = document.getElementById('youtube-video');
+            
+            // YouTubeプレイヤーを停止（エラーハンドリング付き）
+            try {
+                if (window.youtubePlayer && typeof window.youtubePlayer.stopVideo === 'function') {
+                    window.youtubePlayer.stopVideo();
+                }
+            } catch (error) {
+                console.log('YouTube player stopVideo error:', error);
+            }
             
             // 動画を完全に停止
             iframe.src = '';
             
             openingVideo.style.display = 'none';
             stageSelect.style.display = 'flex';
+            
+            console.log('Opening video hidden, stage select shown');
         }
         
         // ページ読み込み時にオープニング動画を表示
@@ -346,6 +393,16 @@
                 console.log('showStageSelect will be called');
                 document.getElementById('stage-select').style.display = 'flex';
                 document.getElementById('game-container').style.display = 'block';
+            }
+            
+            // 「もう一度見る」ボタンのイベントを設定
+            const watchAgainButton = document.getElementById('watch-opening-again');
+            if (watchAgainButton) {
+                watchAgainButton.addEventListener('click', function() {
+                    localStorage.removeItem('openingVideoShown');
+                    showOpeningVideo();
+                    localStorage.setItem('openingVideoShown', 'true');
+                });
             }
         });
         
