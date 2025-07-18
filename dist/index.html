@@ -58,6 +58,83 @@
             top: 0;
             left: 0;
         }
+        #opening-video {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            z-index: 2000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        #video-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+        
+        #youtube-video {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        .skip-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            border: 2px solid white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            z-index: 2001;
+        }
+        
+        .skip-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .play-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 15px 30px;
+            background: rgba(255, 0, 0, 0.8);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+            z-index: 2002;
+        }
+        
+        .play-button:hover {
+            background: rgba(255, 0, 0, 1);
+        }
+        
+        .watch-again-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .watch-again-button:hover {
+            background: #1976D2;
+        }
+        
         #stage-select {
             position: fixed;
             top: 0;
@@ -133,7 +210,7 @@
             #game-container {
                 height: -webkit-fill-available;
             }
-        }</style><script defer="defer" src="bundle.js"></script></head><body><button id="fullscreen-button" onclick="toggleFullscreen()">全画面</button><div id="game-container"></div><script src="https://cdn.jsdelivr.net/npm/phaser@3.70.0/dist/phaser.min.js"></script><div id="stage-select"><h2>ステージ選択</h2><div class="stage-buttons"><button id="stage1">ステージ 1</button> <button id="stage2">ステージ 2</button> <button id="stage3">ステージ 3</button> <button id="miemachi">三重町マップ</button></div></div><script>// 実際の表示エリアサイズを取得する関数
+        }</style><script defer="defer" src="bundle.js"></script></head><body><button id="fullscreen-button" onclick="toggleFullscreen()">全画面</button><div id="game-container"></div><script src="https://cdn.jsdelivr.net/npm/phaser@3.70.0/dist/phaser.min.js"></script><div id="opening-video" style="display: none;"><div id="video-container"><iframe id="youtube-video" width="100%" height="100%" frameborder="0" allowfullscreen></iframe><button id="skip-video" class="skip-button">スキップ</button></div></div><div id="stage-select"><h2>ステージ選択</h2><div class="stage-buttons"><button id="stage1">ステージ 1</button> <button id="stage2">ステージ 2</button> <button id="stage3">ステージ 3</button> <button id="miemachi">三重町マップ</button></div><button id="watch-opening-again" class="watch-again-button">オープニング動画をもう一度見る</button></div><script>// 実際の表示エリアサイズを取得する関数
         function getActualViewportSize() {
             let width = window.innerWidth;
             let height;
@@ -200,6 +277,134 @@
         document.addEventListener('fullscreenchange', handleResize);
         document.addEventListener('webkitfullscreenchange', handleResize);
         document.addEventListener('msfullscreenchange', handleResize);
+        
+        // オープニング動画の管理
+        function showOpeningVideo() {
+            console.log('showOpeningVideo called');
+            const openingVideo = document.getElementById('opening-video');
+            const stageSelect = document.getElementById('stage-select');
+            const gameContainer = document.getElementById('game-container');
+            
+            // YouTube動画のURLを設定（autoplay=0で自動再生を無効化）
+            const videoId = 'P2KXyM27XK4'; // ← 実際の動画ID
+            const iframe = document.getElementById('youtube-video');
+            iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=0&rel=0&showinfo=0&controls=1`;
+            
+            openingVideo.style.display = 'flex';
+            stageSelect.style.display = 'none';
+            gameContainer.style.display = 'none';
+            
+            // 再生開始ボタンを追加
+            const playButton = document.createElement('button');
+            playButton.textContent = '動画を再生';
+            playButton.className = 'play-button';
+            playButton.onclick = function() {
+                // ユーザー操作で動画を再生
+                iframe.src = iframe.src.replace('autoplay=0', 'autoplay=1');
+                playButton.style.display = 'none';
+            };
+            
+            const videoContainer = document.getElementById('video-container');
+            videoContainer.appendChild(playButton);
+            
+            // スキップボタンのイベント
+            document.getElementById('skip-video').addEventListener('click', function() {
+                hideOpeningVideo();
+            });
+            
+            // 動画終了時の処理（YouTube APIを使用）
+            const tag = document.createElement('script');
+            tag.src = 'https://www.youtube.com/iframe_api';
+            const firstScriptTag = document.getElementsByTagName('script')[0];
+            firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+            
+            window.onYouTubeIframeAPIReady = function() {
+                const player = new YT.Player('youtube-video', {
+                    events: {
+                        'onStateChange': function(event) {
+                            console.log('YouTube player state changed:', event.data);
+                            if (event.data === YT.PlayerState.ENDED) {
+                                console.log('Video ended, hiding opening video');
+                                hideOpeningVideo();
+                            }
+                        },
+                        'onReady': function(event) {
+                            console.log('YouTube player ready');
+                        },
+                        'onError': function(event) {
+                            console.log('YouTube player error:', event.data);
+                        }
+                    }
+                });
+                
+                // グローバルに保存して後でアクセスできるようにする
+                window.youtubePlayer = player;
+            };
+            
+            // エラーをコンソールに表示しないようにする
+            window.addEventListener('message', function(event) {
+                if (event.origin !== 'https://www.youtube.com') {
+                    return;
+                }
+            });
+            
+            // YouTubeのpostMessageエラーを無視
+            const originalConsoleError = console.error;
+            console.error = function(...args) {
+                if (args[0] && typeof args[0] === 'string' && args[0].includes('postMessage')) {
+                    return; // YouTubeのpostMessageエラーを無視
+                }
+                originalConsoleError.apply(console, args);
+            };
+        }
+        
+        function hideOpeningVideo() {
+            console.log('hideOpeningVideo called');
+            const openingVideo = document.getElementById('opening-video');
+            const stageSelect = document.getElementById('stage-select');
+            const iframe = document.getElementById('youtube-video');
+            
+            // YouTubeプレイヤーを停止（エラーハンドリング付き）
+            try {
+                if (window.youtubePlayer && typeof window.youtubePlayer.stopVideo === 'function') {
+                    window.youtubePlayer.stopVideo();
+                }
+            } catch (error) {
+                console.log('YouTube player stopVideo error:', error);
+            }
+            
+            // 動画を完全に停止
+            iframe.src = '';
+            
+            openingVideo.style.display = 'none';
+            stageSelect.style.display = 'flex';
+            
+            console.log('Opening video hidden, stage select shown');
+        }
+        
+        // ページ読み込み時にオープニング動画を表示
+        window.addEventListener('load', function() {
+            console.log('window load event fired');
+            if (!localStorage.getItem('openingVideoShown')) {
+                console.log('showOpeningVideo will be called');
+                showOpeningVideo();
+                localStorage.setItem('openingVideoShown', 'true');
+            } else {
+                console.log('showStageSelect will be called');
+                document.getElementById('stage-select').style.display = 'flex';
+                document.getElementById('game-container').style.display = 'block';
+            }
+            
+            // 「もう一度見る」ボタンのイベントを設定
+            const watchAgainButton = document.getElementById('watch-opening-again');
+            if (watchAgainButton) {
+                watchAgainButton.addEventListener('click', function() {
+                    localStorage.removeItem('openingVideoShown');
+                    showOpeningVideo();
+                    localStorage.setItem('openingVideoShown', 'true');
+                });
+            }
+        });
         
         // PWAとしてインストール可能にするためのService Worker登録
         // 開発時（localhost/127.0.0.1）ではサービスワーカーを無効化
