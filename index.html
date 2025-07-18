@@ -101,6 +101,25 @@
             background: rgba(255, 255, 255, 0.2);
         }
         
+        .play-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 15px 30px;
+            background: rgba(255, 0, 0, 0.8);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+            z-index: 2002;
+        }
+        
+        .play-button:hover {
+            background: rgba(255, 0, 0, 1);
+        }
+        
         #stage-select {
             position: fixed;
             top: 0;
@@ -246,18 +265,32 @@
         
         // オープニング動画の管理
         function showOpeningVideo() {
+            console.log('showOpeningVideo called');
             const openingVideo = document.getElementById('opening-video');
             const stageSelect = document.getElementById('stage-select');
             const gameContainer = document.getElementById('game-container');
             
-            // YouTube動画のURLを設定（ここに実際のYouTube動画IDを入れる）
+            // YouTube動画のURLを設定（autoplay=0で自動再生を無効化）
             const videoId = 'P2KXyM27XK4'; // ← 実際の動画ID
             const iframe = document.getElementById('youtube-video');
-            iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&showinfo=0&controls=1`;
+            iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=0&rel=0&showinfo=0&controls=1`;
             
             openingVideo.style.display = 'flex';
             stageSelect.style.display = 'none';
             gameContainer.style.display = 'none';
+            
+            // 再生開始ボタンを追加
+            const playButton = document.createElement('button');
+            playButton.textContent = '動画を再生';
+            playButton.className = 'play-button';
+            playButton.onclick = function() {
+                // ユーザー操作で動画を再生
+                iframe.src = iframe.src.replace('autoplay=0', 'autoplay=1');
+                playButton.style.display = 'none';
+            };
+            
+            const videoContainer = document.getElementById('video-container');
+            videoContainer.appendChild(playButton);
             
             // スキップボタンのイベント
             document.getElementById('skip-video').addEventListener('click', function() {
@@ -281,11 +314,22 @@
                     }
                 });
             };
+            
+            // エラーをコンソールに表示しないようにする
+            window.addEventListener('message', function(event) {
+                if (event.origin !== 'https://www.youtube.com') {
+                    return;
+                }
+            });
         }
         
         function hideOpeningVideo() {
             const openingVideo = document.getElementById('opening-video');
             const stageSelect = document.getElementById('stage-select');
+            const iframe = document.getElementById('youtube-video');
+            
+            // 動画を完全に停止
+            iframe.src = '';
             
             openingVideo.style.display = 'none';
             stageSelect.style.display = 'flex';
@@ -293,12 +337,13 @@
         
         // ページ読み込み時にオープニング動画を表示
         window.addEventListener('load', function() {
-            // 初回アクセス時のみオープニング動画を表示
+            console.log('window load event fired');
             if (!localStorage.getItem('openingVideoShown')) {
+                console.log('showOpeningVideo will be called');
                 showOpeningVideo();
                 localStorage.setItem('openingVideoShown', 'true');
             } else {
-                // 2回目以降は直接ステージ選択を表示
+                console.log('showStageSelect will be called');
                 document.getElementById('stage-select').style.display = 'flex';
                 document.getElementById('game-container').style.display = 'block';
             }
