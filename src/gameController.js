@@ -34,6 +34,7 @@ export function startPhaserGame(stageNumber) {
         case 3: sceneClass = Stage3; sceneKey = 'Stage3Scene'; break;
         case 'stage1_enhanced': sceneClass = Stage1; sceneKey = 'Stage1Scene'; break;
         case 'miemachi': sceneClass = createMapStage('miemachi', 'MiemachiStage'); sceneKey = 'MiemachiStage'; break;
+        case 'taketastage': sceneClass = createMapStage('taketastage', 'TaketastageStage'); sceneKey = 'TaketastageStage'; break;
         default: sceneClass = Stage1; sceneKey = 'Stage1Scene';
     }
     game.scene.add(sceneKey, sceneClass, true);

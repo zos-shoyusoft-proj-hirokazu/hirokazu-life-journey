@@ -49,8 +49,9 @@ export class MapManager {
         // スマホ画面に合わせてマップレイヤーをスケール
         this.scaleMapToScreen();
         
-        // オブジェクトレイヤーから場所データを取得
-        this.extractAreaData();
+        // オブジェクトレイヤーから場所データを取得（マップごとに適切なレイヤー名を指定）
+        const objectLayerName = this.getObjectLayerName(mapKey);
+        this.extractAreaData(objectLayerName);
         
         return this.tilemap;
     }
@@ -137,8 +138,36 @@ export class MapManager {
         this.updateObjectPositions(this.mapScaleX);
     }
 
-    extractAreaData(objectLayerName = 'miemachi') {
+    getObjectLayerName(mapKey) {
+        // マップキーに基づいて適切なオブジェクトレイヤー名を返す
+        const layerNames = {
+            'bunngo_mie_city': 'miemachi',
+            'taketa': 'taketa'
+        };
+        
+        // マップキーが登録されていない場合は警告を出す
+        if (!layerNames[mapKey]) {
+            console.warn(`MapManager: Unknown mapKey '${mapKey}', using default layer name`);
+        }
+        
+        // 登録されたマップキーの場合のみ値を返す
+        return layerNames[mapKey];
+    }
+
+    extractAreaData(objectLayerName = null) {
         // オブジェクトレイヤーから場所データを抽出（初回のみ呼ぶ）
+        // objectLayerNameが指定されていない場合は、現在のマップキーに基づいて自動決定
+        if (!objectLayerName) {
+            const mapKey = this.scene.mapConfig?.mapKey || 'taketa';
+            objectLayerName = this.getObjectLayerName(mapKey);
+        }
+        
+        // objectLayerNameがundefinedの場合は処理をスキップ
+        if (!objectLayerName) {
+            console.warn(`MapManager: No object layer name found for mapKey '${this.scene.mapConfig?.mapKey}'`);
+            return;
+        }
+        
         const objectLayer = this.tilemap.getObjectLayer(objectLayerName);
         if (objectLayer) {
             // 既存のエリアをクリア
@@ -154,7 +183,9 @@ export class MapManager {
                 type: obj.type || 'location'
             }));
             
-            console.log(`MapManager: Extracted ${this.areas.length} areas from object layer`);
+            console.log(`MapManager: Extracted ${this.areas.length} areas from object layer '${objectLayerName}'`);
+        } else {
+            console.warn(`MapManager: Object layer '${objectLayerName}' not found`);
         }
     }
 
@@ -162,8 +193,9 @@ export class MapManager {
         // リサイズ時の処理
         this.scaleMapToScreen();
         
-        // エリアデータを再計算
-        this.extractAreaData();
+        // エリアデータを再計算（現在のマップキーに基づいて適切なレイヤー名を使用）
+        const objectLayerName = this.getObjectLayerName(this.scene.mapConfig?.mapKey || 'taketa');
+        this.extractAreaData(objectLayerName);
     }
 
     createFallbackImage(key) {

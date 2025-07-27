@@ -59,8 +59,8 @@ if (!window.stageSelectInitialized) {
     // ステージボタンにイベントを設定（重複防止版）
     const stage1 = document.getElementById('stage1');
     const stage2 = document.getElementById('stage2');
-    const stage3 = document.getElementById('stage3');
     const miemachi = document.getElementById('miemachi');
+    const taketastage = document.getElementById('taketastage');
 
     if (stage1) {
         // 既存のリスナーを削除してから新しいリスナーを追加
@@ -71,13 +71,13 @@ if (!window.stageSelectInitialized) {
         stage2.removeEventListener('click', stage2ClickHandler);
         stage2.addEventListener('click', stage2ClickHandler);
     }
-    if (stage3) {
-        stage3.removeEventListener('click', stage3ClickHandler);
-        stage3.addEventListener('click', stage3ClickHandler);
-    }
     if (miemachi) {
         miemachi.removeEventListener('click', miemachiClickHandler);
         miemachi.addEventListener('click', miemachiClickHandler);
+    }
+    if (taketastage) {
+        taketastage.removeEventListener('click', taketastageClickHandler);
+        taketastage.addEventListener('click', taketastageClickHandler);
     }
     
 } else {
@@ -93,10 +93,10 @@ function stage2ClickHandler() {
     startStage(2);
 }
 
-function stage3ClickHandler() {
-    startStage(3);
-}
-
 function miemachiClickHandler() {
     startStage('miemachi');
+}
+
+function taketastageClickHandler() {
+    startStage('taketastage');
 }

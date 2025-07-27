@@ -59,7 +59,12 @@ export class AreaSelectionManager {
             'drink_zutu': '飲み頭痛',
             'ドール': 'ドール',
             'momoiro': '桃色',
-            'profile': 'プロフィール'
+            'profile': 'プロフィール',
+            // 竹田ステージのエリア説明
+            'taketa_station': '竹田駅',
+            'taketa_high school': '竹田高校',
+            'ginnga_water': '銀河の水',
+            'udefuriojisann': 'ウデフリオジサン'
         };
         
         return descriptions[areaName] || areaName;
@@ -101,10 +106,12 @@ export class AreaSelectionManager {
         // 現在のスケールを取得
         const currentScale = this.scene.mapManager?.mapScaleX || 1;
         
-        // スケールに応じてマーカーのサイズを調整
-        const circleRadius = 10 * currentScale;
-        const fontSize = Math.max(8, Math.floor(10 * currentScale)) + 'px';
-        const labelOffset = 15 * currentScale;
+        // スケールに応じてマーカーのサイズを調整（全体マップ時でも最小サイズを保証）
+        const minCircleRadius = 10; // 最小半径
+        const circleRadius = Math.max(minCircleRadius, 10 * currentScale);
+        const minFontSize = 10; // 最小フォントサイズ
+        const fontSize = Math.max(minFontSize, Math.floor(10 * currentScale)) + 'px';
+        const labelOffset = Math.max(15, 15 * currentScale);
         
         console.log(`AreaSelectionManager: Creating marker for ${area.name} at (${area.x}, ${area.y}) with scale ${currentScale}, radius ${circleRadius}, fontSize ${fontSize}`);
         

@@ -47,6 +47,28 @@ export const AreaConfig = {
         ]
     },
     
+    // 竹田ステージ
+    taketastage: {
+        mapKey: 'taketa',
+        tilesetKey: 'taketa_map',
+        mapTitle: '竹田ステージ',
+        bgm: {
+            map: 'assets/audio/bgm/stage1/kessen_diaruga.mp3', // 通常マップBGM
+            battle: 'assets/audio/bgm/stage1/battle.mp3',      // バトルBGM
+            event: 'assets/audio/bgm/stage1/event.mp3'          // イベントBGM
+        },
+        se: {
+            touch: 'assets/audio/se/touch_7.mp3', // ダイアログ用タッチSE
+            map_touch: 'assets/audio/se/touch_2.mp3', // マップ専用タッチSE
+        },
+        areas: [
+            { name: 'taketa_station', scene: 'TaketaStationScene' },
+            { name: 'taketa_high school', scene: 'TaketaHighSchoolScene' },
+            { name: 'ginnga_water', scene: 'GinngaWaterScene' },
+            { name: 'udefuriojisann', scene: 'UdefuriojisannScene' }
+        ]
+    },
+    
     // 2つ目のマップ（例）
     second_map: {
         mapKey: 'second_map',

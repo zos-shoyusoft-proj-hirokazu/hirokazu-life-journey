@@ -28,8 +28,19 @@ export class MapSelectionStage extends Phaser.Scene {
 
     preload() {
         // 設定ファイルから動的にアセットを読み込み
-        this.load.tilemapTiledJSON(this.mapConfig.mapKey, `assets/maps/${this.mapId}/${this.mapConfig.mapKey}.tmj`);
-        this.load.image(this.mapConfig.tilesetKey, `assets/maps/${this.mapId}/${this.mapConfig.tilesetKey}.png`);
+        // taketastageの場合はtaketaフォルダを使用
+        const folderName = this.mapId === 'taketastage' ? 'taketa' : this.mapId;
+        
+        // 竹田ステージの場合はファイル名も調整
+        const mapFileName = this.mapId === 'taketastage' ? 'taketa' : this.mapConfig.mapKey;
+        
+        this.load.tilemapTiledJSON(this.mapConfig.mapKey, `assets/maps/${folderName}/${mapFileName}.tmj`);
+        this.load.image(this.mapConfig.tilesetKey, `assets/maps/${folderName}/${this.mapConfig.tilesetKey}.png`);
+        
+        // デバッグ用：読み込みエラーを詳細にログ出力
+        this.load.on('fileerror', (file) => {
+            console.error(`File not found: ${file.key}, path: ${file.url}`);
+        });
         
         // UI要素とアイコン
         
