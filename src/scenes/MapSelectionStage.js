@@ -5,6 +5,8 @@ import { MapManager } from '../managers/MapManager.js';
 import { CameraManager } from '../managers/CameraManager.js';
 import { AreaConfig } from '../config/AreaConfig.js';
 import { VisualFeedbackManager } from '../managers/VisualFeedbackManager.js';
+import { ConversationTrigger } from '../managers/ConversationTrigger.js';
+import { ConversationScene } from '../managers/ConversationScene.js';
 
 export class MapSelectionStage extends Phaser.Scene {
     constructor(config) {
@@ -111,6 +113,13 @@ export class MapSelectionStage extends Phaser.Scene {
             this.areaSelectionManager = new AreaSelectionManager(this);
             // 視覚的フィードバックマネージャーを初期化
             this.visualFeedbackManager = new VisualFeedbackManager(this);
+            
+            // 竹田ステージの場合は会話システムを初期化
+            if (this.mapConfig.mapKey === 'taketa') {
+                this.conversationTrigger = new ConversationTrigger(this);
+                // ConversationSceneを動的に追加
+                this.scene.add('ConversationScene', ConversationScene);
+            }
             // 設定ファイルからエリア情報を取得し、マップエリアとマージ
             const mapAreas = this.mapManager.getAreas();
             const configAreas = this.mapConfig.areas;

@@ -1,4 +1,5 @@
 import { VisualFeedbackManager } from './VisualFeedbackManager.js';
+import { taketaConversationData } from '../data/taketa/conversationData.js';
 
 export class AreaSelectionManager {
     constructor(scene) {
@@ -321,10 +322,49 @@ export class AreaSelectionManager {
     handleAreaSelection(area) {
         // エリア選択後の処理
         
-        // 少し遅延を入れてから移動
-        this.scene.time.delayedCall(1000, () => {
-            this.navigateToArea(area);
-        });
+        // 竹田ステージの会話イベントをチェック（NPCクリック時と同じ会話システムを使用）
+        if (this.scene.mapConfig && this.scene.mapConfig.mapKey === 'taketa') {
+            this.handleTaketaConversation(area);
+        } else {
+            // 従来の処理（他のマップ用）
+            this.scene.time.delayedCall(1000, () => {
+                this.navigateToArea(area);
+            });
+        }
+    }
+
+    handleTaketaConversation(area) {
+        // 竹田ステージの会話イベントを処理
+        let eventId = null;
+        
+        // エリア名に基づいて会話イベントを決定
+        switch (area.name) {
+            case 'udefuriojisann':
+                eventId = 'arm_swinging_person';
+                break;
+            case 'ginnga_water':
+                eventId = 'ginga_sui';
+                break;
+            default:
+                // 会話イベントがない場合は通常の移動
+                this.scene.time.delayedCall(1000, () => {
+                    this.navigateToArea(area);
+                });
+                return;
+        }
+        
+        // 会話データを取得
+        const conversationData = taketaConversationData[eventId];
+        if (conversationData) {
+            // 会話システムを開始（NPCクリック時と同じ方法）
+            if (this.scene.conversationTrigger) {
+                this.scene.conversationTrigger.startVisualNovelConversation(conversationData);
+            } else {
+                console.warn('ConversationTrigger not found in scene');
+            }
+        } else {
+            console.warn(`Conversation data not found for event: ${eventId}`);
+        }
     }
 
     navigateToArea(area) {

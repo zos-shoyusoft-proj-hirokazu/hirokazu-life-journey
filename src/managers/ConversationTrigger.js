@@ -22,7 +22,7 @@ export class ConversationTrigger {
         }
     }
 
-    // ギャルゲ風会話システムの開始
+    // ギャルゲ風会話システムの開始（NPCクリック時とエリアマーカー「はい」クリック時の両方で使用）
     startVisualNovelConversation(conversationData) {
         // 既に会話が起動中の場合は停止
         if (this.isConversationActive) {
@@ -85,7 +85,7 @@ export class ConversationTrigger {
         }
     }
 
-    // NPCクリック時の処理
+    // NPCクリック時の処理（エリアマーカー「はい」クリック時と同じ会話システムを使用）
     setupNpcClickHandler(sprite, npcId) {
         sprite.setInteractive();
         sprite.on('pointerdown', () => {
