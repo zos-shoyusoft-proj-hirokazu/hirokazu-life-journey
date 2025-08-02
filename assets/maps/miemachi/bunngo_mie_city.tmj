@@ -152,6 +152,18 @@
                  "width":182,
                  "x":94,
                  "y":248
+                }, 
+                {
+                 "ellipse":true,
+                 "height":204,
+                 "id":30,
+                 "name":"koutaroupoteto",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":116,
+                 "x":404,
+                 "y":500
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -160,7 +172,7 @@
          "y":0
         }],
  "nextlayerid":3,
- "nextobjectid":30,
+ "nextobjectid":31,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",
