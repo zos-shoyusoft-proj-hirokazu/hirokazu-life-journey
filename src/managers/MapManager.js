@@ -180,6 +180,10 @@ export class MapManager {
                 originalY: obj.y,  // 元の座標を保存
                 x: obj.x * this.mapScaleX + (this.mapLayer ? this.mapLayer.x : 0),
                 y: obj.y * this.mapScaleY + (this.mapLayer ? this.mapLayer.y : 0),
+                width: obj.width * this.mapScaleX,  // スケールに合わせてサイズも調整
+                height: obj.height * this.mapScaleY,  // スケールに合わせてサイズも調整
+                ellipse: obj.ellipse || false,
+                rotation: obj.rotation || 0,
                 type: obj.type || 'location'
             }));
             

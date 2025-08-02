@@ -3,7 +3,7 @@ export const AreaConfig = {
     // 三重町マップ
     miemachi: {
         mapKey: 'bunngo_mie_city',
-        tilesetKey: 'bunngooonoshimiemachi',
+        tilesetKey: 'miemachi',
         mapTitle: '三重町マップ',
         bgm: {
             map: 'assets/audio/bgm/stage1/kessen_diaruga.mp3', // 通常マップBGM
@@ -31,19 +31,17 @@ export const AreaConfig = {
         //     'profile': 'assets/audio/bgm/events/default_event.mp3'
         // },
         areas: [
-            { name: 'mie_high_school', scene: 'MieHighSchoolScene' },
-            { name: 'sumiwataru', scene: 'SumiWataruScene' },
-            { name: 'shigaku', scene: 'ShigakuScene' },
-            { name: 'Banned_kiku', scene: 'BannedKikuScene' },
-            { name: 'drinking_hope', scene: 'DrinkingHopeScene' },
+            { name: 'Traial', scene: 'TraialScene' },
+            { name: 'Flash_land_mie', scene: 'FlashLandMieScene' },
+            { name: 'oreno_koto', scene: 'OrenoKotoScene' },
+            { name: 'momoiro_jyogakuenn', scene: 'MomoiroJyogakuennScene' },
+            { name: 'drinking_dutu', scene: 'DrinkingDutuScene' },
             { name: 'Weeds_burn', scene: 'WeedsBurnScene' },
-            { name: 'katou_poteto', scene: 'KatouPotetoScene' },
-            { name: 'Tanabata_bamboo', scene: 'TanabataBambooScene' },
-            { name: 'bookmarket', scene: 'BookMarketScene' },
-            { name: 'drink_zutu', scene: 'DrinkZutuScene' },
-            { name: 'ドール', scene: 'DollScene' },
-            { name: 'momoiro', scene: 'MomoiroScene' },
-            { name: 'profile', scene: 'ProfileScene' }
+            { name: 'mie_high_school', scene: 'MieHighSchoolScene' },
+            { name: 'raizu', scene: 'RaizuScene' },
+            { name: 'dole', scene: 'DoleScene' },
+            { name: 'souce', scene: 'SouceScene' },
+            { name: 'koutaroupoteto', scene: 'KoutarouPotetoScene' }
         ]
     },
     

@@ -1,4 +1,12 @@
 { "compressionlevel":-1,
+ "editorsettings":
+    {
+     "export":
+        {
+         "format":"json",
+         "target":"taketa.tmj"
+        }
+    },
  "height":15,
  "infinite":false,
  "layers":[
@@ -31,7 +39,7 @@
         {
          "draworder":"topdown",
          "id":2,
-         "name":"\u30aa\u30d6\u30b8\u30a7\u30af\u30c8\u30ec\u30a4\u30e4\u30fc1",
+         "name":"taketa",
          "objects":[
                 {
                  "height":0,
@@ -76,7 +84,7 @@
                  "point":true,
                  "rotation":0,
                  "type":"",
-                 "visible":false,
+                 "visible":true,
                  "width":0,
                  "x":670.666666666667,
                  "y":297.333333333333
@@ -97,7 +105,7 @@
         {
          "columns":15,
          "firstgid":1,
-         "image":"taketa_map.png",
+         "image":"..\/taild\/\u3082\u3068\/\u7af9\u7530\/taketa_map.png",
          "imageheight":1080,
          "imagewidth":1924,
          "margin":0,

@@ -48,19 +48,17 @@ export class AreaSelectionManager {
     getAreaDescription(areaName) {
         // エリアの説明を取得
         const descriptions = {
-            'mie_high_school': '三重中学校',
-            'sumiwataru': '澄みわたる',
-            'shigaku': '志学',
-            'Banned_kiku': '出禁のキク',
-            'drinking_hope': '飲みをしたいなぁ',
+            'Traial': 'トライアル',
+            'Flash_land_mie': 'フラッシュランド三重',
+            'oreno_koto': '俺のこと',
+            'momoiro_jyogakuenn': '桃色女学院',
+            'drinking_dutu': 'づつ',
             'Weeds_burn': '雑草がもえるぅぅ',
-            'katou_poteto': 'こうたろうポテト',
-            'Tanabata_bamboo': '七夕竹',
-            'bookmarket': 'ブックマーケット',
-            'drink_zutu': '飲み頭痛',
-            'ドール': 'ドール',
-            'momoiro': '桃色',
-            'profile': 'プロフィール',
+            'mie_high_school': '三重中学校',
+            'raizu': 'ライズ',
+            'dole': 'ドール',
+            'souce': 'ソース',
+            'koutaroupoteto': 'こうたろうポテト',
             // 竹田ステージのエリア説明
             'taketa_station': '竹田駅',
             'taketa_high school': '竹田高校',
@@ -107,23 +105,62 @@ export class AreaSelectionManager {
         // 現在のスケールを取得
         const currentScale = this.scene.mapManager?.mapScaleX || 1;
         
-        // スケールに応じてマーカーのサイズを調整（全体マップ時でも最小サイズを保証）
-        const minCircleRadius = 10; // 最小半径
-        const circleRadius = Math.max(minCircleRadius, 10 * currentScale);
+        // スケールに応じてフォントサイズを調整
         const minFontSize = 10; // 最小フォントサイズ
         const fontSize = Math.max(minFontSize, Math.floor(10 * currentScale)) + 'px';
         const labelOffset = Math.max(15, 15 * currentScale);
         
-        console.log(`AreaSelectionManager: Creating marker for ${area.name} at (${area.x}, ${area.y}) with scale ${currentScale}, radius ${circleRadius}, fontSize ${fontSize}`);
+        // オブジェクトの実際の範囲を取得
+        const objectWidth = area.width || 100;
+        const objectHeight = area.height || 100;
+        const objectX = area.x;
+        const objectY = area.y;
+        const isEllipse = area.ellipse || false;
+        const rotation = area.rotation || 0;
         
-        // 背景円
-        const background = this.scene.add.circle(area.x, area.y, circleRadius, 0x4169E1, 0.7);
+        console.log(`AreaSelectionManager: Creating marker for ${area.name} at (${objectX}, ${objectY}) with size (${objectWidth}, ${objectHeight}), ellipse: ${isEllipse}, rotation: ${rotation} and scale ${currentScale}`);
+        
+        // オブジェクトの回転を考慮した中心座標を計算
+        // Tiledのオブジェクトは、x, yが回転前の左上座標。
+        // 回転の中心をオブジェクトの中心にするために、回転後の中心座標を計算する。
+        const unrotatedCenterX = objectX + objectWidth / 2;
+        const unrotatedCenterY = objectY + objectHeight / 2;
+
+        let rotatedCenterX = unrotatedCenterX;
+        let rotatedCenterY = unrotatedCenterY;
+
+        if (rotation !== 0) {
+            const angleRad = rotation * Math.PI / 180;
+            // 回転の中心はTiledのオブジェクトの原点 (objectX, objectY)
+            // unrotatedCenterX, unrotatedCenterY を (objectX, objectY) を中心に回転させる
+            const tempX = unrotatedCenterX - objectX;
+            const tempY = unrotatedCenterY - objectY;
+
+            rotatedCenterX = objectX + (tempX * Math.cos(angleRad) - tempY * Math.sin(angleRad));
+            rotatedCenterY = objectY + (tempX * Math.sin(angleRad) + tempY * Math.cos(angleRad));
+        }
+
+        // 背景形状（オブジェクトの実際の範囲と形状に合わせる）
+        let background;
+        if (isEllipse) {
+            // 楕円形オブジェクト
+            background = this.scene.add.ellipse(rotatedCenterX, rotatedCenterY, objectWidth, objectHeight, 0x4169E1, 0.3);
+        } else {
+            // 矩形オブジェクト
+            background = this.scene.add.rectangle(rotatedCenterX, rotatedCenterY, objectWidth, objectHeight, 0x4169E1, 0.3);
+        }
         background.setStrokeStyle(2 * currentScale, 0xFFFFFF);
         background.setData('markerType', 'areaMarker');
         background.setData('areaName', area.name);
+
+        // Phaserオブジェクトの原点を中心に設定し、回転を適用
+        background.setOrigin(0.5, 0.5);
+        if (rotation !== 0) {
+            background.setRotation(rotation * Math.PI / 180);
+        }
         
-        // テキストラベル（円の真上に配置）
-        const label = this.scene.add.text(area.x, area.y - labelOffset, area.description, {
+        // テキストラベル（矩形の上部に配置）
+        const label = this.scene.add.text(objectX + objectWidth/2, objectY - labelOffset, area.description, {
             fontSize: fontSize,
             fill: '#000000',
             backgroundColor: '#FFFFFF',
