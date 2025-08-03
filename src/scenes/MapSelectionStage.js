@@ -149,6 +149,21 @@ export class MapSelectionStage extends Phaser.Scene {
             this.scale.on('resize', this.handleResize, this);
             // シーンシャットダウン時のクリーンアップ登録
             this.events.on('shutdown', this.shutdown, this);
+            // デバッグ: childrenリストを詳細に出力
+            console.log('Phaser children list:');
+            this.children.list.forEach((child, i) => {
+              console.log(
+                `#${i}: type=${child.type}, x=${child.x}, y=${child.y}, width=${child.width}, height=${child.height}, fillColor=${child.fillColor}, visible=${child.visible}, name=${child.name || ''}`
+              );
+              // Graphicsオブジェクトの詳細情報を出力
+              if (child.type === 'Graphics') {
+                console.log(`  Graphics #${i} details:`, child);
+              }
+              // 画面中央下部付近のオブジェクトを特定
+              if (child.x >= 400 && child.x <= 500 && child.y >= 400 && child.y <= 600) {
+                console.log(`  *** CENTRAL BOTTOM AREA OBJECT #${i}:`, child);
+              }
+            });
         } catch (error) {
             console.error(`Error creating ${this.mapConfig.mapTitle}:`, error);
             console.error('Stack trace:', error.stack);

@@ -123,7 +123,7 @@ export class UIManager {
         this.selectedAreaText = scene.add.text(scene.cameras.main.centerX, scene.cameras.main.height - 50, '', {
             fontSize: '14px',
             fill: '#000000',
-            backgroundColor: '#FFFF99',
+            backgroundColor: 'transparent',
             padding: { x: 8, y: 4 },
             borderRadius: 8
         }).setOrigin(0.5);
