@@ -178,6 +178,8 @@ export class MapManager {
                 name: obj.name,
                 originalX: obj.x,  // 元の座標を保存
                 originalY: obj.y,  // 元の座標を保存
+                originalWidth: obj.width,  // 元のサイズを保存
+                originalHeight: obj.height,  // 元のサイズを保存
                 x: obj.x * this.mapScaleX + (this.mapLayer ? this.mapLayer.x : 0),
                 y: obj.y * this.mapScaleY + (this.mapLayer ? this.mapLayer.y : 0),
                 width: obj.width * this.mapScaleX,  // スケールに合わせてサイズも調整
@@ -249,13 +251,17 @@ export class MapManager {
             
             console.log(`MapManager: Map layer position - x: ${mapOffsetX}, y: ${mapOffsetY}, scale: ${scale}`);
             
-            // エリアの座標を更新
+            // エリアの座標とサイズを更新
             this.areas.forEach(area => {
                 // originalX/originalYを使用して正確な座標を計算
                 area.x = area.originalX * scale + mapOffsetX;
                 area.y = area.originalY * scale + mapOffsetY;
                 
-                console.log(`MapManager: Area ${area.name} - original: (${area.originalX}, ${area.originalY}), new: (${area.x}, ${area.y})`);
+                // サイズもスケールに合わせて調整（元のサイズから計算）
+                area.width = area.originalWidth * scale;
+                area.height = area.originalHeight * scale;
+                
+                console.log(`MapManager: Area ${area.name} - original: (${area.originalX}, ${area.originalY}), new: (${area.x}, ${area.y}), size: (${area.width}, ${area.height})`);
             });
             
             // スケール後のマップサイズを更新

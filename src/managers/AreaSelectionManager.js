@@ -152,7 +152,7 @@ export class AreaSelectionManager {
         background.setStrokeStyle(2 * currentScale, 0xFFFFFF);
         background.setData('markerType', 'areaMarker');
         background.setData('areaName', area.name);
-
+        
         // Phaserオブジェクトの原点を中心に設定し、回転を適用
         background.setOrigin(0.5, 0.5);
         if (rotation !== 0) {
@@ -214,16 +214,14 @@ export class AreaSelectionManager {
                 this.touchStartTime = Date.now();
             }
             
-            // 視覚的フィードバック
+            // オブジェクト自体を赤くする
             background.setFillStyle(0xFF0000, 0.7);
-            this.scene.tweens.add({
-                targets: background,
-                scaleX: 1.3,
-                scaleY: 1.3,
-                duration: 100,
-                yoyo: true,
-                ease: 'Power2'
-            });
+            
+            // 赤く広がるエフェクトを表示（オブジェクトサイズから開始）
+            const area = background.getData('area');
+            const centerX = area.x + (area.width || 100) / 2;
+            const centerY = area.y + (area.height || 100) / 2;
+            this.visualFeedback.showObjectRipple(centerX, centerY, area.width || 100, area.height || 100, 0xFF0000);
         });
         
         background.on('pointerup', () => {
@@ -237,9 +235,6 @@ export class AreaSelectionManager {
             } else {
                 this.selectArea(area);
             }
-            
-            // 色を戻す
-            background.setFillStyle(0x4169E1, 0.7);
         });
     }
 
@@ -284,10 +279,27 @@ export class AreaSelectionManager {
     }
 
     showSelectionEffect(area) {
-        // 選択エフェクトを表示
-        this.visualFeedback.showSelectionEffect(area.x, area.y);
+        // 選択エフェクトを表示（エフェクト削除）
+        // this.visualFeedback.showSelectionEffect(area.x, area.y);
         // 確認ダイアログを表示
         this.showConfirmDialog(area);
+    }
+
+    // 選択されたオブジェクトの色を戻す
+    resetSelectedObjectColor() {
+        if (this.selectedArea) {
+            // 選択されたエリアのマーカーを見つけて色を戻す
+            this.areaSprites.forEach(marker => {
+                // マーカーコンテナ内の背景オブジェクトを取得
+                const background = marker.getAt(0); // 最初の要素（背景）
+                if (background && background.setFillStyle) {
+                    const backgroundArea = background.getData('area');
+                    if (backgroundArea && backgroundArea.name === this.selectedArea.name) {
+                        background.setFillStyle(0x4169E1, 0.7);
+                    }
+                }
+            });
+        }
     }
 
     showConfirmDialog(area) {
@@ -341,11 +353,15 @@ export class AreaSelectionManager {
         // ボタンイベント
         yesButton.on('pointerdown', () => {
             dialog.destroy();
+            // 選択されたオブジェクトの色を戻す
+            this.resetSelectedObjectColor();
             this.handleAreaSelection(area);
         });
         
         noButton.on('pointerdown', () => {
             dialog.destroy();
+            // 選択されたオブジェクトの色を戻す
+            this.resetSelectedObjectColor();
         });
         
         // 自動的にダイアログを閉じる

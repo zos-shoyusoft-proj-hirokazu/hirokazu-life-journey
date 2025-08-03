@@ -23,6 +23,26 @@ export class VisualFeedbackManager {
         // SE再生はそのまま
     }
 
+    // オブジェクトサイズから広がるエフェクト
+    showObjectRipple(x, y, width, height, color = 0xFF0000, duration = 400) {
+        // オブジェクトの大きい方のサイズを基準にする
+        const startSize = Math.max(width, height) / 2;
+        const ripple = this.scene.add.circle(x, y, startSize, color, 0.7);
+        ripple.setDepth(9999); // 最前面に
+        this.scene.tweens.add({
+            targets: ripple,
+            scaleX: 3,
+            scaleY: 3,
+            alpha: 0,
+            duration: duration,
+            ease: 'Power2',
+            onComplete: () => {
+                ripple.destroy();
+            }
+        });
+        this.activeEffects.push(ripple);
+    }
+
     // ボタンホバーエフェクト
     showButtonHover(target, scale = 1.2, color = 0xFFD700, alpha = 0.7) {
         if (target.setScale) target.setScale(scale);

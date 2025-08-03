@@ -251,6 +251,20 @@ export class CameraManager {
         // オブジェクトの位置を再計算（マップレイヤーの位置設定後に実行）
         this.scene.mapManager.updateObjectPositions(scale);
 
+        // マーカーを再作成（スケール変更後に実行）
+        if (this.scene.areaSelectionManager) {
+            const mapAreas = this.scene.mapManager.getAreas();
+            const configAreas = this.scene.mapConfig.areas;
+            const mergedAreas = mapAreas.map(mapArea => {
+                const configArea = configAreas.find(config => config.name === mapArea.name);
+                return {
+                    ...mapArea,
+                    scene: configArea?.scene || null
+                };
+            });
+            this.scene.areaSelectionManager.setupAreas(mergedAreas);
+        }
+
         // スケールに応じてカメラの境界を設定
         if (scale === 1.5) {
             // 1.5倍時：マップ全体をカバーする境界
