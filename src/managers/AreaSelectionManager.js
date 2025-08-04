@@ -147,13 +147,14 @@ export class AreaSelectionManager {
         // 背景形状（オブジェクトの実際の範囲と形状に合わせる）
         let background;
         if (isEllipse) {
-            // 楕円形オブジェクト
-            background = this.scene.add.ellipse(rotatedCenterX, rotatedCenterY, objectWidth, objectHeight, 0x4169E1, 0.3);
+            // 楕円形オブジェクト - より透明にして光らせる
+            background = this.scene.add.ellipse(rotatedCenterX, rotatedCenterY, objectWidth, objectHeight, 0x4169E1, 0.1);
         } else {
-            // 矩形オブジェクト
-            background = this.scene.add.rectangle(rotatedCenterX, rotatedCenterY, objectWidth, objectHeight, 0x4169E1, 0.3);
+            // 矩形オブジェクト - より透明にして光らせる
+            background = this.scene.add.rectangle(rotatedCenterX, rotatedCenterY, objectWidth, objectHeight, 0x4169E1, 0.1);
         }
-        background.setStrokeStyle(2 * currentScale, 0xFFFFFF);
+        // 白い輪を削除
+        // background.setStrokeStyle(2 * currentScale, 0xFFFFFF);
         background.setData('markerType', 'areaMarker');
         background.setData('areaName', area.name);
         
@@ -162,6 +163,16 @@ export class AreaSelectionManager {
         if (rotation !== 0) {
             background.setRotation(rotation * Math.PI / 180);
         }
+        
+        // 淡く光らせるエフェクトを追加
+        this.scene.tweens.add({
+            targets: background,
+            alpha: 0.3,
+            duration: 2000,
+            yoyo: true,
+            repeat: -1,
+            ease: 'Sine.easeInOut'
+        });
         
         // テキストラベル（矩形の上部に配置）
         const label = this.scene.add.text(objectX + objectWidth/2, objectY - labelOffset, area.description, {
@@ -198,14 +209,14 @@ export class AreaSelectionManager {
         // ホバーエフェクト
         background.on('pointerover', () => {
             if (!this.isMobile) {
-                this.visualFeedback.showButtonHover(background, 1.2, 0xFFD700, 0.7);
+                this.visualFeedback.showButtonHover(background, 1.2, 0xFFD700, 0.3);
                 label.setStyle({ fill: '#FF0000' });
             }
         });
         
         background.on('pointerout', () => {
             if (!this.isMobile) {
-                this.visualFeedback.resetButtonState(background, 1, 0x4169E1, 0.7);
+                this.visualFeedback.resetButtonState(background, 1, 0x4169E1, 0.1);
                 label.setStyle({ fill: '#000000' });
             }
         });
@@ -313,7 +324,7 @@ export class AreaSelectionManager {
             // マーカーコンテナ内の背景オブジェクトを取得
             const background = marker.getAt(0); // 最初の要素（背景）
             if (background && background.setFillStyle) {
-                background.setFillStyle(0x4169E1, 0.7);
+                background.setFillStyle(0x4169E1, 0.1);
             }
         });
     }
@@ -328,7 +339,7 @@ export class AreaSelectionManager {
                 if (background && background.setFillStyle) {
                     const backgroundArea = background.getData('area');
                     if (backgroundArea && backgroundArea.name === this.selectedArea.name) {
-                        background.setFillStyle(0x4169E1, 0.7);
+                        background.setFillStyle(0x4169E1, 0.1);
                     }
                 }
             });
