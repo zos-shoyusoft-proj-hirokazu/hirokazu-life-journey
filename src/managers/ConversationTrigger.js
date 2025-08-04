@@ -24,6 +24,12 @@ export class ConversationTrigger {
 
     // ギャルゲ風会話システムの開始（NPCクリック時とエリアマーカー「はい」クリック時の両方で使用）
     startVisualNovelConversation(conversationData) {
+        // シーンの有効性をチェック
+        if (!this.scene || !this.scene.scene) {
+            console.warn('[ConversationTrigger] Scene is not available for conversation');
+            return;
+        }
+        
         // 既に会話が起動中の場合は停止
         if (this.isConversationActive) {
             this.scene.scene.stop('ConversationScene');
@@ -42,6 +48,13 @@ export class ConversationTrigger {
             // 少し待ってからConversationSceneを起動
             this.scene.time.delayedCall(100, () => {
                 
+                // シーンの有効性を再チェック
+                if (!this.scene || !this.scene.scene) {
+                    console.warn('[ConversationTrigger] Scene became invalid during conversation start');
+                    this.isConversationActive = false;
+                    return;
+                }
+                
                 // ConversationSceneを起動（既にStage1で追加済み）
                 this.scene.scene.launch('ConversationScene');
                 
@@ -53,6 +66,13 @@ export class ConversationTrigger {
                     // create()が完了するまで待つ
                     this.scene.time.delayedCall(200, () => {
                         try {
+                            // シーンの有効性を再チェック
+                            if (!this.scene || !this.scene.scene) {
+                                console.warn('[ConversationTrigger] Scene became invalid during conversation setup');
+                                this.isConversationActive = false;
+                                return;
+                            }
+                            
                             conversationScene.startConversation(conversationData);
                         } catch (error) {
                             console.error('[ConversationTrigger] 会話開始エラー:', error);
@@ -149,5 +169,25 @@ export class ConversationTrigger {
     // 会話がアクティブかどうかを確認
     isActive() {
         return this.isConversationActive;
+    }
+    
+    // リソースを解放
+    destroy() {
+        // 会話がアクティブな場合は停止
+        if (this.isConversationActive) {
+            this.scene.scene.stop('ConversationScene');
+            this.isConversationActive = false;
+        }
+        
+        // イベントリスナーをクリア
+        this.triggeredEvents.clear();
+        
+        // シーンへの参照を削除
+        this.scene = null;
+        
+        // 会話マネージャーをクリーンアップ
+        if (this.conversationManager) {
+            this.conversationManager = null;
+        }
     }
 } 

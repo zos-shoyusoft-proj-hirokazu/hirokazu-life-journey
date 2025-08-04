@@ -233,4 +233,39 @@ export class DialogSystem {
     isDialogActive() {
         return this.isActive;
     }
+    
+    // リソースを解放
+    destroy() {
+        // 会話を終了
+        this.endDialog();
+        
+        // ダイアログコンテナを破棄
+        if (this.dialogContainer) {
+            this.dialogContainer.destroy();
+            this.dialogContainer = null;
+        }
+        
+        // ダイアログテキストを破棄
+        if (this.dialogText) {
+            this.dialogText.destroy();
+            this.dialogText = null;
+        }
+        
+        // イベントリスナーを削除
+        if (this.scene && this.scene.scale) {
+            this.scene.scale.off('resize', this.handleResize, this);
+        }
+        
+        if (this.scene && this.scene.input && this.scene.input.keyboard) {
+            this.scene.input.keyboard.off('keydown-SPACE');
+        }
+        
+        // プロパティをリセット
+        this.currentDialog = null;
+        this.currentTextIndex = 0;
+        this.dialogs = null;
+        
+        // シーンへの参照を削除
+        this.scene = null;
+    }
 }

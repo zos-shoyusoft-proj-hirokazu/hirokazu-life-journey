@@ -37,6 +37,12 @@ export class UIManager {
             return;
         }
         
+        // inputシステムの有効性をチェック
+        if (!scene.input) {
+            console.warn('UIManager: Scene input system is not available for back button');
+            return;
+        }
+        
         // 角丸背景に修正
         this.backButtonGraphics = scene.add.graphics();
         this.backButtonGraphics.fillStyle(0x000000, 0.7);
@@ -46,11 +52,94 @@ export class UIManager {
         this.backButtonGraphics.setScrollFactor(0);
         // インタラクティブ化（ヒットエリアも完全に同じ座標・サイズにする）
         this.backButtonGraphics.setInteractive(new Phaser.Geom.Rectangle(-45, -20, 80, 40), Phaser.Geom.Rectangle.Contains);
+        
+        // ボタンテキストを動的に設定
+        let buttonText = '戻る';
+        if (scene.scene && scene.scene.key) {
+            if (scene.scene.key === 'Stage1Scene') {
+                buttonText = '三重町マップに戻る';
+            } else if (scene.scene.key === 'MiemachiStage') {
+                buttonText = 'ステージ選択画面に戻る';
+            }
+        }
+        
         this.backButtonGraphics.on('pointerdown', () => {
-            if (window.returnToStageSelect) {
-                window.returnToStageSelect();
+            console.log('[UIManager] 戻るボタンがクリックされました');
+            console.log('[UIManager] 現在のシーン:', scene.scene?.key);
+            console.log('[UIManager] returnToMiemachi exists:', typeof window.returnToMiemachi !== 'undefined');
+            console.log('[UIManager] returnToStageSelect exists:', typeof window.returnToStageSelect !== 'undefined');
+            console.log('[UIManager] returnToStageSelect function:', window.returnToStageSelect);
+            
+            // シーンの種類に応じて戻る処理を分岐
+            if (scene.scene?.key === 'Stage1Scene') {
+                console.log('[UIManager] Stage1Sceneから三重町マップに戻ります');
+                if (window.returnToMiemachi) {
+                    console.log('[UIManager] returnToMiemachiを呼び出します');
+                    window.returnToMiemachi();
+                } else {
+                    console.error('[UIManager] returnToMiemachiが見つかりません');
+                }
+            } else if (scene.scene?.key === 'MiemachiStage') {
+                console.log('[UIManager] MiemachiStageからステージ選択画面に戻ります');
+                if (window.returnToStageSelect) {
+                    console.log('[UIManager] returnToStageSelectを呼び出します');
+                    try {
+                        window.returnToStageSelect();
+                        console.log('[UIManager] returnToStageSelectの実行完了');
+                    } catch (error) {
+                        console.error('[UIManager] returnToStageSelectの実行でエラー:', error);
+                    }
+                } else {
+                    console.error('[UIManager] returnToStageSelectが見つかりません');
+                    // フォールバック：直接ステージ選択画面を表示
+                    const stageSelect = document.getElementById('stage-select');
+                    const gameContainer = document.getElementById('game-container');
+                    if (stageSelect) {
+                        stageSelect.style.display = 'block';
+                        console.log('[UIManager] フォールバック: ステージ選択画面を表示しました');
+                    }
+                    if (gameContainer) {
+                        gameContainer.style.display = 'none';
+                    }
+                }
+            } else {
+                console.warn('[UIManager] 未知のシーン:', scene.scene?.key);
+                // フォールバック：直接ステージ選択画面を表示
+                const stageSelect = document.getElementById('stage-select');
+                const gameContainer = document.getElementById('game-container');
+                if (stageSelect) {
+                    stageSelect.style.display = 'block';
+                    console.log('[UIManager] フォールバック: ステージ選択画面を表示しました');
+                }
+                if (gameContainer) {
+                    gameContainer.style.display = 'none';
+                }
             }
         });
+        
+        // キーボードショートカットでも戻る機能を追加
+        if (scene.input && scene.input.keyboard) {
+            scene.input.keyboard.on('keydown-ESC', () => {
+                console.log('[UIManager] ESCキーが押されました');
+                if (window.returnToStageSelect) {
+                    console.log('[UIManager] ESCキーでreturnToStageSelectを呼び出します');
+                    window.returnToStageSelect();
+                } else {
+                    console.warn('[UIManager] ESCキー: 戻る機能が見つかりません');
+                    // フォールバック：直接ステージ選択画面を表示
+                    const stageSelect = document.getElementById('stage-select');
+                    const gameContainer = document.getElementById('game-container');
+                    if (stageSelect) {
+                        stageSelect.style.display = 'block';
+                        console.log('[UIManager] ESCキー: フォールバックでステージ選択画面を表示しました');
+                    }
+                    if (gameContainer) {
+                        gameContainer.style.display = 'none';
+                    }
+                }
+            });
+        }
+        
         this.backButtonGraphics.on('pointerover', () => {
             this.backButtonGraphics.clear();
             this.backButtonGraphics.fillStyle(0x333333, 0.8);
@@ -63,7 +152,7 @@ export class UIManager {
         });
         
         // 戻るボタンのテキスト
-        this.backButtonText = scene.add.text(45, 34, '戻る', {
+        this.backButtonText = scene.add.text(45, 34, buttonText, {
             fontSize: '16px',
             fill: '#ffffff',
             fontWeight: 'bold',

@@ -72,4 +72,20 @@ export class VisualFeedbackManager {
         });
         this.activeEffects.push(effect);
     }
+
+    // クリーンアップ処理
+    destroy() {
+        // アクティブなエフェクトをすべて削除
+        if (this.activeEffects && this.activeEffects.length > 0) {
+            this.activeEffects.forEach(effect => {
+                if (effect && effect.destroy) {
+                    effect.destroy();
+                }
+            });
+            this.activeEffects = [];
+        }
+        
+        // シーンの参照をクリア
+        this.scene = null;
+    }
 } 

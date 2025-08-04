@@ -370,23 +370,31 @@ export class MapManager {
                     
                     if (obj.type === 'npc') {
                         this.npcSprites.set(obj.name, sprite);
-                    }
-
-                    let hasCollision = false;
-                    if (obj.properties && Array.isArray(obj.properties)) {
-                        const collidesProp = obj.properties.find(prop => prop.name === 'collides');
-                        hasCollision = collidesProp && collidesProp.value === true;
-                    }
-
-                    if (hasCollision) {
-                        let objType = obj.type || 'wall';
-
+                        // NPCは必ずCollisionManagerに追加
                         this.scene.collisionManager.addObjectToCollision(sprite, {
-                            type: objType,
+                            type: 'npc',
                             width: obj.width || 32,
                             height: obj.height || 32,
                             name: obj.name
-                        });  
+                        });
+                    } else {
+                        // NPC以外のオブジェクトはcollidesプロパティをチェック
+                        let hasCollision = false;
+                        if (obj.properties && Array.isArray(obj.properties)) {
+                            const collidesProp = obj.properties.find(prop => prop.name === 'collides');
+                            hasCollision = collidesProp && collidesProp.value === true;
+                        }
+
+                        if (hasCollision) {
+                            let objType = obj.type || 'wall';
+
+                            this.scene.collisionManager.addObjectToCollision(sprite, {
+                                type: objType,
+                                width: obj.width || 32,
+                                height: obj.height || 32,
+                                name: obj.name
+                            });  
+                        }
                     }
                 } else {
                     console.warn(`Image not found: ${imageKey} - スプライト作成をスキップします`);

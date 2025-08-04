@@ -13,7 +13,7 @@ export class BehaviorManager_Stage1 {
                 this.setupNpcBehavior(sprite, obj);
                 break;
             case 'item':
-                this.setupItemBehavior(sprite, obj);
+                this.setupItemBehavior(sprite);
                 break;
             case 'enemy':
                 this.setupEnemyBehavior(sprite, obj);
@@ -193,9 +193,18 @@ export class BehaviorManager_Stage1 {
 
     // 会話開始処理
     startConversation(npcId) {
-        // CollisionManagerの会話システムを使用
-        if (this.scene.collisionManager) {
+        // ギャルゲ風の会話システムを優先
+        if (this.scene.conversationTrigger) {
+            this.scene.conversationTrigger.startConversation(npcId);
+        } else if (this.scene.collisionManager) {
+            // フォールバック：既存のCollisionManagerの会話システムを使用
             this.scene.collisionManager.startConversation(npcId);
         }
+    }
+    
+    // リソースを解放
+    destroy() {
+        // シーンへの参照を削除
+        this.scene = null;
     }
 }

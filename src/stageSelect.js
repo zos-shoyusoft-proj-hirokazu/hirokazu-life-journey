@@ -36,6 +36,33 @@ function startStage(stageNumber) {
 // ゲーム中からステージ選択に戻るためのグローバル関数
 function returnToStageSelect() {
     if (window.game && window.game.destroy) {
+        // すべてのシーンのAudioManagerをクリーンアップ
+        if (window.game.scene) {
+            window.game.scene.scenes.forEach(scene => {
+                if (scene && scene.audioManager) {
+                    scene.audioManager.stopAll();
+                    scene.audioManager.destroy();
+                    scene.audioManager = null;
+                }
+                
+                // イベントリスナーの削除
+                if (scene.events) {
+                    scene.events.removeAllListeners();
+                }
+                
+                // シーンのshutdownメソッドを呼び出し
+                if (scene.shutdown) {
+                    scene.shutdown();
+                }
+            });
+        }
+        
+        // グローバルな音声システムをクリーンアップ
+        if (window.game.sound) {
+            window.game.sound.stopAll();
+            window.game.sound.removeAll();
+        }
+        
         window.game.destroy(true);
         window.game = null;
         if (typeof window.gameInstance !== 'undefined') {
@@ -49,6 +76,7 @@ function returnToStageSelect() {
 window.returnToStageSelect = returnToStageSelect;
 window.showStageSelect = showStageSelect;
 window.hideStageSelect = hideStageSelect;
+window.startStage = startStage;
 
 // ページ読み込み時の処理（重複実行防止）
 if (!window.stageSelectInitialized) {

@@ -7,8 +7,8 @@ export const AreaConfig = {
         mapTitle: '三重町マップ',
         bgm: {
             map: 'assets/audio/bgm/stage1/kessen_diaruga.mp3', // 通常マップBGM
-            battle: 'assets/audio/bgm/stage1/battle.mp3',      // バトルBGM
-            event: 'assets/audio/bgm/stage1/event.mp3'          // イベントBGM
+            // battle: 'assets/audio/bgm/stage1/battle.mp3',      // バトルBGM - ファイルが存在しないため削除
+            // event: 'assets/audio/bgm/stage1/event.mp3'          // イベントBGM - ファイルが存在しないため削除
         },
         se: {
             touch: 'assets/audio/se/touch_7.mp3', // ダイアログ用タッチSE
@@ -31,17 +31,17 @@ export const AreaConfig = {
         //     'profile': 'assets/audio/bgm/events/default_event.mp3'
         // },
         areas: [
-            { name: 'Traial', scene: 'TraialScene' },
-            { name: 'Flash_land_mie', scene: 'FlashLandMieScene' },
-            { name: 'oreno_koto', scene: 'OrenoKotoScene' },
-            { name: 'momoiro_jyogakuenn', scene: 'MomoiroJyogakuennScene' },
-            { name: 'drinking_dutu', scene: 'DrinkingDutuScene' },
-            { name: 'Weeds_burn', scene: 'WeedsBurnScene' },
-            { name: 'mie_high_school', scene: 'MieHighSchoolScene' },
-            { name: 'raizu', scene: 'RaizuScene' },
-            { name: 'dole', scene: 'DoleScene' },
-            { name: 'souce', scene: 'SouceScene' },
-            { name: 'koutaroupoteto', scene: 'KoutarouPotetoScene' }
+            { name: 'Traial', scene: 'TraialScene', conversationId: null },
+            { name: 'Flash_land_mie', scene: 'FlashLandMieScene', conversationId: null },
+            { name: 'oreno_koto', scene: 'OrenoKotoScene', conversationId: 'oreno_koto' },
+            { name: 'momoiro_jyogakuenn', scene: 'MomoiroJyogakuennScene', conversationId: 'annex_momo' },
+            { name: 'drinking_dutu', scene: 'DrinkingDutuScene', conversationId: 'drink_zutsu' },
+            { name: 'Weeds_burn', scene: 'WeedsBurnScene', conversationId: 'river_fire' },
+            { name: 'mie_high_school', scene: 'startPhaserGame', sceneParam: 1, conversationId: null },
+            { name: 'raizu', scene: 'RaizuScene', conversationId: 'shigaku' },
+            { name: 'dole', scene: 'DoleScene', conversationId: 'doll' },
+            { name: 'souce', scene: 'SouceScene', conversationId: 'team_shoyu_drinking' },
+            { name: 'koutaroupoteto', scene: 'KoutarouPotetoScene', conversationId: 'koutarou_potato' }
         ]
     },
     
@@ -52,8 +52,8 @@ export const AreaConfig = {
         mapTitle: '竹田ステージ',
         bgm: {
             map: 'assets/audio/bgm/stage1/kessen_diaruga.mp3', // 通常マップBGM
-            battle: 'assets/audio/bgm/stage1/battle.mp3',      // バトルBGM
-            event: 'assets/audio/bgm/stage1/event.mp3'          // イベントBGM
+            // battle: 'assets/audio/bgm/stage1/battle.mp3',      // バトルBGM - ファイルが存在しないため削除
+            // event: 'assets/audio/bgm/stage1/event.mp3'          // イベントBGM - ファイルが存在しないため削除
         },
         se: {
             touch: 'assets/audio/se/touch_7.mp3', // ダイアログ用タッチSE

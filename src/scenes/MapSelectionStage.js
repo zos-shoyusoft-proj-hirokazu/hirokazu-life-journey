@@ -114,8 +114,8 @@ export class MapSelectionStage extends Phaser.Scene {
             // 視覚的フィードバックマネージャーを初期化
             this.visualFeedbackManager = new VisualFeedbackManager(this);
             
-            // 竹田ステージの場合は会話システムを初期化
-            if (this.mapConfig.mapKey === 'taketa') {
+            // 竹田ステージと三重町ステージの場合は会話システムを初期化
+            if (this.mapConfig.mapKey === 'taketa' || this.mapConfig.mapKey === 'bunngo_mie_city') {
                 this.conversationTrigger = new ConversationTrigger(this);
                 // ConversationSceneを動的に追加
                 this.scene.add('ConversationScene', ConversationScene);
@@ -132,19 +132,37 @@ export class MapSelectionStage extends Phaser.Scene {
                 };
             });
             this.areaSelectionManager.setupAreas(mergedAreas);
-            // タッチイベントを直接設定
-            this.setupTouchEvents();
+            
             // UI要素を作成
             this.uiManager = new UIManager();
             this.uiManager.createMapUI(this, this.mapConfig.mapTitle);
-            this.uiManager.createBackButton(this); // 右上の戻るボタンを追加
+            
+            // 少し遅延を入れてから戻るボタンを作成（シーンの初期化完了を待つ）
+            this.time.delayedCall(100, () => {
+                try {
+                    this.uiManager.createBackButton(this); // 右上の戻るボタンを追加
+                    console.log('[MapSelectionStage] 戻るボタンを作成しました');
+                } catch (error) {
+                    console.error('[MapSelectionStage] 戻るボタンの作成に失敗:', error);
+                }
+            });
+            
+            // タッチイベントを設定
+            this.setupTouchEvents();
             
             // スケール切り替えボタンを追加
             this.createScaleToggleButton();
             
-            // AudioManagerを初期化
-            this.audioManager = new AudioManager(this);
-            this.audioManager.playBgm('bgm_map', 0.3);
+            // AudioManagerを初期化（シーンの初期化完了を待つ）
+            this.time.delayedCall(200, () => {
+                try {
+                    this.audioManager = new AudioManager(this);
+                    this.audioManager.playBgm('bgm_map', 0.3);
+                    console.log('[MapSelectionStage] AudioManagerを初期化しました');
+                } catch (error) {
+                    console.error('[MapSelectionStage] AudioManagerの初期化に失敗:', error);
+                }
+            });
             // リサイズイベントを設定
             this.scale.on('resize', this.handleResize, this);
             // シーンシャットダウン時のクリーンアップ登録
@@ -281,13 +299,45 @@ export class MapSelectionStage extends Phaser.Scene {
     }
 
     shutdown() {
-        if (this.audioManager && this.audioManager.stopAll) {
+        // AudioManagerの完全なクリーンアップ
+        if (this.audioManager) {
             this.audioManager.stopAll();
-            if (this.audioManager.bgm && this.audioManager.bgm.destroy) {
-                this.audioManager.bgm.destroy();
-                this.audioManager.bgm = null;
-            }
+            this.audioManager.destroy();
+            this.audioManager = null;
         }
+        
+        // 他のマネージャーのクリーンアップ
+        if (this.mapManager) {
+            this.mapManager.destroy();
+            this.mapManager = null;
+        }
+        
+        if (this.areaSelectionManager) {
+            this.areaSelectionManager.destroy();
+            this.areaSelectionManager = null;
+        }
+        
+        if (this.uiManager) {
+            this.uiManager.destroy();
+            this.uiManager = null;
+        }
+        
+        if (this.cameraManager) {
+            this.cameraManager.destroy();
+            this.cameraManager = null;
+        }
+        
+        if (this.visualFeedbackManager) {
+            this.visualFeedbackManager.destroy();
+            this.visualFeedbackManager = null;
+        }
+        
+        if (this.conversationTrigger) {
+            this.conversationTrigger.destroy();
+            this.conversationTrigger = null;
+        }
+        
+        // グローバルな音声システムもクリーンアップ
         if (this.sound) {
             this.sound.stopAll();
         }

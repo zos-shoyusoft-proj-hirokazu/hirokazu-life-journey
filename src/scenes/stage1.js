@@ -162,16 +162,66 @@ export class Stage1 extends Phaser.Scene {
     }
 
     shutdown() {
-        if (this.audioManager && this.audioManager.stopAll) {
+        // AudioManagerの完全なクリーンアップ
+        if (this.audioManager) {
             this.audioManager.stopAll();
-            if (this.audioManager.bgm && this.audioManager.bgm.destroy) {
-                this.audioManager.bgm.destroy();
-                this.audioManager.bgm = null;
-            }
+            this.audioManager.destroy();
+            this.audioManager = null;
         }
+        
+        // 他のマネージャーのクリーンアップ
+        if (this.playerController) {
+            this.playerController.destroy();
+            this.playerController = null;
+        }
+        
+        if (this.touchControlManager) {
+            this.touchControlManager.destroy();
+            this.touchControlManager = null;
+        }
+        
+        if (this.uiManager) {
+            this.uiManager.destroy();
+            this.uiManager = null;
+        }
+        
+        if (this.cameraManager) {
+            this.cameraManager.destroy();
+            this.cameraManager = null;
+        }
+        
+        if (this.inputManager) {
+            this.inputManager.destroy();
+            this.inputManager = null;
+        }
+        
+        if (this.collisionManager) {
+            this.collisionManager.destroy();
+            this.collisionManager = null;
+        }
+        
+        if (this.behaviorManager) {
+            this.behaviorManager.destroy();
+            this.behaviorManager = null;
+        }
+        
+        if (this.dialogSystem) {
+            this.dialogSystem.destroy();
+            this.dialogSystem = null;
+        }
+        
+        if (this.conversationTrigger) {
+            this.conversationTrigger.destroy();
+            this.conversationTrigger = null;
+        }
+        
+        // グローバルな音声システムもクリーンアップ
         if (this.sound) {
             this.sound.stopAll();
         }
+        
+        // シーンシャットダウン時のクリーンアップ登録を削除
+        this.events.off('shutdown', this.shutdown, this);
     }
 
     destroy() {

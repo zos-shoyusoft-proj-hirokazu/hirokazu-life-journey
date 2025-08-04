@@ -1,5 +1,6 @@
 import { VisualFeedbackManager } from './VisualFeedbackManager.js';
 import { taketaConversationData } from '../data/taketa/conversationData.js';
+import { miemachiConversationData } from '../data/miemachi/conversationData.js';
 
 export class AreaSelectionManager {
     constructor(scene) {
@@ -437,9 +438,11 @@ export class AreaSelectionManager {
     handleAreaSelection(area) {
         // エリア選択後の処理
         
-        // 竹田ステージの会話イベントをチェック（NPCクリック時と同じ会話システムを使用）
+        // 竹田ステージと三重町ステージの会話イベントをチェック（NPCクリック時と同じ会話システムを使用）
         if (this.scene.mapConfig && this.scene.mapConfig.mapKey === 'taketa') {
             this.handleTaketaConversation(area);
+        } else if (this.scene.mapConfig && this.scene.mapConfig.mapKey === 'bunngo_mie_city') {
+            this.handleMiemachiConversation(area);
         } else {
             // 従来の処理（他のマップ用）
             this.scene.time.delayedCall(1000, () => {
@@ -482,12 +485,309 @@ export class AreaSelectionManager {
         }
     }
 
+    handleMiemachiConversation(area) {
+        // 三重町ステージの会話イベントを処理
+        let eventId = null;
+        
+        // エリアのconversationIdを確認
+        if (area.conversationId && area.conversationId !== null) {
+            eventId = area.conversationId;
+        } else {
+            // エリア名に基づいて会話イベントを決定（フォールバック）
+            switch (area.name) {
+                case 'oreno_koto':
+                    eventId = 'oreno_koto';
+                    break;
+                case 'raizu':
+                    eventId = 'shigaku';
+                    break;
+                case 'souce':
+                    eventId = 'team_shoyu_drinking';
+                    break;
+                case 'Weeds_burn':
+                    eventId = 'river_fire';
+                    break;
+                case 'koutaroupoteto':
+                    eventId = 'koutarou_potato';
+                    break;
+                case 'drinking_dutu':
+                    eventId = 'drink_zutsu';
+                    break;
+                case 'dole':
+                    eventId = 'doll';
+                    break;
+                case 'momoiro_jyogakuenn':
+                    eventId = 'annex_momo';
+                    break;
+                default:
+                    // 会話イベントがない場合は通常の移動
+                    this.scene.time.delayedCall(1000, () => {
+                        this.navigateToArea(area);
+                    });
+                    return;
+            }
+        }
+        
+        // 会話データを取得
+        const conversationData = miemachiConversationData[eventId];
+        if (conversationData) {
+            // 会話システムを開始（NPCクリック時と同じ方法）
+            if (this.scene.conversationTrigger) {
+                this.scene.conversationTrigger.startVisualNovelConversation(conversationData);
+            } else {
+                console.warn('ConversationTrigger not found in scene');
+            }
+        } else {
+            console.warn(`Conversation data not found for event: ${eventId}`);
+            // 会話データがない場合は通常の移動
+            this.scene.time.delayedCall(1000, () => {
+                this.navigateToArea(area);
+            });
+        }
+    }
+
     navigateToArea(area) {
         // 選択した場所に応じて次のマップまたはシーンに移動
         
         // エリアオブジェクトがsceneプロパティを持っている場合
         if (area.scene) {
-            this.scene.scene.start(area.scene);
+            // startPhaserGameの場合は特別な処理
+            if (area.scene === 'startPhaserGame') {
+                // 三重町マップに戻るための関数を設定
+                window.returnToMiemachi = () => {
+                    // 現在のシーンを停止してから三重町マップを開始
+                    if (window.game && window.game.scene) {
+                        // すべてのシーンを停止して削除
+                        window.game.scene.scenes.forEach(scene => {
+                            if (scene && scene.scene) {
+                                // AudioManagerの完全なクリーンアップ
+                                if (scene.audioManager) {
+                                    scene.audioManager.stopAll();
+                                    scene.audioManager.destroy();
+                                    scene.audioManager = null;
+                                }
+                                
+                                // イベントリスナーの削除
+                                if (scene.events) {
+                                    scene.events.removeAllListeners();
+                                }
+                                
+                                // シーンのshutdownメソッドを呼び出し
+                                if (scene.shutdown) {
+                                    scene.shutdown();
+                                }
+                                
+                                if (scene.scene.isActive()) {
+                                    scene.scene.stop();
+                                }
+                                scene.scene.remove();
+                            }
+                        });
+                        
+                        // グローバルな音声システムもクリーンアップ
+                        if (window.game.sound) {
+                            window.game.sound.stopAll();
+                            // 音声キャッシュをクリア
+                            window.game.sound.removeAll();
+                        }
+                    }
+                    
+                    // ゲームインスタンスを完全に再初期化
+                    if (window.game) {
+                        window.game.destroy(true);
+                        window.game = null;
+                    }
+                    if (window.gameInstance) {
+                        window.gameInstance = null;
+                    }
+                    
+                    // 少し遅延を入れてから三重町マップを開始（クリーンアップ完了を待つ）
+                    setTimeout(() => {
+                        import('../gameController.js').then(({ startPhaserGame }) => {
+                            startPhaserGame('miemachi');
+                            
+                            // 三重町マップ開始直後にreturnToStageSelect関数を強制設定
+                            setTimeout(() => {
+                                console.log('[AreaSelectionManager] 三重町マップ開始直後の処理');
+                                
+                                // 強制的にreturnToStageSelect関数を設定
+                                window.returnToStageSelect = function() {
+                                    console.log('[AreaSelectionManager] returnToStageSelect called (強制設定版)');
+                                    
+                                    // ゲームのクリーンアップ
+                                    if (window.game) {
+                                        window.game.destroy(true);
+                                        window.game = null;
+                                    }
+                                    if (window.gameInstance) {
+                                        window.gameInstance = null;
+                                    }
+                                    
+                                    // ステージ選択画面を表示
+                                    const stageSelect = document.getElementById('stage-select');
+                                    const gameContainer = document.getElementById('game-container');
+                                    
+                                    if (stageSelect) {
+                                        stageSelect.style.display = 'block';
+                                        console.log('[AreaSelectionManager] ステージ選択画面を表示しました (強制設定版)');
+                                    }
+                                    
+                                    if (gameContainer) {
+                                        gameContainer.style.display = 'none';
+                                        console.log('[AreaSelectionManager] ゲームコンテナを非表示にしました (強制設定版)');
+                                    }
+                                    
+                                    // グローバル関数をクリア
+                                    window.returnToMiemachi = null;
+                                    window.returnToStageSelect = null;
+                                    
+                                    console.log('[AreaSelectionManager] returnToStageSelect完了 (強制設定版)');
+                                };
+                                
+                                console.log('[AreaSelectionManager] returnToStageSelect関数を強制設定しました');
+                                
+                            }, 500);
+                            
+                            // 三重町マップ開始後、ステージ選択画面に戻る機能を復活
+                            setTimeout(() => {
+                                console.log('[AreaSelectionManager] 三重町マップ開始後の処理を開始');
+                                
+                                // ステージ選択画面に戻る機能を再設定
+                                if (typeof window.returnToStageSelect === 'undefined') {
+                                    // stageSelect.jsを動的に読み込んで関数を復活
+                                    import('../stageSelect.js').then(() => {
+                                        console.log('[AreaSelectionManager] ステージ選択画面に戻る機能を復活しました');
+                                    });
+                                }
+                                
+                                // より確実にステージ選択画面に戻る機能を再定義
+                                window.returnToStageSelect = function() {
+                                    console.log('[AreaSelectionManager] returnToStageSelect called');
+                                    console.log('[AreaSelectionManager] 現在のゲーム状態:', {
+                                        game: !!window.game,
+                                        gameInstance: !!window.gameInstance,
+                                        stageSelect: !!document.getElementById('stage-select'),
+                                        gameContainer: !!document.getElementById('game-container')
+                                    });
+                                    
+                                    try {
+                                        if (window.game && window.game.destroy) {
+                                            console.log('[AreaSelectionManager] ゲームのクリーンアップを開始');
+                                            // すべてのシーンのAudioManagerをクリーンアップ
+                                            if (window.game.scene) {
+                                                window.game.scene.scenes.forEach(scene => {
+                                                    if (scene && scene.audioManager) {
+                                                        scene.audioManager.stopAll();
+                                                        scene.audioManager.destroy();
+                                                        scene.audioManager = null;
+                                                    }
+                                                    
+                                                    // イベントリスナーの削除
+                                                    if (scene.events) {
+                                                        scene.events.removeAllListeners();
+                                                    }
+                                                    
+                                                    // シーンのshutdownメソッドを呼び出し
+                                                    if (scene.shutdown) {
+                                                        scene.shutdown();
+                                                    }
+                                                });
+                                            }
+                                            
+                                            // グローバルな音声システムをクリーンアップ
+                                            if (window.game.sound) {
+                                                window.game.sound.stopAll();
+                                                window.game.sound.removeAll();
+                                            }
+                                            
+                                            window.game.destroy(true);
+                                            window.game = null;
+                                            if (typeof window.gameInstance !== 'undefined') {
+                                                window.gameInstance = null;
+                                            }
+                                            console.log('[AreaSelectionManager] ゲームのクリーンアップ完了');
+                                        }
+                                        
+                                        // ステージ選択画面を表示
+                                        const stageSelect = document.getElementById('stage-select');
+                                        const gameContainer = document.getElementById('game-container');
+                                        
+                                        console.log('[AreaSelectionManager] UI要素の状態:', {
+                                            stageSelect: !!stageSelect,
+                                            gameContainer: !!gameContainer
+                                        });
+                                        
+                                        if (stageSelect) {
+                                            stageSelect.style.display = 'block';
+                                            console.log('[AreaSelectionManager] ステージ選択画面を表示しました');
+                                        } else {
+                                            console.error('[AreaSelectionManager] ステージ選択画面の要素が見つかりません');
+                                        }
+                                        
+                                        if (gameContainer) {
+                                            gameContainer.style.display = 'none';
+                                            console.log('[AreaSelectionManager] ゲームコンテナを非表示にしました');
+                                        } else {
+                                            console.error('[AreaSelectionManager] ゲームコンテナの要素が見つかりません');
+                                        }
+                                        
+                                        // グローバル関数をクリア
+                                        window.returnToMiemachi = null;
+                                        window.returnToStageSelect = null;
+                                        
+                                        console.log('[AreaSelectionManager] returnToStageSelect完了');
+                                        
+                                    } catch (error) {
+                                        console.error('[AreaSelectionManager] returnToStageSelectでエラー:', error);
+                                        // エラーが発生してもフォールバックでステージ選択画面を表示
+                                        const stageSelect = document.getElementById('stage-select');
+                                        const gameContainer = document.getElementById('game-container');
+                                        if (stageSelect) {
+                                            stageSelect.style.display = 'block';
+                                        }
+                                        if (gameContainer) {
+                                            gameContainer.style.display = 'none';
+                                        }
+                                    }
+                                };
+                                
+                                console.log('[AreaSelectionManager] ステージ選択画面に戻る機能を再定義しました');
+                                console.log('[AreaSelectionManager] returnToStageSelect function:', window.returnToStageSelect);
+                                
+                                // 三重町マップの戻るボタンに直接イベントを設定
+                                setTimeout(() => {
+                                    const backButton = document.querySelector('#game-container .back-button, #game-container [data-back-button]');
+                                    if (backButton) {
+                                        backButton.addEventListener('click', () => {
+                                            console.log('[AreaSelectionManager] 三重町マップの戻るボタンがクリックされました');
+                                            window.returnToStageSelect();
+                                        });
+                                        console.log('[AreaSelectionManager] 三重町マップの戻るボタンにイベントを設定しました');
+                                    }
+                                }, 1000);
+                            }, 2000); // 遅延時間を2000msに増加
+                        });
+                    }, 300); // 遅延時間を300msに増加
+                };
+                // 現在のシーン（三重町マップ）を停止してからStage1を開始
+                console.log('Stage1を開始します...');
+                console.log('area:', area);
+                
+                // Stage1に移動する前に、三重町マップのConversationSceneを削除
+                if (this.scene.scene.get('ConversationScene')) {
+                    this.scene.scene.remove('ConversationScene');
+                }
+                
+                this.scene.scene.stop();
+                // Stage1を直接開始
+                import('../gameController.js').then(({ startPhaserGame }) => {
+                    const stageNumber = area.sceneParam || 1;
+                    console.log('startPhaserGameを呼び出します:', stageNumber);
+                    startPhaserGame(stageNumber);
+                });
+            } else {
+                this.scene.scene.start(area.scene);
+            }
         } else {
             // 従来の方法でフォールバック
             console.log(`Area ${area.name} not implemented yet`);
@@ -685,4 +985,4 @@ export class AreaSelectionManager {
         
         console.log('AreaSelectionManager: Destroyed all markers');
     }
-} 
+}

@@ -87,8 +87,11 @@ export class CollisionManager {
             this.scene.mapManager.makeNpcFacePlayer(npcId, playerPos.x, playerPos.y);
         }
         
-        // 追加：nullチェック
-        if (this.dialogSystem) {
+        // ギャルゲ風の会話システムを優先
+        if (this.scene.conversationTrigger) {
+            this.scene.conversationTrigger.startConversation(npcId);
+        } else if (this.dialogSystem) {
+            // フォールバック：既存のDialogSystemを使用
             this.dialogSystem.startDialog(npcId);
         }
     }
@@ -120,5 +123,25 @@ export class CollisionManager {
                 }
             });
         }
+    }
+    
+    // リソースを解放
+    destroy() {
+        // 衝突グループをクリア
+        if (this.collisionGroups) {
+            Object.keys(this.collisionGroups).forEach(key => {
+                if (this.collisionGroups[key]) {
+                    this.collisionGroups[key].clear();
+                    this.collisionGroups[key] = null;
+                }
+            });
+            this.collisionGroups = null;
+        }
+        
+        // DialogSystemの参照をクリア
+        this.dialogSystem = null;
+        
+        // シーンへの参照を削除
+        this.scene = null;
     }
 }
