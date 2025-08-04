@@ -18,6 +18,10 @@ export class AreaSelectionManager {
         this.touchThreshold = 200; // タップ判定の閾値（ミリ秒）
 
         this.visualFeedback = new VisualFeedbackManager(scene);
+        
+        // 確認ダイアログの重複表示を防ぐためのフラグ
+        this.isConfirmDialogActive = false;
+        this.currentDialog = null;
     }
 
     setupAreas(areas) {
@@ -210,9 +214,17 @@ export class AreaSelectionManager {
     setupMarkerClick(background) {
         // クリック/タップイベント
         background.on('pointerdown', () => {
+            // 確認ダイアログが表示されている場合は何もしない
+            if (this.isConfirmDialogActive) {
+                return;
+            }
+            
             if (this.isMobile) {
                 this.touchStartTime = Date.now();
             }
+            
+            // 他のオブジェクトの色を戻す
+            this.resetAllObjectColors();
             
             // オブジェクト自体を赤くする
             background.setFillStyle(0xFF0000, 0.7);
@@ -225,6 +237,11 @@ export class AreaSelectionManager {
         });
         
         background.on('pointerup', () => {
+            // 確認ダイアログが表示されている場合は何もしない
+            if (this.isConfirmDialogActive) {
+                return;
+            }
+            
             const area = background.getData('area');
             
             if (this.isMobile) {
@@ -264,6 +281,11 @@ export class AreaSelectionManager {
                 return;
             }
             
+            // 確認ダイアログが既に表示されている場合は何もしない
+            if (this.isConfirmDialogActive) {
+                return;
+            }
+            
             // 選択されたエリアを記録
             this.selectedArea = area;
             
@@ -285,6 +307,17 @@ export class AreaSelectionManager {
         this.showConfirmDialog(area);
     }
 
+    // 全てのオブジェクトの色を戻す
+    resetAllObjectColors() {
+        this.areaSprites.forEach(marker => {
+            // マーカーコンテナ内の背景オブジェクトを取得
+            const background = marker.getAt(0); // 最初の要素（背景）
+            if (background && background.setFillStyle) {
+                background.setFillStyle(0x4169E1, 0.7);
+            }
+        });
+    }
+
     // 選択されたオブジェクトの色を戻す
     resetSelectedObjectColor() {
         if (this.selectedArea) {
@@ -303,11 +336,22 @@ export class AreaSelectionManager {
     }
 
     showConfirmDialog(area) {
+        // 既にダイアログが表示されている場合は何もしない
+        if (this.isConfirmDialogActive) {
+            return;
+        }
+        
+        // ダイアログ表示フラグを設定
+        this.isConfirmDialogActive = true;
+        
         // 確認ダイアログを表示
         const dialog = this.scene.add.container(
             this.scene.cameras.main.worldView.centerX,
             this.scene.cameras.main.worldView.centerY
         );
+        
+        // 現在のダイアログを保存
+        this.currentDialog = dialog;
         
         // 背景
         const background = this.scene.add.rectangle(0, 0, 300, 150, 0x000000, 0.8);
@@ -350,24 +394,31 @@ export class AreaSelectionManager {
         // ダイアログにアイテムを追加
         dialog.add([background, title, message, yesButton, noButton]);
         
+        // ダイアログを閉じる共通関数
+        const closeDialog = () => {
+            if (dialog.active) {
+                dialog.destroy();
+            }
+            this.isConfirmDialogActive = false;
+            this.currentDialog = null;
+            // 選択されたオブジェクトの色を戻す（確認画面のボタンクリック時のみ）
+            this.resetSelectedObjectColor();
+        };
+        
         // ボタンイベント
         yesButton.on('pointerdown', () => {
-            dialog.destroy();
-            // 選択されたオブジェクトの色を戻す
-            this.resetSelectedObjectColor();
+            closeDialog();
             this.handleAreaSelection(area);
         });
         
         noButton.on('pointerdown', () => {
-            dialog.destroy();
-            // 選択されたオブジェクトの色を戻す
-            this.resetSelectedObjectColor();
+            closeDialog();
         });
         
         // 自動的にダイアログを閉じる
         this.scene.time.delayedCall(5000, () => {
             if (dialog.active) {
-                dialog.destroy();
+                closeDialog();
             }
         });
     }
@@ -565,6 +616,13 @@ export class AreaSelectionManager {
     }
     
     destroy() {
+        // 確認ダイアログを閉じる
+        if (this.currentDialog && this.currentDialog.active) {
+            this.currentDialog.destroy();
+        }
+        this.isConfirmDialogActive = false;
+        this.currentDialog = null;
+        
         // クリーンアップ
         if (this.areaSprites && Array.isArray(this.areaSprites)) {
             this.areaSprites.forEach(sprite => {

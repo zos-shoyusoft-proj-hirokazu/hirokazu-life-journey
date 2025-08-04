@@ -98,24 +98,42 @@ export class UIManager {
     
     // マップステージ専用のUIを作成
     createMapUI(scene, title) {
-        // タイトル表示
-        this.titleText = scene.add.text(scene.cameras.main.centerX, 50, title, {
-            fontSize: '24px',
-            fill: '#000000',
+        // タイトル表示（左下に配置）
+        this.titleText = scene.add.text(5, scene.cameras.main.height - 25, title, {
+            fontSize: '18px',
+            fill: '#FFD700',
             fontWeight: 'bold',
-            backgroundColor: '#FFFFFF',
-            padding: { x: 10, y: 5 },
-            borderRadius: 10
-        }).setOrigin(0.5);
+            backgroundColor: 'rgba(0, 0, 0, 0.7)',
+            padding: { x: 12, y: 6 },
+            borderRadius: 8,
+            stroke: '#FF6B35',
+            strokeThickness: 2,
+            shadow: {
+                offsetX: 3,
+                offsetY: 3,
+                color: '#000000',
+                blur: 6,
+                fill: true
+            }
+        }).setOrigin(0, 1);
         
-        // 説明テキスト
-        this.instructionText = scene.add.text(scene.cameras.main.centerX, 100, '場所をタップして移動！', {
-            fontSize: '16px',
-            fill: '#333333',
-            backgroundColor: '#FFFFFF',
+        // 説明テキスト（左下に配置）
+        this.instructionText = scene.add.text(5, scene.cameras.main.height, '場所をタップして移動！', {
+            fontSize: '14px',
+            fill: '#FF6B35',
+            backgroundColor: 'rgba(0, 0, 0, 0.3)',
             padding: { x: 8, y: 4 },
-            borderRadius: 8
-        }).setOrigin(0.5);
+            borderRadius: 6,
+            stroke: '#FF00FF',
+            strokeThickness: 2,
+            shadow: {
+                offsetX: 3,
+                offsetY: 3,
+                color: '#FF6B35',
+                blur: 8,
+                fill: true
+            }
+        }).setOrigin(0, 1);
         
         // 戻るボタンは削除 - 右上の戻るボタンのみを使用
         
@@ -133,15 +151,15 @@ export class UIManager {
     
     // MapUI専用の更新メソッド
     updateMapUI(gameSize) {
-        // 画面サイズに応じてUI要素の位置を調整
+        // 画面サイズに応じてUI要素の位置を調整（左下に配置）
         const centerX = gameSize.width / 2;
         
         if (this.titleText) {
-            this.titleText.setPosition(centerX, 50);
+            this.titleText.setPosition(10, gameSize.height - 40);
         }
         
         if (this.instructionText) {
-            this.instructionText.setPosition(centerX, 100);
+            this.instructionText.setPosition(10, gameSize.height - 15);
         }
         
         if (this.selectedAreaText) {
