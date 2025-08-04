@@ -94,11 +94,17 @@ export class AudioManager {
     stopBgm(fade = true, onComplete) {
         if (this.bgm) {
             try {
-                console.log('[AudioManager] stopBgm:', this.bgm.key, new Error().stack);
-                
                 // シーンとサウンドシステムの有効性をチェック
                 if (!this.scene || !this.scene.sound) {
                     console.warn('[AudioManager] Scene or sound system is not available for stopping BGM');
+                    this.bgm = null;
+                    if (onComplete) onComplete();
+                    return;
+                }
+                
+                // BGMオブジェクトの有効性をチェック
+                if (!this.bgm.isPlaying && !this.bgm.isPaused) {
+                    console.warn('[AudioManager] BGM is not playing or paused');
                     this.bgm = null;
                     if (onComplete) onComplete();
                     return;
@@ -111,7 +117,9 @@ export class AudioManager {
                         duration: 500,
                         onComplete: () => {
                             try {
-                                this.bgm.stop();
+                                if (this.bgm && this.bgm.isPlaying) {
+                                    this.bgm.stop();
+                                }
                                 this.bgm = null;
                                 console.log('[AudioManager] BGM stopped (fade)');
                             } catch (error) {
@@ -123,7 +131,9 @@ export class AudioManager {
                     });
                 } else {
                     try {
-                        this.bgm.stop();
+                        if (this.bgm && this.bgm.isPlaying) {
+                            this.bgm.stop();
+                        }
                         this.bgm = null;
                         console.log('[AudioManager] BGM stopped');
                     } catch (error) {

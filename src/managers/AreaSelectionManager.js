@@ -455,24 +455,37 @@ export class AreaSelectionManager {
         // 竹田ステージの会話イベントを処理
         let eventId = null;
         
-        // エリア名に基づいて会話イベントを決定
-        switch (area.name) {
-            case 'udefuriojisann':
-                eventId = 'arm_swinging_person';
-                break;
-            case 'ginnga_water':
-                eventId = 'ginga_sui';
-                break;
-            default:
-                // 会話イベントがない場合は通常の移動
-                this.scene.time.delayedCall(1000, () => {
-                    this.navigateToArea(area);
-                });
-                return;
+        // エリアのconversationIdを確認
+        if (area.conversationId && area.conversationId !== null) {
+            eventId = area.conversationId;
+        } else {
+            // エリア名に基づいて会話イベントを決定（フォールバック）
+            switch (area.name) {
+                case 'taketa_station':
+                    eventId = 'taketa_station';
+                    break;
+                case 'taketa_high school':
+                    eventId = 'taketa_school';
+                    break;
+                case 'ginnga_water':
+                    eventId = 'ginnga_water';
+                    break;
+                case 'udefuriojisann':
+                    eventId = 'udefuriojisann';
+                    break;
+                default:
+                    // 会話イベントがない場合は通常の移動
+                    this.scene.time.delayedCall(1000, () => {
+                        this.navigateToArea(area);
+                    });
+                    return;
+            }
         }
         
-        // 会話データを取得
-        const conversationData = taketaConversationData[eventId];
+        // 会話データを取得（汎用化）
+        const currentMapId = this.scene.mapConfig?.mapKey || 'unknown';
+        const conversationData = this.getConversationData(currentMapId, eventId);
+        
         if (conversationData) {
             // 会話システムを開始（NPCクリック時と同じ方法）
             if (this.scene.conversationTrigger) {
@@ -524,8 +537,10 @@ export class AreaSelectionManager {
             }
         }
         
-        // 会話データを取得
-        const conversationData = miemachiConversationData[eventId];
+        // 会話データを取得（汎用化）
+        const currentMapId = this.scene.mapConfig?.mapKey || 'unknown';
+        const conversationData = this.getConversationData(currentMapId, eventId);
+        
         if (conversationData) {
             // 会話システムを開始（NPCクリック時と同じ方法）
             if (this.scene.conversationTrigger) {
@@ -539,6 +554,20 @@ export class AreaSelectionManager {
         }
     }
 
+    // 汎用的な会話データ取得関数
+    getConversationData(mapId, eventId) {
+        // マップIDに基づいて適切な会話データを取得
+        switch (mapId) {
+            case 'bunngo_mie_city':
+                return miemachiConversationData[eventId];
+            case 'taketa':
+                return taketaConversationData[eventId];
+            default:
+                // デフォルトの会話データを返す
+                return miemachiConversationData[eventId] || taketaConversationData[eventId];
+        }
+    }
+
     navigateToArea(area) {
         // 選択した場所に応じて次のマップまたはシーンに移動
         
@@ -546,8 +575,15 @@ export class AreaSelectionManager {
         if (area.scene) {
             // startPhaserGameの場合は特別な処理
             if (area.scene === 'startPhaserGame') {
-                // 三重町マップに戻るための関数を設定
-                window.returnToMiemachi = () => {
+                // 現在のマップIDを動的に取得して記憶
+                const currentMapId = this.scene.mapConfig?.mapKey || 'unknown';
+                const stageNumber = area.sceneParam || 1;
+                
+                // 現在のマップに戻るための関数を設定（汎用化）
+                window.returnToMap = () => {
+                    console.log('[returnToMap] マップに戻る処理を開始:', currentMapId);
+                    console.log('[returnToMap] 現在のマップID:', currentMapId);
+                    
                     // 現在のシーンを停止してから指定されたマップを開始
                     if (window.game && window.game.scene) {
                         // すべてのシーンを停止して削除
@@ -555,8 +591,12 @@ export class AreaSelectionManager {
                             if (scene && scene.scene) {
                                 // AudioManagerの完全なクリーンアップ
                                 if (scene.audioManager) {
-                                    scene.audioManager.stopAll();
-                                    scene.audioManager.destroy();
+                                    try {
+                                        scene.audioManager.stopAll();
+                                        scene.audioManager.destroy();
+                                    } catch (error) {
+                                        console.warn('[returnToMap] AudioManager cleanup error:', error);
+                                    }
                                     scene.audioManager = null;
                                 }
                                 
@@ -579,9 +619,13 @@ export class AreaSelectionManager {
                         
                         // グローバルな音声システムもクリーンアップ
                         if (window.game.sound) {
-                            window.game.sound.stopAll();
-                            // 音声キャッシュをクリア
-                            window.game.sound.removeAll();
+                            try {
+                                window.game.sound.stopAll();
+                                // 音声キャッシュをクリア
+                                window.game.sound.removeAll();
+                            } catch (error) {
+                                console.warn('[returnToMap] Global sound cleanup error:', error);
+                            }
                         }
                     }
                     
@@ -594,10 +638,12 @@ export class AreaSelectionManager {
                         window.gameInstance = null;
                     }
                     
-                    // 少し遅延を入れてから三重町マップを開始（クリーンアップ完了を待つ）
+                    // 少し遅延を入れてからマップを開始（クリーンアップ完了を待つ）
                     setTimeout(() => {
                         import('../gameController.js').then(({ startPhaserGame }) => {
-                            startPhaserGame('miemachi');
+                            console.log('[returnToMap] startPhaserGameを呼び出します:', currentMapId);
+                            startPhaserGame(currentMapId);
+                            console.log('[returnToMap] マップに戻る処理が完了しました');
                             
                             // マップ開始直後にreturnToStageSelect関数を強制設定
                             setTimeout(() => {
@@ -624,9 +670,9 @@ export class AreaSelectionManager {
                                         gameContainer.style.display = 'none';
                                     }
                                     
-                                    // グローバル関数をクリア
-                                    window.returnToMiemachi = null;
+                                    // グローバル関数をクリア（returnToMapもクリア）
                                     window.returnToStageSelect = null;
+                                    window.returnToMap = null;
                                 };
                                 
                             }, 500);
@@ -648,8 +694,12 @@ export class AreaSelectionManager {
                                             if (window.game.scene) {
                                                 window.game.scene.scenes.forEach(scene => {
                                                     if (scene && scene.audioManager) {
-                                                        scene.audioManager.stopAll();
-                                                        scene.audioManager.destroy();
+                                                        try {
+                                                            scene.audioManager.stopAll();
+                                                            scene.audioManager.destroy();
+                                                        } catch (error) {
+                                                            console.warn('[returnToStageSelect] AudioManager cleanup error:', error);
+                                                        }
                                                         scene.audioManager = null;
                                                     }
                                                     
@@ -667,8 +717,12 @@ export class AreaSelectionManager {
                                             
                                             // グローバルな音声システムをクリーンアップ
                                             if (window.game.sound) {
-                                                window.game.sound.stopAll();
-                                                window.game.sound.removeAll();
+                                                try {
+                                                    window.game.sound.stopAll();
+                                                    window.game.sound.removeAll();
+                                                } catch (error) {
+                                                    console.warn('[returnToStageSelect] Global sound cleanup error:', error);
+                                                }
                                             }
                                             
                                             window.game.destroy(true);
@@ -711,19 +765,18 @@ export class AreaSelectionManager {
                     }, 100);
                 };
                 
-                // 現在のシーン（三重町マップ）を停止してからStage1を開始
-                console.log('Stage1を開始します...');
+                // 現在のシーン（マップ）を停止してからステージを開始
+                console.log(`ステージ${stageNumber}を開始します... (マップ: ${currentMapId})`);
                 console.log('area:', area);
                 
-                // Stage1に移動する前に、三重町マップのConversationSceneを削除
+                // ステージに移動する前に、現在のマップのConversationSceneを削除
                 if (this.scene.scene.get('ConversationScene')) {
                     this.scene.scene.remove('ConversationScene');
                 }
                 
                 this.scene.scene.stop();
-                // Stage1を直接開始
+                // ステージを直接開始
                 import('../gameController.js').then(({ startPhaserGame }) => {
-                    const stageNumber = area.sceneParam || 1;
                     console.log('startPhaserGameを呼び出します:', stageNumber);
                     startPhaserGame(stageNumber);
                 });

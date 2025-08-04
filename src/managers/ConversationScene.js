@@ -337,13 +337,17 @@ export class ConversationScene extends Phaser.Scene {
 
     // 元のBGMに戻す
     restoreOriginalBgm() {
-        const mainScene = this.scene.get('Stage1Scene') || this.scene.get('Stage2Scene') || this.scene.get('Stage3Scene');
-        if (mainScene && mainScene.audioManager) {
-            mainScene.audioManager.stopBgm(false);
-            const originalBgmKey = this.getOriginalBgmKey();
-            if (originalBgmKey) {
-                mainScene.audioManager.playBgm(originalBgmKey, 0.3, true);
+        try {
+            const mainScene = this.scene.get('Stage1Scene') || this.scene.get('Stage2Scene') || this.scene.get('Stage3Scene');
+            if (mainScene && mainScene.audioManager) {
+                mainScene.audioManager.stopBgm(false);
+                const originalBgmKey = this.getOriginalBgmKey();
+                if (originalBgmKey) {
+                    mainScene.audioManager.playBgm(originalBgmKey, 0.3, true);
+                }
             }
+        } catch (error) {
+            console.warn('[ConversationScene] Error in restoreOriginalBgm:', error);
         }
     }
 
@@ -364,27 +368,42 @@ export class ConversationScene extends Phaser.Scene {
     
     // 会話終了
     endConversation() {
-        console.log('[ConversationScene] endConversation called', {
-            index: this.currentConversationIndex,
-            length: this.currentConversation?.conversations?.length,
-            stack: new Error().stack
-        });
-        this.restoreOriginalBgm(); // イベント終了時にBGMを元に戻す
-        // スプライトをクリーンアップ
-        this.cleanupCharacterSprites();
-        // テキストアニメーションタイマーをクリーンアップ
-        if (this.currentTextTimer) {
-            this.currentTextTimer.destroy();
-            this.currentTextTimer = null;
+        try {
+            console.log('[ConversationScene] endConversation called', {
+                index: this.currentConversationIndex,
+                length: this.currentConversation?.conversations?.length
+            });
+            
+            // BGMを元に戻す
+            this.restoreOriginalBgm();
+            
+            // スプライトをクリーンアップ
+            this.cleanupCharacterSprites();
+            
+            // テキストアニメーションタイマーをクリーンアップ
+            if (this.currentTextTimer) {
+                this.currentTextTimer.destroy();
+                this.currentTextTimer = null;
+            }
+            
+            // UI要素をリセット（削除はしない）
+            this.resetUI();
+            
+            // 会話終了イベントを発火
+            this.events.emit('conversationEnded');
+            
+            // 元のシーンに戻る
+            this.scene.stop();
+            
+        } catch (error) {
+            console.error('[ConversationScene] Error in endConversation:', error);
+            // エラーが発生しても強制的にシーンを停止
+            try {
+                this.scene.stop();
+            } catch (stopError) {
+                console.error('[ConversationScene] Error stopping scene:', stopError);
+            }
         }
-        // UI要素をリセット（削除はしない）
-        this.resetUI();
-        // 会話終了イベントを発火
-        this.events.emit('conversationEnded');
-        // 元のシーンに戻る、または次のイベントに移行
-        this.scene.stop();
-        // 必要に応じて他のシーンを開始
-        // this.scene.start('GameScene');
     }
     
     // キャラクタースプライトのクリーンアップ

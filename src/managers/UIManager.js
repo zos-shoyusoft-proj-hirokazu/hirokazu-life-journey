@@ -56,22 +56,36 @@ export class UIManager {
         // ボタンテキストを動的に設定
         let buttonText = '戻る';
         if (scene.scene && scene.scene.key) {
-            if (scene.scene.key === 'Stage1Scene') {
-                buttonText = '三重町マップに戻る';
-            } else if (scene.scene.key === 'MiemachiStage') {
+            if (scene.scene.key === 'Stage1Scene' || scene.scene.key === 'Stage2Scene' || scene.scene.key === 'Stage3Scene') {
+                // ステージ番号を動的に取得
+                const stageNumber = scene.scene.key.replace('Stage', '').replace('Scene', '');
+                buttonText = `ステージ${stageNumber}から戻る`;
+            } else if (scene.scene.key === 'MiemachiStage' || scene.scene.key === 'TaketastageStage') {
                 buttonText = 'ステージ選択画面に戻る';
             }
         }
         
         this.backButtonGraphics.on('pointerdown', () => {
+            console.log('[UIManager] 戻るボタンがクリックされました');
+            console.log('[UIManager] 現在のシーン:', scene.scene?.key);
+            console.log('[UIManager] window.returnToMap:', typeof window.returnToMap);
+            console.log('[UIManager] window.returnToMiemachi:', typeof window.returnToMiemachi);
+            console.log('[UIManager] window.returnToStageSelect:', typeof window.returnToStageSelect);
+            
             // シーンの種類に応じて戻る処理を分岐
-            if (scene.scene?.key === 'Stage1Scene') {
-                // ステージから三重町マップに戻る
-                if (window.returnToMiemachi) {
-                    window.returnToMiemachi();
+            if (scene.scene?.key === 'Stage1Scene' || scene.scene?.key === 'Stage2Scene' || scene.scene?.key === 'Stage3Scene') {
+                // ステージから戻る（returnToMapが優先、returnToStageSelectがフォールバック）
+                if (window.returnToMap) {
+                    console.log('[UIManager] returnToMapを呼び出します');
+                    window.returnToMap();
                 } else if (window.returnToStageSelect) {
+                    console.log('[UIManager] returnToStageSelectを呼び出します（フォールバック）');
                     window.returnToStageSelect();
+                } else if (window.returnToMiemachi) {
+                    console.log('[UIManager] returnToMiemachiを呼び出します（フォールバック）');
+                    window.returnToMiemachi();
                 } else {
+                    console.log('[UIManager] フォールバック処理を実行します');
                     // フォールバック：直接ステージ選択画面を表示
                     const stageSelect = document.getElementById('stage-select');
                     const gameContainer = document.getElementById('game-container');
@@ -82,8 +96,15 @@ export class UIManager {
                         gameContainer.style.display = 'none';
                     }
                 }
-            } else if (scene.scene?.key === 'MiemachiStage') {
+            } else if (scene.scene?.key === 'MiemachiStage' || scene.scene?.key === 'TaketastageStage') {
                 // マップからステージ選択画面に戻る
+                console.log('[UIManager] マップからステージ選択画面に戻ります');
+                console.log('[UIManager] returnToMap before:', typeof window.returnToMap);
+                
+                // returnToMapをクリア
+                window.returnToMap = null;
+                console.log('[UIManager] returnToMap after:', typeof window.returnToMap);
+                
                 if (window.returnToStageSelect) {
                     try {
                         window.returnToStageSelect();

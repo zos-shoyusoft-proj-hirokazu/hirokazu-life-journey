@@ -24,6 +24,7 @@ function initializeGame() {
 
 // ゲーム開始関数（動的シーン読み込み）
 export function startPhaserGame(stageNumber) {
+    console.log('[startPhaserGame] 開始:', stageNumber);
     const game = initializeGame();
 
     let sceneClass, sceneKey;
@@ -34,7 +35,9 @@ export function startPhaserGame(stageNumber) {
         case 'stage1_enhanced': sceneClass = Stage1; sceneKey = 'Stage1Scene'; break;
         case 'miemachi': sceneClass = createMapStage('miemachi', 'MiemachiStage'); sceneKey = 'MiemachiStage'; break;
         case 'taketastage': sceneClass = createMapStage('taketastage', 'TaketastageStage'); sceneKey = 'TaketastageStage'; break;
+        case 'bunngo_mie_city': sceneClass = createMapStage('miemachi', 'MiemachiStage'); sceneKey = 'MiemachiStage'; break;
         default: sceneClass = Stage1; sceneKey = 'Stage1Scene';
     }
+    console.log('[startPhaserGame] シーンを追加:', sceneKey);
     game.scene.add(sceneKey, sceneClass, true);
 } 
