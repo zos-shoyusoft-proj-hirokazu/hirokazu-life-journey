@@ -64,55 +64,57 @@ export class UIManager {
         }
         
         this.backButtonGraphics.on('pointerdown', () => {
-            console.log('[UIManager] 戻るボタンがクリックされました');
-            console.log('[UIManager] 現在のシーン:', scene.scene?.key);
-            console.log('[UIManager] returnToMiemachi exists:', typeof window.returnToMiemachi !== 'undefined');
-            console.log('[UIManager] returnToStageSelect exists:', typeof window.returnToStageSelect !== 'undefined');
-            console.log('[UIManager] returnToStageSelect function:', window.returnToStageSelect);
-            
             // シーンの種類に応じて戻る処理を分岐
             if (scene.scene?.key === 'Stage1Scene') {
-                console.log('[UIManager] Stage1Sceneから三重町マップに戻ります');
+                // ステージから三重町マップに戻る
                 if (window.returnToMiemachi) {
-                    console.log('[UIManager] returnToMiemachiを呼び出します');
                     window.returnToMiemachi();
+                } else if (window.returnToStageSelect) {
+                    window.returnToStageSelect();
                 } else {
-                    console.error('[UIManager] returnToMiemachiが見つかりません');
-                }
-            } else if (scene.scene?.key === 'MiemachiStage') {
-                console.log('[UIManager] MiemachiStageからステージ選択画面に戻ります');
-                if (window.returnToStageSelect) {
-                    console.log('[UIManager] returnToStageSelectを呼び出します');
-                    try {
-                        window.returnToStageSelect();
-                        console.log('[UIManager] returnToStageSelectの実行完了');
-                    } catch (error) {
-                        console.error('[UIManager] returnToStageSelectの実行でエラー:', error);
-                    }
-                } else {
-                    console.error('[UIManager] returnToStageSelectが見つかりません');
                     // フォールバック：直接ステージ選択画面を表示
                     const stageSelect = document.getElementById('stage-select');
                     const gameContainer = document.getElementById('game-container');
                     if (stageSelect) {
                         stageSelect.style.display = 'block';
-                        console.log('[UIManager] フォールバック: ステージ選択画面を表示しました');
+                    }
+                    if (gameContainer) {
+                        gameContainer.style.display = 'none';
+                    }
+                }
+            } else if (scene.scene?.key === 'MiemachiStage') {
+                // マップからステージ選択画面に戻る
+                if (window.returnToStageSelect) {
+                    try {
+                        window.returnToStageSelect();
+                    } catch (error) {
+                        // エラーハンドリング
+                    }
+                } else {
+                    // フォールバック：直接ステージ選択画面を表示
+                    const stageSelect = document.getElementById('stage-select');
+                    const gameContainer = document.getElementById('game-container');
+                    if (stageSelect) {
+                        stageSelect.style.display = 'block';
                     }
                     if (gameContainer) {
                         gameContainer.style.display = 'none';
                     }
                 }
             } else {
-                console.warn('[UIManager] 未知のシーン:', scene.scene?.key);
-                // フォールバック：直接ステージ選択画面を表示
-                const stageSelect = document.getElementById('stage-select');
-                const gameContainer = document.getElementById('game-container');
-                if (stageSelect) {
-                    stageSelect.style.display = 'block';
-                    console.log('[UIManager] フォールバック: ステージ選択画面を表示しました');
-                }
-                if (gameContainer) {
-                    gameContainer.style.display = 'none';
+                // その他のシーン：ステージ選択画面に戻る
+                if (window.returnToStageSelect) {
+                    window.returnToStageSelect();
+                } else {
+                    // フォールバック：直接ステージ選択画面を表示
+                    const stageSelect = document.getElementById('stage-select');
+                    const gameContainer = document.getElementById('game-container');
+                    if (stageSelect) {
+                        stageSelect.style.display = 'block';
+                    }
+                    if (gameContainer) {
+                        gameContainer.style.display = 'none';
+                    }
                 }
             }
         });
@@ -120,18 +122,14 @@ export class UIManager {
         // キーボードショートカットでも戻る機能を追加
         if (scene.input && scene.input.keyboard) {
             scene.input.keyboard.on('keydown-ESC', () => {
-                console.log('[UIManager] ESCキーが押されました');
                 if (window.returnToStageSelect) {
-                    console.log('[UIManager] ESCキーでreturnToStageSelectを呼び出します');
                     window.returnToStageSelect();
                 } else {
-                    console.warn('[UIManager] ESCキー: 戻る機能が見つかりません');
                     // フォールバック：直接ステージ選択画面を表示
                     const stageSelect = document.getElementById('stage-select');
                     const gameContainer = document.getElementById('game-container');
                     if (stageSelect) {
                         stageSelect.style.display = 'block';
-                        console.log('[UIManager] ESCキー: フォールバックでステージ選択画面を表示しました');
                     }
                     if (gameContainer) {
                         gameContainer.style.display = 'none';

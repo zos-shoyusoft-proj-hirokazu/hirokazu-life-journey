@@ -5,12 +5,7 @@ function startGame(stageNumber) {
     startPhaserGame(stageNumber); // ← ここでPhaserゲームを起動 本来は分けないといけなくて強制敵にindex.jsを読み込んでる
 }
 
-// ステージデータを読み込む関数
-function loadStageData(stageNumber) {
-    // ここで将来的にステージデータを読み込む処理を行う
-    // eslint-disable-next-line no-unused-vars
-    const stage = stageNumber; // 将来的にstageNumberを使ってデータを読み込む予定
-}
+
 
 // 画面の表示/非表示を切り替える関数（安全版）
 function showStageSelect() {
@@ -28,7 +23,6 @@ function hideStageSelect() {
 
 // ステージを開始する関数
 function startStage(stageNumber) {
-    loadStageData(stageNumber);
     hideStageSelect();
     startGame(stageNumber);
 }

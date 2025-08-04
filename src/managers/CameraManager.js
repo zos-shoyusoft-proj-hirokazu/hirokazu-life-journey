@@ -35,7 +35,7 @@ export class CameraManager {
                 mapOffsetY + mapSize.scaledHeight / 2
             );
             
-            console.log(`CameraManager: Initial setup - bounds: (0, 0, ${screenWidth}, ${screenHeight})`);
+    
         } 
         // 学校などの歩き回るようのステージのcamera
         else if (arguments.length === 3) {
@@ -51,9 +51,6 @@ export class CameraManager {
             
             // プレイヤーの移動範囲もマップ内に制限
             scene.physics.world.setBounds(0, 0, mapWidth, mapHeight);
-        }
-        else {
-            console.error('Invalid arguments for setupCamera');
         }
     }
 
@@ -155,7 +152,7 @@ export class CameraManager {
         });
         
         // デバッグ用：スクロール機能の設定を確認
-        console.log('Scroll controls setup complete');
+
     }
     
     setupPinchZoom() {
@@ -208,11 +205,11 @@ export class CameraManager {
             const scaleY = screenHeight / mapHeight;
             const wholeScale = Math.min(scaleX, scaleY);
             
-            console.log(`Switching from 1.5 to whole scale: ${wholeScale}`);
+
             this.setMapScale(wholeScale);
         } else {
             // 全体表示の場合は1.5倍に切り替え
-            console.log('Switching from whole scale to 1.5');
+
             this.setMapScale(1.5);
         }
     }
@@ -221,7 +218,6 @@ export class CameraManager {
         this.currentScale = scale;
         
         if (!this.scene.mapManager || !this.scene.mapManager.mapLayer) {
-            console.error('MapManager or mapLayer not available');
             return;
         }
         
@@ -285,11 +281,6 @@ export class CameraManager {
             mapY + scaledHeight / 2
         );
         
-        // デバッグ用：スケール変更を確認
-        const boundsInfo = scale === 1.5 ? 
-            `(${mapX}, ${mapY}, ${scaledWidth}, ${scaledHeight})` : 
-            `(0, 0, ${screenWidth}, ${screenHeight})`;
-        console.log(`CameraManager: Set map scale to ${scale}, bounds: ${boundsInfo}`);
     }
 
     destroy() {

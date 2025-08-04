@@ -3,7 +3,6 @@ import { Stage1 } from './scenes/stage1.js';
 import { Stage2 } from './scenes/stage2.js';
 import { Stage3 } from './scenes/stage3.js';
 import { createMapStage } from './scenes/MapSelectionStage.js';
-// import { StageSelectScene } from './scenes/StageSelectScene.js';
 
 // グローバルなゲームインスタンス（1つだけ）
 let gameInstance = null;
