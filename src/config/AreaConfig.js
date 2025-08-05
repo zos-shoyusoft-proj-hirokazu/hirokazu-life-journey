@@ -24,6 +24,15 @@ export const AreaConfig = {
             'daichi_A': 'assets/characters/portraits/daichi_A.png',
             'naoki_A': 'assets/characters/portraits/naoki_A.png'
         },
+        backgrounds: {
+            'bar': 'assets/backgrounds/bar.png',
+            'hospital': 'assets/backgrounds/hospital.png',
+            'classroom': 'assets/backgrounds/classroom.png',
+            'gym': 'assets/backgrounds/gym.png',
+            'room': 'assets/backgrounds/room.png',
+            'river': 'assets/backgrounds/river.png',
+            'test_1': 'assets/backgrounds/background_test.png'
+        },
         // eventBgm: {
         //     // エリア固有のイベントBGM
         //     'mie_high_school': 'assets/audio/bgm/events/school_event.mp3',
@@ -78,6 +87,15 @@ export const AreaConfig = {
             'hirokazu_F': 'assets/characters/portraits/hirokazu_F.png',
             'daichi_A': 'assets/characters/portraits/daichi_A.png',
             'naoki_A': 'assets/characters/portraits/naoki_A.png'
+        },
+        backgrounds: {
+            'bar': 'assets/backgrounds/bar.png',
+            'hospital': 'assets/backgrounds/hospital.png',
+            'classroom': 'assets/backgrounds/classroom.png',
+            'gym': 'assets/backgrounds/gym.png',
+            'room': 'assets/backgrounds/room.png',
+            'river': 'assets/backgrounds/river.png',
+            'test_1': 'assets/backgrounds/background_test.png'
         },
         areas: [
             { name: 'taketa_station', scene: null, conversationId: 'taketa_station' },

@@ -10,7 +10,6 @@ export class ConversationScene extends Phaser.Scene {
     }
 
 
-
     create() {
         // シーンが正しく初期化されているかチェック
         if (!this.sys) {
@@ -121,7 +120,6 @@ export class ConversationScene extends Phaser.Scene {
 
     // 会話開始
     startConversation(conversationData) {
-        console.log('[ConversationScene] startConversation:', conversationData);
         this.currentConversation = conversationData;
         this.currentConversationIndex = 0;
         
@@ -136,7 +134,6 @@ export class ConversationScene extends Phaser.Scene {
 
     // 次の会話に進む
     nextDialog() {
-        console.log('[ConversationScene] nextDialog called', this.currentConversationIndex);
         if (this.isTextAnimating) {
             this.completeTextAnimation();
             return;
@@ -152,12 +149,6 @@ export class ConversationScene extends Phaser.Scene {
     // 会話表示
     showDialog() {
         const dialog = this.currentConversation.conversations[this.currentConversationIndex];
-        console.log('[ConversationScene] showDialog', {
-            index: this.currentConversationIndex,
-            speaker: dialog?.speaker,
-            text: dialog?.text,
-            conversation: dialog
-        });
         // 立ち絵の更新
         this.updateCharacterSprite(dialog.character, dialog.expression);
         // 名前の表示
@@ -323,7 +314,6 @@ export class ConversationScene extends Phaser.Scene {
     
     // イベント用BGMに切り替え
     switchToEventBgm(eventBgmKey) {
-        console.log('[ConversationScene] switchToEventBgm called:', eventBgmKey);
         const mainScene = this.scene.get('Stage1Scene') || this.scene.get('Stage2Scene') || this.scene.get('Stage3Scene');
         if (mainScene && mainScene.audioManager) {
             this.originalBgm = mainScene.audioManager.bgm;
@@ -369,11 +359,6 @@ export class ConversationScene extends Phaser.Scene {
     // 会話終了
     endConversation() {
         try {
-            console.log('[ConversationScene] endConversation called', {
-                index: this.currentConversationIndex,
-                length: this.currentConversation?.conversations?.length
-            });
-            
             // BGMを元に戻す
             this.restoreOriginalBgm();
             

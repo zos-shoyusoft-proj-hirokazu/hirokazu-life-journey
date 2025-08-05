@@ -2,7 +2,7 @@
 export const miemachiConversationData = {
     // 出生エピソード
     'oreno_koto': {
-        'background': 'hospital',
+        'background': 'test_1',
         'bgm': 'bgm_memory',
         'conversations': [
             {
@@ -76,7 +76,7 @@ export const miemachiConversationData = {
     
     // 志学エピソード
     'shigaku': {
-        'background': 'classroom',
+        'background': 'test_1',
         'bgm': 'bgm_normal',
         'conversations': [
             {
@@ -150,7 +150,7 @@ export const miemachiConversationData = {
     
     // チーム醤油飲み会
     'team_shoyu_drinking': {
-        'background': 'bar',
+        'background': 'test_1',
         'bgm': 'bgm_bar',
         'conversations': [
             {
@@ -350,7 +350,7 @@ export const miemachiConversationData = {
     
     // セブンエピソード
     'seven_episode': {
-        'background': 'convenience_store',
+        'background': 'test_1',
         'bgm': 'bgm_night',
         'conversations': [
             {
@@ -544,7 +544,7 @@ export const miemachiConversationData = {
     
     // 川で火をつけたエピソード
     'river_fire': {
-        'background': 'river',
+        'background': 'test_1',
         'bgm': 'bgm_danger',
         'conversations': [
             {
@@ -648,7 +648,7 @@ export const miemachiConversationData = {
     
     // こうたろうポテト
     'koutarou_potato': {
-        'background': 'potato_shop',
+        'background': 'test_1',
         'bgm': 'bgm_normal',
         'conversations': [
             {
@@ -674,7 +674,7 @@ export const miemachiConversationData = {
     
     // アンタレス
     'antares': {
-        'background': 'fishing_spot',
+        'background': 'test_1',
         'bgm': 'bgm_fishing',
         'conversations': [
             {
@@ -728,23 +728,179 @@ export const miemachiConversationData = {
         ]
     },
     
-    // づつを飲む
+    // ドンキの謎酒"ずつ"
     'drink_zutsu': {
-        'background': 'bar',
+        'background': 'test_1',
         'bgm': 'bgm_drinking',
         'conversations': [
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
-                'text': 'づつを飲む',
+                'text': '普通の酒飲み飽きたなー',
                 'expression': 'A'
+            },
+            {
+                'speaker': 'こうたろう',
+                'character': 'koutarou',
+                'text': 'ドンキで探すか',
+                'expression': 'A'
+            },
+            {
+                'speaker': 'だいち',
+                'character': 'daichi',
+                'text': 'あっ！これよくね！？',
+                'expression': 'B'
+            },
+            {
+                'speaker': 'ひろかず',
+                'character': 'hirokazu',
+                'text': 'これもう一気するための大きさじゃん！',
+                'expression': 'B'
+            },
+            {
+                'speaker': 'だいち',
+                'character': 'daichi',
+                'text': '一気してくださいって言ってるなあ！',
+                'expression': 'A'
+            },
+            {
+                'speaker': 'こうたろう',
+                'character': 'koutarou',
+                'text': 'それ御神酒じゃね？',
+                'expression': 'C'
+            },
+            {
+                'speaker': 'ひろかず',
+                'character': 'hirokazu',
+                'text': 'ドンキには一気する用の酒も売ってるんかあ！',
+                'expression': 'B'
+            },
+            {
+                'speaker': 'だいち',
+                'character': 'daichi',
+                'text': 'じゃあ1人一本ずつ買うか！',
+                'expression': 'A'
+            },
+            {
+                'speaker': 'こうたろう',
+                'character': 'koutarou',
+                'text': 'いや1人一本ずつのやつかそれ？',
+                'expression': 'C'
+            },
+            {
+                'speaker': 'ひろかず',
+                'character': 'hirokazu',
+                'text': '1人一本"ずつ"のやつ、いくぞお！',
+                'expression': 'B'
+            },
+            {
+                'speaker': 'だいち',
+                'character': 'daichi',
+                'text': '"ずつ"！うおおお！',
+                'expression': 'B'
+            },
+            {
+                'speaker': 'こうたろう',
+                'character': 'koutarou',
+                'text': 'だから……まあいいか！うおおお！',
+                'expression': 'A'
+            },
+            {
+                'speaker': 'ひろかず',
+                'character': 'hirokazu',
+                'text': 'ーーさて、夜も更けてきました',
+                'expression': 'A'
+            },
+            {
+                'speaker': 'だいち',
+                'character': 'daichi',
+                'text': '"ずつ"、いきますか',
+                'expression': 'A'
+            },
+            {
+                'speaker': 'こうたろう',
+                'character': 'koutarou',
+                'text': 'もうそれの名前"ずつ"なんや',
+                'expression': 'C'
+            },
+            {
+                'speaker': 'ひろかず',
+                'character': 'hirokazu',
+                'text': 'よっしゃ3人で同時にいくぞお！',
+                'expression': 'B'
+            },
+            {
+                'speaker': 'だいち',
+                'character': 'daichi',
+                'text': 'うおおお！',
+                'expression': 'B'
+            },
+            {
+                'speaker': 'こうたろう',
+                'character': 'koutarou',
+                'text': 'もういいや！いくぞお！',
+                'expression': 'A'
+            },
+            {
+                'speaker': 'ひろかず・だいち・こうたろう',
+                'character': 'all',
+                'text': '「「「ゴクゴクゴッ…オロロロロロ✨」」」',
+                'expression': 'C'
+            },
+            {
+                'speaker': 'ひろかず',
+                'character': 'hirokazu',
+                'text': 'なんだこれ…',
+                'expression': 'C'
+            },
+            {
+                'speaker': 'だいち',
+                'character': 'daichi',
+                'text': '体に入らないです',
+                'expression': 'C'
+            },
+            {
+                'speaker': 'こうたろう',
+                'character': 'koutarou',
+                'text': '胃に当たってそのまま跳ね返ってくる',
+                'expression': 'C'
+            },
+            {
+                'speaker': 'ひろかず',
+                'character': 'hirokazu',
+                'text': 'オロロロロロ✨',
+                'expression': 'C'
+            },
+            {
+                'speaker': 'こうたろう',
+                'character': 'koutarou',
+                'text': 'オロロロロロ…止まらん…',
+                'expression': 'C'
+            },
+            {
+                'speaker': 'ひろかず',
+                'character': 'hirokazu',
+                'text': '木の下に吐こオロロロロロ✨',
+                'expression': 'C'
+            },
+            {
+                'speaker': 'だいち',
+                'character': 'daichi',
+                'text': '大きく成長しろよオロロロロロ✨',
+                'expression': 'C'
+            },
+            {
+                'speaker': 'こうたろう',
+                'character': 'koutarou',
+                'text': '最低の栄養や…',
+                'expression': 'C'
             }
         ]
     },
     
     // バスケ（中学）
     'basketball_middle_school': {
-        'background': 'gym',
+        'background': 'test_1',
         'bgm': 'bgm_sports',
         'conversations': [
             {
@@ -758,7 +914,7 @@ export const miemachiConversationData = {
     
     // ドール
     'doll': {
-        'background': 'room',
+        'background': 'test_1',
         'bgm': 'bgm_normal',
         'conversations': [
             {
@@ -772,7 +928,7 @@ export const miemachiConversationData = {
     
     // アネックス（ももいろ女学園）
     'annex_momo': {
-        'background': 'school',
+        'background': 'test_1',
         'bgm': 'bgm_mysterious',
         'conversations': [
             {
@@ -786,7 +942,7 @@ export const miemachiConversationData = {
     
     // フラッシュランド三重
     'flash_land_mie': {
-        'background': 'amusement_park',
+        'background': 'test_1',
         'bgm': 'bgm_normal',
         'conversations': [
             {
@@ -800,7 +956,7 @@ export const miemachiConversationData = {
     
     // トライアルエピソード
     'trial': {
-        'background': 'trial',
+        'background': 'test_1',
         'bgm': 'bgm_normal',
         'conversations': [
             {
