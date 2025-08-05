@@ -587,6 +587,21 @@ export class AreaSelectionManager {
 
     navigateToArea(area) {
         console.log('[DEBUG] navigateToArea called with area:', area);
+        console.log('[DEBUG] navigateToArea - area.name:', area.name);
+        console.log('[DEBUG] navigateToArea - area.scene:', area.scene);
+        console.log('[DEBUG] navigateToArea - area.sceneParam:', area.sceneParam);
+        
+        // sceneParamがundefinedの場合は、AreaConfigから直接取得
+        if (!area.sceneParam && area.name) {
+            console.log('[DEBUG] sceneParam is undefined, trying to get from AreaConfig');
+            const areaConfig = this.scene.mapConfig?.areas?.find(config => config.name === area.name);
+            console.log('[DEBUG] areaConfig for', area.name, ':', areaConfig);
+            if (areaConfig) {
+                area.sceneParam = areaConfig.sceneParam;
+                area.scene = areaConfig.scene;
+                console.log('[DEBUG] Updated area from AreaConfig - sceneParam:', area.sceneParam, 'scene:', area.scene);
+            }
+        }
         
         if (!area.scene) {
             console.log('[DEBUG] No scene specified for this area');
@@ -597,6 +612,9 @@ export class AreaSelectionManager {
         if (area.scene === 'startPhaserGame') {
             const currentMapId = this.scene.mapConfig?.mapKey || 'unknown';
             const stageNumber = area.sceneParam || 1;
+            
+            console.log('[DEBUG] navigateToArea - area.sceneParam:', area.sceneParam);
+            console.log('[DEBUG] navigateToArea - stageNumber:', stageNumber);
             
             // 現在のマップに戻るための関数を設定
             window.returnToMap = () => {
@@ -680,12 +698,16 @@ export class AreaSelectionManager {
     // タッチイベントを処理
     handleTouchAt(worldX, worldY) {
         try {
+            console.log('[DEBUG] handleTouchAt - worldX:', worldX, 'worldY:', worldY);
+            
             // タッチ位置に近いエリアを検索
             const touchedArea = this.findAreaAtPosition(worldX, worldY);
             
             if (touchedArea) {
+                console.log('[DEBUG] 選択されたエリア:', touchedArea.name, 'sceneParam:', touchedArea.sceneParam);
                 this.selectArea(touchedArea);
             } else {
+                console.log('[DEBUG] エリアが見つかりませんでした');
                 // 背景タッチ時のSE再生
                 if (this.scene.audioManager && this.scene.mapConfig?.se?.map_touch) {
                     this.scene.audioManager.playSe('se_map_touch', 0.3);
@@ -699,7 +721,9 @@ export class AreaSelectionManager {
     
     // 指定された座標に近いエリアを検索
     findAreaAtPosition(worldX, worldY) {
-        const tapRadius = 20; // タップ判定の半径（青い丸のサイズ10+余裕10）
+        // 拡大率に応じてタップ判定半径を調整
+        const currentScale = this.scene.mapManager?.mapScaleX || 1;
+        const tapRadius = 20 * currentScale; // 拡大率に応じて調整
         
         for (let area of this.areas) {
             const distance = Math.sqrt(
@@ -749,10 +773,35 @@ export class AreaSelectionManager {
         }
         
         // エリアデータを更新（座標情報を含む）
-        this.areas = areas.map(area => ({
-            ...area,
-            description: this.getAreaDescription(area.name)
-        }));
+        this.areas = areas.map(area => {
+            // 元のエリアデータからsceneParam情報を取得
+            const originalArea = this.areas.find(orig => orig.name === area.name);
+            
+            // 元のエリアデータが見つからない場合は、設定ファイルから取得
+            let sceneParam = originalArea?.sceneParam;
+            let scene = originalArea?.scene;
+            let conversationId = originalArea?.conversationId;
+            
+            // 元のエリアデータにsceneParam情報がない場合は、AreaConfigから取得
+            if (!sceneParam || !scene) {
+                const areaConfig = this.scene.mapConfig?.areas?.find(config => config.name === area.name);
+                if (areaConfig) {
+                    sceneParam = areaConfig.sceneParam;
+                    scene = areaConfig.scene;
+                    conversationId = areaConfig.conversationId;
+                }
+            }
+            
+            const updatedArea = {
+                ...area,
+                sceneParam: sceneParam,
+                scene: scene,
+                conversationId: conversationId,
+                description: this.getAreaDescription(area.name)
+            };
+            
+            return updatedArea;
+        });
         
         // 新しいマーカーを作成（エリアの数だけ作成）
         console.log(`AreaSelectionManager: Creating ${this.areas.length} markers`);
