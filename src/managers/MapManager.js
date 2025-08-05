@@ -123,6 +123,9 @@ export class MapManager {
             // これにより青い余白が解消される
             this.scene.cameraManager.camera.setBounds(0, 0, screenWidth, screenHeight);
             
+            // 背景色を設定して、マップが画面より小さい場合の余白を埋める
+            this.scene.cameraManager.camera.setBackgroundColor('#87CEEB');
+            
             // カメラをマップの中心に設定
             const mapOffsetX = this.mapLayer ? this.mapLayer.x : 0;
             const mapOffsetY = this.mapLayer ? this.mapLayer.y : 0;

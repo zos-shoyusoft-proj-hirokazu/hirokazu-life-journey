@@ -26,6 +26,10 @@ export class MapSelectionStage extends Phaser.Scene {
         
         // スマホ対応
         this.isMobile = false;
+        
+        // 拡大ボタンの参照を保持
+        this.scaleToggleButton = null;
+        this.scaleToggleButtonGraphics = null;
     }
 
     preload() {
@@ -224,16 +228,73 @@ export class MapSelectionStage extends Phaser.Scene {
     }
 
     createScaleToggleButton() {
+        // 既存のボタンを削除
+        if (this.scaleToggleButton) {
+            this.scaleToggleButton.destroy();
+            this.scaleToggleButton = null;
+        }
+        if (this.scaleToggleButtonGraphics) {
+            this.scaleToggleButtonGraphics.destroy();
+            this.scaleToggleButtonGraphics = null;
+        }
+        
+        // 現代風な背景を作成
+        const buttonGraphics = this.add.graphics();
+        this.scaleToggleButtonGraphics = buttonGraphics;
+        
+        // ボタンの位置とサイズを定義
+        const buttonX = 2.5;
+        const buttonY = 38;
+        const buttonHeight = 30;
+        
+        // 背景を動的に描画する関数
+        const drawBackground = (text, isHover = false) => {
+            buttonGraphics.clear();
+            
+            // テキストの長さに応じて幅を調整
+            const baseWidth = 43;
+            const extraWidth = text.length > 2 ? (text.length - 2) * 15 + 5 : 0;
+            const totalWidth = baseWidth + extraWidth;
+            
+            const shadowColor = isHover ? 0x000000 : 0x000000;
+            const shadowAlpha = isHover ? 0.4 : 0.3;
+            const bgColor = isHover ? 0x3a3a3a : 0x2a2a2a;
+            const bgAlpha = isHover ? 0.98 : 0.95;
+            const glossAlpha = isHover ? 0.15 : 0.1;
+            
+            // 影を描画
+            buttonGraphics.fillStyle(shadowColor, shadowAlpha);
+            buttonGraphics.fillRoundedRect(buttonX + 2, buttonY + 2, totalWidth, buttonHeight, 8);
+            
+            // メイン背景を描画
+            buttonGraphics.fillStyle(bgColor, bgAlpha);
+            buttonGraphics.fillRoundedRect(buttonX, buttonY, totalWidth, buttonHeight, 8);
+            
+            // 光沢効果（上部）
+            buttonGraphics.fillStyle(0xffffff, glossAlpha);
+            buttonGraphics.fillRoundedRect(buttonX, buttonY, totalWidth, buttonHeight / 2, 8);
+        };
+        
+        // 初期背景を描画
+        drawBackground('拡大');
+        
+        buttonGraphics.setScrollFactor(0);
+        buttonGraphics.setDepth(1000);
+        
         // スケール切り替えボタンを作成（画面座標で固定）
-        const button = this.add.text(10, 50, '拡大', {
-            fontSize: '18px',
+        const button = this.add.text(buttonX + 5, buttonY + 5, '拡大', {
+            fontSize: '16px',
             fill: '#ffffff',
-            backgroundColor: '#666666',
-            padding: { x: 15, y: 8 }
+            fontWeight: 'bold',
+            fontFamily: 'Arial'
         });
+        
+        // ボタンの参照を保存
+        this.scaleToggleButton = button;
         
         // ボタンをカメラに固定（画面座標で表示）
         button.setScrollFactor(0);
+        button.setDepth(1002);
         
         button.setInteractive();
         button.on('pointerdown', () => {
@@ -243,9 +304,22 @@ export class MapSelectionStage extends Phaser.Scene {
             const currentScale = this.cameraManager.scene.mapManager?.mapScaleX || this.cameraManager.currentScale;
             if (currentScale === 1.5) {
                 button.setText('全体マップ表示');
+                drawBackground('全体マップ表示');
             } else {
                 button.setText('拡大');
+                drawBackground('拡大');
             }
+        });
+        
+        // ホバー効果
+        button.on('pointerover', () => {
+            const currentText = button.text;
+            drawBackground(currentText, true);
+        });
+        
+        button.on('pointerout', () => {
+            const currentText = button.text;
+            drawBackground(currentText, false);
         });
         
         // 初期テキストを設定（全体表示から開始）
@@ -281,6 +355,9 @@ export class MapSelectionStage extends Phaser.Scene {
             
             // UIの更新
             this.uiManager?.updateMapUI(gameSize);
+            
+            // 拡大ボタンを再作成（リサイズ時に位置を調整）
+            this.createScaleToggleButton();
             
         } catch (error) {
             console.error('Error handling resize:', error);
@@ -335,6 +412,16 @@ export class MapSelectionStage extends Phaser.Scene {
         if (this.conversationTrigger) {
             this.conversationTrigger.destroy();
             this.conversationTrigger = null;
+        }
+        
+        // 拡大ボタンのクリーンアップ
+        if (this.scaleToggleButton) {
+            this.scaleToggleButton.destroy();
+            this.scaleToggleButton = null;
+        }
+        if (this.scaleToggleButtonGraphics) {
+            this.scaleToggleButtonGraphics.destroy();
+            this.scaleToggleButtonGraphics = null;
         }
         
         // グローバルな音声システムもクリーンアップ

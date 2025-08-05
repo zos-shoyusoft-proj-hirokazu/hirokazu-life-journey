@@ -272,6 +272,8 @@ export class CameraManager {
             );
         } else {
             // 全体表示時：画面全体をカメラの境界にする
+            // 背景色も設定して、マップが画面より小さい場合の余白を埋める
+            this.camera.setBackgroundColor('#87CEEB');
             this.camera.setBounds(0, 0, screenWidth, screenHeight);
         }
 
@@ -281,6 +283,8 @@ export class CameraManager {
             mapY + scaledHeight / 2
         );
         
+        // デバッグ用：スケール変更をログ出力
+        console.log(`CameraManager: Scale changed to ${scale}, map position: (${mapX}, ${mapY}), size: (${scaledWidth}, ${scaledHeight})`);
     }
 
     destroy() {

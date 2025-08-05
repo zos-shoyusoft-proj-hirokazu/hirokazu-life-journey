@@ -43,10 +43,21 @@ export class UIManager {
             return;
         }
         
-        // === 戻るボタンの背景（黒い角丸矩形） ===
+        // === 戻るボタンの背景（現代風ゲームポップ） ===
         this.backButtonGraphics = scene.add.graphics();
-        this.backButtonGraphics.fillStyle(0x000000, 0.8);  // 黒色、透明度0.8
-        this.backButtonGraphics.fillRoundedRect(2.5, 2.5, 155, 30, 8);  // 左上(5,5)に150x40の角丸矩形
+        
+        // 影を描画
+        this.backButtonGraphics.fillStyle(0x000000, 0.3);
+        this.backButtonGraphics.fillRoundedRect(4.5, 4.5, 155, 30, 8);
+        
+        // メイン背景を描画
+        this.backButtonGraphics.fillStyle(0x2a2a2a, 0.95);
+        this.backButtonGraphics.fillRoundedRect(2.5, 2.5, 155, 30, 8);
+        
+        // 光沢効果（上部）
+        this.backButtonGraphics.fillStyle(0xffffff, 0.1);
+        this.backButtonGraphics.fillRoundedRect(2.5, 2.5, 155, 15, 8);
+        
         this.backButtonGraphics.setDepth(1000);  // 表示順序
         this.backButtonGraphics.setScrollFactor(0);  // カメラに固定
         // === クリック可能エリアの設定 ===
@@ -160,14 +171,34 @@ export class UIManager {
         // === ホバー効果（マウスオーバー時の色変更） ===
         this.backButtonGraphics.on('pointerover', () => {
             this.backButtonGraphics.clear();
-            this.backButtonGraphics.fillStyle(0x333333, 0.9);  // グレーに変更
-            this.backButtonGraphics.fillRoundedRect(-50, -25, 100, 50, 8);
+            
+            // ホバー時の影
+            this.backButtonGraphics.fillStyle(0x000000, 0.4);
+            this.backButtonGraphics.fillRoundedRect(4.5, 4.5, 155, 30, 8);
+            
+            // ホバー時のメイン背景（明るく）
+            this.backButtonGraphics.fillStyle(0x3a3a3a, 0.98);
+            this.backButtonGraphics.fillRoundedRect(2.5, 2.5, 155, 30, 8);
+            
+            // ホバー時の光沢効果（より明るく）
+            this.backButtonGraphics.fillStyle(0xffffff, 0.15);
+            this.backButtonGraphics.fillRoundedRect(2.5, 2.5, 155, 15, 8);
         });
         // === マウスアウト時の色戻し ===
         this.backButtonGraphics.on('pointerout', () => {
             this.backButtonGraphics.clear();
-            this.backButtonGraphics.fillStyle(0x000000, 0.8);  // 黒に戻す
-            this.backButtonGraphics.fillRoundedRect(-50, -25, 100, 50, 8);
+            
+            // 通常時の影
+            this.backButtonGraphics.fillStyle(0x000000, 0.3);
+            this.backButtonGraphics.fillRoundedRect(4.5, 4.5, 155, 30, 8);
+            
+            // 通常時のメイン背景
+            this.backButtonGraphics.fillStyle(0x2a2a2a, 0.95);
+            this.backButtonGraphics.fillRoundedRect(2.5, 2.5, 155, 30, 8);
+            
+            // 通常時の光沢効果
+            this.backButtonGraphics.fillStyle(0xffffff, 0.1);
+            this.backButtonGraphics.fillRoundedRect(2.5, 2.5, 155, 15, 8);
         });
         
         // === 戻るボタンのテキスト表示 ===
