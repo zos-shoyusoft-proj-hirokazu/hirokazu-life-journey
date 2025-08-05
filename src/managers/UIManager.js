@@ -43,28 +43,26 @@ export class UIManager {
             return;
         }
         
-        // 角丸背景に修正
+        // === 戻るボタンの背景（黒い角丸矩形） ===
         this.backButtonGraphics = scene.add.graphics();
-        this.backButtonGraphics.fillStyle(0x000000, 0.7);
-        this.backButtonGraphics.fillRoundedRect(-45, -20, 80, 40, 5); // 指示通り
-        this.backButtonGraphics.setPosition(50, 25);
-        this.backButtonGraphics.setDepth(1000);
-        this.backButtonGraphics.setScrollFactor(0);
-        // インタラクティブ化（ヒットエリアも完全に同じ座標・サイズにする）
-        this.backButtonGraphics.setInteractive(new Phaser.Geom.Rectangle(-45, -20, 80, 40), Phaser.Geom.Rectangle.Contains);
+        this.backButtonGraphics.fillStyle(0x000000, 0.8);  // 黒色、透明度0.8
+        this.backButtonGraphics.fillRoundedRect(2.5, 2.5, 155, 30, 8);  // 左上(5,5)に150x40の角丸矩形
+        this.backButtonGraphics.setDepth(1000);  // 表示順序
+        this.backButtonGraphics.setScrollFactor(0);  // カメラに固定
+        // === クリック可能エリアの設定 ===
+        this.backButtonGraphics.setInteractive(new Phaser.Geom.Rectangle(5, 5, 150, 40), Phaser.Geom.Rectangle.Contains);
         
-        // ボタンテキストを動的に設定
-        let buttonText = '戻る';
+        // === ボタンテキストの内容を動的に設定 ===
+        let buttonText = '戻る';  // デフォルトテキスト
         if (scene.scene && scene.scene.key) {
             if (scene.scene.key === 'Stage1Scene' || scene.scene.key === 'Stage2Scene' || scene.scene.key === 'Stage3Scene') {
-                // ステージ番号を動的に取得
-                const stageNumber = scene.scene.key.replace('Stage', '').replace('Scene', '');
-                buttonText = `ステージ${stageNumber}から戻る`;
+                buttonText = 'マップに戻る';  // 通常ステージ用
             } else if (scene.scene.key === 'MiemachiStage' || scene.scene.key === 'TaketastageStage') {
-                buttonText = 'ステージ選択画面に戻る';
+                buttonText = 'ステージ選択画面';  // マップステージ用
             }
         }
         
+        // === ボタンクリック時の処理 ===
         this.backButtonGraphics.on('pointerdown', () => {
             console.log('[UIManager] 戻るボタンがクリックされました');
             console.log('[UIManager] 現在のシーン:', scene.scene?.key);
@@ -90,7 +88,7 @@ export class UIManager {
                     const stageSelect = document.getElementById('stage-select');
                     const gameContainer = document.getElementById('game-container');
                     if (stageSelect) {
-                        stageSelect.style.display = 'block';
+                        stageSelect.style.display = 'flex';
                     }
                     if (gameContainer) {
                         gameContainer.style.display = 'none';
@@ -116,7 +114,7 @@ export class UIManager {
                     const stageSelect = document.getElementById('stage-select');
                     const gameContainer = document.getElementById('game-container');
                     if (stageSelect) {
-                        stageSelect.style.display = 'block';
+                        stageSelect.style.display = 'flex';
                     }
                     if (gameContainer) {
                         gameContainer.style.display = 'none';
@@ -131,7 +129,7 @@ export class UIManager {
                     const stageSelect = document.getElementById('stage-select');
                     const gameContainer = document.getElementById('game-container');
                     if (stageSelect) {
-                        stageSelect.style.display = 'block';
+                        stageSelect.style.display = 'flex';
                     }
                     if (gameContainer) {
                         gameContainer.style.display = 'none';
@@ -159,27 +157,32 @@ export class UIManager {
             });
         }
         
+        // === ホバー効果（マウスオーバー時の色変更） ===
         this.backButtonGraphics.on('pointerover', () => {
             this.backButtonGraphics.clear();
-            this.backButtonGraphics.fillStyle(0x333333, 0.8);
-            this.backButtonGraphics.fillRoundedRect(-45, -20, 80, 40, 5);
+            this.backButtonGraphics.fillStyle(0x333333, 0.9);  // グレーに変更
+            this.backButtonGraphics.fillRoundedRect(-50, -25, 100, 50, 8);
         });
+        // === マウスアウト時の色戻し ===
         this.backButtonGraphics.on('pointerout', () => {
             this.backButtonGraphics.clear();
-            this.backButtonGraphics.fillStyle(0x000000, 0.7);
-            this.backButtonGraphics.fillRoundedRect(-45, -20, 80, 40, 5);
+            this.backButtonGraphics.fillStyle(0x000000, 0.8);  // 黒に戻す
+            this.backButtonGraphics.fillRoundedRect(-50, -25, 100, 50, 8);
         });
         
-        // 戻るボタンのテキスト
-        this.backButtonText = scene.add.text(45, 34, buttonText, {
-            fontSize: '16px',
-            fill: '#ffffff',
-            fontWeight: 'bold',
-            fixedHeight: 40
+        // === 戻るボタンのテキスト表示 ===
+        this.backButtonText = scene.add.text(80, 25, buttonText, {  // 位置(80,25)にテキスト配置
+            fontSize: '18px',  // フォントサイズ
+            fill: '#ffffff',  // 白色
+            fontWeight: 'bold',  // 太字
+            fixedHeight: 50,  // 高さ固定
+            wordWrap: { width: 150 },  // 文字の折り返し
+            align: 'center',  // 文字の中央揃え
+            padding: { x: 10, y: 10 }  // パディング
         });
-        this.backButtonText.setOrigin(0.5, 0.4);
-        this.backButtonText.setScrollFactor(0); // カメラに固定
-        this.backButtonText.setDepth(1001); // ボタンより手前に表示
+        this.backButtonText.setOrigin(0.5, 0.5);  // テキストの中心を基準に配置（上寄り）
+        this.backButtonText.setScrollFactor(0);  // カメラに固定
+        this.backButtonText.setDepth(1001);  // ボタンより手前に表示
         
         // 画面リサイズ時の位置調整
         scene.scale.on('resize', () => {

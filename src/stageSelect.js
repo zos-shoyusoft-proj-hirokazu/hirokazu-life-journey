@@ -13,7 +13,7 @@ function showStageSelect() {
     const stageSelect = document.getElementById('stage-select');
     
     if (gameContainer) gameContainer.style.display = 'none';
-    if (stageSelect) stageSelect.style.display = 'block';
+    if (stageSelect) stageSelect.style.display = 'flex';
 }
 
 function hideStageSelect() {
