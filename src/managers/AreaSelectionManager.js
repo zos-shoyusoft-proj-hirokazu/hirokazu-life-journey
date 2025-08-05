@@ -35,6 +35,7 @@ export class AreaSelectionManager {
                 ...area,
                 description: this.getAreaDescription(area.name)
             }));
+            console.log('[DEBUG] setupAreas - areas:', this.areas);
         } else {
             this.areas = [];
         }
@@ -66,8 +67,8 @@ export class AreaSelectionManager {
             'koutaroupoteto': 'こうたろうポテト',
             // 竹田ステージのエリア説明
             'taketa_station': '竹田駅',
-            'taketa_high school': '竹田高校',
-            'ginnga_water': '銀河の水',
+            'taketa_high_school': '竹田高校',
+            'galaxy_water': '銀河の水',
             'udefuriojisann': 'ウデフリオジサン'
         };
         
@@ -439,7 +440,7 @@ export class AreaSelectionManager {
         // エリア選択後の処理
         
         // 竹田ステージと三重町ステージの会話イベントをチェック（NPCクリック時と同じ会話システムを使用）
-        if (this.scene.mapConfig && this.scene.mapConfig.mapKey === 'taketa') {
+        if (this.scene.mapConfig && this.scene.mapConfig.mapKey === 'taketa_city') {
             this.handleTaketaConversation(area);
         } else if (this.scene.mapConfig && this.scene.mapConfig.mapKey === 'bunngo_mie_city') {
             this.handleMiemachiConversation(area);
@@ -464,14 +465,12 @@ export class AreaSelectionManager {
                 case 'taketa_station':
                     eventId = 'taketa_station';
                     break;
-                case 'taketa_high school':
-                    eventId = 'taketa_school';
-                    break;
-                case 'ginnga_water':
+
+                case 'galaxy_water':
                     eventId = 'ginnga_water';
                     break;
                 case 'udefuriojisann':
-                    eventId = 'udefuriojisann';
+                    eventId = 'arm_swinging_person';
                     break;
                 default:
                     // 会話イベントがない場合は通常の移動
@@ -486,11 +485,23 @@ export class AreaSelectionManager {
         const currentMapId = this.scene.mapConfig?.mapKey || 'unknown';
         const conversationData = this.getConversationData(currentMapId, eventId);
         
+        console.log('[DEBUG] handleTaketaConversation - conversationData:', conversationData);
+        console.log('[DEBUG] handleTaketaConversation - this.scene.conversationTrigger:', this.scene.conversationTrigger);
+        
         if (conversationData) {
             // 会話システムを開始（NPCクリック時と同じ方法）
             if (this.scene.conversationTrigger) {
+                console.log('[DEBUG] startVisualNovelConversation を呼び出します');
                 this.scene.conversationTrigger.startVisualNovelConversation(conversationData);
+            } else {
+                console.log('[ERROR] conversationTrigger が存在しません');
             }
+        } else {
+            console.log('[DEBUG] conversationData が見つかりませんでした');
+            // 会話データがない場合は通常の移動
+            this.scene.time.delayedCall(1000, () => {
+                this.navigateToArea(area);
+            });
         }
     }
 
@@ -556,20 +567,29 @@ export class AreaSelectionManager {
 
     // 汎用的な会話データ取得関数
     getConversationData(mapId, eventId) {
+        console.log('[DEBUG] getConversationData called with mapId:', mapId, 'eventId:', eventId);
         // マップIDに基づいて適切な会話データを取得
+        let result;
         switch (mapId) {
             case 'bunngo_mie_city':
-                return miemachiConversationData[eventId];
-            case 'taketa':
-                return taketaConversationData[eventId];
+                result = miemachiConversationData[eventId];
+                break;
+            case 'taketa_city':
+                result = taketaConversationData[eventId];
+                break;
             default:
                 // デフォルトの会話データを返す
-                return miemachiConversationData[eventId] || taketaConversationData[eventId];
+                result = miemachiConversationData[eventId] || taketaConversationData[eventId];
         }
+        console.log('[DEBUG] getConversationData result:', result);
+        return result;
     }
 
     navigateToArea(area) {
         // 選択した場所に応じて次のマップまたはシーンに移動
+        console.log('[DEBUG] navigateToArea called with area:', area);
+        console.log('[DEBUG] area.scene:', area.scene);
+        console.log('[DEBUG] area.sceneParam:', area.sceneParam);
         
         // エリアオブジェクトがsceneプロパティを持っている場合
         if (area.scene) {
@@ -777,13 +797,17 @@ export class AreaSelectionManager {
                 this.scene.scene.stop();
                 // ステージを直接開始
                 import('../gameController.js').then(({ startPhaserGame }) => {
-                    console.log('startPhaserGameを呼び出します:', stageNumber);
+                    console.log('[DEBUG] startPhaserGameを呼び出します:', stageNumber);
+                    console.log('[DEBUG] area:', area);
+                    console.log('[DEBUG] area.sceneParam:', area.sceneParam);
                     startPhaserGame(stageNumber);
                 });
                 
             } else {
                 // その他のシーンへの移動
+                console.log('[DEBUG] その他のシーンへの移動:', area.scene);
                 import('../gameController.js').then(({ startPhaserGame }) => {
+                    console.log('[DEBUG] startPhaserGameを呼び出します:', area.scene);
                     startPhaserGame(area.scene);
                 });
             }

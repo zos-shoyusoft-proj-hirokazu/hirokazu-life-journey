@@ -47,7 +47,7 @@ export const AreaConfig = {
     
     // 竹田ステージ
     taketastage: {
-        mapKey: 'taketa',
+        mapKey: 'taketa_city',
         tilesetKey: 'taketa_map',
         mapTitle: '竹田ステージ',
         bgm: {
@@ -60,10 +60,10 @@ export const AreaConfig = {
             map_touch: 'assets/audio/se/touch_2.mp3', // マップ専用タッチSE
         },
         areas: [
-            { name: 'taketa_station', scene: 'TaketaStationScene' },
-            { name: 'taketa_high school', scene: 'TaketaHighSchoolScene' },
-            { name: 'ginnga_water', scene: 'GinngaWaterScene' },
-            { name: 'udefuriojisann', scene: 'UdefuriojisannScene' }
+            { name: 'taketa_station', scene: null, conversationId: 'taketa_station' },
+            { name: 'taketa_high_school', scene: 'startPhaserGame', sceneParam: 2, conversationId: null },
+            { name: 'galaxy_water', scene: null, conversationId: 'ginnga_water' },
+            { name: 'udefuriojisann', scene: null, conversationId: 'arm_swinging_person' }
         ]
     },
     

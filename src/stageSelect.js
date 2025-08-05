@@ -120,5 +120,5 @@ function miemachiClickHandler() {
 }
 
 function taketastageClickHandler() {
-    startStage('taketastage');
+    startStage('taketa');
 }

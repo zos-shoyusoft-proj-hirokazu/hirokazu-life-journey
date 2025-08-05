@@ -119,7 +119,7 @@ export class MapSelectionStage extends Phaser.Scene {
             this.visualFeedbackManager = new VisualFeedbackManager(this);
             
             // 竹田ステージと三重町ステージの場合は会話システムを初期化
-            if (this.mapConfig.mapKey === 'taketa' || this.mapConfig.mapKey === 'bunngo_mie_city') {
+            if (this.mapConfig.mapKey === 'taketa_city' || this.mapConfig.mapKey === 'bunngo_mie_city') {
                 this.conversationTrigger = new ConversationTrigger(this);
                 // ConversationSceneを動的に追加
                 this.scene.add('ConversationScene', ConversationScene);
@@ -132,9 +132,12 @@ export class MapSelectionStage extends Phaser.Scene {
                 const configArea = configAreas.find(config => config.name === mapArea.name);
                 return {
                     ...mapArea,
-                    scene: configArea?.scene || null
+                    scene: configArea?.scene || null,
+                    sceneParam: configArea?.sceneParam || null,
+                    conversationId: configArea?.conversationId || null
                 };
             });
+            console.log('[DEBUG] mergedAreas:', mergedAreas);
             this.areaSelectionManager.setupAreas(mergedAreas);
             
             // UI要素を作成

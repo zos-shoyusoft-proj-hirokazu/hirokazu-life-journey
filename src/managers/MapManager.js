@@ -145,7 +145,7 @@ export class MapManager {
         // マップキーに基づいて適切なオブジェクトレイヤー名を返す
         const layerNames = {
             'bunngo_mie_city': 'miemachi',
-            'taketa': 'taketa'
+            'taketa_city': 'taketa'
         };
         
         // マップキーが登録されていない場合は警告を出す

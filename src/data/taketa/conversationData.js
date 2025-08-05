@@ -488,25 +488,7 @@ export const taketaConversationData = {
         ]
     },
     
-    // 竹田駅
-    'takeda_station': {
-        'background': 'station',
-        'bgm': 'bgm_station',
-        'conversations': [
-            {
-                'speaker': 'ナレーション',
-                'character': 'narrator',
-                'text': '竹田駅',
-                'expression': 'A'
-            },
-            {
-                'speaker': 'ひろかず',
-                'character': 'hirokazu',
-                'text': '電車の工藤くん？',
-                'expression': 'B'
-            }
-        ]
-    },
+
     
     // 電車ないうんこおじさん事件
     'train_no_poop_man': {
@@ -536,15 +518,42 @@ export const taketaConversationData = {
         ]
     },
     
-    // 銀河水
-    'ginga_sui': {
-        'background': 'ginga_sui',
+    
+    // 銀河の水
+    'ginnga_water': {
+        'background': 'galaxy',
         'bgm': 'bgm_mysterious',
         'conversations': [
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
-                'text': '銀河水？',
+                'text': '銀河の水だ',
+                'expression': 'A'
+            },
+            {
+                'speaker': 'ひろかず',
+                'character': 'hirokazu',
+                'text': 'なんだか神秘的だな',
+                'expression': 'B'
+            }
+        ]
+    },
+    
+    // 竹田駅
+    'taketa_station': {
+        'background': 'station',
+        'bgm': 'bgm_station',
+        'conversations': [
+            {
+                'speaker': 'ひろかず',
+                'character': 'hirokazu',
+                'text': '竹田駅だ',
+                'expression': 'A'
+            },
+            {
+                'speaker': 'ひろかず',
+                'character': 'hirokazu',
+                'text': '電車で来たな',
                 'expression': 'B'
             }
         ]

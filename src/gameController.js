@@ -34,9 +34,15 @@ export function startPhaserGame(stageNumber) {
         case 3: sceneClass = Stage3; sceneKey = 'Stage3Scene'; break;
         case 'stage1_enhanced': sceneClass = Stage1; sceneKey = 'Stage1Scene'; break;
         case 'miemachi': sceneClass = createMapStage('miemachi', 'MiemachiStage'); sceneKey = 'MiemachiStage'; break;
-        case 'taketastage': sceneClass = createMapStage('taketastage', 'TaketastageStage'); sceneKey = 'TaketastageStage'; break;
+        case 'taketa': sceneClass = createMapStage('taketastage', 'TaketastageStage'); sceneKey = 'TaketastageStage'; break;
+
         case 'bunngo_mie_city': sceneClass = createMapStage('miemachi', 'MiemachiStage'); sceneKey = 'MiemachiStage'; break;
-        default: sceneClass = Stage1; sceneKey = 'Stage1Scene';
+        case 'taketa_city': sceneClass = createMapStage('taketastage', 'TaketastageStage'); sceneKey = 'TaketastageStage'; break;
+
+        default: 
+            console.log('[DEBUG] gameController: 未定義のシーン:', stageNumber, '→ Stage1に飛ぶ');
+            sceneClass = Stage1; 
+            sceneKey = 'Stage1Scene';
     }
     console.log('[startPhaserGame] シーンを追加:', sceneKey);
     game.scene.add(sceneKey, sceneClass, true);
