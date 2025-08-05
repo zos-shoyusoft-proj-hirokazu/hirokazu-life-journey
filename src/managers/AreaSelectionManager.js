@@ -586,235 +586,69 @@ export class AreaSelectionManager {
     }
 
     navigateToArea(area) {
-        // 選択した場所に応じて次のマップまたはシーンに移動
         console.log('[DEBUG] navigateToArea called with area:', area);
-        console.log('[DEBUG] area.scene:', area.scene);
-        console.log('[DEBUG] area.sceneParam:', area.sceneParam);
         
-        // エリアオブジェクトがsceneプロパティを持っている場合
-        if (area.scene) {
-            // startPhaserGameの場合は特別な処理
-            if (area.scene === 'startPhaserGame') {
-                // 現在のマップIDを動的に取得して記憶
-                const currentMapId = this.scene.mapConfig?.mapKey || 'unknown';
-                const stageNumber = area.sceneParam || 1;
+        if (!area.scene) {
+            console.log('[DEBUG] No scene specified for this area');
+            return;
+        }
+        
+        // startPhaserGameの場合は特別な処理
+        if (area.scene === 'startPhaserGame') {
+            const currentMapId = this.scene.mapConfig?.mapKey || 'unknown';
+            const stageNumber = area.sceneParam || 1;
+            
+            // 現在のマップに戻るための関数を設定
+            window.returnToMap = () => {
+                console.log('[returnToMap] マップに戻る:', currentMapId);
                 
-                // 現在のマップに戻るための関数を設定（汎用化）
-                window.returnToMap = () => {
-                    console.log('[returnToMap] マップに戻る処理を開始:', currentMapId);
-                    console.log('[returnToMap] 現在のマップID:', currentMapId);
-                    
-                    // 現在のシーンを停止してから指定されたマップを開始
-                    if (window.game && window.game.scene) {
-                        // すべてのシーンを停止して削除
-                        window.game.scene.scenes.forEach(scene => {
-                            if (scene && scene.scene) {
-                                // AudioManagerの完全なクリーンアップ
-                                if (scene.audioManager) {
-                                    try {
-                                        scene.audioManager.stopAll();
-                                        scene.audioManager.destroy();
-                                    } catch (error) {
-                                        console.warn('[returnToMap] AudioManager cleanup error:', error);
-                                    }
-                                    scene.audioManager = null;
-                                }
-                                
-                                // イベントリスナーの削除
-                                if (scene.events) {
-                                    scene.events.removeAllListeners();
-                                }
-                                
-                                // シーンのshutdownメソッドを呼び出し
-                                if (scene.shutdown) {
-                                    scene.shutdown();
-                                }
-                                
-                                if (scene.scene.isActive()) {
-                                    scene.scene.stop();
-                                }
-                                scene.scene.remove();
+                // 現在のシーンを停止してから指定されたマップを開始
+                if (window.game && window.game.scene) {
+                    // すべてのシーンを停止して削除
+                    window.game.scene.scenes.forEach(scene => {
+                        if (scene && scene.scene) {
+                            if (scene.scene.isActive()) {
+                                scene.scene.stop();
                             }
-                        });
-                        
-                        // グローバルな音声システムもクリーンアップ
-                        if (window.game.sound) {
-                            try {
-                                window.game.sound.stopAll();
-                                // 音声キャッシュをクリア
-                                window.game.sound.removeAll();
-                            } catch (error) {
-                                console.warn('[returnToMap] Global sound cleanup error:', error);
-                            }
+                            scene.scene.remove();
                         }
-                    }
-                    
-                    // ゲームインスタンスを完全に再初期化
-                    if (window.game) {
-                        window.game.destroy(true);
-                        window.game = null;
-                    }
-                    if (window.gameInstance) {
-                        window.gameInstance = null;
-                    }
-                    
-                    // 少し遅延を入れてからマップを開始（クリーンアップ完了を待つ）
-                    setTimeout(() => {
-                        import('../gameController.js').then(({ startPhaserGame }) => {
-                            console.log('[returnToMap] startPhaserGameを呼び出します:', currentMapId);
-                            startPhaserGame(currentMapId);
-                            console.log('[returnToMap] マップに戻る処理が完了しました');
-                            
-                            // マップ開始直後にreturnToStageSelect関数を強制設定
-                            setTimeout(() => {
-                                // 強制的にreturnToStageSelect関数を設定
-                                window.returnToStageSelect = function() {
-                                    // ゲームのクリーンアップ
-                                    if (window.game) {
-                                        window.game.destroy(true);
-                                        window.game = null;
-                                    }
-                                    if (window.gameInstance) {
-                                        window.gameInstance = null;
-                                    }
-                                    
-                                    // ステージ選択画面を表示
-                                    const stageSelect = document.getElementById('stage-select');
-                                    const gameContainer = document.getElementById('game-container');
-                                    
-                                    if (stageSelect) {
-                                        stageSelect.style.display = 'block';
-                                    }
-                                    
-                                    if (gameContainer) {
-                                        gameContainer.style.display = 'none';
-                                    }
-                                    
-                                    // グローバル関数をクリア（returnToMapもクリア）
-                                    window.returnToStageSelect = null;
-                                    window.returnToMap = null;
-                                };
-                                
-                            }, 500);
-                            
-                            // マップ開始後、ステージ選択画面に戻る機能を復活
-                            setTimeout(() => {
-                                // ステージ選択画面に戻る機能を再設定
-                                if (typeof window.returnToStageSelect === 'undefined') {
-                                    // stageSelect.jsを動的に読み込んで関数を復活
-                                    import('../stageSelect.js').then(() => {
-                                    });
-                                }
-                                
-                                // より確実にステージ選択画面に戻る機能を再定義
-                                window.returnToStageSelect = function() {
-                                    try {
-                                        if (window.game && window.game.destroy) {
-                                            // すべてのシーンのAudioManagerをクリーンアップ
-                                            if (window.game.scene) {
-                                                window.game.scene.scenes.forEach(scene => {
-                                                    if (scene && scene.audioManager) {
-                                                        try {
-                                                            scene.audioManager.stopAll();
-                                                            scene.audioManager.destroy();
-                                                        } catch (error) {
-                                                            console.warn('[returnToStageSelect] AudioManager cleanup error:', error);
-                                                        }
-                                                        scene.audioManager = null;
-                                                    }
-                                                    
-                                                    // イベントリスナーの削除
-                                                    if (scene.events) {
-                                                        scene.events.removeAllListeners();
-                                                    }
-                                                    
-                                                    // シーンのshutdownメソッドを呼び出し
-                                                    if (scene.shutdown) {
-                                                        scene.shutdown();
-                                                    }
-                                                });
-                                            }
-                                            
-                                            // グローバルな音声システムをクリーンアップ
-                                            if (window.game.sound) {
-                                                try {
-                                                    window.game.sound.stopAll();
-                                                    window.game.sound.removeAll();
-                                                } catch (error) {
-                                                    console.warn('[returnToStageSelect] Global sound cleanup error:', error);
-                                                }
-                                            }
-                                            
-                                            window.game.destroy(true);
-                                            window.game = null;
-                                            if (typeof window.gameInstance !== 'undefined') {
-                                                window.gameInstance = null;
-                                            }
-                                        }
-                                        
-                                        // ステージ選択画面を表示
-                                        const stageSelect = document.getElementById('stage-select');
-                                        const gameContainer = document.getElementById('game-container');
-                                        
-                                        if (stageSelect) {
-                                            stageSelect.style.display = 'block';
-                                        } else {
-                                            // フォールバック: 手動でステージ選択画面を表示
-                                            const stageSelectFallback = document.getElementById('stage-select');
-                                            const gameContainerFallback = document.getElementById('game-container');
-                                            if (stageSelectFallback) {
-                                                stageSelectFallback.style.display = 'block';
-                                            }
-                                            if (gameContainerFallback) {
-                                                gameContainerFallback.style.display = 'none';
-                                            }
-                                        }
-                                        
-                                        if (gameContainer) {
-                                            gameContainer.style.display = 'none';
-                                        }
-                                        
-                                    } catch (error) {
-                                        // エラーハンドリング
-                                    }
-                                };
-                                
-                            }, 1000);
-                            
-                        });
-                    }, 100);
-                };
-                
-                // 現在のシーン（マップ）を停止してからステージを開始
-                console.log(`ステージ${stageNumber}を開始します... (マップ: ${currentMapId})`);
-                console.log('area:', area);
-                
-                // ステージに移動する前に、現在のマップのConversationSceneを削除
-                if (this.scene.scene.get('ConversationScene')) {
-                    this.scene.scene.remove('ConversationScene');
+                    });
                 }
                 
-                this.scene.scene.stop();
-                // ステージを直接開始
-                import('../gameController.js').then(({ startPhaserGame }) => {
-                    console.log('[DEBUG] startPhaserGameを呼び出します:', stageNumber);
-                    console.log('[DEBUG] area:', area);
-                    console.log('[DEBUG] area.sceneParam:', area.sceneParam);
-                    startPhaserGame(stageNumber);
-                });
+                // ゲームインスタンスを完全に再初期化
+                if (window.game) {
+                    window.game.destroy(true);
+                    window.game = null;
+                }
+                if (window.gameInstance) {
+                    window.gameInstance = null;
+                }
                 
-            } else {
-                // その他のシーンへの移動
-                console.log('[DEBUG] その他のシーンへの移動:', area.scene);
+                // マップを再開始
                 import('../gameController.js').then(({ startPhaserGame }) => {
-                    console.log('[DEBUG] startPhaserGameを呼び出します:', area.scene);
-                    startPhaserGame(area.scene);
+                    startPhaserGame(currentMapId);
                 });
+            };
+            
+            // ステージを開始
+            console.log(`ステージ${stageNumber}を開始します...`);
+            
+            // ステージに移動する前に、現在のマップのConversationSceneを削除
+            if (this.scene.scene.get('ConversationScene')) {
+                this.scene.scene.remove('ConversationScene');
             }
+            
+            this.scene.scene.stop();
+            
+            import('../gameController.js').then(({ startPhaserGame }) => {
+                startPhaserGame(stageNumber);
+            });
+            
         } else {
-            // sceneプロパティがない場合は通常の移動処理
-            this.scene.time.delayedCall(1000, () => {
-                // デフォルトの移動処理
+            // その他のシーンへの移動
+            console.log('[DEBUG] その他のシーンへの移動:', area.scene);
+            import('../gameController.js').then(({ startPhaserGame }) => {
+                startPhaserGame(area.scene);
             });
         }
     }
