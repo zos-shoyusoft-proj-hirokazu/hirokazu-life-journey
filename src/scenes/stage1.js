@@ -82,12 +82,12 @@ export class Stage1 extends Phaser.Scene {
         });
         
         // 新しい会話システム用の画像
-        this.load.image('kawamuro_A', 'assets/characters/portraits/kawamuro_A.png');
-        this.load.image('kawamuro_B', 'assets/characters/portraits/kawamuro_B.png');
-        this.load.image('kawamuro_C', 'assets/characters/portraits/kawamuro_C.png');
-        this.load.image('kawamuro_D', 'assets/characters/portraits/kawamuro_D.png');
-        this.load.image('kawamuro_E', 'assets/characters/portraits/kawamuro_E.png');
-        this.load.image('kawamuro_F', 'assets/characters/portraits/kawamuro_F.png');
+        this.load.image('hirokazu_A', 'assets/characters/portraits/hirokazu_A.png');
+        this.load.image('hirokazu_B', 'assets/characters/portraits/hirokazu_B.png');
+        this.load.image('hirokazu_C', 'assets/characters/portraits/hirokazu_C.png');
+        this.load.image('hirokazu_D', 'assets/characters/portraits/hirokazu_D.png');
+        this.load.image('hirokazu_E', 'assets/characters/portraits/hirokazu_E.png');
+        this.load.image('hirokazu_F', 'assets/characters/portraits/hirokazu_F.png');
         this.load.image('daichi_A', 'assets/characters/portraits/daichi_A.png');
         this.load.image('naoki_A', 'assets/characters/portraits/naoki_A.png');
         

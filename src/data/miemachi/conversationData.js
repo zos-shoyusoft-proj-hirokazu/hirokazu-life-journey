@@ -798,7 +798,19 @@ export const miemachiConversationData = {
         ]
     },
     
-    
+    // トライアルエピソード
+    'trial': {
+        'background': 'trial',
+        'bgm': 'bgm_normal',
+        'conversations': [
+            {
+                'speaker': 'ひろかず',
+                'character': 'hirokazu',
+                'text': 'トライアル',
+                'expression': 'A'
+            }
+        ]
+    },
 
 };
 

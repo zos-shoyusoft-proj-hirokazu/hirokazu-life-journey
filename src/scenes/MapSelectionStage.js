@@ -56,6 +56,9 @@ export class MapSelectionStage extends Phaser.Scene {
         // SEの読み込み（設定に基づいて動的に）
         this.loadSeFiles();
         
+        // キャラクター画像の読み込み（設定に基づいて動的に）
+        this.loadCharacterFiles();
+        
         // エラーハンドリング
         this.load.on('fileerror', (file) => {
             console.warn(`File not found: ${file.key}, using fallback`);
@@ -90,6 +93,16 @@ export class MapSelectionStage extends Phaser.Scene {
         if (this.mapConfig.eventBgm) {
             Object.keys(this.mapConfig.eventBgm).forEach(eventKey => {
                 this.load.audio(`bgm_event_${eventKey}`, this.mapConfig.eventBgm[eventKey]);
+            });
+        }
+    }
+
+    // キャラクター画像ファイルを動的に読み込む
+    loadCharacterFiles() {
+        // AreaConfigからキャラクター画像を動的に読み込み
+        if (this.mapConfig.characters) {
+            Object.keys(this.mapConfig.characters).forEach(charKey => {
+                this.load.image(charKey, this.mapConfig.characters[charKey]);
             });
         }
     }

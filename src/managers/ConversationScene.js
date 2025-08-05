@@ -485,7 +485,7 @@ export class ConversationScene extends Phaser.Scene {
                 'heroine': { x: width * 0.7, y: height * 0.4 },
                 'friend': { x: width * 0.3, y: height * 0.4 },
                 'teacher': { x: width * 0.5, y: height * 0.4 },
-                'kawamuro': { x: width * 0.7, y: height * 0.4 },
+                'hirokazu': { x: width * 0.7, y: height * 0.4 },
                 'daichi': { x: width * 0.3, y: height * 0.4 },
                 'naoki': { x: width * 0.5, y: height * 0.4 }
             };

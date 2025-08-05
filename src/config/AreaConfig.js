@@ -14,6 +14,16 @@ export const AreaConfig = {
             touch: 'assets/audio/se/touch_7.mp3', // ダイアログ用タッチSE
             map_touch: 'assets/audio/se/touch_2.mp3', // マップ専用タッチSE
         },
+        characters: {
+            'hirokazu_A': 'assets/characters/portraits/hirokazu_A.png',
+            'hirokazu_B': 'assets/characters/portraits/hirokazu_B.png',
+            'hirokazu_C': 'assets/characters/portraits/hirokazu_C.png',
+            'hirokazu_D': 'assets/characters/portraits/hirokazu_D.png',
+            'hirokazu_E': 'assets/characters/portraits/hirokazu_E.png',
+            'hirokazu_F': 'assets/characters/portraits/hirokazu_F.png',
+            'daichi_A': 'assets/characters/portraits/daichi_A.png',
+            'naoki_A': 'assets/characters/portraits/naoki_A.png'
+        },
         // eventBgm: {
         //     // エリア固有のイベントBGM
         //     'mie_high_school': 'assets/audio/bgm/events/school_event.mp3',
@@ -31,8 +41,8 @@ export const AreaConfig = {
         //     'profile': 'assets/audio/bgm/events/default_event.mp3'
         // },
         areas: [
-            { name: 'Traial', scene: 'TraialScene', conversationId: null },
-            { name: 'Flash_land_mie', scene: 'FlashLandMieScene', conversationId: null },
+            { name: 'Trial', scene: 'TrialScene', conversationId:'trial' },
+            { name: 'Flash_land_mie', scene: 'FlashLandMieScene', conversationId:'flash_land_mie' },
             { name: 'oreno_koto', scene: 'OrenoKotoScene', conversationId: 'oreno_koto' },
             { name: 'momoiro_jyogakuenn', scene: 'MomoiroJyogakuennScene', conversationId: 'annex_momo' },
             { name: 'drinking_dutu', scene: 'DrinkingDutuScene', conversationId: 'drink_zutsu' },
@@ -58,6 +68,16 @@ export const AreaConfig = {
         se: {
             touch: 'assets/audio/se/touch_7.mp3', // ダイアログ用タッチSE
             map_touch: 'assets/audio/se/touch_2.mp3', // マップ専用タッチSE
+        },
+        characters: {
+            'hirokazu_A': 'assets/characters/portraits/hirokazu_A.png',
+            'hirokazu_B': 'assets/characters/portraits/hirokazu_B.png',
+            'hirokazu_C': 'assets/characters/portraits/hirokazu_C.png',
+            'hirokazu_D': 'assets/characters/portraits/hirokazu_D.png',
+            'hirokazu_E': 'assets/characters/portraits/hirokazu_E.png',
+            'hirokazu_F': 'assets/characters/portraits/hirokazu_F.png',
+            'daichi_A': 'assets/characters/portraits/daichi_A.png',
+            'naoki_A': 'assets/characters/portraits/naoki_A.png'
         },
         areas: [
             { name: 'taketa_station', scene: null, conversationId: 'taketa_station' },

@@ -54,7 +54,7 @@ export class AreaSelectionManager {
     getAreaDescription(areaName) {
         // エリアの説明を取得
         const descriptions = {
-            'Traial': 'トライアル',
+            'Trial': 'トライアル',
             'Flash_land_mie': 'フラッシュランド三重',
             'oreno_koto': '俺のこと',
             'momoiro_jyogakuenn': '桃色女学院',
@@ -538,6 +538,9 @@ export class AreaSelectionManager {
                     break;
                 case 'momoiro_jyogakuenn':
                     eventId = 'annex_momo';
+                    break;
+                case 'Flash_land_mie':
+                    eventId = 'flash_land_mie';
                     break;
                 default:
                     // 会話イベントがない場合は通常の移動

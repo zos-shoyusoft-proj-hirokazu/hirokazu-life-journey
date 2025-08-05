@@ -38,7 +38,7 @@
                  "ellipse":true,
                  "height":232,
                  "id":16,
-                 "name":"Traial",
+                 "name":"Flash_land_mie",
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -49,7 +49,7 @@
                 {
                  "height":198,
                  "id":19,
-                 "name":"Flash_land_mie",
+                 "name":"Trial",
                  "rotation":0,
                  "type":"",
                  "visible":true,

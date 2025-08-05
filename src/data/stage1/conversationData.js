@@ -7,7 +7,7 @@ export const conversationData = {
         'conversations': [
             {
                 'speaker': 'ひろかず',
-                'character': 'kawamuro',
+                'character': 'hirokazu',
                 'text': 'おれけっこんすんだ',
                 'expression': 'A'
             },
@@ -19,7 +19,7 @@ export const conversationData = {
             },
             {
                 'speaker': '河村',
-                'character': 'kawamuro',
+                'character': 'hirokazu',
                 'text': 'そんなに固くならなくてもいい',
                 'expression': 'B'
             },
@@ -56,37 +56,37 @@ export const conversationData = {
         'conversations': [
             {
                 'speaker': '河室',
-                'character': 'kawamuro',
+                'character': 'hirokazu',
                 'text': '（新しいクラスか...少し緊張するな）',
                 'expression': 'E'
             },
             {
                 'speaker': '河室',
-                'character': 'kawamuro',
+                'character': 'hirokazu',
                 'text': 'あ、あなたが転校生の方ですね！',
                 'expression': 'F'
             },
             {
                 'speaker': '河室',
-                'character': 'kawamuro',
+                'character': 'hirokazu',
                 'text': 'はい、今日からお世話になります',
                 'expression': 'D'
             },
             {
                 'speaker': '河室',
-                'character': 'kawamuro',
+                'character': 'hirokazu',
                 'text': '私、田中花子です。よろしくお願いします！',
                 'expression': 'C'
             },
             {
                 'speaker': '河室',
-                'character': 'kawamuro',
+                'character': 'hirokazu',
                 'text': 'こちらこそ。分からないことがあったら教えてください',
                 'expression': 'A'
             },
             {
                 'speaker': '河室',
-                'character': 'kawamuro',
+                'character': 'hirokazu',
                 'text': 'はい！何でも聞いてくださいね♪',
                 'expression': 'E'
             }
