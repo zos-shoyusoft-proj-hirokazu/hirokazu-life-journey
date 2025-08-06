@@ -187,7 +187,7 @@
             #game-container {
                 height: -webkit-fill-available;
             }
-        }</style><script defer="defer" src="main.bundle.js"></script><script defer="defer" src="gameController.bundle.js"></script></head><body><button id="fullscreen-button" onclick="toggleFullscreen()">全画面</button><div id="game-container"></div><script src="https://cdn.jsdelivr.net/npm/phaser@3.70.0/dist/phaser.min.js"></script><div id="opening-video" style="display: none;"><div id="video-container"><iframe id="youtube-video" width="100%" height="100%" frameborder="0" allowfullscreen></iframe><button id="skip-video" class="skip-button">スキップ</button></div></div><div id="stage-select"><div class="stage-select-container"><div class="stage-buttons"><button id="miemachi">三重シティ</button> <button id="taketastage">竹田シティ</button> <button id="japan">全国</button> <button id="opening-video-btn">オープニング動画</button></div><div class="content-area"><div class="preview-area"><img src="./assets/backgrounds/stage_backgrounds/miemachi.png" alt="三重町マップ" class="preview-image" id="preview-miemachi"> <img src="./assets/backgrounds/stage_backgrounds/taketa_map.png" alt="竹田ステージ" class="preview-image" id="preview-taketastage"> <img src="./assets/backgrounds/stage_backgrounds/zennkoku.png" alt="日本マップ" class="preview-image" id="preview-japan"></div><div class="description-area" id="description-area"><p>ステージを選択してください</p></div></div></div></div><script>// ステージ選択画面のシンプルなJavaScript
+        }</style><script defer="defer" src="bundle.js"></script></head><body><button id="fullscreen-button" onclick="toggleFullscreen()">全画面</button><div id="game-container"></div><script src="https://cdn.jsdelivr.net/npm/phaser@3.70.0/dist/phaser.min.js"></script><div id="opening-video" style="display: none;"><div id="video-container"><iframe id="youtube-video" width="100%" height="100%" frameborder="0" allowfullscreen></iframe><button id="skip-video" class="skip-button">スキップ</button></div></div><div id="stage-select"><div class="stage-select-container"><div class="stage-buttons"><button id="miemachi">三重シティ</button> <button id="taketastage">竹田シティ</button> <button id="japan">全国</button> <button id="opening-video-btn">オープニング動画</button></div><div class="content-area"><div class="preview-area"><img src="./assets/backgrounds/stage_backgrounds/miemachi.png" alt="三重町マップ" class="preview-image" id="preview-miemachi"> <img src="./assets/backgrounds/stage_backgrounds/taketa_map.png" alt="竹田ステージ" class="preview-image" id="preview-taketastage"> <img src="./assets/backgrounds/stage_backgrounds/zennkoku.png" alt="日本マップ" class="preview-image" id="preview-japan"></div><div class="description-area" id="description-area"><p>ステージを選択してください</p></div></div></div></div><script>// ステージ選択画面のシンプルなJavaScript
         document.addEventListener('DOMContentLoaded', function() {
             console.log('DOMContentLoaded - ステージ選択画面を初期化');
             
@@ -277,7 +277,7 @@
             }
             
             // ゲームを開始
-            import('./gameController.js').then(({ startPhaserGame }) => {
+            import('./bundle.js').then(({ startPhaserGame }) => {
                 startPhaserGame(stageNumber);
             });
         }
