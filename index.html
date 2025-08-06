@@ -249,14 +249,8 @@
                 console.error('オープニング動画ボタンが見つかりません');
             }
             
-            // スキップボタンのイベントを設定
-            const skipVideoBtn = document.getElementById('skip-video');
-            if (skipVideoBtn) {
-                skipVideoBtn.addEventListener('click', function() {
-                    console.log('スキップボタン clicked');
-                    hideOpeningVideo();
-                });
-            }
+            // スキップボタンのイベントを設定（動画表示時に設定）
+            // 初期化時には設定しない（動画が表示されていないため）
             
             console.log('イベントリスナーの設定完了');
         });
