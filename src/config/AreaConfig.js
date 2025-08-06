@@ -137,5 +137,46 @@ export const AreaConfig = {
             { name: 'area_B', scene: 'ThirdMap_AreaBScene' }
             // 新しいエリアを追加するだけ
         ]
+    },
+    
+    // 日本ステージ
+    japan: {
+        mapKey: 'japan',
+        tilesetKey: 'zennkoku',
+        mapTitle: '日本マップ',
+        bgm: {
+            map: 'assets/audio/bgm/stage1/kessen_diaruga.mp3', // 通常マップBGM
+        },
+        se: {
+            touch: 'assets/audio/se/touch_7.mp3', // ダイアログ用タッチSE
+            map_touch: 'assets/audio/se/touch_2.mp3', // マップ専用タッチSE
+        },
+        characters: {
+            'hirokazu_A': 'assets/characters/portraits/hirokazu_A.png',
+            'hirokazu_B': 'assets/characters/portraits/hirokazu_B.png',
+            'hirokazu_C': 'assets/characters/portraits/hirokazu_C.png',
+            'hirokazu_D': 'assets/characters/portraits/hirokazu_D.png',
+            'hirokazu_E': 'assets/characters/portraits/hirokazu_E.png',
+            'hirokazu_F': 'assets/characters/portraits/hirokazu_F.png',
+            'daichi_A': 'assets/characters/portraits/daichi_A.png',
+            'naoki_A': 'assets/characters/portraits/naoki_A.png'
+        },
+        backgrounds: {
+            'bar': 'assets/backgrounds/bar.png',
+            'hospital': 'assets/backgrounds/hospital.png',
+            'classroom': 'assets/backgrounds/classroom.png',
+            'gym': 'assets/backgrounds/gym.png',
+            'room': 'assets/backgrounds/room.png',
+            'river': 'assets/backgrounds/river.png',
+            'test_1': 'assets/backgrounds/background_test.png'
+        },
+        areas: [
+            { name: 'computer', scene: null, conversationId: 'computer' },
+            { name: 'breaking_car', scene: null, conversationId: 'breaking_car' },
+            { name: 'special_scam', scene: null, conversationId: 'special_scam' },
+            { name: 'rojyounopenki', scene: null, conversationId: 'rojyounopenki' },
+            { name: 'tereapo', scene: null, conversationId: 'tereapo' },
+            { name: 'gray_bytes', scene: null, conversationId: 'gray_bytes' }
+        ]
     }
 }; 

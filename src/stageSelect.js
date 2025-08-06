@@ -81,6 +81,7 @@ if (!window.stageSelectInitialized) {
     // ステージボタンにイベントを設定（重複防止版）
     const miemachi = document.getElementById('miemachi');
     const taketastage = document.getElementById('taketastage');
+    const japan = document.getElementById('japan');
 
     if (miemachi) {
         miemachi.removeEventListener('click', miemachiClickHandler);
@@ -89,6 +90,10 @@ if (!window.stageSelectInitialized) {
     if (taketastage) {
         taketastage.removeEventListener('click', taketastageClickHandler);
         taketastage.addEventListener('click', taketastageClickHandler);
+    }
+    if (japan) {
+        japan.removeEventListener('click', japanClickHandler);
+        japan.addEventListener('click', japanClickHandler);
     }
     
 } else {
@@ -102,4 +107,8 @@ function miemachiClickHandler() {
 
 function taketastageClickHandler() {
     startStage('taketa');
+}
+
+function japanClickHandler() {
+    startStage('japan');
 }

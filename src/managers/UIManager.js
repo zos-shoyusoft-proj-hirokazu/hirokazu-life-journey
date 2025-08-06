@@ -68,7 +68,7 @@ export class UIManager {
         if (scene.scene && scene.scene.key) {
             if (scene.scene.key === 'Stage1Scene' || scene.scene.key === 'Stage2Scene' || scene.scene.key === 'Stage3Scene') {
                 buttonText = 'マップに戻る';  // 通常ステージ用
-            } else if (scene.scene.key === 'MiemachiStage' || scene.scene.key === 'TaketastageStage') {
+            } else if (scene.scene.key === 'MiemachiStage' || scene.scene.key === 'TaketastageStage' || scene.scene.key === 'JapanStage') {
                 buttonText = 'ステージ選択画面';  // マップステージ用
             }
         }
@@ -105,7 +105,7 @@ export class UIManager {
                         gameContainer.style.display = 'none';
                     }
                 }
-            } else if (scene.scene?.key === 'MiemachiStage' || scene.scene?.key === 'TaketastageStage') {
+            } else if (scene.scene?.key === 'MiemachiStage' || scene.scene?.key === 'TaketastageStage' || scene.scene?.key === 'JapanStage') {
                 // マップからステージ選択画面に戻る
                 console.log('[UIManager] マップからステージ選択画面に戻ります');
                 console.log('[UIManager] returnToMap before:', typeof window.returnToMap);

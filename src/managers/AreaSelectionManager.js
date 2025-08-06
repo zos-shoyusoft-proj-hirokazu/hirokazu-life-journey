@@ -1,6 +1,7 @@
 import { VisualFeedbackManager } from './VisualFeedbackManager.js';
 import { taketaConversationData } from '../data/taketa/conversationData.js';
 import { miemachiConversationData } from '../data/miemachi/conversationData.js';
+import { japanConversationData } from '../data/japan/conversationData.js';
 
 export class AreaSelectionManager {
     constructor(scene) {
@@ -69,7 +70,13 @@ export class AreaSelectionManager {
             'taketa_station': '竹田駅',
             'taketa_high_school': '竹田高校',
             'galaxy_water': '銀河の水',
-            'udefuriojisann': 'ウデフリオジサン'
+            'udefuriojisann': 'ウデフリオジサン',
+            // 日本ステージのエリア説明
+            'computer': 'コンピュータエリア',
+            'breaking_car': '故障車エリア',
+            'special_scam': '特殊詐欺エリア',
+            'rojyounopenki': '路上の噴水',
+            'gray_bytes': 'グレーバイト'
         };
         
         return descriptions[areaName] || areaName;
@@ -444,6 +451,8 @@ export class AreaSelectionManager {
             this.handleTaketaConversation(area);
         } else if (this.scene.mapConfig && this.scene.mapConfig.mapKey === 'bunngo_mie_city') {
             this.handleMiemachiConversation(area);
+        } else if (this.scene.mapConfig && this.scene.mapConfig.mapKey === 'japan') {
+            this.handleJapanConversation(area);
         } else {
             // 従来の処理（他のマップ用）
             this.scene.time.delayedCall(1000, () => {
@@ -465,7 +474,6 @@ export class AreaSelectionManager {
                 case 'taketa_station':
                     eventId = 'taketa_station';
                     break;
-
                 case 'galaxy_water':
                     eventId = 'ginnga_water';
                     break;
@@ -487,6 +495,67 @@ export class AreaSelectionManager {
         
         console.log('[DEBUG] handleTaketaConversation - conversationData:', conversationData);
         console.log('[DEBUG] handleTaketaConversation - this.scene.conversationTrigger:', this.scene.conversationTrigger);
+        
+        if (conversationData) {
+            // 会話システムを開始（NPCクリック時と同じ方法）
+            if (this.scene.conversationTrigger) {
+                console.log('[DEBUG] startVisualNovelConversation を呼び出します');
+                this.scene.conversationTrigger.startVisualNovelConversation(conversationData);
+            } else {
+                console.log('[ERROR] conversationTrigger が存在しません');
+            }
+        } else {
+            console.log('[DEBUG] conversationData が見つかりませんでした');
+            // 会話データがない場合は通常の移動
+            this.scene.time.delayedCall(1000, () => {
+                this.navigateToArea(area);
+            });
+        }
+    }
+
+    handleJapanConversation(area) {
+        // 日本ステージの会話イベントを処理
+        let eventId = null;
+        
+        // エリアのconversationIdを確認
+        if (area.conversationId && area.conversationId !== null) {
+            eventId = area.conversationId;
+        } else {
+            // エリア名に基づいて会話イベントを決定（フォールバック）
+            switch (area.name) {
+                case 'computer':
+                    eventId = 'computer';
+                    break;
+                case 'breaking_car':
+                    eventId = 'breaking_car';
+                    break;
+                case 'special_scam':
+                    eventId = 'special_scam';
+                    break;
+                case 'rojyounopenki':
+                    eventId = 'rojyounopenki';
+                    break;
+                case 'tereapo':
+                    eventId = 'tereapo';
+                    break;
+                case 'gray_bytes':
+                    eventId = 'gray_bytes';
+                    break;
+                default:
+                    // 会話イベントがない場合は通常の移動
+                    this.scene.time.delayedCall(1000, () => {
+                        this.navigateToArea(area);
+                    });
+                    return;
+            }
+        }
+        
+        // 会話データを取得（汎用化）
+        const currentMapId = this.scene.mapConfig?.mapKey || 'unknown';
+        const conversationData = this.getConversationData(currentMapId, eventId);
+        
+        console.log('[DEBUG] handleJapanConversation - conversationData:', conversationData);
+        console.log('[DEBUG] handleJapanConversation - this.scene.conversationTrigger:', this.scene.conversationTrigger);
         
         if (conversationData) {
             // 会話システムを開始（NPCクリック時と同じ方法）
@@ -580,9 +649,12 @@ export class AreaSelectionManager {
             case 'taketa_city':
                 result = taketaConversationData[eventId];
                 break;
+            case 'japan':
+                result = japanConversationData[eventId];
+                break;
             default:
                 // デフォルトの会話データを返す
-                result = miemachiConversationData[eventId] || taketaConversationData[eventId];
+                result = miemachiConversationData[eventId] || taketaConversationData[eventId] || japanConversationData[eventId];
         }
         console.log('[DEBUG] getConversationData result:', result);
         return result;

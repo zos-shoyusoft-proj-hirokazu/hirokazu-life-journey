@@ -145,7 +145,8 @@ export class MapManager {
         // マップキーに基づいて適切なオブジェクトレイヤー名を返す
         const layerNames = {
             'bunngo_mie_city': 'miemachi',
-            'taketa_city': 'taketa'
+            'taketa_city': 'taketa',
+            'japan': 'zenkoku'
         };
         
         // マップキーが登録されていない場合は警告を出す
@@ -193,8 +194,10 @@ export class MapManager {
             }));
             
             console.log(`MapManager: Extracted ${this.areas.length} areas from object layer '${objectLayerName}'`);
+            console.log('MapManager: Areas:', this.areas);
         } else {
             console.warn(`MapManager: Object layer '${objectLayerName}' not found`);
+            console.log('MapManager: Available layers:', this.tilemap.layers);
         }
     }
 

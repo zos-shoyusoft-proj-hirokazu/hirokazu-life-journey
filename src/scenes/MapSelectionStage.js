@@ -40,8 +40,11 @@ export class MapSelectionStage extends Phaser.Scene {
         // 竹田ステージの場合はファイル名も調整
         const mapFileName = this.mapId === 'taketastage' ? 'taketa' : this.mapConfig.mapKey;
         
+        // japanステージの場合はzennkoku.pngを使用
+        const tilesetFileName = this.mapId === 'japan' ? 'zennkoku' : this.mapConfig.tilesetKey;
+        
         this.load.tilemapTiledJSON(this.mapConfig.mapKey, `assets/maps/${folderName}/${mapFileName}.tmj`);
-        this.load.image(this.mapConfig.tilesetKey, `assets/maps/${folderName}/${this.mapConfig.tilesetKey}.png`);
+        this.load.image(this.mapConfig.tilesetKey, `assets/maps/${folderName}/${tilesetFileName}.png`);
         
         // デバッグ用：読み込みエラーを詳細にログ出力
         this.load.on('fileerror', (file) => {
@@ -144,8 +147,8 @@ export class MapSelectionStage extends Phaser.Scene {
             // 視覚的フィードバックマネージャーを初期化
             this.visualFeedbackManager = new VisualFeedbackManager(this);
             
-            // 竹田ステージと三重町ステージの場合は会話システムを初期化
-            if (this.mapConfig.mapKey === 'taketa_city' || this.mapConfig.mapKey === 'bunngo_mie_city') {
+            // 竹田ステージ、三重町ステージ、日本ステージの場合は会話システムを初期化
+            if (this.mapConfig.mapKey === 'taketa_city' || this.mapConfig.mapKey === 'bunngo_mie_city' || this.mapConfig.mapKey === 'japan') {
                 this.conversationTrigger = new ConversationTrigger(this);
                 // ConversationSceneを動的に追加
                 this.scene.add('ConversationScene', ConversationScene);
