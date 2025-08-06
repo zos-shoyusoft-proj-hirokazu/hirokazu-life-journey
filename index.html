@@ -291,10 +291,15 @@
             }
             
             // ゲームを開始
+            console.log('🔥🔥🔥 startStage: ゲーム開始 🔥🔥🔥');
+            console.log('window.startPhaserGame:', window.startPhaserGame);
+            
+            // バンドルに含まれたgameController.jsを直接呼び出し
             if (window.startPhaserGame) {
+                console.log('🔥🔥🔥 startPhaserGame found in window 🔥🔥🔥');
                 window.startPhaserGame(stageNumber);
             } else {
-                console.error('startPhaserGame not found');
+                console.error('startPhaserGame not found in window');
             }
         }
 
