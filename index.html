@@ -243,18 +243,19 @@
                 console.log('オープニング動画ボタンが見つかりました');
                 openingVideoBtn.addEventListener('click', function() {
                     console.log('オープニング動画 clicked');
-                    const openingVideo = document.getElementById('opening-video');
-                    if (openingVideo) {
-                        openingVideo.style.display = 'flex';
-                    }
-                    
-                    const stageSelect = document.getElementById('stage-select');
-                    if (stageSelect) {
-                        stageSelect.style.display = 'none';
-                    }
+                    showOpeningVideo();
                 });
             } else {
                 console.error('オープニング動画ボタンが見つかりません');
+            }
+            
+            // スキップボタンのイベントを設定
+            const skipVideoBtn = document.getElementById('skip-video');
+            if (skipVideoBtn) {
+                skipVideoBtn.addEventListener('click', function() {
+                    console.log('スキップボタン clicked');
+                    hideOpeningVideo();
+                });
             }
             
             console.log('イベントリスナーの設定完了');
@@ -289,6 +290,35 @@
             });
         }
 
+        // オープニング動画を表示
+        function showOpeningVideo() {
+            console.log('showOpeningVideo called');
+            const openingVideo = document.getElementById('opening-video');
+            const stageSelect = document.getElementById('stage-select');
+            const gameContainer = document.getElementById('game-container');
+            
+            // YouTube動画のURLを設定
+            const videoId = 'P2KXyM27XK4'; // 実際の動画ID
+            const iframe = document.getElementById('youtube-video');
+            if (iframe) {
+                iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&showinfo=0&controls=1`;
+            }
+            
+            openingVideo.style.display = 'flex';
+            stageSelect.style.display = 'none';
+            gameContainer.style.display = 'none';
+        }
+        
+        // オープニング動画を非表示
+        function hideOpeningVideo() {
+            console.log('hideOpeningVideo called');
+            const openingVideo = document.getElementById('opening-video');
+            const stageSelect = document.getElementById('stage-select');
+            
+            openingVideo.style.display = 'none';
+            stageSelect.style.display = 'flex';
+        }
+        
         // グローバル関数
         window.returnToStageSelect = function() {
             console.log('returnToStageSelect called');
