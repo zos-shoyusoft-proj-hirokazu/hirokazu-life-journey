@@ -307,6 +307,20 @@
             openingVideo.style.display = 'flex';
             stageSelect.style.display = 'none';
             gameContainer.style.display = 'none';
+            
+            // スキップボタンのイベントリスナーを設定
+            setTimeout(() => {
+                const skipVideoBtn = document.getElementById('skip-video');
+                if (skipVideoBtn) {
+                    console.log('スキップボタンが見つかりました');
+                    skipVideoBtn.addEventListener('click', function() {
+                        console.log('スキップボタン clicked');
+                        hideOpeningVideo();
+                    });
+                } else {
+                    console.error('スキップボタンが見つかりません');
+                }
+            }, 100);
         }
         
         // オープニング動画を非表示
@@ -552,4 +566,4 @@
             });
         } else if (window.location.hostname.includes('localhost') || window.location.hostname.includes('127.0.0.1')) {
             console.log('開発環境のため、サービスワーカーは無効化されています');
-        }</script><script src="./bundle.js"></script></body></html>
+        }</script><script src="./main.bundle.js"></script></body></html>
