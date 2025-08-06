@@ -249,17 +249,7 @@
                 console.error('オープニング動画ボタンが見つかりません');
             }
             
-            // スキップボタンのイベントを設定
-            const skipVideoBtn = document.getElementById('skip-video');
-            if (skipVideoBtn) {
-                console.log('スキップボタンが見つかりました');
-                skipVideoBtn.addEventListener('click', function() {
-                    console.log('スキップボタン clicked');
-                    hideOpeningVideo();
-                });
-            } else {
-                console.error('スキップボタンが見つかりません');
-            }
+            // スキップボタンのイベントは動画表示時に設定する
             
             console.log('イベントリスナーの設定完了');
         });
@@ -415,37 +405,40 @@
         
         // オープニング動画の管理
         function showOpeningVideo() {
-            console.log('showOpeningVideo called');
+            console.log('🔥🔥🔥 showOpeningVideo called 🔥🔥🔥');
             const openingVideo = document.getElementById('opening-video');
             const stageSelect = document.getElementById('stage-select');
             const gameContainer = document.getElementById('game-container');
             
-            // YouTube動画のURLを設定（autoplay=0で自動再生を無効化）
-            const videoId = 'P2KXyM27XK4'; // ← 実際の動画ID
+            // YouTube動画のURLを設定
+            const videoId = 'P2KXyM27XK4'; // 実際の動画ID
             const iframe = document.getElementById('youtube-video');
-            iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=0&rel=0&showinfo=0&controls=1`;
+            if (iframe) {
+                iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&showinfo=0&controls=1`;
+            }
             
             openingVideo.style.display = 'flex';
             stageSelect.style.display = 'none';
             gameContainer.style.display = 'none';
             
-            // 再生開始ボタンを追加
-            const playButton = document.createElement('button');
-            playButton.textContent = '動画を再生';
-            playButton.className = 'play-button';
-            playButton.onclick = function() {
-                // ユーザー操作で動画を再生
-                iframe.src = iframe.src.replace('autoplay=0', 'autoplay=1');
-                playButton.style.display = 'none';
-            };
-            
-            const videoContainer = document.getElementById('video-container');
-            videoContainer.appendChild(playButton);
-            
-            // スキップボタンのイベント
-            document.getElementById('skip-video').addEventListener('click', function() {
-                hideOpeningVideo();
-            });
+            // スキップボタンのイベントリスナーを設定
+            setTimeout(() => {
+                console.log('🔥🔥🔥 setTimeout実行開始 🔥🔥🔥');
+                const skipVideoBtn = document.getElementById('skip-video');
+                console.log('skipVideoBtn:', skipVideoBtn);
+                if (skipVideoBtn) {
+                    console.log('スキップボタンが見つかりました');
+                    skipVideoBtn.addEventListener('click', function() {
+                        console.log('スキップボタン clicked');
+                        hideOpeningVideo();
+                    });
+                } else {
+                    console.error('スキップボタンが見つかりません');
+                    // デバッグ用：すべてのボタンを確認
+                    const allButtons = document.querySelectorAll('button');
+                    console.log('ページ内のすべてのボタン:', allButtons);
+                }
+            }, 100);
             
             // 動画終了時の処理（YouTube APIを使用）
             const tag = document.createElement('script');
