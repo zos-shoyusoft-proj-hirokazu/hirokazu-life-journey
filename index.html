@@ -87,14 +87,21 @@
             position: absolute;
             top: 20px;
             right: 20px;
-            padding: 10px 20px;
-            background: rgba(0, 0, 0, 0.7);
+            padding: 15px 25px;
+            background: rgba(0, 0, 0, 0.8);
             color: white;
             border: 2px solid white;
-            border-radius: 5px;
+            border-radius: 8px;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 18px;
+            font-weight: bold;
             z-index: 2001;
+            min-width: 80px;
+            min-height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-sizing: border-box;
         }
         
         .skip-button:hover {
@@ -511,7 +518,30 @@
             }
         }
 
-        // ページ読み込み時にオープニング動画を表示
+        // ステージ選択画面に戻る関数
+        window.returnToStageSelect = function() {
+            console.log('returnToStageSelect called');
+            
+            // ゲームを停止
+            if (window.game && window.game.destroy) {
+                window.game.destroy(true);
+                window.game = null;
+            }
+            
+            // ステージ選択画面を表示
+            const stageSelect = document.getElementById('stage-select');
+            if (stageSelect) {
+                stageSelect.style.display = 'flex';
+            }
+            
+            // ゲームコンテナを非表示
+            const gameContainer = document.getElementById('game-container');
+            if (gameContainer) {
+                gameContainer.style.display = 'none';
+            }
+        };
+
+        // ページ読み込み時の処理
         window.addEventListener('load', function() {
             console.log('window load event fired');
             if (!localStorage.getItem('openingVideoShown')) {
@@ -520,8 +550,7 @@
                 localStorage.setItem('openingVideoShown', 'true');
             } else {
                 console.log('showStageSelect will be called');
-                document.getElementById('stage-select').style.display = 'flex';
-                document.getElementById('game-container').style.display = 'block';
+                // ステージ選択画面は既にDOMContentLoadedで設定済み
             }
         });
         
