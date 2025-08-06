@@ -81,6 +81,7 @@
             width: 100%;
             height: 100%;
             border: none;
+            pointer-events: none;
         }
         
         .skip-button {
@@ -88,13 +89,15 @@
             top: 20px;
             right: 20px;
             padding: 10px 20px;
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(0, 0, 0, 0.9);
             color: white;
-            border: 2px solid white;
+            border: 3px solid red;
             border-radius: 5px;
             cursor: pointer;
             font-size: 16px;
-            z-index: 2001;
+            z-index: 9999;
+            pointer-events: auto;
+            font-weight: bold;
         }
         
         .skip-button:hover {
@@ -421,24 +424,26 @@
             stageSelect.style.display = 'none';
             gameContainer.style.display = 'none';
             
-            // スキップボタンのイベントリスナーを設定
-            setTimeout(() => {
-                console.log('🔥🔥🔥 setTimeout実行開始 🔥🔥🔥');
-                const skipVideoBtn = document.getElementById('skip-video');
-                console.log('skipVideoBtn:', skipVideoBtn);
-                if (skipVideoBtn) {
-                    console.log('スキップボタンが見つかりました');
-                    skipVideoBtn.addEventListener('click', function() {
-                        console.log('スキップボタン clicked');
-                        hideOpeningVideo();
-                    });
-                } else {
-                    console.error('スキップボタンが見つかりません');
-                    // デバッグ用：すべてのボタンを確認
-                    const allButtons = document.querySelectorAll('button');
-                    console.log('ページ内のすべてのボタン:', allButtons);
-                }
-            }, 100);
+            // スキップボタンのイベントリスナーを即座に設定
+            console.log('🔥🔥🔥 スキップボタン設定開始 🔥🔥🔥');
+            const skipVideoBtn = document.getElementById('skip-video');
+            console.log('skipVideoBtn:', skipVideoBtn);
+            if (skipVideoBtn) {
+                console.log('スキップボタンが見つかりました');
+                // 既存のイベントリスナーを削除
+                skipVideoBtn.removeEventListener('click', skipVideoHandler);
+                // 新しいイベントリスナーを追加
+                skipVideoBtn.addEventListener('click', skipVideoHandler);
+                // デバッグ用：mouseenterイベント
+                skipVideoBtn.addEventListener('mouseenter', function() {
+                    console.log('🔥🔥🔥 スキップボタン mouseenter 🔥🔥🔥');
+                });
+            } else {
+                console.error('スキップボタンが見つかりません');
+                // デバッグ用：すべてのボタンを確認
+                const allButtons = document.querySelectorAll('button');
+                console.log('ページ内のすべてのボタン:', allButtons);
+            }
             
             // 動画終了時の処理（YouTube APIを使用）
             const tag = document.createElement('script');
@@ -486,8 +491,14 @@
             };
         }
         
+        // スキップボタンのハンドラー関数
+        function skipVideoHandler() {
+            console.log('🔥🔥🔥 スキップボタン clicked 🔥🔥🔥');
+            hideOpeningVideo();
+        }
+        
         function hideOpeningVideo() {
-            console.log('hideOpeningVideo called');
+            console.log('🔥🔥🔥 hideOpeningVideo called 🔥🔥🔥');
             const openingVideo = document.getElementById('opening-video');
             const stageSelect = document.getElementById('stage-select');
             const iframe = document.getElementById('youtube-video');
@@ -507,7 +518,7 @@
             openingVideo.style.display = 'none';
             stageSelect.style.display = 'flex';
             
-            console.log('Opening video hidden, stage select shown');
+            console.log('🔥🔥🔥 Opening video hidden, stage select shown 🔥🔥🔥');
         }
         
         // ページ読み込み時にオープニング動画を表示
