@@ -249,8 +249,17 @@
                 console.error('オープニング動画ボタンが見つかりません');
             }
             
-            // スキップボタンのイベントを設定（動画表示時に設定）
-            // 初期化時には設定しない（動画が表示されていないため）
+            // スキップボタンのイベントを設定
+            const skipVideoBtn = document.getElementById('skip-video');
+            if (skipVideoBtn) {
+                console.log('スキップボタンが見つかりました');
+                skipVideoBtn.addEventListener('click', function() {
+                    console.log('スキップボタン clicked');
+                    hideOpeningVideo();
+                });
+            } else {
+                console.error('スキップボタンが見つかりません');
+            }
             
             console.log('イベントリスナーの設定完了');
         });
@@ -301,20 +310,6 @@
             openingVideo.style.display = 'flex';
             stageSelect.style.display = 'none';
             gameContainer.style.display = 'none';
-            
-            // スキップボタンのイベントリスナーを設定
-            setTimeout(() => {
-                const skipVideoBtn = document.getElementById('skip-video');
-                if (skipVideoBtn) {
-                    console.log('スキップボタンが見つかりました');
-                    skipVideoBtn.addEventListener('click', function() {
-                        console.log('スキップボタン clicked');
-                        hideOpeningVideo();
-                    });
-                } else {
-                    console.error('スキップボタンが見つかりません');
-                }
-            }, 100);
         }
         
         // オープニング動画を非表示
