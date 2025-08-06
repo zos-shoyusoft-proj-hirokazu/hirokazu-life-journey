@@ -43,7 +43,7 @@ export class Stage1 extends Phaser.Scene {
         this.load.image('Tilemap', 'assets/maps/tilesets/stage1/Tilemap.png');
         
         //BGM読み込み
-        this.load.audio('bgm_kessen_diaruga', 'assets/audio/bgm/stage1/kessen_diaruga.mp3');
+        this.load.audio('bgm_kessen_diaruga', 'assets/audio/bgm/kessen_diaruga.mp3');
 
         this.load.audio('bgm_demo_chinpo', 'assets/audio/bgm/stage1/megarovania.mp3');
         

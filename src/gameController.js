@@ -46,4 +46,7 @@ export function startPhaserGame(stageNumber) {
     }
     console.log('[startPhaserGame] シーンを追加:', sceneKey);
     game.scene.add(sceneKey, sceneClass, true);
-} 
+}
+
+// グローバル関数として公開
+window.startPhaserGame = startPhaserGame; 

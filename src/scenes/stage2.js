@@ -34,7 +34,7 @@ export class Stage2 extends Phaser.Scene {
         this.load.tilemapTiledJSON('map', 'assets/maps/test_map5.tmj');
 
         // BGM読み込み
-        this.load.audio('bgm_stage2', 'assets/audio/bgm/stage1/kessen_diaruga.mp3');
+        this.load.audio('bgm_pollyanna', 'assets/audio/bgm/Pollyanna.mp3');
 
         // マップ用のタイル
         this.load.image('GK_A2_C_autotile', 'assets/maps/tilesets/stage2/GK_A2_JC_autotile.png');
@@ -73,7 +73,8 @@ export class Stage2 extends Phaser.Scene {
 
     create() {
         this.audioManager = new AudioManager(this);
-        this.audioManager.playBgm('bgm_stage2', 0.3);
+        console.log('[Stage2] BGM再生開始: bgm_pollyanna');
+        this.audioManager.playBgm('bgm_pollyanna', 0.5);
         
         // マップマネージャーを初期化
         // CollisionManagerを使った当たり判定

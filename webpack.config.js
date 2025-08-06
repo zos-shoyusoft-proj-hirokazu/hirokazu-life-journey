@@ -10,6 +10,15 @@ module.exports = {
     clean: true
   },
   
+  module: {
+    rules: [
+      {
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader']
+      }
+    ]
+  },
+  
   // パフォーマンス警告を抑制
   performance: {
     hints: false,
@@ -51,6 +60,7 @@ module.exports = {
     new CopyWebpackPlugin({
       patterns: [
         { from: 'src/assets', to: 'assets' }, // ゲーム用アセットのコピー
+        { from: 'src/css', to: 'css' },       // CSSファイルのコピー
         { from: 'public', to: '.' }           // PWA用ファイル（manifest.json, sw.jsなど）のコピー
       ]
     })

@@ -150,8 +150,8 @@ export class MapSelectionStage extends Phaser.Scene {
             // 竹田ステージ、三重町ステージ、日本ステージの場合は会話システムを初期化
             if (this.mapConfig.mapKey === 'taketa_city' || this.mapConfig.mapKey === 'bunngo_mie_city' || this.mapConfig.mapKey === 'japan') {
                 this.conversationTrigger = new ConversationTrigger(this);
-                // ConversationSceneを動的に追加
-                this.scene.add('ConversationScene', ConversationScene);
+                        // ConversationSceneを動的に追加
+        this.scene.add('ConversationScene', ConversationScene);
             }
             // 設定ファイルからエリア情報を取得し、マップエリアとマージ
             const mapAreas = this.mapManager.getAreas();

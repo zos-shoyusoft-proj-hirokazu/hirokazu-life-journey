@@ -1,4 +1,7 @@
-import './stageSelect.js';
+// gameController.jsをimport（バンドルに含めるため）
+import './gameController.js';
+
+// stageSelect.jsは削除済み（重複を避けるため）
 
 // 画面向き変更の検知（グローバル設定）
 window.addEventListener('orientationchange', () => {
