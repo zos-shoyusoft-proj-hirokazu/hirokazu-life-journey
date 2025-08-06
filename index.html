@@ -277,8 +277,15 @@
             }
             
             // ゲームを開始
-            import('./gameController.bundle.js').then(({ startPhaserGame }) => {
-                startPhaserGame(stageNumber);
+            import('./gameController.bundle.js').then((module) => {
+                console.log('gameController module:', module);
+                if (module.startPhaserGame) {
+                    module.startPhaserGame(stageNumber);
+                } else {
+                    console.error('startPhaserGame not found in module');
+                }
+            }).catch(error => {
+                console.error('Failed to import gameController:', error);
             });
         }
 
