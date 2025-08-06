@@ -187,7 +187,125 @@
             #game-container {
                 height: -webkit-fill-available;
             }
-        }</style><script defer="defer" src="bundle.js"></script></head><body><button id="fullscreen-button" onclick="toggleFullscreen()">全画面</button><div id="game-container"></div><script src="https://cdn.jsdelivr.net/npm/phaser@3.70.0/dist/phaser.min.js"></script><script type="module" src="./stageSelect.js"></script><div id="opening-video" style="display: none;"><div id="video-container"><iframe id="youtube-video" width="100%" height="100%" frameborder="0" allowfullscreen></iframe><button id="skip-video" class="skip-button">スキップ</button></div></div><div id="stage-select"><div class="stage-select-container"><div class="stage-buttons"><button id="miemachi">三重シティ</button> <button id="taketastage">竹田シティ</button> <button id="japan">全国</button> <button id="opening-video-btn">オープニング動画</button></div><div class="content-area"><div class="preview-area"><img src="./assets/backgrounds/stage_backgrounds/miemachi.png" alt="三重町マップ" class="preview-image" id="preview-miemachi"> <img src="./assets/backgrounds/stage_backgrounds/taketa_map.png" alt="竹田ステージ" class="preview-image" id="preview-taketastage"> <img src="./assets/backgrounds/stage_backgrounds/zennkoku.png" alt="日本マップ" class="preview-image" id="preview-japan"></div><div class="description-area" id="description-area"><p>ステージを選択してください</p></div></div></div></div><script>// 実際の表示エリアサイズを取得する関数
+        }</style><script defer="defer" src="bundle.js"></script></head><body><button id="fullscreen-button" onclick="toggleFullscreen()">全画面</button><div id="game-container"></div><script src="https://cdn.jsdelivr.net/npm/phaser@3.70.0/dist/phaser.min.js"></script><div id="opening-video" style="display: none;"><div id="video-container"><iframe id="youtube-video" width="100%" height="100%" frameborder="0" allowfullscreen></iframe><button id="skip-video" class="skip-button">スキップ</button></div></div><div id="stage-select"><div class="stage-select-container"><div class="stage-buttons"><button id="miemachi">三重シティ</button> <button id="taketastage">竹田シティ</button> <button id="japan">全国</button> <button id="opening-video-btn">オープニング動画</button></div><div class="content-area"><div class="preview-area"><img src="./assets/backgrounds/stage_backgrounds/miemachi.png" alt="三重町マップ" class="preview-image" id="preview-miemachi"> <img src="./assets/backgrounds/stage_backgrounds/taketa_map.png" alt="竹田ステージ" class="preview-image" id="preview-taketastage"> <img src="./assets/backgrounds/stage_backgrounds/zennkoku.png" alt="日本マップ" class="preview-image" id="preview-japan"></div><div class="description-area" id="description-area"><p>ステージを選択してください</p></div></div></div></div><script>// ステージ選択画面のシンプルなJavaScript
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOMContentLoaded - ステージ選択画面を初期化');
+            
+            // ステージ選択画面を表示
+            const stageSelect = document.getElementById('stage-select');
+            if (stageSelect) {
+                stageSelect.style.display = 'flex';
+            }
+            
+            // ゲームコンテナを非表示
+            const gameContainer = document.getElementById('game-container');
+            if (gameContainer) {
+                gameContainer.style.display = 'none';
+            }
+
+            // ボタンにイベントを設定
+            const miemachi = document.getElementById('miemachi');
+            const taketastage = document.getElementById('taketastage');
+            const japan = document.getElementById('japan');
+            const openingVideoBtn = document.getElementById('opening-video-btn');
+
+            if (miemachi) {
+                console.log('三重シティボタンが見つかりました');
+                miemachi.addEventListener('click', function() {
+                    console.log('三重シティ clicked');
+                    startStage('miemachi');
+                });
+            } else {
+                console.error('三重シティボタンが見つかりません');
+            }
+            
+            if (taketastage) {
+                console.log('竹田シティボタンが見つかりました');
+                taketastage.addEventListener('click', function() {
+                    console.log('竹田シティ clicked');
+                    startStage('taketa');
+                });
+            } else {
+                console.error('竹田シティボタンが見つかりません');
+            }
+            
+            if (japan) {
+                console.log('全国ボタンが見つかりました');
+                japan.addEventListener('click', function() {
+                    console.log('全国 clicked');
+                    startStage('japan');
+                });
+            } else {
+                console.error('全国ボタンが見つかりません');
+            }
+            
+            if (openingVideoBtn) {
+                console.log('オープニング動画ボタンが見つかりました');
+                openingVideoBtn.addEventListener('click', function() {
+                    console.log('オープニング動画 clicked');
+                    const openingVideo = document.getElementById('opening-video');
+                    if (openingVideo) {
+                        openingVideo.style.display = 'flex';
+                    }
+                    
+                    const stageSelect = document.getElementById('stage-select');
+                    if (stageSelect) {
+                        stageSelect.style.display = 'none';
+                    }
+                });
+            } else {
+                console.error('オープニング動画ボタンが見つかりません');
+            }
+            
+            console.log('イベントリスナーの設定完了');
+        });
+
+        // ステージ開始関数
+        function startStage(stageNumber) {
+            console.log('startStage called:', stageNumber);
+            
+            // ステージ選択画面を非表示
+            const stageSelect = document.getElementById('stage-select');
+            if (stageSelect) {
+                stageSelect.style.display = 'none';
+            }
+            
+            // ゲームコンテナを表示
+            const gameContainer = document.getElementById('game-container');
+            if (gameContainer) {
+                gameContainer.style.display = 'block';
+            }
+            
+            // ゲームを開始
+            import('./gameController.js').then(({ startPhaserGame }) => {
+                startPhaserGame(stageNumber);
+            });
+        }
+
+        // グローバル関数
+        window.returnToStageSelect = function() {
+            console.log('returnToStageSelect called');
+            
+            // ゲームを停止
+            if (window.game && window.game.destroy) {
+                window.game.destroy(true);
+                window.game = null;
+            }
+            
+            // ステージ選択画面を表示
+            const stageSelect = document.getElementById('stage-select');
+            if (stageSelect) {
+                stageSelect.style.display = 'flex';
+            }
+            
+            // ゲームコンテナを非表示
+            const gameContainer = document.getElementById('game-container');
+            if (gameContainer) {
+                gameContainer.style.display = 'none';
+            }
+        };
+
+        // 実際の表示エリアサイズを取得する関数
         function getActualViewportSize() {
             let width = window.innerWidth;
             let height;
