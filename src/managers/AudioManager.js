@@ -65,7 +65,6 @@ export class AudioManager {
                     return;
                 }
                 
-                console.log('[AudioManager] sound cache keys:', Object.keys(this.scene.cache.audio.entries.entries));
                 this.bgm = this.scene.sound.add(key, {
                     loop: true,
                     volume: fadeIn ? 0 : volume
@@ -80,7 +79,6 @@ export class AudioManager {
                 } else {
                     this.bgm.setVolume(volume);
                 }
-                console.log('[AudioManager] BGM started:', key);
             } catch (error) {
                 console.error(`[AudioManager] BGM ${key} の再生に失敗しました:`, error);
             }
@@ -121,7 +119,7 @@ export class AudioManager {
                                     this.bgm.stop();
                                 }
                                 this.bgm = null;
-                                console.log('[AudioManager] BGM stopped (fade)');
+
                             } catch (error) {
                                 console.warn('[AudioManager] Error during BGM stop:', error);
                                 this.bgm = null;
@@ -135,7 +133,7 @@ export class AudioManager {
                             this.bgm.stop();
                         }
                         this.bgm = null;
-                        console.log('[AudioManager] BGM stopped');
+
                     } catch (error) {
                         console.warn('[AudioManager] Error during BGM stop:', error);
                         this.bgm = null;
@@ -158,7 +156,7 @@ export class AudioManager {
      * @param {number} volume - 音量（0-1）
      */
     playSe(key, volume = this.seVolume) {
-        console.log('[SE] playSe called:', key);
+
         if (this.isSeMuted) return;
         
         // シーンとサウンドシステムの有効性をチェック

@@ -73,7 +73,6 @@ export class Stage2 extends Phaser.Scene {
 
     create() {
         this.audioManager = new AudioManager(this);
-        console.log('[Stage2] BGM再生開始: bgm_pollyanna');
         this.audioManager.playBgm('bgm_pollyanna', 0.5);
         
         // マップマネージャーを初期化

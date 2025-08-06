@@ -43,7 +43,7 @@ export class Stage1 extends Phaser.Scene {
         this.load.image('Tilemap', 'assets/maps/tilesets/stage1/Tilemap.png');
         
         //BGM読み込み
-        this.load.audio('bgm_kessen_diaruga', 'assets/audio/bgm/kessen_diaruga.mp3');
+        this.load.audio('bgm_nightbarth', 'assets/audio/bgm/nightbarth.mp3');
 
         this.load.audio('bgm_demo_chinpo', 'assets/audio/bgm/stage1/megarovania.mp3');
         
@@ -105,7 +105,7 @@ export class Stage1 extends Phaser.Scene {
             // AudioManagerを初期化
             this.audioManager = new AudioManager(this);
             // メニューBGMを開始
-            this.audioManager.playBgm('bgm_kessen_diaruga', 0.3);
+            this.audioManager.playBgm('bgm_nightbarth', 0.3);
 
             // CollisionManagerを初期化
             this.collisionManager = new CollisionManager(this);

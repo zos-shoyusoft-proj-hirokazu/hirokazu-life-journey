@@ -314,11 +314,16 @@ export class ConversationScene extends Phaser.Scene {
     
     // イベント用BGMに切り替え
     switchToEventBgm(eventBgmKey) {
-        const mainScene = this.scene.get('Stage1Scene') || this.scene.get('Stage2Scene') || this.scene.get('Stage3Scene');
+        // MapSelectionStageも含めて検索
+        const mainScene = this.scene.get('Stage1Scene') || this.scene.get('Stage2Scene') || this.scene.get('Stage3Scene') || this.scene.get('MiemachiStage') || this.scene.get('TaketastageStage') || this.scene.get('JapanStage');
+        
         if (mainScene && mainScene.audioManager) {
             this.originalBgm = mainScene.audioManager.bgm;
             if (eventBgmKey) {
-                mainScene.audioManager.playBgm(eventBgmKey, 0.3, true);
+                // AreaConfigで定義したBGMは 'bgm_' プレフィックス付きで読み込まれる
+                // ただし、eventBgmKeyが既に 'bgm_' で始まっている場合は二重に付けない
+                const bgmKey = eventBgmKey.startsWith('bgm_') ? eventBgmKey : `bgm_${eventBgmKey}`;
+                mainScene.audioManager.playBgm(bgmKey, 0.3, true);
             } else {
                 mainScene.audioManager.playBgm('bgm_event', 0.3, true);
             }
@@ -328,7 +333,8 @@ export class ConversationScene extends Phaser.Scene {
     // 元のBGMに戻す
     restoreOriginalBgm() {
         try {
-            const mainScene = this.scene.get('Stage1Scene') || this.scene.get('Stage2Scene') || this.scene.get('Stage3Scene');
+            // MapSelectionStageも含めて検索
+            const mainScene = this.scene.get('Stage1Scene') || this.scene.get('Stage2Scene') || this.scene.get('Stage3Scene') || this.scene.get('MiemachiStage') || this.scene.get('TaketastageStage') || this.scene.get('JapanStage');
             if (mainScene && mainScene.audioManager) {
                 mainScene.audioManager.stopBgm(false);
                 const originalBgmKey = this.getOriginalBgmKey();
@@ -337,13 +343,14 @@ export class ConversationScene extends Phaser.Scene {
                 }
             }
         } catch (error) {
-            console.warn('[ConversationScene] Error in restoreOriginalBgm:', error);
+            // エラーは無視
         }
     }
 
     // 元のBGMのキーを取得
     getOriginalBgmKey() {
-        const mainScene = this.scene.get('Stage1Scene') || this.scene.get('Stage2Scene') || this.scene.get('Stage3Scene');
+        // MapSelectionStageも含めて検索
+        const mainScene = this.scene.get('Stage1Scene') || this.scene.get('Stage2Scene') || this.scene.get('Stage3Scene') || this.scene.get('MiemachiStage') || this.scene.get('TaketastageStage') || this.scene.get('JapanStage');
         if (mainScene) {
             if (mainScene.scene.key === 'Stage1Scene') {
                 return 'bgm_kessen_diaruga';
@@ -351,6 +358,8 @@ export class ConversationScene extends Phaser.Scene {
                 return 'bgm_stage2';
             } else if (mainScene.scene.key === 'Stage3Scene') {
                 return 'bgm_stage3';
+            } else if (mainScene.scene.key === 'MiemachiStage' || mainScene.scene.key === 'TaketastageStage' || mainScene.scene.key === 'JapanStage') {
+                return 'bgm_map'; // MapSelectionStageの場合はmap BGMに戻す
             }
         }
         return 'bgm_kessen_diaruga'; // デフォルト

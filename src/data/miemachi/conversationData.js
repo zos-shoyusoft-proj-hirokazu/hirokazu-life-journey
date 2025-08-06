@@ -3,7 +3,7 @@ export const miemachiConversationData = {
     // 出生エピソード
     'oreno_koto': {
         'background': 'test_1',
-        'bgm': 'bgm_memory',
+        'bgm': 'curono',
         'conversations': [
             {
                 'speaker': 'ひろかず',
@@ -77,7 +77,7 @@ export const miemachiConversationData = {
     // 志学エピソード
     'shigaku': {
         'background': 'test_1',
-        'bgm': 'bgm_normal',
+        'bgm': 'Fantasy',
         'conversations': [
             {
                 'speaker': 'ひろかず',
@@ -151,7 +151,7 @@ export const miemachiConversationData = {
     // チーム醤油飲み会
     'team_shoyu_drinking': {
         'background': 'test_1',
-        'bgm': 'bgm_bar',
+        'bgm': 'Jounetsu_Tairiku',
         'conversations': [
             {
                 'speaker': 'ひろかず',
@@ -351,7 +351,7 @@ export const miemachiConversationData = {
     // セブンエピソード
     'seven_episode': {
         'background': 'test_1',
-        'bgm': 'bgm_night',
+        'bgm': 'Last_Summer_In_Rio',
         'conversations': [
             {
                 'speaker': 'ひろかず',
@@ -545,7 +545,7 @@ export const miemachiConversationData = {
     // 川で火をつけたエピソード
     'river_fire': {
         'background': 'test_1',
-        'bgm': 'bgm_danger',
+        'bgm': 'metoroido',
         'conversations': [
             {
                 'speaker': 'だいち少年',
@@ -649,7 +649,7 @@ export const miemachiConversationData = {
     // こうたろうポテト
     'koutarou_potato': {
         'background': 'test_1',
-        'bgm': 'bgm_normal',
+        'bgm': 'Nagisa_Moderato',
         'conversations': [
             {
                 'speaker': 'だいち',
@@ -675,7 +675,7 @@ export const miemachiConversationData = {
     // アンタレス
     'antares': {
         'background': 'test_1',
-        'bgm': 'bgm_fishing',
+        'bgm': 'nightbarth',
         'conversations': [
             {
                 'speaker': 'ひろかず',
@@ -731,7 +731,7 @@ export const miemachiConversationData = {
     // ドンキの謎酒"ずつ"
     'drink_zutsu': {
         'background': 'test_1',
-        'bgm': 'bgm_drinking',
+        'bgm': 'ON_THE_BEACH',
         'conversations': [
             {
                 'speaker': 'ひろかず',
@@ -901,7 +901,7 @@ export const miemachiConversationData = {
     // バスケ（中学）
     'basketball_middle_school': {
         'background': 'test_1',
-        'bgm': 'bgm_sports',
+        'bgm': 'nightbarth',
         'conversations': [
             {
                 'speaker': 'ひろかず',
@@ -915,7 +915,7 @@ export const miemachiConversationData = {
     // ドール
     'doll': {
         'background': 'test_1',
-        'bgm': 'bgm_normal',
+        'bgm': 'togetogetarumeiro',
         'conversations': [
             {
                 'speaker': 'ひろかず',
@@ -929,7 +929,7 @@ export const miemachiConversationData = {
     // アネックス（ももいろ女学園）
     'annex_momo': {
         'background': 'test_1',
-        'bgm': 'bgm_mysterious',
+        'bgm': 'btogetogetarumeiro',
         'conversations': [
             {
                 'speaker': 'ひろかず',
@@ -943,7 +943,7 @@ export const miemachiConversationData = {
     // フラッシュランド三重
     'flash_land_mie': {
         'background': 'test_1',
-        'bgm': 'bgm_normal',
+        'bgm': 'togetogetarumeiro',
         'conversations': [
             {
                 'speaker': 'ひろかず',

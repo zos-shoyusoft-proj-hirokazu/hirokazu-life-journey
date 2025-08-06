@@ -193,9 +193,8 @@ export class MapSelectionStage extends Phaser.Scene {
                 try {
                     this.audioManager = new AudioManager(this);
                     this.audioManager.playBgm('bgm_map', 0.3);
-                    console.log('[MapSelectionStage] AudioManagerを初期化しました');
                 } catch (error) {
-                    console.error('[MapSelectionStage] AudioManagerの初期化に失敗:', error);
+                    // エラーは無視
                 }
             });
             // リサイズイベントを設定

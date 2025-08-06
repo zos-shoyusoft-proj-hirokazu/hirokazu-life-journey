@@ -6,9 +6,20 @@ export const AreaConfig = {
         tilesetKey: 'miemachi',
         mapTitle: '三重町マップ',
         bgm: {
-            map: 'assets/audio/bgm/stage1/kessen_diaruga.mp3', // 通常マップBGM
-            // battle: 'assets/audio/bgm/stage1/battle.mp3',      // バトルBGM - ファイルが存在しないため削除
-            // event: 'assets/audio/bgm/stage1/event.mp3'          // イベントBGM - ファイルが存在しないため削除
+            map: 'assets/audio/bgm/kessen_diaruga.mp3', // 通常マップBGM
+            curono: 'assets/audio/bgm/curono.mp3',
+            Fantasy: 'assets/audio/bgm/Fantasy.mp3',
+            Jounetsu_Tairiku: 'assets/audio/bgm/Jounetsu_Tairiku.mp3',
+            Last_Summer_In_Rio: 'assets/audio/bgm/Last_Summer_In_Rio.mp3',
+            metoroido: 'assets/audio/bgm/metoroido.mp3',
+            Nagisa_Moderato: 'assets/audio/bgm/Nagisa_Moderato.mp3',
+            nightbarth: 'assets/audio/bgm/nightbarth.mp3',
+            ON_THE_BEACH: 'assets/audio/bgm/ON_THE_BEACH.mp3',
+            Pollyanna: 'assets/audio/bgm/Pollyanna.mp3',
+            Spain: 'assets/audio/bgm/Spain.mp3',
+            The_Terminator: 'assets/audio/bgm/The_Terminator.mp3',
+            Theme_from_Back_To_The_Future: 'assets/audio/bgm/Theme_from_Back_To_The_Future.mp3',
+            togetogetarumeiro: 'assets/audio/bgm/togetogetarumeiro.mp3'
         },
         se: {
             touch: 'assets/audio/se/touch_7.mp3', // ダイアログ用タッチSE
@@ -25,12 +36,7 @@ export const AreaConfig = {
             'naoki_A': 'assets/characters/portraits/naoki_A.png'
         },
         backgrounds: {
-            'bar': 'assets/backgrounds/bar.png',
-            'hospital': 'assets/backgrounds/hospital.png',
-            'classroom': 'assets/backgrounds/classroom.png',
-            'gym': 'assets/backgrounds/gym.png',
-            'room': 'assets/backgrounds/room.png',
-            'river': 'assets/backgrounds/river.png',
+
             'test_1': 'assets/backgrounds/background_test.png'
         },
         // eventBgm: {
@@ -70,9 +76,20 @@ export const AreaConfig = {
         tilesetKey: 'taketa_map',
         mapTitle: '竹田ステージ',
         bgm: {
-            map: 'assets/audio/bgm/stage1/kessen_diaruga.mp3', // 通常マップBGM
-            // battle: 'assets/audio/bgm/stage1/battle.mp3',      // バトルBGM - ファイルが存在しないため削除
-            // event: 'assets/audio/bgm/stage1/event.mp3'          // イベントBGM - ファイルが存在しないため削除
+            map: 'assets/audio/bgm/Spain.mp3', // 通常マップBGM
+            curono: 'assets/audio/bgm/curono.mp3',
+            Fantasy: 'assets/audio/bgm/Fantasy.mp3',
+            Jounetsu_Tairiku: 'assets/audio/bgm/Jounetsu_Tairiku.mp3',
+            Last_Summer_In_Rio: 'assets/audio/bgm/Last_Summer_In_Rio.mp3',
+            metoroido: 'assets/audio/bgm/metoroido.mp3',
+            Nagisa_Moderato: 'assets/audio/bgm/Nagisa_Moderato.mp3',
+            nightbarth: 'assets/audio/bgm/nightbarth.mp3',
+            ON_THE_BEACH: 'assets/audio/bgm/ON_THE_BEACH.mp3',
+            Pollyanna: 'assets/audio/bgm/Pollyanna.mp3',
+            Spain: 'assets/audio/bgm/Spain.mp3',
+            The_Terminator: 'assets/audio/bgm/The_Terminator.mp3',
+            Theme_from_Back_To_The_Future: 'assets/audio/bgm/Theme_from_Back_To_The_Future.mp3',
+            togetogetarumeiro: 'assets/audio/bgm/togetogetarumeiro.mp3'
         },
         se: {
             touch: 'assets/audio/se/touch_7.mp3', // ダイアログ用タッチSE
@@ -89,12 +106,7 @@ export const AreaConfig = {
             'naoki_A': 'assets/characters/portraits/naoki_A.png'
         },
         backgrounds: {
-            'bar': 'assets/backgrounds/bar.png',
-            'hospital': 'assets/backgrounds/hospital.png',
-            'classroom': 'assets/backgrounds/classroom.png',
-            'gym': 'assets/backgrounds/gym.png',
-            'room': 'assets/backgrounds/room.png',
-            'river': 'assets/backgrounds/river.png',
+
             'test_1': 'assets/backgrounds/background_test.png'
         },
         areas: [
@@ -145,7 +157,20 @@ export const AreaConfig = {
         tilesetKey: 'zennkoku',
         mapTitle: '日本マップ',
         bgm: {
-            map: 'assets/audio/bgm/stage1/kessen_diaruga.mp3', // 通常マップBGM
+            map: 'assets/audio/bgm/Theme_from_Back_To_The_Future.mp3', // 通常マップBGM
+            curono: 'assets/audio/bgm/curono.mp3',
+            Fantasy: 'assets/audio/bgm/Fantasy.mp3',
+            Jounetsu_Tairiku: 'assets/audio/bgm/Jounetsu_Tairiku.mp3',
+            Last_Summer_In_Rio: 'assets/audio/bgm/Last_Summer_In_Rio.mp3',
+            metoroido: 'assets/audio/bgm/metoroido.mp3',
+            Nagisa_Moderato: 'assets/audio/bgm/Nagisa_Moderato.mp3',
+            nightbarth: 'assets/audio/bgm/nightbarth.mp3',
+            ON_THE_BEACH: 'assets/audio/bgm/ON_THE_BEACH.mp3',
+            Pollyanna: 'assets/audio/bgm/Pollyanna.mp3',
+            Spain: 'assets/audio/bgm/Spain.mp3',
+            The_Terminator: 'assets/audio/bgm/The_Terminator.mp3',
+            Theme_from_Back_To_The_Future: 'assets/audio/bgm/Theme_from_Back_To_The_Future.mp3',
+            togetogetarumeiro: 'assets/audio/bgm/togetogetarumeiro.mp3'
         },
         se: {
             touch: 'assets/audio/se/touch_7.mp3', // ダイアログ用タッチSE
@@ -162,12 +187,7 @@ export const AreaConfig = {
             'naoki_A': 'assets/characters/portraits/naoki_A.png'
         },
         backgrounds: {
-            'bar': 'assets/backgrounds/bar.png',
-            'hospital': 'assets/backgrounds/hospital.png',
-            'classroom': 'assets/backgrounds/classroom.png',
-            'gym': 'assets/backgrounds/gym.png',
-            'room': 'assets/backgrounds/room.png',
-            'river': 'assets/backgrounds/river.png',
+
             'test_1': 'assets/backgrounds/background_test.png'
         },
         areas: [

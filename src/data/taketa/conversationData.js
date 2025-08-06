@@ -3,7 +3,7 @@ export const taketaConversationData = {
     // 昼休み鬼ごっこ
     'lunch_tag': {
         'background': 'classroom',
-        'bgm': 'bgm_school_lunch',
+        'bgm': 'Fantasy',
         'conversations': [
             {
                 'speaker': 'ひろかず',
@@ -59,7 +59,7 @@ export const taketaConversationData = {
     // ゴスペラーズの歌
     'gospellers_song': {
         'background': 'classroom',
-        'bgm': 'bgm_gospellers',
+        'bgm': 'Fantasy',
         'conversations': [
             {
                 'speaker': 'ひろかず',
@@ -79,7 +79,7 @@ export const taketaConversationData = {
     // ドラマ撮影事件
     'drama_filming': {
         'background': 'classroom',
-        'bgm': 'bgm_drama',
+        'bgm': 'Fantasy',
         'conversations': [
             {
                 'speaker': 'ひろかず',
@@ -123,7 +123,7 @@ export const taketaConversationData = {
     // クライミング指怪我事件
     'climbing_injury': {
         'background': 'classroom',
-        'bgm': 'bgm_normal',
+        'bgm': 'Fantasy',
         'conversations': [
             {
                 'speaker': 'かなと',
@@ -143,7 +143,7 @@ export const taketaConversationData = {
     // 教室の入り口鍵かけ事件
     'classroom_lock_incident': {
         'background': 'classroom_door',
-        'bgm': 'bgm_tension',
+        'bgm': 'Fantasy',
         'conversations': [
             {
                 'speaker': '安藤先生',
@@ -271,7 +271,7 @@ export const taketaConversationData = {
     // こうたろうのおしっこ事件
     'koutarou_toilet': {
         'background': 'classroom',
-        'bgm': 'bgm_normal',
+        'bgm': 'Fantasy',
         'conversations': [
             {
                 'speaker': 'こうたろう',
@@ -411,7 +411,7 @@ export const taketaConversationData = {
     // 文化祭後の謝罪
     'culture_festival_apology': {
         'background': 'classroom',
-        'bgm': 'bgm_serious',
+        'bgm': 'The_Terminator',
         'conversations': [
             {
                 'speaker': '先生',
@@ -522,7 +522,7 @@ export const taketaConversationData = {
     // 銀河の水
     'ginnga_water': {
         'background': 'galaxy',
-        'bgm': 'bgm_mysterious',
+        'bgm': 'nightbarth',
         'conversations': [
             {
                 'speaker': 'ひろかず',
@@ -542,7 +542,7 @@ export const taketaConversationData = {
     // 竹田駅
     'taketa_station': {
         'background': 'station',
-        'bgm': 'bgm_station',
+        'bgm': 'nightbarth',
         'conversations': [
             {
                 'speaker': 'ひろかず',
