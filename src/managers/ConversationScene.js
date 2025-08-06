@@ -353,7 +353,7 @@ export class ConversationScene extends Phaser.Scene {
         const mainScene = this.scene.get('Stage1Scene') || this.scene.get('Stage2Scene') || this.scene.get('Stage3Scene') || this.scene.get('MiemachiStage') || this.scene.get('TaketastageStage') || this.scene.get('JapanStage');
         if (mainScene) {
             if (mainScene.scene.key === 'Stage1Scene') {
-                return 'bgm_kessen_diaruga';
+                return 'bgm_map'; // Stage1Sceneの場合はmap BGMに戻す
             } else if (mainScene.scene.key === 'Stage2Scene') {
                 return 'bgm_stage2';
             } else if (mainScene.scene.key === 'Stage3Scene') {
@@ -362,7 +362,7 @@ export class ConversationScene extends Phaser.Scene {
                 return 'bgm_map'; // MapSelectionStageの場合はmap BGMに戻す
             }
         }
-        return 'bgm_kessen_diaruga'; // デフォルト
+        return 'bgm_map'; // デフォルト
     }
     
     // 会話終了

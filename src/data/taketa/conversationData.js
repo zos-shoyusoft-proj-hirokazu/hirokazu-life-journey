@@ -493,7 +493,7 @@ export const taketaConversationData = {
     // 電車ないうんこおじさん事件
     'train_no_poop_man': {
         'background': 'station',
-        'bgm': 'bgm_tension',
+        'bgm': 'Nagisa_Moderato',
         'conversations': [
             {
                 'speaker': 'ひろかず',
@@ -507,7 +507,7 @@ export const taketaConversationData = {
     // めっちゃ腕振って歩く人
     'arm_swinging_person': {
         'background': 'street',
-        'bgm': 'bgm_normal',
+        'bgm': 'Nagisa_Moderato',
         'conversations': [
             {
                 'speaker': 'ひろかず',
