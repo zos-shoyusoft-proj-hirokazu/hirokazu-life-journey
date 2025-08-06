@@ -929,7 +929,7 @@ export const miemachiConversationData = {
     // アネックス（ももいろ女学園）
     'annex_momo': {
         'background': 'test_1',
-        'bgm': 'btogetogetarumeiro',
+        'bgm': 'togetogetarumeiro',
         'conversations': [
             {
                 'speaker': 'ひろかず',
@@ -957,7 +957,7 @@ export const miemachiConversationData = {
     // トライアルエピソード
     'trial': {
         'background': 'test_1',
-        'bgm': 'bgm_normal',
+        'bgm': 'curono',
         'conversations': [
             {
                 'speaker': 'ひろかず',
