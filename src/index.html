@@ -259,19 +259,31 @@
     
     <!-- ステージ選択画面 -->
     <div id="stage-select">
+        <div class="background-image"></div>
+        <div class="background-overlay"></div>
         <div class="stage-select-container">
             <div class="stage-buttons">
-                <button id="miemachi">三重シティ</button>
-                <button id="taketastage">竹田シティ</button>
-                <button id="japan">全国</button>
+                <div class="button-row">
+                    <button id="miemachi">三重シティ</button>
+                    <div id="miemachi-move-btn" class="move-button-container" style="display: none;">
+                        <button class="move-button">移動する</button>
+                    </div>
+                </div>
+                <div class="button-row">
+                    <button id="taketastage">竹田シティ</button>
+                    <div id="taketastage-move-btn" class="move-button-container" style="display: none;">
+                        <button class="move-button">移動する</button>
+                    </div>
+                </div>
+                <div class="button-row">
+                    <button id="japan">全国</button>
+                    <div id="japan-move-btn" class="move-button-container" style="display: none;">
+                        <button class="move-button">移動する</button>
+                    </div>
+                </div>
                 <button id="opening-video-btn">オープニング動画</button>
             </div>
             <div class="content-area">
-                <div class="preview-area">
-                    <img src="./assets/backgrounds/stage_backgrounds/miemachi.png" alt="三重町マップ" class="preview-image" id="preview-miemachi">
-                    <img src="./assets/backgrounds/stage_backgrounds/taketa_map.png" alt="竹田ステージ" class="preview-image" id="preview-taketastage">
-                    <img src="./assets/backgrounds/stage_backgrounds/zennkoku.png" alt="日本マップ" class="preview-image" id="preview-japan">
-                </div>
                 <div class="description-area" id="description-area">
                     <p>ステージを選択してください</p>
                 </div>
@@ -511,7 +523,7 @@
                 console.log('三重シティボタンが見つかりました');
                 miemachi.addEventListener('click', function() {
                     console.log('三重シティ clicked');
-                    startStage('miemachi');
+                    selectStage('miemachi', '三重シティ - 広和の故郷での物語', './assets/backgrounds/stage_backgrounds/miemachi.png');
                 });
             } else {
                 console.error('三重シティボタンが見つかりません');
@@ -521,7 +533,7 @@
                 console.log('竹田シティボタンが見つかりました');
                 taketastage.addEventListener('click', function() {
                     console.log('竹田シティ clicked');
-                    startStage('taketa');
+                    selectStage('taketastage', '竹田シティ - 新しい冒険の舞台', './assets/backgrounds/stage_backgrounds/taketa_map.png');
                 });
             } else {
                 console.error('竹田シティボタンが見つかりません');
@@ -531,7 +543,7 @@
                 console.log('全国ボタンが見つかりました');
                 japan.addEventListener('click', function() {
                     console.log('全国 clicked');
-                    startStage('japan');
+                    selectStage('japan', '全国 - 日本各地を巡る旅', './assets/backgrounds/stage_backgrounds/zennkoku.png');
                 });
             } else {
                 console.error('全国ボタンが見つかりません');
@@ -547,8 +559,11 @@
                 console.error('オープニング動画ボタンが見つかりません');
             }
             
-            // プレビュー画像の切り替え機能
+            // 背景画像の切り替え機能
             setupPreviewImages();
+            
+            // 「下に移動」ボタンのイベント設定
+            setupStartStageButton();
         }
         
         // ステージ選択画面を表示する関数
@@ -559,37 +574,126 @@
             
             mainMenu.style.display = 'none';
             stageSelect.style.display = 'flex';
+            
+            // デフォルトの背景画像を設定（三重シティ）
+            const defaultBgImage = './assets/backgrounds/stage_backgrounds/miemachi.png';
+            const bgImageElement = stageSelect.querySelector('.background-image');
+            if (bgImageElement) {
+                bgImageElement.style.backgroundImage = `url(${defaultBgImage})`;
+                console.log('背景画像を設定:', defaultBgImage);
+            }
+            
+            // デフォルトの説明を設定
+            const descriptionArea = document.getElementById('description-area');
+            if (descriptionArea) {
+                const descriptionP = descriptionArea.querySelector('p');
+                if (descriptionP) {
+                    descriptionP.textContent = '三重シティ - 広和の故郷での物語';
+                }
+            }
+            
+            console.log('Stage select screen displayed');
         }
 
-        // プレビュー画像の切り替え機能
+        // 背景画像の切り替え機能
         function setupPreviewImages() {
             const buttons = ['miemachi', 'taketastage', 'japan'];
-            const previews = ['preview-miemachi', 'preview-taketastage', 'preview-japan'];
             const descriptions = [
                 '三重シティ - 広和の故郷での物語',
                 '竹田シティ - 新しい冒険の舞台',
                 '全国 - 日本各地を巡る旅'
             ];
+            const backgroundImages = [
+                './assets/backgrounds/stage_backgrounds/miemachi.png',
+                './assets/backgrounds/stage_backgrounds/taketa_map.png',
+                './assets/backgrounds/stage_backgrounds/zennkoku.png'
+            ];
 
             buttons.forEach((buttonId, index) => {
                 const button = document.getElementById(buttonId);
-                const preview = document.getElementById(previews[index]);
                 const description = document.getElementById('description-area');
+                const stageSelect = document.getElementById('stage-select');
 
-                if (button && preview && description) {
+                if (button && description) {
                     button.addEventListener('mouseenter', function() {
-                        // すべてのプレビューを非表示
-                        previews.forEach(id => {
-                            const img = document.getElementById(id);
-                            if (img) img.classList.remove('show');
-                        });
-                        
-                        // 選択されたプレビューを表示
-                        preview.classList.add('show');
                         description.innerHTML = `<p>${descriptions[index]}</p>`;
+                        
+                        // 背景画像を設定
+                        const bgImageElement = stageSelect.querySelector('.background-image');
+                        if (bgImageElement) {
+                            bgImageElement.style.backgroundImage = `url(${backgroundImages[index]})`;
+                            console.log('背景画像を切り替え:', backgroundImages[index]);
+                        }
                     });
                 }
             });
+        }
+
+        // ステージ選択機能
+        function selectStage(stageId, description, backgroundImage) {
+            console.log('selectStage called:', stageId, description, backgroundImage);
+            
+            // 背景画像を設定
+            const stageSelect = document.getElementById('stage-select');
+            const bgImageElement = stageSelect.querySelector('.background-image');
+            if (bgImageElement) {
+                bgImageElement.style.backgroundImage = `url(${backgroundImage})`;
+                console.log('背景画像を設定:', backgroundImage);
+            }
+            
+            // 説明エリアを取得
+            const descriptionArea = document.getElementById('description-area');
+            console.log('descriptionArea found:', !!descriptionArea);
+            
+            if (descriptionArea) {
+                // 説明テキストを更新
+                const descriptionP = descriptionArea.querySelector('p');
+                if (descriptionP) {
+                    descriptionP.textContent = description;
+                } else {
+                    const newP = document.createElement('p');
+                    newP.textContent = description;
+                    descriptionArea.appendChild(newP);
+                }
+            } else {
+                console.error('description-area not found!');
+            }
+            
+            // すべての移動ボタンを非表示にする
+            const allMoveButtons = document.querySelectorAll('.move-button-container');
+            allMoveButtons.forEach(btn => {
+                btn.style.display = 'none';
+            });
+            
+            // 選択されたステージの移動ボタンを表示
+            const moveButtonId = `${stageId}-move-btn`;
+            const moveButton = document.getElementById(moveButtonId);
+            if (moveButton) {
+                moveButton.style.display = 'block';
+                console.log('Move button displayed for:', stageId);
+                
+                // ボタンのクリックイベントを設定
+                const moveBtn = moveButton.querySelector('.move-button');
+                if (moveBtn) {
+                    moveBtn.onclick = function() {
+                        console.log('移動するボタンがクリックされました:', stageId);
+                        startStage(stageId);
+                    };
+                }
+            } else {
+                console.error('Move button not found for:', stageId);
+            }
+        }
+
+        // 「下に移動」ボタンの設定
+        function setupStartStageButton() {
+            const startStageBtn = document.getElementById('start-stage-btn');
+            if (startStageBtn) {
+                startStageBtn.addEventListener('click', function() {
+                    console.log('下に移動ボタンがクリックされました');
+                    // この関数は selectStage で動的に設定されます
+                });
+            }
         }
 
         // ステージ開始関数
@@ -653,7 +757,26 @@
                 localStorage.setItem('openingVideoShown', 'true');
             } else {
                 console.log('showStageSelect will be called');
-                // ステージ選択画面は既にDOMContentLoadedで設定済み
+                                    // ステージ選択画面を表示し、デフォルトで三重シティの背景を設定
+                    const stageSelect = document.getElementById('stage-select');
+                    if (stageSelect) {
+                        stageSelect.style.display = 'flex';
+                        const bgImageElement = stageSelect.querySelector('.background-image');
+                        if (bgImageElement) {
+                            bgImageElement.style.backgroundImage = 'url(./assets/backgrounds/stage_backgrounds/miemachi.png)';
+                        }
+                        
+                        // デフォルトの説明を設定
+                        const descriptionArea = document.getElementById('description-area');
+                        if (descriptionArea) {
+                            const descriptionP = descriptionArea.querySelector('p');
+                            if (descriptionP) {
+                                descriptionP.textContent = '三重シティ - 広和の故郷での物語';
+                            }
+                        }
+                        
+                        console.log('Stage select screen displayed on page load');
+                    }
             }
         });
         
