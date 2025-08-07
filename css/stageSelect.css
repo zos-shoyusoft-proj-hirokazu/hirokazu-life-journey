@@ -7,7 +7,7 @@
     height: 100%;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     z-index: 1000;
     color: white;
     font-family: 'Arial', sans-serif;
@@ -16,6 +16,7 @@
         radial-gradient(circle at 80% 20%, rgba(46, 204, 113, 0.1) 0%, transparent 50%),
         radial-gradient(circle at 40% 40%, rgba(155, 89, 182, 0.1) 0%, transparent 50%),
         radial-gradient(circle at center, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.7) 100%);
+    padding-top: 20px;
 }
 
 /* 背景画像用のdiv要素 */
@@ -56,8 +57,9 @@
 
 .stage-select-container {
     display: flex;
+    flex-direction: column;
     width: 95%;
-    height: 85%;
+    height: 75%;
     max-width: 1400px;
     background: transparent;
     border-radius: 20px;
@@ -65,11 +67,70 @@
     z-index: 10;
 }
 
+.stage-title {
+    text-align: center;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 8px;
+    text-shadow: 
+        0 2px 4px rgba(0, 0, 0, 0.8),
+        0 0 15px rgba(52, 152, 219, 0.5);
+    letter-spacing: 1px;
+    z-index: 20;
+    position: relative;
+    padding: 8px 20px;
+    background: linear-gradient(145deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.8) 100%);
+    border-radius: 8px;
+    border: 1px solid #3498db;
+    box-shadow: 
+        0 4px 8px rgba(0, 0, 0, 0.4),
+        inset 0 1px 2px rgba(255, 255, 255, 0.1),
+        inset 0 -1px 2px rgba(0, 0, 0, 0.2),
+        0 0 10px rgba(52, 152, 219, 0.3);
+    backdrop-filter: blur(10px);
+    animation: titleGlow 3s ease-in-out infinite alternate;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+@keyframes titleGlow {
+    0% {
+        text-shadow: 
+            0 2px 4px rgba(0, 0, 0, 0.8),
+            0 0 15px rgba(52, 152, 219, 0.5);
+        box-shadow: 
+            0 4px 8px rgba(0, 0, 0, 0.4),
+            inset 0 1px 2px rgba(255, 255, 255, 0.1),
+            inset 0 -1px 2px rgba(0, 0, 0, 0.2),
+            0 0 10px rgba(52, 152, 219, 0.3);
+    }
+    100% {
+        text-shadow: 
+            0 2px 4px rgba(0, 0, 0, 0.8),
+            0 0 20px rgba(52, 152, 219, 0.6);
+        box-shadow: 
+            0 4px 8px rgba(0, 0, 0, 0.4),
+            inset 0 1px 2px rgba(255, 255, 255, 0.1),
+            inset 0 -1px 2px rgba(0, 0, 0, 0.2),
+            0 0 15px rgba(52, 152, 219, 0.4);
+    }
+}
+
+.stage-content {
+    display: flex;
+    flex: 1;
+    align-items: flex-start;
+    padding-top: 0;
+    margin-top: -10px;
+}
+
 .stage-buttons {
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    padding: 25px;
+    gap: 10px;
+    padding: 10px;
     width: 350px;
     background: transparent;
     border-radius: 15px;
@@ -98,10 +159,13 @@
     width: 100%;
     font-weight: bold;
     box-shadow: 
-        0 8px 16px rgba(0, 0, 0, 0.4),
-        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        0 6px 12px rgba(0, 0, 0, 0.3),
+        inset 0 2px 4px rgba(255, 255, 255, 0.1),
+        inset 0 -2px 4px rgba(0, 0, 0, 0.2),
+        0 0 0 1px rgba(255, 255, 255, 0.05);
     overflow: hidden;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+    transform: translateY(0);
 }
 
 
@@ -109,11 +173,13 @@
 .stage-buttons button:hover {
     background: linear-gradient(145deg, #3498db 0%, #2980b9 50%, #3498db 100%);
     border-color: #2ecc71;
-    transform: translateY(-3px) scale(1.02);
+    transform: translateY(-4px) scale(1.03);
     box-shadow: 
         0 12px 24px rgba(0, 0, 0, 0.5),
-        inset 0 1px 0 rgba(255, 255, 255, 0.15),
-        0 0 20px rgba(52, 152, 219, 0.4);
+        inset 0 2px 6px rgba(255, 255, 255, 0.2),
+        inset 0 -2px 6px rgba(0, 0, 0, 0.3),
+        0 0 25px rgba(52, 152, 219, 0.4),
+        0 0 0 1px rgba(255, 255, 255, 0.1);
     color: #ffffff;
 }
 
@@ -168,14 +234,17 @@
     font-weight: bold;
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     box-shadow: 
-        0 6px 12px rgba(0, 0, 0, 0.3),
-        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        0 4px 8px rgba(0, 0, 0, 0.3),
+        inset 0 2px 4px rgba(255, 255, 255, 0.1),
+        inset 0 -2px 4px rgba(0, 0, 0, 0.2),
+        0 0 0 1px rgba(255, 255, 255, 0.05);
     text-transform: uppercase;
     letter-spacing: 1px;
     white-space: nowrap;
     position: relative;
     overflow: hidden;
     min-width: 80px;
+    transform: translateY(0);
 }
 
 .move-button::before {
@@ -191,11 +260,13 @@
 
 .move-button:hover {
     background: linear-gradient(145deg, #2ecc71 0%, #27ae60 50%, #2ecc71 100%);
-    transform: translateY(-2px) scale(1.05);
+    transform: translateY(-3px) scale(1.05);
     box-shadow: 
         0 8px 16px rgba(0, 0, 0, 0.4),
-        inset 0 1px 0 rgba(255, 255, 255, 0.15),
-        0 0 15px rgba(46, 204, 113, 0.4);
+        inset 0 2px 6px rgba(255, 255, 255, 0.2),
+        inset 0 -2px 6px rgba(0, 0, 0, 0.3),
+        0 0 20px rgba(46, 204, 113, 0.4),
+        0 0 0 1px rgba(255, 255, 255, 0.1);
 }
 
 .move-button:hover::before {
@@ -246,24 +317,27 @@
 }
 
 .description-area {
-    height: 200px;
+    height: 280px;
     border-radius: 15px;
-    padding: 30px;
+    padding: 35px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     text-align: center;
-    font-size: 18px;
+    font-size: 20px;
     line-height: 1.6;
     background: rgba(0, 0, 0, 0.8);
     z-index: 20;
     border: 2px solid #3498db;
     filter: none;
     box-shadow: 
-        0 10px 20px rgba(0, 0, 0, 0.5),
-        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        0 12px 24px rgba(0, 0, 0, 0.5),
+        inset 0 3px 6px rgba(255, 255, 255, 0.1),
+        inset 0 -3px 6px rgba(0, 0, 0, 0.3),
+        0 0 0 1px rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(10px);
+    transform: translateY(0);
 }
 
 
