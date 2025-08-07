@@ -1,4 +1,4 @@
-<!doctype html><html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover,minimal-ui"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="mobile-web-app-capable" content="yes"><meta name="theme-color" content="#000000"><meta name="description" content="Hirokazu Life Journey - ゲーム"><link rel="manifest" href="./manifest.json"><title>Hirokazu Life Journey</title><link rel="stylesheet" href="./css/stageSelect.css"><style>/* 全体のリセットとブラウザUI対応 */
+<!doctype html><html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover,minimal-ui"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="mobile-web-app-capable" content="yes"><meta name="theme-color" content="#000000"><meta name="description" content="Hirokazu Life Journey - ゲーム"><link rel="manifest" href="./manifest.json"><title>Hirokazu Life Journey</title><link rel="stylesheet" href="./css/stageSelect.css"><link rel="stylesheet" href="./css/mainMenu.css"><style>/* 全体のリセットとブラウザUI対応 */
         * {
             margin: 0;
             padding: 0;
@@ -143,6 +143,8 @@
         }
         
 
+        
+
         #fullscreen-button {
             position: fixed;
             top: 10px;
@@ -193,7 +195,7 @@
             #game-container {
                 height: -webkit-fill-available;
             }
-        }</style><script defer="defer" src="bundle.js"></script></head><body><button id="fullscreen-button" onclick="toggleFullscreen()">全画面</button><div id="game-container"></div><script src="https://cdn.jsdelivr.net/npm/phaser@3.70.0/dist/phaser.min.js"></script><div id="opening-video" style="display: none;"><div id="video-container"><iframe id="youtube-video" width="100%" height="100%" frameborder="0" allowfullscreen></iframe><button id="skip-video" class="skip-button">スキップ</button></div></div><div id="stage-select"><div class="stage-select-container"><div class="stage-buttons"><button id="miemachi">三重シティ</button> <button id="taketastage">竹田シティ</button> <button id="japan">全国</button> <button id="opening-video-btn">オープニング動画</button></div><div class="content-area"><div class="preview-area"><img src="./assets/backgrounds/stage_backgrounds/miemachi.png" alt="三重町マップ" class="preview-image" id="preview-miemachi"> <img src="./assets/backgrounds/stage_backgrounds/taketa_map.png" alt="竹田ステージ" class="preview-image" id="preview-taketastage"> <img src="./assets/backgrounds/stage_backgrounds/zennkoku.png" alt="日本マップ" class="preview-image" id="preview-japan"></div><div class="description-area" id="description-area"><p>ステージを選択してください</p></div></div></div></div><script>// 実際の表示エリアサイズを取得する関数
+        }</style><script defer="defer" src="bundle.js"></script></head><body><button id="fullscreen-button" onclick="toggleFullscreen()">全画面</button><div id="game-container"></div><script src="https://cdn.jsdelivr.net/npm/phaser@3.70.0/dist/phaser.min.js"></script><div id="opening-video" style="display: none;"><div id="video-container"><iframe id="youtube-video" width="100%" height="100%" frameborder="0" allowfullscreen></iframe><button id="skip-video" class="skip-button">スキップ</button></div></div><div id="main-menu" style="display: none;"><div class="main-menu-container"><div class="game-title"><h1>Hirokazu Life Journey</h1><p class="subtitle">ひろかずの人生を追体験しよう！</p></div><div class="menu-buttons"><button id="start-game" class="menu-button primary">START</button></div><div class="game-info"><p>結婚式で披露するゲーム</p><p>新郎の人生をRPGで体験！</p></div></div></div><div id="stage-select"><div class="stage-select-container"><div class="stage-buttons"><button id="miemachi">三重シティ</button> <button id="taketastage">竹田シティ</button> <button id="japan">全国</button> <button id="opening-video-btn">オープニング動画</button></div><div class="content-area"><div class="preview-area"><img src="./assets/backgrounds/stage_backgrounds/miemachi.png" alt="三重町マップ" class="preview-image" id="preview-miemachi"> <img src="./assets/backgrounds/stage_backgrounds/taketa_map.png" alt="竹田ステージ" class="preview-image" id="preview-taketastage"> <img src="./assets/backgrounds/stage_backgrounds/zennkoku.png" alt="日本マップ" class="preview-image" id="preview-japan"></div><div class="description-area" id="description-area"><p>ステージを選択してください</p></div></div></div></div><script>// 実際の表示エリアサイズを取得する関数
         function getActualViewportSize() {
             let width = window.innerWidth;
             let height;
@@ -369,7 +371,7 @@
         function hideOpeningVideo() {
             console.log('hideOpeningVideo called');
             const openingVideo = document.getElementById('opening-video');
-            const stageSelect = document.getElementById('stage-select');
+            const mainMenu = document.getElementById('main-menu');
             const iframe = document.getElementById('youtube-video');
             
             // YouTubeプレイヤーを停止（エラーハンドリング付き）
@@ -385,28 +387,36 @@
             iframe.src = '';
             
             openingVideo.style.display = 'none';
-            stageSelect.style.display = 'flex';
+            mainMenu.style.display = 'flex';
             
-            console.log('Opening video hidden, stage select shown');
+            console.log('Opening video hidden, main menu shown');
         }
         
         // ステージ選択画面の初期化
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('DOMContentLoaded - ステージ選択画面を初期化');
+            console.log('DOMContentLoaded - メインメニュー画面を初期化');
             
-            // ステージ選択画面を表示
-            const stageSelect = document.getElementById('stage-select');
-            if (stageSelect) {
-                stageSelect.style.display = 'flex';
+            // メインメニューのボタンイベントを設定
+            const startGameBtn = document.getElementById('start-game');
+            
+            if (startGameBtn) {
+                console.log('STARTボタンが見つかりました');
+                startGameBtn.addEventListener('click', function() {
+                    console.log('START clicked');
+                    showStageSelect();
+                });
+            } else {
+                console.error('STARTボタンが見つかりません');
             }
             
-            // ゲームコンテナを非表示
-            const gameContainer = document.getElementById('game-container');
-            if (gameContainer) {
-                gameContainer.style.display = 'none';
-            }
-
-            // ボタンにイベントを設定
+            // ステージ選択画面のボタンイベントを設定
+            setupStageSelectButtons();
+            
+            console.log('イベントリスナーの設定完了');
+        });
+        
+        // ステージ選択画面のボタン設定
+        function setupStageSelectButtons() {
             const miemachi = document.getElementById('miemachi');
             const taketastage = document.getElementById('taketastage');
             const japan = document.getElementById('japan');
@@ -454,9 +464,17 @@
             
             // プレビュー画像の切り替え機能
             setupPreviewImages();
+        }
+        
+        // ステージ選択画面を表示する関数
+        function showStageSelect() {
+            console.log('showStageSelect called');
+            const mainMenu = document.getElementById('main-menu');
+            const stageSelect = document.getElementById('stage-select');
             
-            console.log('イベントリスナーの設定完了');
-        });
+            mainMenu.style.display = 'none';
+            stageSelect.style.display = 'flex';
+        }
 
         // プレビュー画像の切り替え機能
         function setupPreviewImages() {
@@ -553,6 +571,18 @@
                 // ステージ選択画面は既にDOMContentLoadedで設定済み
             }
         });
+        
+        // メインメニューを表示する関数
+        function showMainMenu() {
+            console.log('showMainMenu called');
+            const mainMenu = document.getElementById('main-menu');
+            const stageSelect = document.getElementById('stage-select');
+            const gameContainer = document.getElementById('game-container');
+            
+            if (mainMenu) mainMenu.style.display = 'flex';
+            if (stageSelect) stageSelect.style.display = 'none';
+            if (gameContainer) gameContainer.style.display = 'none';
+        }
         
         // PWAとしてインストール可能にするためのService Worker登録
         // 開発時（localhost/127.0.0.1）ではサービスワーカーを無効化
