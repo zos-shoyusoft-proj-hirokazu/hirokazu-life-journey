@@ -168,8 +168,6 @@
     transform: translateY(0);
 }
 
-
-
 .stage-buttons button:hover {
     background: linear-gradient(145deg, #3498db 0%, #2980b9 50%, #3498db 100%);
     border-color: #2ecc71;
@@ -340,8 +338,6 @@
     transform: translateY(0);
 }
 
-
-
 .start-stage-button {
     margin-top: 15px;
     padding: 12px 24px;
@@ -360,6 +356,41 @@
     background: linear-gradient(135deg, #45a049 0%, #3d8b40 100%);
     transform: translateY(-2px);
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+}
+
+/* レスポンシブデザイン */
+@media (max-width: 768px) {
+    .stage-content {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .stage-buttons {
+        width: 90%;
+        max-width: 400px;
+    }
+    
+    .content-area {
+        width: 90%;
+        margin-left: 0;
+        margin-top: 20px;
+    }
+    
+    .description-area {
+        height: 250px;
+        font-size: 18px;
+        padding: 30px;
+    }
+    
+    .stage-title {
+        font-size: 16px;
+        padding: 10px 20px;
+    }
+    
+    .stage-buttons button {
+        font-size: 16px;
+        padding: 15px 20px;
+    }
 }
 
  
