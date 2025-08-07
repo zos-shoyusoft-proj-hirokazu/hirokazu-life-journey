@@ -10,98 +10,294 @@
     justify-content: center;
     align-items: center;
     z-index: 1500;
+    overflow: hidden;
+}
+
+#main-menu::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.4) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.4) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.3) 0%, transparent 50%);
+    animation: backgroundShift 12s ease-in-out infinite;
+}
+
+@keyframes backgroundShift {
+    0%, 100% { 
+        background: 
+            radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.4) 0%, transparent 50%),
+            radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.4) 0%, transparent 50%),
+            radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.3) 0%, transparent 50%);
+        transform: scale(1);
+    }
+    50% { 
+        background: 
+            radial-gradient(circle at 80% 80%, rgba(120, 119, 198, 0.4) 0%, transparent 50%),
+            radial-gradient(circle at 20% 20%, rgba(255, 119, 198, 0.4) 0%, transparent 50%),
+            radial-gradient(circle at 60% 60%, rgba(120, 219, 255, 0.3) 0%, transparent 50%);
+        transform: scale(1.05);
+    }
 }
 
 .main-menu-container {
     text-align: center;
     color: white;
-    padding: 20px;
-    max-width: 600px;
+    padding: 50px;
+    max-width: 800px;
     width: 90%;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 30px;
+    backdrop-filter: blur(20px);
+    border: 2px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 
+        0 30px 60px rgba(0, 0, 0, 0.6),
+        inset 0 2px 0 rgba(255, 255, 255, 0.2),
+        0 0 30px rgba(255, 255, 255, 0.1);
+    position: relative;
+    z-index: 10;
+    animation: containerGlow 4s ease-in-out infinite alternate;
+}
+
+@keyframes containerGlow {
+    0% {
+        box-shadow: 
+            0 30px 60px rgba(0, 0, 0, 0.6),
+            inset 0 2px 0 rgba(255, 255, 255, 0.2),
+            0 0 30px rgba(255, 255, 255, 0.1);
+    }
+    100% {
+        box-shadow: 
+            0 30px 60px rgba(0, 0, 0, 0.6),
+            inset 0 2px 0 rgba(255, 255, 255, 0.2),
+            0 0 40px rgba(255, 255, 255, 0.2);
+    }
+}
+
+.main-menu-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, transparent, #ff6b6b, #4ecdc4, #45b7d1, #ff6b6b, transparent);
+    border-radius: 30px 30px 0 0;
+    animation: borderFlow 6s ease-in-out infinite;
+}
+
+@keyframes borderFlow {
+    0%, 100% { 
+        background: linear-gradient(90deg, transparent, #ff6b6b, #4ecdc4, #45b7d1, #ff6b6b, transparent);
+    }
+    25% { 
+        background: linear-gradient(90deg, transparent, #4ecdc4, #45b7d1, #ff6b6b, #4ecdc4, transparent);
+    }
+    50% { 
+        background: linear-gradient(90deg, transparent, #45b7d1, #ff6b6b, #4ecdc4, #45b7d1, transparent);
+    }
+    75% { 
+        background: linear-gradient(90deg, transparent, #ff6b6b, #4ecdc4, #45b7d1, #ff6b6b, transparent);
+    }
 }
 
 .game-title h1 {
-    font-size: 3rem;
-    margin-bottom: 10px;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-    animation: titleGlow 2s ease-in-out infinite alternate;
+    font-size: 4rem;
+    margin-bottom: 20px;
+    text-shadow: 
+        0 4px 8px rgba(0, 0, 0, 0.8),
+        0 0 30px rgba(255, 255, 255, 0.4);
+    animation: titleGlow 4s ease-in-out infinite alternate;
+    font-weight: bold;
+    letter-spacing: 3px;
+    color: #ffffff;
+    text-transform: uppercase;
+    position: relative;
+    z-index: 20;
 }
 
 @keyframes titleGlow {
-    from { text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); }
-    to { text-shadow: 2px 2px 20px rgba(255, 255, 255, 0.8); }
+    from { 
+        text-shadow: 
+            0 4px 8px rgba(0, 0, 0, 0.8),
+            0 0 30px rgba(255, 255, 255, 0.4);
+        transform: scale(1);
+    }
+    to { 
+        text-shadow: 
+            0 4px 8px rgba(0, 0, 0, 0.8),
+            0 0 40px rgba(255, 255, 255, 0.7);
+        transform: scale(1.03);
+    }
 }
 
 .subtitle {
-    font-size: 1.2rem;
-    margin-bottom: 40px;
-    opacity: 0.9;
+    font-size: 1.6rem;
+    margin-bottom: 60px;
+    opacity: 0.95;
+    text-shadow: 0 3px 6px rgba(0, 0, 0, 0.8);
+    animation: subtitlePulse 5s ease-in-out infinite;
+    font-weight: 500;
+    letter-spacing: 1px;
+    color: #ffffff;
+    position: relative;
+    z-index: 20;
+}
+
+@keyframes subtitlePulse {
+    0%, 100% { 
+        opacity: 0.95;
+        transform: translateY(0);
+    }
+    50% { 
+        opacity: 1;
+        transform: translateY(-2px);
+    }
 }
 
 .menu-buttons {
-    margin: 40px 0;
+    margin: 60px 0;
 }
 
 .menu-button {
     display: block;
-    width: 200px;
-    margin: 15px auto;
-    padding: 15px 30px;
-    font-size: 1.2rem;
+    width: 300px;
+    margin: 25px auto;
+    padding: 25px 50px;
+    font-size: 1.6rem;
     font-weight: bold;
     border: none;
-    border-radius: 10px;
+    border-radius: 20px;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 3px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 
+        0 12px 24px rgba(0, 0, 0, 0.4),
+        inset 0 2px 0 rgba(255, 255, 255, 0.2);
+}
+
+.menu-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    transition: left 0.8s ease;
+}
+
+.menu-button:hover::before {
+    left: 100%;
 }
 
 .menu-button.primary {
-    background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+    background: linear-gradient(145deg, #ff6b6b 0%, #ee5a24 50%, #ff6b6b 100%);
     color: white;
-    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+    box-shadow: 
+        0 12px 24px rgba(255, 107, 107, 0.5),
+        inset 0 2px 0 rgba(255, 255, 255, 0.2),
+        0 0 25px rgba(255, 107, 107, 0.3);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
 }
 
 .menu-button.primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(255, 107, 107, 0.6);
+    background: linear-gradient(145deg, #ee5a24 0%, #ff6b6b 50%, #ee5a24 100%);
+    transform: translateY(-5px) scale(1.08);
+    box-shadow: 
+        0 20px 40px rgba(255, 107, 107, 0.7),
+        inset 0 2px 0 rgba(255, 255, 255, 0.25),
+        0 0 35px rgba(255, 107, 107, 0.5);
 }
 
 .menu-button.secondary {
-    background: linear-gradient(45deg, #4ecdc4, #44a08d);
+    background: linear-gradient(145deg, #4ecdc4 0%, #44a08d 50%, #4ecdc4 100%);
     color: white;
-    box-shadow: 0 4px 15px rgba(78, 205, 196, 0.4);
+    box-shadow: 
+        0 12px 24px rgba(78, 205, 196, 0.5),
+        inset 0 2px 0 rgba(255, 255, 255, 0.2),
+        0 0 25px rgba(78, 205, 196, 0.3);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
 }
 
 .menu-button.secondary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(78, 205, 196, 0.6);
+    background: linear-gradient(145deg, #44a08d 0%, #4ecdc4 50%, #44a08d 100%);
+    transform: translateY(-5px) scale(1.08);
+    box-shadow: 
+        0 20px 40px rgba(78, 205, 196, 0.7),
+        inset 0 2px 0 rgba(255, 255, 255, 0.25),
+        0 0 35px rgba(78, 205, 196, 0.5);
 }
 
 .game-info {
-    margin-top: 40px;
-    opacity: 0.8;
+    margin-top: 60px;
+    opacity: 0.9;
+    background: rgba(0, 0, 0, 0.4);
+    padding: 25px;
+    border-radius: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    box-shadow: 
+        0 15px 30px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 .game-info p {
-    margin: 5px 0;
-    font-size: 0.9rem;
+    margin: 10px 0;
+    font-size: 1.1rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+    animation: infoGlow 6s ease-in-out infinite;
+    font-weight: 500;
+    color: #ffffff;
+    position: relative;
+    z-index: 20;
+}
+
+@keyframes infoGlow {
+    0%, 100% { 
+        opacity: 0.9;
+        transform: translateY(0);
+    }
+    50% { 
+        opacity: 1;
+        transform: translateY(-1px);
+    }
 }
 
 /* スマホ対応 */
 @media (max-width: 768px) {
     .game-title h1 {
-        font-size: 2rem;
+        font-size: 3rem;
+        letter-spacing: 2px;
     }
     
     .subtitle {
-        font-size: 1rem;
+        font-size: 1.4rem;
     }
     
     .menu-button {
-        width: 150px;
+        width: 250px;
+        font-size: 1.4rem;
+        padding: 22px 40px;
+        letter-spacing: 2px;
+    }
+    
+    .main-menu-container {
+        padding: 40px 25px;
+    }
+    
+    .game-info {
+        padding: 20px;
+    }
+    
+    .game-info p {
         font-size: 1rem;
-        padding: 12px 20px;
     }
 } 

@@ -184,6 +184,8 @@
             transition: all 0.2s ease;
         }
         
+
+        
         #fullscreen-button:hover {
             background: linear-gradient(135deg, #3a3a3a 0%, #4a4a4a 50%, #3a3a3a 100%);
             box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15);
@@ -262,30 +264,33 @@
         <div class="background-image"></div>
         <div class="background-overlay"></div>
         <div class="stage-select-container">
-            <div class="stage-buttons">
-                <div class="button-row">
-                    <button id="miemachi">三重シティ</button>
-                    <div id="miemachi-move-btn" class="move-button-container" style="display: none;">
-                        <button class="move-button">移動する</button>
+            <div class="stage-title">ステージ選択画面</div>
+            <div class="stage-content">
+                <div class="stage-buttons">
+                    <div class="button-row">
+                        <button id="miemachi">三重シティ</button>
+                        <div id="miemachi-move-btn" class="move-button-container" style="display: none;">
+                            <button class="move-button">移動する</button>
+                        </div>
                     </div>
-                </div>
-                <div class="button-row">
-                    <button id="taketastage">竹田シティ</button>
-                    <div id="taketastage-move-btn" class="move-button-container" style="display: none;">
-                        <button class="move-button">移動する</button>
+                    <div class="button-row">
+                        <button id="taketastage">竹田シティ</button>
+                        <div id="taketa-move-btn" class="move-button-container" style="display: none;">
+                            <button class="move-button">移動する</button>
+                        </div>
                     </div>
-                </div>
-                <div class="button-row">
-                    <button id="japan">全国</button>
-                    <div id="japan-move-btn" class="move-button-container" style="display: none;">
-                        <button class="move-button">移動する</button>
+                    <div class="button-row">
+                        <button id="japan">全国</button>
+                        <div id="japan-move-btn" class="move-button-container" style="display: none;">
+                            <button class="move-button">移動する</button>
+                        </div>
                     </div>
+                    <button id="opening-video-btn">オープニング動画</button>
                 </div>
-                <button id="opening-video-btn">オープニング動画</button>
-            </div>
-            <div class="content-area">
-                <div class="description-area" id="description-area">
-                    <p>ステージを選択してください</p>
+                <div class="content-area">
+                    <div class="description-area" id="description-area">
+                        <p>ステージを選択してください</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -397,6 +402,15 @@
         // オープニング動画の管理
         function showOpeningVideo() {
             console.log('showOpeningVideo called');
+            
+            // BGMを停止
+            if (currentBGM) {
+                currentBGM.pause();
+                currentBGM.currentTime = 0;
+                currentBGM = null;
+                console.log('BGM停止');
+            }
+            
             const openingVideo = document.getElementById('opening-video');
             const stageSelect = document.getElementById('stage-select');
             const gameContainer = document.getElementById('game-container');
@@ -557,11 +571,27 @@
             const japan = document.getElementById('japan');
             const openingVideoBtn = document.getElementById('opening-video-btn');
 
+            // ボタンにホバー効果を追加
+            const buttons = [miemachi, taketastage, japan, openingVideoBtn];
+            buttons.forEach(button => {
+                if (button) {
+                    button.addEventListener('mouseenter', function() {
+                        // ホバー時の軽い音響効果
+                        playSE('assets/audio/se/touch_1.mp3');
+                    });
+                }
+            });
+
             if (miemachi) {
                 console.log('三重シティボタンが見つかりました');
                 miemachi.addEventListener('click', function() {
                     console.log('三重シティ clicked');
                     playSE('assets/audio/se/touch_1.mp3');
+                    // クリック時のエフェクト
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 150);
                     selectStage('miemachi', '三重シティ - 広和の故郷での物語', './assets/backgrounds/stage_backgrounds/miemachi.png');
                 });
             } else {
@@ -573,7 +603,12 @@
                 taketastage.addEventListener('click', function() {
                     console.log('竹田シティ clicked');
                     playSE('assets/audio/se/touch_1.mp3');
-                    selectStage('taketastage', '竹田シティ - 新しい冒険の舞台', './assets/backgrounds/stage_backgrounds/taketa_map.png');
+                    // クリック時のエフェクト
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 150);
+                    selectStage('taketa', '竹田シティ - 新しい冒険の舞台', './assets/backgrounds/stage_backgrounds/taketa_map.png');
                 });
             } else {
                 console.error('竹田シティボタンが見つかりません');
@@ -584,6 +619,11 @@
                 japan.addEventListener('click', function() {
                     console.log('全国 clicked');
                     playSE('assets/audio/se/touch_1.mp3');
+                    // クリック時のエフェクト
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 150);
                     selectStage('japan', '全国 - 日本各地を巡る旅', './assets/backgrounds/stage_backgrounds/zennkoku.png');
                 });
             } else {
@@ -595,6 +635,11 @@
                 openingVideoBtn.addEventListener('click', function() {
                     console.log('オープニング動画 clicked');
                     playSE('assets/audio/se/touch_1.mp3');
+                    // クリック時のエフェクト
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 150);
                     showOpeningVideo();
                 });
             } else {
@@ -715,6 +760,10 @@
             const moveButton = document.getElementById(moveButtonId);
             if (moveButton) {
                 moveButton.style.display = 'block';
+                // アニメーション効果を追加
+                setTimeout(() => {
+                    moveButton.classList.add('show');
+                }, 100);
                 console.log('Move button displayed for:', stageId);
                 
                 // ボタンのクリックイベントを設定
@@ -722,6 +771,11 @@
                 if (moveBtn) {
                     moveBtn.onclick = function() {
                         console.log('移動するボタンがクリックされました:', stageId);
+                        // クリック時のエフェクト
+                        moveBtn.style.transform = 'scale(0.95)';
+                        setTimeout(() => {
+                            moveBtn.style.transform = '';
+                        }, 150);
                         startStage(stageId);
                     };
                 }

@@ -7,10 +7,16 @@
     height: 100%;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     z-index: 1000;
     color: white;
-    font-family: Arial, sans-serif;
+    font-family: 'Arial', sans-serif;
+    background: 
+        radial-gradient(circle at 20% 80%, rgba(52, 152, 219, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(46, 204, 113, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(155, 89, 182, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at center, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.7) 100%);
+    padding-top: 20px;
 }
 
 /* 背景画像用のdiv要素 */
@@ -23,8 +29,14 @@
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    filter: blur(3px);
+    filter: blur(4px) brightness(0.8);
     z-index: -2;
+    animation: backgroundPulse 8s ease-in-out infinite;
+}
+
+@keyframes backgroundPulse {
+    0%, 100% { filter: blur(4px) brightness(0.8); }
+    50% { filter: blur(3px) brightness(0.9); }
 }
 
 /* 背景のオーバーレイ */
@@ -34,7 +46,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.3);
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.6) 100%);
     z-index: -1;
 }
 
@@ -45,110 +57,242 @@
 
 .stage-select-container {
     display: flex;
-    width: 90%;
-    height: 80%;
-    max-width: 1200px;
+    flex-direction: column;
+    width: 95%;
+    height: 75%;
+    max-width: 1400px;
     background: transparent;
-    border-radius: 10px;
+    border-radius: 20px;
     position: relative;
     z-index: 10;
-    filter: none;
+}
+
+.stage-title {
+    text-align: center;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 8px;
+    text-shadow: 
+        0 2px 4px rgba(0, 0, 0, 0.8),
+        0 0 15px rgba(52, 152, 219, 0.5);
+    letter-spacing: 1px;
+    z-index: 20;
+    position: relative;
+    padding: 8px 20px;
+    background: linear-gradient(145deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.8) 100%);
+    border-radius: 8px;
+    border: 1px solid #3498db;
+    box-shadow: 
+        0 4px 8px rgba(0, 0, 0, 0.4),
+        inset 0 1px 2px rgba(255, 255, 255, 0.1),
+        inset 0 -1px 2px rgba(0, 0, 0, 0.2),
+        0 0 10px rgba(52, 152, 219, 0.3);
+    backdrop-filter: blur(10px);
+    animation: titleGlow 3s ease-in-out infinite alternate;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+@keyframes titleGlow {
+    0% {
+        text-shadow: 
+            0 2px 4px rgba(0, 0, 0, 0.8),
+            0 0 15px rgba(52, 152, 219, 0.5);
+        box-shadow: 
+            0 4px 8px rgba(0, 0, 0, 0.4),
+            inset 0 1px 2px rgba(255, 255, 255, 0.1),
+            inset 0 -1px 2px rgba(0, 0, 0, 0.2),
+            0 0 10px rgba(52, 152, 219, 0.3);
+    }
+    100% {
+        text-shadow: 
+            0 2px 4px rgba(0, 0, 0, 0.8),
+            0 0 20px rgba(52, 152, 219, 0.6);
+        box-shadow: 
+            0 4px 8px rgba(0, 0, 0, 0.4),
+            inset 0 1px 2px rgba(255, 255, 255, 0.1),
+            inset 0 -1px 2px rgba(0, 0, 0, 0.2),
+            0 0 15px rgba(52, 152, 219, 0.4);
+    }
+}
+
+.stage-content {
+    display: flex;
+    flex: 1;
+    align-items: flex-start;
+    padding-top: 0;
+    margin-top: -10px;
 }
 
 .stage-buttons {
     display: flex;
     flex-direction: column;
-    gap: 15px;
-    padding: 30px;
-    width: 400px;
+    gap: 10px;
+    padding: 10px;
+    width: 350px;
     background: transparent;
-    border-radius: 10px;
+    border-radius: 15px;
     z-index: 20;
-    filter: none;
 }
 
 .button-row {
     display: flex;
     align-items: center;
     gap: 15px;
+    position: relative;
+    width: 100%;
 }
 
 .stage-buttons button {
     padding: 15px 20px;
     font-size: 18px;
-    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-    color: white;
+    background: linear-gradient(145deg, #2c3e50 0%, #34495e 50%, #2c3e50 100%);
+    color: #ffffff;
     border: 2px solid #3498db;
-    border-radius: 10px;
+    border-radius: 12px;
     cursor: pointer;
-    text-align: left;
-    transition: all 0.3s ease;
+    text-align: center;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     position: relative;
-    width: 200px;
+    width: 100%;
     font-weight: bold;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    box-shadow: 
+        0 6px 12px rgba(0, 0, 0, 0.3),
+        inset 0 2px 4px rgba(255, 255, 255, 0.1),
+        inset 0 -2px 4px rgba(0, 0, 0, 0.2),
+        0 0 0 1px rgba(255, 255, 255, 0.05);
+    overflow: hidden;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+    transform: translateY(0);
 }
 
 .stage-buttons button:hover {
-    background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+    background: linear-gradient(145deg, #3498db 0%, #2980b9 50%, #3498db 100%);
     border-color: #2ecc71;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+    transform: translateY(-4px) scale(1.03);
+    box-shadow: 
+        0 12px 24px rgba(0, 0, 0, 0.5),
+        inset 0 2px 6px rgba(255, 255, 255, 0.2),
+        inset 0 -2px 6px rgba(0, 0, 0, 0.3),
+        0 0 25px rgba(52, 152, 219, 0.4),
+        0 0 0 1px rgba(255, 255, 255, 0.1);
+    color: #ffffff;
 }
 
 .stage-buttons button.selected {
-    background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+    background: linear-gradient(145deg, #e74c3c 0%, #c0392b 50%, #e74c3c 100%);
     border-color: #f39c12;
-    color: white;
+    color: #ffffff;
     font-weight: bold;
+    box-shadow: 
+        0 8px 16px rgba(231, 76, 60, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2),
+        0 0 20px rgba(231, 76, 60, 0.3);
+    animation: selectedPulse 2s ease-in-out infinite;
+}
+
+@keyframes selectedPulse {
+    0%, 100% { 
+        box-shadow: 
+            0 8px 16px rgba(231, 76, 60, 0.4),
+            inset 0 1px 0 rgba(255, 255, 255, 0.2),
+            0 0 20px rgba(231, 76, 60, 0.3);
+    }
+    50% { 
+        box-shadow: 
+            0 8px 16px rgba(231, 76, 60, 0.6),
+            inset 0 1px 0 rgba(255, 255, 255, 0.3),
+            0 0 30px rgba(231, 76, 60, 0.5);
+    }
 }
 
 .move-button-container {
     display: flex;
     align-items: center;
+    opacity: 0;
+    transform: translateX(-20px);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.move-button-container.show {
+    opacity: 1;
+    transform: translateX(0);
 }
 
 .move-button {
     padding: 12px 20px;
-    background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+    background: linear-gradient(145deg, #27ae60 0%, #2ecc71 50%, #27ae60 100%);
     color: white;
     border: none;
-    border-radius: 8px;
+    border-radius: 10px;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: bold;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 
+        0 4px 8px rgba(0, 0, 0, 0.3),
+        inset 0 2px 4px rgba(255, 255, 255, 0.1),
+        inset 0 -2px 4px rgba(0, 0, 0, 0.2),
+        0 0 0 1px rgba(255, 255, 255, 0.05);
     text-transform: uppercase;
     letter-spacing: 1px;
     white-space: nowrap;
+    position: relative;
+    overflow: hidden;
+    min-width: 80px;
+    transform: translateY(0);
+}
+
+.move-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.6s ease;
 }
 
 .move-button:hover {
-    background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+    background: linear-gradient(145deg, #2ecc71 0%, #27ae60 50%, #2ecc71 100%);
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 
+        0 8px 16px rgba(0, 0, 0, 0.4),
+        inset 0 2px 6px rgba(255, 255, 255, 0.2),
+        inset 0 -2px 6px rgba(0, 0, 0, 0.3),
+        0 0 20px rgba(46, 204, 113, 0.4),
+        0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+.move-button:hover::before {
+    left: 100%;
 }
 
 .content-area {
     flex: 1;
     display: flex;
     flex-direction: column;
-    padding: 30px;
+    padding: 20px;
     background: transparent;
     filter: none;
+    margin-left: 10px;
 }
 
 .preview-area {
     flex: 1;
-    border-radius: 5px;
-    margin-bottom: 20px;
+    border-radius: 15px;
+    margin-bottom: 30px;
     display: flex;
     justify-content: center;
     align-items: center;
     overflow: hidden;
     position: relative;
-    background: transparent;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
 }
 
 .preview-image {
@@ -171,20 +315,27 @@
 }
 
 .description-area {
-    height: 150px;
-    border-radius: 10px;
-    padding: 20px;
+    height: 280px;
+    border-radius: 15px;
+    padding: 35px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     text-align: center;
-    font-size: 16px;
-    line-height: 1.5;
-    background: rgba(0, 0, 0, 0.7);
+    font-size: 20px;
+    line-height: 1.6;
+    background: rgba(0, 0, 0, 0.8);
     z-index: 20;
     border: 2px solid #3498db;
     filter: none;
+    box-shadow: 
+        0 12px 24px rgba(0, 0, 0, 0.5),
+        inset 0 3px 6px rgba(255, 255, 255, 0.1),
+        inset 0 -3px 6px rgba(0, 0, 0, 0.3),
+        0 0 0 1px rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    transform: translateY(0);
 }
 
 .start-stage-button {
@@ -205,6 +356,41 @@
     background: linear-gradient(135deg, #45a049 0%, #3d8b40 100%);
     transform: translateY(-2px);
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+}
+
+/* レスポンシブデザイン */
+@media (max-width: 768px) {
+    .stage-content {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .stage-buttons {
+        width: 90%;
+        max-width: 400px;
+    }
+    
+    .content-area {
+        width: 90%;
+        margin-left: 0;
+        margin-top: 20px;
+    }
+    
+    .description-area {
+        height: 250px;
+        font-size: 18px;
+        padding: 30px;
+    }
+    
+    .stage-title {
+        font-size: 16px;
+        padding: 10px 20px;
+    }
+    
+    .stage-buttons button {
+        font-size: 16px;
+        padding: 15px 20px;
+    }
 }
 
  

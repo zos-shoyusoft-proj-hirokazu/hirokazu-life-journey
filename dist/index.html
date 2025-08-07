@@ -161,6 +161,8 @@
             transition: all 0.2s ease;
         }
         
+
+        
         #fullscreen-button:hover {
             background: linear-gradient(135deg, #3a3a3a 0%, #4a4a4a 50%, #3a3a3a 100%);
             box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15);
@@ -195,21 +197,31 @@
             #game-container {
                 height: -webkit-fill-available;
             }
-        }</style><script defer="defer" src="bundle.js"></script></head><body><button id="fullscreen-button" onclick="toggleFullscreen()">全画面</button><div id="game-container"></div><script src="https://cdn.jsdelivr.net/npm/phaser@3.70.0/dist/phaser.min.js"></script><div id="opening-video" style="display: none;"><div id="video-container"><iframe id="youtube-video" width="100%" height="100%" frameborder="0" allowfullscreen></iframe><button id="skip-video" class="skip-button">スキップ</button></div></div><div id="main-menu" style="display: none;"><div class="main-menu-container"><div class="game-title"><h1>Hirokazu Life Journey</h1><p class="subtitle">ひろかずの人生を追体験しよう！</p></div><div class="menu-buttons"><button id="start-game" class="menu-button primary">START</button></div><div class="game-info"><p>結婚式で披露するゲーム</p><p>新郎の人生をRPGで体験！</p></div></div></div><div id="stage-select"><div class="background-image"></div><div class="background-overlay"></div><div class="stage-select-container"><div class="stage-buttons"><div class="button-row"><button id="miemachi">三重シティ</button><div id="miemachi-move-btn" class="move-button-container" style="display: none;"><button class="move-button">移動する</button></div></div><div class="button-row"><button id="taketastage">竹田シティ</button><div id="taketastage-move-btn" class="move-button-container" style="display: none;"><button class="move-button">移動する</button></div></div><div class="button-row"><button id="japan">全国</button><div id="japan-move-btn" class="move-button-container" style="display: none;"><button class="move-button">移動する</button></div></div><button id="opening-video-btn">オープニング動画</button></div><div class="content-area"><div class="description-area" id="description-area"><p>ステージを選択してください</p></div></div></div></div><script>// 音声管理
+        }</style><script defer="defer" src="bundle.js"></script></head><body><button id="fullscreen-button" onclick="toggleFullscreen()">全画面</button><div id="game-container"></div><script src="https://cdn.jsdelivr.net/npm/phaser@3.70.0/dist/phaser.min.js"></script><div id="opening-video" style="display: none;"><div id="video-container"><iframe id="youtube-video" width="100%" height="100%" frameborder="0" allowfullscreen></iframe><button id="skip-video" class="skip-button">スキップ</button></div></div><div id="main-menu" style="display: none;"><div class="main-menu-container"><div class="game-title"><h1>Hirokazu Life Journey</h1><p class="subtitle">ひろかずの人生を追体験しよう！</p></div><div class="menu-buttons"><button id="start-game" class="menu-button primary">START</button></div><div class="game-info"><p>結婚式で披露するゲーム</p><p>新郎の人生をRPGで体験！</p></div></div></div><div id="stage-select"><div class="background-image"></div><div class="background-overlay"></div><div class="stage-select-container"><div class="stage-title">ステージ選択画面</div><div class="stage-content"><div class="stage-buttons"><div class="button-row"><button id="miemachi">三重シティ</button><div id="miemachi-move-btn" class="move-button-container" style="display: none;"><button class="move-button">移動する</button></div></div><div class="button-row"><button id="taketastage">竹田シティ</button><div id="taketa-move-btn" class="move-button-container" style="display: none;"><button class="move-button">移動する</button></div></div><div class="button-row"><button id="japan">全国</button><div id="japan-move-btn" class="move-button-container" style="display: none;"><button class="move-button">移動する</button></div></div><button id="opening-video-btn">オープニング動画</button></div><div class="content-area"><div class="description-area" id="description-area"><p>ステージを選択してください</p></div></div></div></div></div><script>// 音声管理
         let currentBGM = null;
         let currentSE = null;
         
         // BGM再生関数
         function playBGM(audioPath) {
+            // 同じBGMが既に再生中の場合は何もしない
+            if (currentBGM && currentBGM.src.includes(audioPath.split('/').pop())) {
+                console.log('同じBGMが既に再生中:', audioPath);
+                return;
+            }
+            
+            // 既存のBGMを停止
             if (currentBGM) {
                 currentBGM.pause();
                 currentBGM = null;
+                console.log('既存のBGMを停止');
             }
             
+            // 新しいBGMを再生
             currentBGM = new Audio(audioPath);
             currentBGM.loop = true;
             currentBGM.volume = 0.5;
             currentBGM.play().catch(e => console.log('BGM再生エラー:', e));
+            console.log('新しいBGMを再生:', audioPath);
         }
         
         // SE再生関数
@@ -290,6 +302,15 @@
         // オープニング動画の管理
         function showOpeningVideo() {
             console.log('showOpeningVideo called');
+            
+            // BGMを停止
+            if (currentBGM) {
+                currentBGM.pause();
+                currentBGM.currentTime = 0;
+                currentBGM = null;
+                console.log('BGM停止');
+            }
+            
             const openingVideo = document.getElementById('opening-video');
             const stageSelect = document.getElementById('stage-select');
             const gameContainer = document.getElementById('game-container');
@@ -413,6 +434,9 @@
             openingVideo.style.display = 'none';
             mainMenu.style.display = 'flex';
             
+            // メインメニューBGMを開始
+            playBGM('assets/audio/bgm/zelda_menu_select.mp3');
+            
             console.log('Opening video hidden, main menu shown');
         }
         
@@ -447,11 +471,27 @@
             const japan = document.getElementById('japan');
             const openingVideoBtn = document.getElementById('opening-video-btn');
 
+            // ボタンにホバー効果を追加
+            const buttons = [miemachi, taketastage, japan, openingVideoBtn];
+            buttons.forEach(button => {
+                if (button) {
+                    button.addEventListener('mouseenter', function() {
+                        // ホバー時の軽い音響効果
+                        playSE('assets/audio/se/touch_1.mp3');
+                    });
+                }
+            });
+
             if (miemachi) {
                 console.log('三重シティボタンが見つかりました');
                 miemachi.addEventListener('click', function() {
                     console.log('三重シティ clicked');
                     playSE('assets/audio/se/touch_1.mp3');
+                    // クリック時のエフェクト
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 150);
                     selectStage('miemachi', '三重シティ - 広和の故郷での物語', './assets/backgrounds/stage_backgrounds/miemachi.png');
                 });
             } else {
@@ -463,7 +503,12 @@
                 taketastage.addEventListener('click', function() {
                     console.log('竹田シティ clicked');
                     playSE('assets/audio/se/touch_1.mp3');
-                    selectStage('taketastage', '竹田シティ - 新しい冒険の舞台', './assets/backgrounds/stage_backgrounds/taketa_map.png');
+                    // クリック時のエフェクト
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 150);
+                    selectStage('taketa', '竹田シティ - 新しい冒険の舞台', './assets/backgrounds/stage_backgrounds/taketa_map.png');
                 });
             } else {
                 console.error('竹田シティボタンが見つかりません');
@@ -474,6 +519,11 @@
                 japan.addEventListener('click', function() {
                     console.log('全国 clicked');
                     playSE('assets/audio/se/touch_1.mp3');
+                    // クリック時のエフェクト
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 150);
                     selectStage('japan', '全国 - 日本各地を巡る旅', './assets/backgrounds/stage_backgrounds/zennkoku.png');
                 });
             } else {
@@ -485,6 +535,11 @@
                 openingVideoBtn.addEventListener('click', function() {
                     console.log('オープニング動画 clicked');
                     playSE('assets/audio/se/touch_1.mp3');
+                    // クリック時のエフェクト
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 150);
                     showOpeningVideo();
                 });
             } else {
@@ -524,7 +579,7 @@
                 }
             }
             
-            // ステージ選択画面BGM再生
+            // ステージ選択画面BGM再生（同じBGMの場合は継続再生）
             playBGM('assets/audio/bgm/zelda_menu_select.mp3');
             
             console.log('Stage select screen displayed');
@@ -605,6 +660,10 @@
             const moveButton = document.getElementById(moveButtonId);
             if (moveButton) {
                 moveButton.style.display = 'block';
+                // アニメーション効果を追加
+                setTimeout(() => {
+                    moveButton.classList.add('show');
+                }, 100);
                 console.log('Move button displayed for:', stageId);
                 
                 // ボタンのクリックイベントを設定
@@ -612,6 +671,11 @@
                 if (moveBtn) {
                     moveBtn.onclick = function() {
                         console.log('移動するボタンがクリックされました:', stageId);
+                        // クリック時のエフェクト
+                        moveBtn.style.transform = 'scale(0.95)';
+                        setTimeout(() => {
+                            moveBtn.style.transform = '';
+                        }, 150);
                         startStage(stageId);
                     };
                 }
@@ -634,6 +698,13 @@
         // ステージ開始関数
         function startStage(stageNumber) {
             console.log('startStage called:', stageNumber);
+            
+            // BGMを停止
+            if (currentBGM) {
+                currentBGM.pause();
+                currentBGM = null;
+                console.log('BGM停止');
+            }
             
             // ステージ選択画面を非表示
             const stageSelect = document.getElementById('stage-select');
@@ -681,6 +752,9 @@
             if (gameContainer) {
                 gameContainer.style.display = 'none';
             }
+            
+            // ステージ選択画面BGMを再開
+            playBGM('assets/audio/bgm/zelda_menu_select.mp3');
         };
 
         // ページ読み込み時の処理
@@ -712,7 +786,7 @@
                         
                         console.log('Stage select screen displayed on page load');
                         
-                        // ステージ選択画面BGM再生
+                        // ステージ選択画面BGM再生（既存のBGMは停止される）
                         playBGM('assets/audio/bgm/zelda_menu_select.mp3');
                     }
             }

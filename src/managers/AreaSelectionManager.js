@@ -36,13 +36,19 @@ export class AreaSelectionManager {
                 ...area,
                 description: this.getAreaDescription(area.name)
             }));
-            console.log('[DEBUG] setupAreas - areas:', this.areas);
         } else {
             this.areas = [];
         }
         
         // エリアマーカーを作成
-        this.createAreaMarkers();
+        this.areas.forEach((area) => {
+            if (area) {
+                const marker = this.createAreaMarker(area);
+                if (marker) {
+                    this.areaSprites.push(marker);
+                }
+            }
+        });
         
         // インタラクションイベントを設定
         this.setupInteractionEvents();
@@ -86,17 +92,13 @@ export class AreaSelectionManager {
         // 既存のマーカーをクリア
         this.areaSprites = [];
         
-        console.log(`AreaSelectionManager: Creating markers for ${this.areas ? this.areas.length : 0} areas`);
-        
         if (!this.areas || this.areas.length === 0) {
-            console.warn('AreaSelectionManager: No areas available for marker creation');
             return;
         }
         
         // エリアマーカーを作成
-                this.areas.forEach((area, index) => {
+                this.areas.forEach((area) => {
             if (area) {
-                console.log(`AreaSelectionManager: Creating marker ${index + 1} for area ${area.name} at (${area.x}, ${area.y})`);
                 const marker = this.createAreaMarker(area);
                 if (marker) {
                     this.areaSprites.push(marker);
@@ -104,7 +106,6 @@ export class AreaSelectionManager {
             }
         });
         
-        console.log(`AreaSelectionManager: Created ${this.areaSprites.length} markers`);
     }
 
     createAreaMarker(area) {
@@ -493,19 +494,14 @@ export class AreaSelectionManager {
         const currentMapId = this.scene.mapConfig?.mapKey || 'unknown';
         const conversationData = this.getConversationData(currentMapId, eventId);
         
-        console.log('[DEBUG] handleTaketaConversation - conversationData:', conversationData);
-        console.log('[DEBUG] handleTaketaConversation - this.scene.conversationTrigger:', this.scene.conversationTrigger);
-        
         if (conversationData) {
             // 会話システムを開始（NPCクリック時と同じ方法）
             if (this.scene.conversationTrigger) {
-                console.log('[DEBUG] startVisualNovelConversation を呼び出します');
                 this.scene.conversationTrigger.startVisualNovelConversation(conversationData);
             } else {
                 console.log('[ERROR] conversationTrigger が存在しません');
             }
         } else {
-            console.log('[DEBUG] conversationData が見つかりませんでした');
             // 会話データがない場合は通常の移動
             this.scene.time.delayedCall(1000, () => {
                 this.navigateToArea(area);
@@ -554,19 +550,14 @@ export class AreaSelectionManager {
         const currentMapId = this.scene.mapConfig?.mapKey || 'unknown';
         const conversationData = this.getConversationData(currentMapId, eventId);
         
-        console.log('[DEBUG] handleJapanConversation - conversationData:', conversationData);
-        console.log('[DEBUG] handleJapanConversation - this.scene.conversationTrigger:', this.scene.conversationTrigger);
-        
         if (conversationData) {
             // 会話システムを開始（NPCクリック時と同じ方法）
             if (this.scene.conversationTrigger) {
-                console.log('[DEBUG] startVisualNovelConversation を呼び出します');
                 this.scene.conversationTrigger.startVisualNovelConversation(conversationData);
             } else {
                 console.log('[ERROR] conversationTrigger が存在しません');
             }
         } else {
-            console.log('[DEBUG] conversationData が見つかりませんでした');
             // 会話データがない場合は通常の移動
             this.scene.time.delayedCall(1000, () => {
                 this.navigateToArea(area);
@@ -639,7 +630,6 @@ export class AreaSelectionManager {
 
     // 汎用的な会話データ取得関数
     getConversationData(mapId, eventId) {
-        console.log('[DEBUG] getConversationData called with mapId:', mapId, 'eventId:', eventId);
         // マップIDに基づいて適切な会話データを取得
         let result;
         switch (mapId) {
@@ -656,30 +646,21 @@ export class AreaSelectionManager {
                 // デフォルトの会話データを返す
                 result = miemachiConversationData[eventId] || taketaConversationData[eventId] || japanConversationData[eventId];
         }
-        console.log('[DEBUG] getConversationData result:', result);
         return result;
     }
 
     navigateToArea(area) {
-        console.log('[DEBUG] navigateToArea called with area:', area);
-        console.log('[DEBUG] navigateToArea - area.name:', area.name);
-        console.log('[DEBUG] navigateToArea - area.scene:', area.scene);
-        console.log('[DEBUG] navigateToArea - area.sceneParam:', area.sceneParam);
         
         // sceneParamがundefinedの場合は、AreaConfigから直接取得
         if (!area.sceneParam && area.name) {
-            console.log('[DEBUG] sceneParam is undefined, trying to get from AreaConfig');
             const areaConfig = this.scene.mapConfig?.areas?.find(config => config.name === area.name);
-            console.log('[DEBUG] areaConfig for', area.name, ':', areaConfig);
             if (areaConfig) {
                 area.sceneParam = areaConfig.sceneParam;
                 area.scene = areaConfig.scene;
-                console.log('[DEBUG] Updated area from AreaConfig - sceneParam:', area.sceneParam, 'scene:', area.scene);
             }
         }
         
         if (!area.scene) {
-            console.log('[DEBUG] No scene specified for this area');
             return;
         }
         
@@ -688,12 +669,8 @@ export class AreaSelectionManager {
             const currentMapId = this.scene.mapConfig?.mapKey || 'unknown';
             const stageNumber = area.sceneParam || 1;
             
-            console.log('[DEBUG] navigateToArea - area.sceneParam:', area.sceneParam);
-            console.log('[DEBUG] navigateToArea - stageNumber:', stageNumber);
-            
             // 現在のマップに戻るための関数を設定
             window.returnToMap = () => {
-                console.log('[returnToMap] マップに戻る:', currentMapId);
                 
                 // 現在のシーンを停止してから指定されたマップを開始
                 if (window.game && window.game.scene) {
@@ -724,7 +701,6 @@ export class AreaSelectionManager {
             };
             
             // ステージを開始
-            console.log(`ステージ${stageNumber}を開始します...`);
             
             // ステージに移動する前に、現在のマップのConversationSceneを削除
             if (this.scene.scene.get('ConversationScene')) {
@@ -739,7 +715,6 @@ export class AreaSelectionManager {
             
         } else {
             // その他のシーンへの移動
-            console.log('[DEBUG] その他のシーンへの移動:', area.scene);
             import('../gameController.js').then(({ startPhaserGame }) => {
                 startPhaserGame(area.scene);
             });
@@ -773,16 +748,13 @@ export class AreaSelectionManager {
     // タッチイベントを処理
     handleTouchAt(worldX, worldY) {
         try {
-            console.log('[DEBUG] handleTouchAt - worldX:', worldX, 'worldY:', worldY);
             
             // タッチ位置に近いエリアを検索
             const touchedArea = this.findAreaAtPosition(worldX, worldY);
             
             if (touchedArea) {
-                console.log('[DEBUG] 選択されたエリア:', touchedArea.name, 'sceneParam:', touchedArea.sceneParam);
                 this.selectArea(touchedArea);
             } else {
-                console.log('[DEBUG] エリアが見つかりませんでした');
                 // 背景タッチ時のSE再生
                 if (this.scene.audioManager && this.scene.mapConfig?.se?.map_touch) {
                     this.scene.audioManager.playSe('se_map_touch', 0.3);
@@ -829,8 +801,6 @@ export class AreaSelectionManager {
             console.warn('AreaSelectionManager: No areas provided for marker update');
             return;
         }
-        
-        console.log(`AreaSelectionManager: Updating positions for ${areas.length} areas`);
         
         // 既存のマーカーを完全に削除
         this.destroy();
@@ -879,9 +849,7 @@ export class AreaSelectionManager {
         });
         
         // 新しいマーカーを作成（エリアの数だけ作成）
-        console.log(`AreaSelectionManager: Creating ${this.areas.length} markers`);
         this.createAreaMarkers();
-        console.log(`AreaSelectionManager: Updated ${this.areaSprites.length} markers`);
     }
 
     repositionMarkers() {
@@ -966,6 +934,5 @@ export class AreaSelectionManager {
         this.areaSprites = [];
         this.selectedArea = null;
         
-        console.log('AreaSelectionManager: Destroyed all markers');
     }
 }
