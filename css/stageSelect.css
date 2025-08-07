@@ -12,6 +12,9 @@
     z-index: 1000;
     color: white;
     font-family: Arial, sans-serif;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
 .stage-select-container {
@@ -19,8 +22,7 @@
     width: 90%;
     height: 80%;
     max-width: 1200px;
-    background: rgba(0, 0, 0, 0.8);
-    border: 2px solid white;
+    background: rgba(0, 0, 0, 0.3);
     border-radius: 10px;
 }
 
@@ -55,8 +57,6 @@
     font-weight: bold;
 }
 
-
-
 .content-area {
     flex: 1;
     display: flex;
@@ -66,7 +66,6 @@
 
 .preview-area {
     flex: 1;
-    border: 2px solid white;
     border-radius: 5px;
     margin-bottom: 20px;
     display: flex;
@@ -78,6 +77,7 @@
 }
 
 .preview-image {
+    display: none;
     max-width: 100%;
     max-height: 100%;
     width: auto;
@@ -97,15 +97,36 @@
 
 .description-area {
     height: 150px;
-    border: 2px solid white;
     border-radius: 5px;
     padding: 20px;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     text-align: center;
     font-size: 16px;
     line-height: 1.5;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.start-stage-button {
+    margin-top: 15px;
+    padding: 12px 24px;
+    background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.start-stage-button:hover {
+    background: linear-gradient(135deg, #45a049 0%, #3d8b40 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
 }
 
  
