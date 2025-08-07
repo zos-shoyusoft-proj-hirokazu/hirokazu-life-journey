@@ -70,6 +70,18 @@ export const miemachiConversationData = {
                 'character': 'hirokazu',
                 'text': 'めちゃくちゃでかい声で泣いて生まれたらしいぜ☆',
                 'expression': 'C'
+            },
+            {
+                'speaker': 'ひろかず',
+                'character': 'hirokazu',
+                'text': '皆俺のことを覚えてくれるとうれしいぜ！',
+                'expression': 'C'
+            },
+            {
+                'speaker': 'ひろかず',
+                'character': 'hirokazu',
+                'text': 'じゃあな！',
+                'expression': 'C'
             }
         ]
     },
@@ -100,7 +112,13 @@ export const miemachiConversationData = {
             {
                 'speaker': 'こうたろう',
                 'character': 'koutarou',
-                'text': 'あったな、、、',
+                'text': 'なついな、、、元気かな？',
+                'expression': 'B'
+            },
+            {
+                'speaker': 'かなと',
+                'character': 'koutarou',
+                'text': 'ああー、一日２箱のヘビースモーカーか',
                 'expression': 'B'
             },
             {
@@ -112,14 +130,19 @@ export const miemachiConversationData = {
             {
                 'speaker': 'かなと',
                 'character': 'kanato',
-                'text': '確認してきます。。。',
+                'text': 'ちょっと、今度確認してくるわ',
                 'expression': 'A'
             },
             {
-                'speaker': 'ナレーション',
                 'character': 'narrator',
-                'text': '、、移動中、、',
+                'text': '数日後',
                 'expression': 'A'
+            },
+            {
+                'speaker': 'やばじん',
+                'character': 'yabajin',
+                'text': 'おらぁぁぁ！！！！！',
+                'expression': 'C'
             },
             {
                 'speaker': 'やばじん',
@@ -140,11 +163,23 @@ export const miemachiConversationData = {
                 'expression': 'B'
             },
             {
-                'speaker': 'ひろかず',
-                'character': 'hirokazu',
-                'text': '元気ならよろしい',
-                'expression': 'A'
-            }
+                'speaker': 'かなと',
+                'character': 'kanato',
+                'text': 'なんか、安心したわ',
+                'expression': 'B'
+            },
+            {
+                'speaker': 'かなと',
+                'character': 'kanato',
+                'text': 'かわらない、良さというものがあるな',
+                'expression': 'B'
+            },
+            {
+                'speaker': 'なおき',
+                'character': 'naoki',
+                'text': 'ライズだなー',
+                'expression': 'B'
+            },
         ]
     },
     
@@ -162,19 +197,19 @@ export const miemachiConversationData = {
             {
                 'speaker': 'こうたろう',
                 'character': 'koutarou',
-                'text': 'まぁ、ええよ',
+                'text': 'まぁ、ええよ、せっかくそろったしな',
                 'expression': 'B'
             },
             {
                 'speaker': 'かなと',
                 'character': 'kanato',
-                'text': 'えーと、うん、あの、うーん、えっとね',
+                'text': 'えーと、ね、あの、うーん、えっとね',
                 'expression': 'C'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
-                'text': '？？',
+                'text': 'どした？？',
                 'expression': 'B'
             },
             {
@@ -190,27 +225,39 @@ export const miemachiConversationData = {
                 'expression': 'D'
             },
             {
-                'speaker': 'ひろかず',
+                'speaker': 'ひろかず、こうたろう',
                 'character': 'hirokazu',
-                'text': '？？',
+                'text': '！？',
                 'expression': 'C'
             },
             {
                 'speaker': 'こうたろう',
                 'character': 'koutarou',
-                'text': '？？',
+                'text': 'ん？どういうこと？',
+                'expression': 'C'
+            },
+            {
+                'speaker': 'ひろかず、こうたろう',
+                'character': 'hirokazu',
+                'text': 'まったく、おれら心当たりはないんだが？',
                 'expression': 'C'
             },
             {
                 'speaker': 'だいち',
                 'character': 'daichi',
-                'text': 'このまえ、かなと、俺、なおきとその他のメンバーで飲みに行ったんやけど、',
+                'text': 'いや、説明すると、この前、「かなと、俺、なおき」その他のメンバーで飲みに行ったんやけど、',
                 'expression': 'A'
             },
             {
                 'speaker': 'だいち',
                 'character': 'daichi',
-                'text': 'その時に来た、日本酒のお酒の中になぜか日本酒と醤油が混ざってたんよね',
+                'text': 'その時に来た、日本酒のお酒の中になぜか日本酒と醤油が混ざってたんよ',
+                'expression': 'B'
+            },
+            {
+                'speaker': 'かなと',
+                'character': 'kanato',
+                'text': 'もちろん、俺らがいれたわけではないよ',
                 'expression': 'B'
             },
             {
@@ -222,31 +269,37 @@ export const miemachiConversationData = {
             {
                 'speaker': 'だいち',
                 'character': 'daichi',
-                'text': 'それを、俺らがいたずらで入れたって話になって冤罪で出禁になりました、まる。',
+                'text': 'それを、俺らがいたずらで入れたって話になって冤罪で出禁になりました。',
                 'expression': 'D'
-            },
-            {
-                'speaker': 'なおき',
-                'character': 'naoki',
-                'text': 'もちろん俺らも抵抗するで？、、、こぶしでぃくぁｗすぇｓ、、、',
-                'expression': 'E'
-            },
+            },            
             {
                 'speaker': 'かなと',
                 'character': 'kanato',
-                'text': 'いわせねぇーよ、、、',
-                'expression': 'F'
+                'text': '一応、次の日に謝りにいったけど門前払いを食らいました。',
+                'expression': 'B'
+            },            
+            {
+                'speaker': 'かなと',
+                'character': 'kanato',
+                'text': 'ぶっちゃけ、俺ら何も悪いことしてないから何を反省していいのかわからんかったけど',
+                'expression': 'B'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
-                'text': '俺とこうたろうはその時行ってないから、全く関係なくね？',
+                'text': '俺とこうたろうはとばっちりすぎん？',
                 'expression': 'B'
             },
             {
                 'speaker': 'かなと',
                 'character': 'kanato',
-                'text': 'あー、たぶん、いつも俺ら５人とかで飲んでるから、行ってなくても同じくくりにされて出禁だね。',
+                'text': 'いや、、、、まぁ',
+                'expression': 'C'
+            },
+            {
+                'speaker': 'かなと',
+                'character': 'kanato',
+                'text': 'そう',
                 'expression': 'C'
             },
             {
@@ -264,7 +317,7 @@ export const miemachiConversationData = {
             {
                 'speaker': 'だいち',
                 'character': 'daichi',
-                'text': 'あれは、不可避ｗ',
+                'text': 'ｗｗｗｗｗｗｗｗｗｗｗ',
                 'expression': 'F'
             },
             {
@@ -324,25 +377,30 @@ export const miemachiConversationData = {
             {
                 'speaker': 'だいち',
                 'character': 'daichi',
-                'text': '仕方ないな、醤油にしよう',
+                'text': '、、、するか、、、、醤油に',
                 'expression': 'B'
+            },
+            {
+                'speaker': 'かなと',
+                'character': 'kanato',
+                'text': 'じゃあ、ＬＩＮＥのグループ名は醤油にしときます',
+                'expression': 'D'
             },
             {
                 'speaker': 'こうたろう',
                 'character': 'koutarou',
-                'text': 'ＬＩＮＥのグループ名はチーム醤油で',
+                'text': '醤油か、、、、、おれは関係ないけど',
                 'expression': 'C'
             },
             {
-                'speaker': '全員',
-                'character': 'all',
+                'speaker': 'だいち',
+                'character': 'daichi',
                 'text': '決定だ',
                 'expression': 'A'
             },
             {
-                'speaker': 'ナレーション',
-                'character': 'narrator',
-                'text': 'こうして、ＬＩＮＥのグループ名はチーム醤油となりました。',
+                'character': 'line_group_syouyu',
+                'text': 'こうして、lineグループはしょうゆになった。',
                 'expression': 'A'
             }
         ]
@@ -384,14 +442,9 @@ export const miemachiConversationData = {
                 'expression': 'E'
             },
             {
-                'speaker': 'SE',
-                'character': 'sound_effect',
-                'text': 'っデデドン',
-                'expression': 'A'
-            },
-            {
                 'speaker': 'だいち',
                 'character': 'daichi',
+                'se': 'dededon',
                 'text': 'あっ！！！',
                 'expression': 'F'
             },
@@ -426,27 +479,24 @@ export const miemachiConversationData = {
                 'expression': 'K'
             },
             {
-                'speaker': 'かなと',
+                'speaker': 'かなと,なおき',
                 'character': 'kanato',
                 'text': 'はじまった、、反対方向なのに、、、',
                 'expression': 'L'
             },
             {
-                'speaker': 'なおき',
-                'character': 'naoki',
-                'text': 'はじまった、、反対方向なのに、、、',
-                'expression': 'L'
-            },
-            {
-                'speaker': '全員',
-                'character': 'all',
-                'text': '、、、、、、、、',
-                'expression': 'M'
+                'text': '移動中',
             },
             {
                 'speaker': 'こうたろう',
                 'character': 'koutarou',
-                'text': 'おれ結婚するんだよな、、、',
+                'text': '、、、、、',
+                'expression': 'N'
+            },
+            {
+                'speaker': 'こうたろう',
+                'character': 'koutarou',
+                'text': '、、、、、おれ結婚するんだよな、、、',
                 'expression': 'N'
             },
             {
@@ -462,6 +512,12 @@ export const miemachiConversationData = {
                 'expression': 'P'
             },
             {
+                'speaker': 'かなと',
+                'character': 'kanato',
+                'text': 'なんか、聞こえたな',
+                'expression': 'D'
+            },
+            {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'おい、やっぱりおっぱいか、おっぱいなんだな、嫁さんおっぱい大きいって言ってたもんな！',
@@ -470,13 +526,13 @@ export const miemachiConversationData = {
             {
                 'speaker': 'こうたろう',
                 'character': 'koutarou',
-                'text': 'ん、、？',
+                'text': 'ん、、、、、？',
                 'expression': 'R'
             },
             {
                 'speaker': 'こうたろう',
                 'character': 'koutarou',
-                'text': 'ん、、、、、そう',
+                'text': 'そう',
                 'expression': 'S'
             },
             {
@@ -494,19 +550,19 @@ export const miemachiConversationData = {
             {
                 'speaker': 'だいち',
                 'character': 'daichi',
-                'text': 'はい、処します',
+                'text': '処します',
                 'expression': 'V'
             },
             {
                 'speaker': 'かなと',
                 'character': 'kanato',
-                'text': '拷問して、、、、処刑！！！！！！！！',
+                'text': '拷問して、、、、死刑！！！！！！！！',
                 'expression': 'W'
             },
             {
                 'speaker': 'なおき',
                 'character': 'naoki',
-                'text': 'はい、賛成です',
+                'text': '賛成です',
                 'expression': 'X'
             },
             {
@@ -528,17 +584,11 @@ export const miemachiConversationData = {
                 'expression': 'Z'
             },
             {
-                'speaker': 'かなと',
+                'speaker': 'かなと、なおき',
                 'character': 'kanato',
-                'text': 'はい、処刑',
+                'text': 'はい、死刑',
                 'expression': 'AA'
             },
-            {
-                'speaker': 'なおき',
-                'character': 'naoki',
-                'text': 'はい、処刑',
-                'expression': 'AA'
-            }
         ]
     },
     
@@ -550,13 +600,13 @@ export const miemachiConversationData = {
             {
                 'speaker': 'だいち少年',
                 'character': 'daichi_young',
-                'text': 'これ、火付けたら面白くね',
+                'text': '火遊びしたいな',
                 'expression': 'A'
             },
             {
                 'speaker': 'ひろかず少年',
                 'character': 'hirokazu_young',
-                'text': 'いけるいける',
+                'text': 'これを使えば、火遊びできるよ',
                 'expression': 'B'
             },
             {
@@ -566,10 +616,44 @@ export const miemachiConversationData = {
                 'expression': 'C'
             },
             {
-                'speaker': 'SE',
-                'character': 'sound_effect',
+                'speaker': 'ひろかず少年',
+                'character': 'hirokazu_young',
+                'text': 'いや、まてさすがにここでは周りに火が付きそうなものがおおい',
+                'expression': 'B'
+            },
+            {
+                'speaker': 'ひろかず少年',
+                'character': 'hirokazu_young',
+                'text': 'なので、距離をおいて火をつけよう',
+                'expression': 'B'
+            },
+            {
+                'speaker': 'だいち少年',
+                'character': 'daichi_young',
+                'text': 'ここなら大丈夫だろ、この川の別れて、陸みたいになってるとこ！！！',
+                'expression': 'C'
+            },
+            {
+                'speaker': 'だいち少年',
+                'character': 'daichi_young',
+                'text': '新大陸だ！！！！',
+                'expression': 'C'
+            },
+            {
+                'speaker': 'ひろかず少年',
+                'character': 'hirokazu_young',
+                'text': 'ここならいける！！！！',
+                'expression': 'B'
+            },
+            {
+                'speaker': 'だいち少年',
+                'character': 'daichi_young',
+                'text': 'よし、やるんだ！！！',
+                'expression': 'C'
+            },
+            {
+                'se': 'bo',
                 'text': 'ボッ！！',
-                'expression': 'A'
             },
             {
                 'speaker': 'ダイチ少年',
@@ -578,21 +662,53 @@ export const miemachiConversationData = {
                 'expression': 'D'
             },
             {
+                'speaker': 'ひろかず少年',
+                'character': 'hirokazu_young',
+                'text': 'おおっ、、あたたけぇ、、、',
+                'expression': 'B'
+            },
+            {
                 'speaker': 'ダイチ少年',
                 'character': 'daichi_young',
-                'text': 'ん？なんか、火の勢いが、、、',
+                'text': 'ええな、、、、',
+                'expression': 'E'
+            },
+            {
+                'se': 'byubyu',
+                'text': 'びゅぅぅぅぅ、、、、',
+            },
+            {
+                'speaker': 'ダイチ少年',
+                'character': 'daichi_young',
+                'text': 'なんか風が、、、なぁ、、、！？！？！！！！！？！？！？',
                 'expression': 'E'
             },
             {
                 'speaker': 'ダイチ少年',
                 'character': 'daichi_young',
-                'text': 'おっ、、、',
-                'expression': 'F'
+                'text': 'もえた、物が、、、、、風に飛んで、、',
+                'expression': 'E'
+            },
+            {
+                'se': 'bo',
+                'text': 'ボッ！！',
+            },
+            {
+                'speaker': 'ダイチ少年、ひろかず少年',
+                'character': 'daichi_young',
+                'text': 'あっっっ！！！！！！！！！！！！！！！！',
+                'expression': 'E'
             },
             {
                 'speaker': 'ダイチ少年',
                 'character': 'daichi_young',
-                'text': 'あっ、なんかやばくね',
+                'text': 'えっと、なんかやばくね',
+                'expression': 'G'
+            },
+            {
+                'speaker': 'ダイチ少年',
+                'character': 'daichi_young',
+                'text': 'やばくね？なんかやばくね？？？？？',
                 'expression': 'G'
             },
             {
@@ -616,7 +732,31 @@ export const miemachiConversationData = {
             {
                 'speaker': 'ダイチ少年',
                 'character': 'daichi_young',
-                'text': 'ダメだ火の勢いが強い',
+                'text': 'ダメだ！！！！！火の勢いが強い',
+                'expression': 'K'
+            },
+            {
+                'speaker': 'ひろかず少年',
+                'character': 'daichi_young',
+                'text': 'つっっつち！！！！土をなげろぉーーーーーーーーーー！！！！！',
+                'expression': 'K'
+            },
+            {
+                'speaker': 'ダイチ少年',
+                'character': 'daichi_young',
+                'text': '泥しかないです！！！',
+                'expression': 'K'
+            },
+            {
+                'speaker': 'ダイチ少年',
+                'character': 'daichi_young',
+                'text': 'いいから、なげろぉぉおぉ！！！',
+                'expression': 'K'
+            },
+            {
+                'speaker': 'ダイチ少年',
+                'character': 'daichi_young',
+                'text': '火がぁぁぁ！つよい！！！',
                 'expression': 'K'
             },
             {
@@ -626,8 +766,26 @@ export const miemachiConversationData = {
                 'expression': 'L'
             },
             {
-                'speaker': 'ナレーション',
-                'character': 'narrator',
+                'text': '３０分後',
+                'expression': 'A'
+            },
+            {
+                'speaker': 'ダイチ少年',
+                'character': 'daichi_young',
+                'text': 'やったか？、、、',
+                'expression': 'M'
+            },
+            {
+                'se': 'bo',
+                'text': 'ボッ！！',
+            },
+            {
+                'speaker': 'ひろかず少年',
+                'character': 'hirokazu_young',
+                'text': '早くけせーーーーーーーー！！！',
+                'expression': 'L'
+            },
+            {
                 'text': '３０分後',
                 'expression': 'A'
             },
@@ -640,7 +798,7 @@ export const miemachiConversationData = {
             {
                 'speaker': 'ひろかず少年',
                 'character': 'hirokazu_young',
-                'text': '焦った、、、、、',
+                'text': 'やばかった、焦ったわ、、、、、',
                 'expression': 'N'
             }
         ]
@@ -668,7 +826,25 @@ export const miemachiConversationData = {
                 'character': 'daichi',
                 'text': '１００円で、この量はお得でうまいな',
                 'expression': 'C'
-            }
+            },
+            {
+                'speaker': 'だいち',
+                'character': 'daichi',
+                'text': 'まぁ、いいけど、一週間ずっと、来てるやん、、、',
+                'expression': 'C'
+            },
+            {
+                'speaker': 'ひろかず',
+                'character': 'hirokazu',
+                'text': 'うまいからいいんだよ',
+                'expression': 'B'
+            },
+            {
+                'speaker': 'だいち',
+                'character': 'daichi',
+                'text': 'あっ、、、はい',
+                'expression': 'C'
+            },
         ]
     },
     
@@ -752,6 +928,10 @@ export const miemachiConversationData = {
                 'expression': 'B'
             },
             {
+                'character': 'dutu',
+                'se':'donn'
+            },
+            {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'これもう一気するための大きさじゃん！',
@@ -804,6 +984,9 @@ export const miemachiConversationData = {
                 'character': 'koutarou',
                 'text': 'だから……まあいいか！うおおお！',
                 'expression': 'A'
+            },
+            {
+                'text': '、、、夜、、、',
             },
             {
                 'speaker': 'ひろかず',
@@ -874,7 +1057,13 @@ export const miemachiConversationData = {
             {
                 'speaker': 'こうたろう',
                 'character': 'koutarou',
-                'text': 'オロロロロロ…止まらん…',
+                'text': 'オロロロロロ…',
+                'expression': 'C'
+            },
+            {
+                'speaker': 'こうたろう',
+                'character': 'koutarou',
+                'text': '止まらん…',
                 'expression': 'C'
             },
             {
@@ -886,7 +1075,13 @@ export const miemachiConversationData = {
             {
                 'speaker': 'だいち',
                 'character': 'daichi',
-                'text': '大きく成長しろよオロロロロロ✨',
+                'text': '大きく成長しろよ',
+                'expression': 'C'
+            },
+            {
+                'speaker': 'だいち',
+                'character': 'daichi',
+                'text': 'オロロロロロ✨',
                 'expression': 'C'
             },
             {

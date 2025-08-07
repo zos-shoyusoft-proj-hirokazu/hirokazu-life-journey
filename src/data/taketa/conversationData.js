@@ -12,34 +12,76 @@ export const taketaConversationData = {
                 'expression': 'A'
             },
             {
-                'speaker': 'かなと',
-                'character': 'kanato',
+                'speaker': 'だいち',
+                'character': 'daichi',
                 'text': 'いやっ、うーん、、、したいなぁ、、',
                 'expression': 'B'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
-                'text': 'おらぁ、、、',
+                'text': 'おらぁ、、、たっち',
                 'expression': 'A'
             },
             {
-                'speaker': 'ひろかず',
+                'speaker': 'なおき',
+                'character': 'naoki',
+                'text': 'えっ？？？？いきなり？',
+                'expression': 'A'
+            },
+            {
+                'speaker': 'なおき',
+                'character': 'naoki',
+                'text': 'なら、あ、、はい',
+                'expression': 'A'
+            },
+            {
+                'speaker': 'かなと',
+                'character': 'kanato',
+                'text': 'おおっと、順応はえーんだよ',
+                'expression': 'A'
+            },
+            {
+                'speaker': 'ひろかず、なおき、こうたろう、だいち、あきざわ、しゅうへい',
                 'character': 'hirokazu',
-                'text': 'おらぁ！！たっち！！！',
+                'text': 'にげろぉぉぉ！！！！！',
                 'expression': 'C'
             },
             {
                 'speaker': 'かなと',
                 'character': 'kanato',
-                'text': 'ばりあ！！！！',
+                'text': 'おらぁぁぁぁ！！！！！',
                 'expression': 'C'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
-                'text': 'くそぉお！',
+                'text': 'ばりあーーーーーーーーー！！！！',
                 'expression': 'D'
+            },
+            {
+                'speaker': 'かなと',
+                'character': 'kanato',
+                'text': 'それだけは、しちゃだめだろぉぉぉ！！',
+                'expression': 'C'
+            },
+            {
+                'speaker': 'かなと',
+                'character': 'kanato',
+                'text': 'あーーくそぉ、、なんで、高校生になって鬼ごっこしなきゃならんのだ',
+                'expression': 'C'
+            },
+            {
+                'speaker': 'こうたろう',
+                'character': 'koutarou',
+                'text': 'ばりあーーーーーーーーー！！！！',
+                'expression': 'D'
+            },
+            {
+                'speaker': 'かなと',
+                'character': 'kanato',
+                'text': 'だから、だめだろ！！！！',
+                'expression': 'C'
             },
             {
                 'speaker': 'かなと',
@@ -50,7 +92,7 @@ export const taketaConversationData = {
             {
                 'speaker': 'かなと',
                 'character': 'kanato',
-                'text': 'なんか、もうおなか一杯だ',
+                'text': 'これは、ゲームじゃない、いじめだ、、、',
                 'expression': 'F'
             }
         ]
@@ -64,15 +106,30 @@ export const taketaConversationData = {
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
-                'text': 'ゴスペラーズの一人を歌うぞ、、、',
+                'text': 'ゴスペラーズの「ひとり」を歌うぞ、、、',
+                'expression': 'A'
+            },
+            {
+                'speaker': 'だいち',
+                'character': 'daichi',
+                'text': 'えっ、なんで？',
                 'expression': 'A'
             },
             {
                 'speaker': 'かなと',
                 'character': 'kanato',
-                'text': '実際の奴',
+                'text': 'まぁ、やるか、、、',
                 'expression': 'B'
-            }
+            },
+            {
+                'se': 'hitori'
+            },
+            {
+                'speaker': 'ひろかず,だいち,こうたろう,かなと',
+                'character': 'hirokazu,daichi,koutarou,kanato',
+                'text': '、、、、、やめよう',
+                'expression': 'B'
+            },
         ]
     },
     

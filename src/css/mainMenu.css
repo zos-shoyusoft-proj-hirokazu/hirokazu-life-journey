@@ -1,0 +1,107 @@
+/* メインメニュー画面のスタイル */
+#main-menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1500;
+}
+
+.main-menu-container {
+    text-align: center;
+    color: white;
+    padding: 20px;
+    max-width: 600px;
+    width: 90%;
+}
+
+.game-title h1 {
+    font-size: 3rem;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    animation: titleGlow 2s ease-in-out infinite alternate;
+}
+
+@keyframes titleGlow {
+    from { text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); }
+    to { text-shadow: 2px 2px 20px rgba(255, 255, 255, 0.8); }
+}
+
+.subtitle {
+    font-size: 1.2rem;
+    margin-bottom: 40px;
+    opacity: 0.9;
+}
+
+.menu-buttons {
+    margin: 40px 0;
+}
+
+.menu-button {
+    display: block;
+    width: 200px;
+    margin: 15px auto;
+    padding: 15px 30px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.menu-button.primary {
+    background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+    color: white;
+    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+}
+
+.menu-button.primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 107, 107, 0.6);
+}
+
+.menu-button.secondary {
+    background: linear-gradient(45deg, #4ecdc4, #44a08d);
+    color: white;
+    box-shadow: 0 4px 15px rgba(78, 205, 196, 0.4);
+}
+
+.menu-button.secondary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(78, 205, 196, 0.6);
+}
+
+.game-info {
+    margin-top: 40px;
+    opacity: 0.8;
+}
+
+.game-info p {
+    margin: 5px 0;
+    font-size: 0.9rem;
+}
+
+/* スマホ対応 */
+@media (max-width: 768px) {
+    .game-title h1 {
+        font-size: 2rem;
+    }
+    
+    .subtitle {
+        font-size: 1rem;
+    }
+    
+    .menu-button {
+        width: 150px;
+        font-size: 1rem;
+        padding: 12px 20px;
+    }
+} 
