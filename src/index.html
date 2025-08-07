@@ -292,6 +292,40 @@
     </div>
     
     <script>
+        // 音声管理
+        let currentBGM = null;
+        let currentSE = null;
+        
+        // BGM再生関数
+        function playBGM(audioPath) {
+            // 同じBGMが既に再生中の場合は何もしない
+            if (currentBGM && currentBGM.src.includes(audioPath.split('/').pop())) {
+                console.log('同じBGMが既に再生中:', audioPath);
+                return;
+            }
+            
+            // 既存のBGMを停止
+            if (currentBGM) {
+                currentBGM.pause();
+                currentBGM = null;
+                console.log('既存のBGMを停止');
+            }
+            
+            // 新しいBGMを再生
+            currentBGM = new Audio(audioPath);
+            currentBGM.loop = true;
+            currentBGM.volume = 0.5;
+            currentBGM.play().catch(e => console.log('BGM再生エラー:', e));
+            console.log('新しいBGMを再生:', audioPath);
+        }
+        
+        // SE再生関数
+        function playSE(audioPath) {
+            const se = new Audio(audioPath);
+            se.volume = 0.3;
+            se.play().catch(e => console.log('SE再生エラー:', e));
+        }
+        
         // 実際の表示エリアサイズを取得する関数
         function getActualViewportSize() {
             let width = window.innerWidth;
@@ -486,6 +520,9 @@
             openingVideo.style.display = 'none';
             mainMenu.style.display = 'flex';
             
+            // メインメニューBGMを開始
+            playBGM('assets/audio/bgm/zelda_menu_select.mp3');
+            
             console.log('Opening video hidden, main menu shown');
         }
         
@@ -500,6 +537,7 @@
                 console.log('STARTボタンが見つかりました');
                 startGameBtn.addEventListener('click', function() {
                     console.log('START clicked');
+                    playSE('assets/audio/se/touch_1.mp3');
                     showStageSelect();
                 });
             } else {
@@ -523,6 +561,7 @@
                 console.log('三重シティボタンが見つかりました');
                 miemachi.addEventListener('click', function() {
                     console.log('三重シティ clicked');
+                    playSE('assets/audio/se/touch_1.mp3');
                     selectStage('miemachi', '三重シティ - 広和の故郷での物語', './assets/backgrounds/stage_backgrounds/miemachi.png');
                 });
             } else {
@@ -533,6 +572,7 @@
                 console.log('竹田シティボタンが見つかりました');
                 taketastage.addEventListener('click', function() {
                     console.log('竹田シティ clicked');
+                    playSE('assets/audio/se/touch_1.mp3');
                     selectStage('taketastage', '竹田シティ - 新しい冒険の舞台', './assets/backgrounds/stage_backgrounds/taketa_map.png');
                 });
             } else {
@@ -543,6 +583,7 @@
                 console.log('全国ボタンが見つかりました');
                 japan.addEventListener('click', function() {
                     console.log('全国 clicked');
+                    playSE('assets/audio/se/touch_1.mp3');
                     selectStage('japan', '全国 - 日本各地を巡る旅', './assets/backgrounds/stage_backgrounds/zennkoku.png');
                 });
             } else {
@@ -553,6 +594,7 @@
                 console.log('オープニング動画ボタンが見つかりました');
                 openingVideoBtn.addEventListener('click', function() {
                     console.log('オープニング動画 clicked');
+                    playSE('assets/audio/se/touch_1.mp3');
                     showOpeningVideo();
                 });
             } else {
@@ -591,6 +633,9 @@
                     descriptionP.textContent = '三重シティ - 広和の故郷での物語';
                 }
             }
+            
+            // ステージ選択画面BGM再生（同じBGMの場合は継続再生）
+            playBGM('assets/audio/bgm/zelda_menu_select.mp3');
             
             console.log('Stage select screen displayed');
         }
@@ -700,6 +745,13 @@
         function startStage(stageNumber) {
             console.log('startStage called:', stageNumber);
             
+            // BGMを停止
+            if (currentBGM) {
+                currentBGM.pause();
+                currentBGM = null;
+                console.log('BGM停止');
+            }
+            
             // ステージ選択画面を非表示
             const stageSelect = document.getElementById('stage-select');
             if (stageSelect) {
@@ -746,6 +798,9 @@
             if (gameContainer) {
                 gameContainer.style.display = 'none';
             }
+            
+            // ステージ選択画面BGMを再開
+            playBGM('assets/audio/bgm/zelda_menu_select.mp3');
         };
 
         // ページ読み込み時の処理
@@ -776,6 +831,9 @@
                         }
                         
                         console.log('Stage select screen displayed on page load');
+                        
+                        // ステージ選択画面BGM再生（既存のBGMは停止される）
+                        playBGM('assets/audio/bgm/zelda_menu_select.mp3');
                     }
             }
         });
@@ -790,6 +848,9 @@
             if (mainMenu) mainMenu.style.display = 'flex';
             if (stageSelect) stageSelect.style.display = 'none';
             if (gameContainer) gameContainer.style.display = 'none';
+            
+            // メインメニューBGM再生
+            playBGM('assets/audio/bgm/zelda_menu_select.mp3');
         }
         
         // PWAとしてインストール可能にするためのService Worker登録

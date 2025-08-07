@@ -1,5 +1,25 @@
 // エリア設定の管理
 export const AreaConfig = {
+    // セレクト画面設定
+    select_screen: {
+        bgm: {
+            menu: 'assets/audio/bgm/zelda_menu_select.mp3'
+        },
+        se: {
+            touch: 'assets/audio/se/touch_1.mp3'
+        }
+    },
+    
+    // ステージ選択画面設定
+    stage_select: {
+        bgm: {
+            menu: 'assets/audio/bgm/zelda_menu_select.mp3'
+        },
+        se: {
+            touch: 'assets/audio/se/touch_1.mp3'
+        }
+    },
+    
     // 三重町マップ
     miemachi: {
         mapKey: 'bunngo_mie_city',
