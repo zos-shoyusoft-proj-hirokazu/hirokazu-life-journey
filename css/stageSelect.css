@@ -323,7 +323,7 @@
     align-items: center;
     justify-content: center;
     text-align: center;
-    font-size: 20px;
+    font-size: 18px;
     line-height: 1.6;
     background: rgba(0, 0, 0, 0.8);
     z-index: 20;
@@ -378,7 +378,7 @@
     
     .description-area {
         height: 250px;
-        font-size: 18px;
+        font-size: 16px;
         padding: 30px;
     }
     
