@@ -1161,19 +1161,13 @@ export const miemachiConversationData = {
             {
                 'speaker': 'ナレーター',
                 'character': 'narrator',
-                'text': 'まずはここ！！『シリウス』クセの強い「よいしょ⤴あそれ⤴」のカラオケ合いの手が名物！文字では伝わらないニュアンス！あともう店は潰れてるぞ！',
+                'text': 'まずはここ！！『シリウス』クセの強い「よいしょ⤴あそれ⤴」のカラオケ合いの手が名物！',
                 'expression': 'A'
             },
             {
                 'speaker': 'ナレーター',
                 'character': 'narrator',
-                'text': '『シリウス』！！！！',
-                'expression': 'A'
-            },
-            {
-                'speaker': 'ナレーター',
-                'character': 'narrator',
-                'text': 'クセの強い「よいしょ⤴あっそれ⤴」のカラオケ合いの手が名物！文字では伝わらないニュアンス！あともう店は潰れてるぞ！',
+                'text': '文字では伝わらないニュアンス！あともう店は潰れてるぞ！',
                 'expression': 'A'
             },
             {
@@ -1185,13 +1179,31 @@ export const miemachiConversationData = {
             {
                 'speaker': 'ナレーター',
                 'character': 'narrator',
-                'text': '更に『ドール』唯一の同世代・アイドルまゆちゃん！三重町最後の希望だ！でももう引退したぞ！あと同級生の親とかも通ってる！',
+                'text': '更に『ドール』唯一の同世代・アイドルまゆちゃん！三重町最後の希望だ！でももう引退したぞ！',
                 'expression': 'A'
             },
             {
                 'speaker': 'ナレーター',
                 'character': 'narrator',
-                'text': '『シークレット』カラオケが盛り上がりすぎて会話できない！最高なフィリピンママによるネイティブ洋楽とフィリピン料理が魅力！料金はちょっと不安になるくらい安いぞ！',
+                'text': 'あと同級生の親とかも通ってる！',
+                'expression': 'A'
+            },
+            {
+                'speaker': 'ナレーター',
+                'character': 'narrator',
+                'text': '『シークレット』カラオケが盛り上がりすぎて会話できない！',
+                'expression': 'A'
+            },
+            {
+                'speaker': 'ナレーター',
+                'character': 'narrator',
+                'text': '最高なフィリピンママによるネイティブ洋楽とフィリピン料理が魅力！',
+                'expression': 'A'
+            },
+            {
+                'speaker': 'ナレーター',
+                'character': 'narrator',
+                'text': '料金はちょっと不安になるくらい安いぞ！',
                 'expression': 'A'
             },
             {
@@ -1243,7 +1255,12 @@ export const miemachiConversationData = {
             },
             {
                 'character': 'narrator',
-                'text': '「獲物を追いかけるより、待ち伏せをしよう。そうすれば遠くまで出かけずとも、獲物のほうからやって来るだろう」',
+                'text': '「獲物を追いかけるより、待ち伏せをしよう。」',
+                'expression': 'A'
+            },
+            {
+                'character': 'narrator',
+                'text': '「そうすれば遠くまで出かけずとも、獲物のほうからやって来るだろう」',
                 'expression': 'A'
             },
             {

@@ -7,6 +7,7 @@ export class ConversationScene extends Phaser.Scene {
         this.textSpeed = 30; // ms per character
         this.originalBgm = null; // 元のBGMを保存
         this.eventBgm = null; // イベント用BGM
+        this.nameboxLeftMargin = 30; // 左の固定マージン
     }
 
 
@@ -55,16 +56,16 @@ export class ConversationScene extends Phaser.Scene {
         
         // 名前ボックスの設定（画像がない場合は黒い四角形で代替）
         if (this.textures.exists('namebox')) {
-            this.namebox = this.add.image(width * 0.15, height - 130, 'namebox'); // 位置を調整
+            this.namebox = this.add.image(this.nameboxLeftMargin, height - 123, 'namebox'); // 左固定
         } else {
             // 代替：黒い四角形を作成（ギャルゲ風デザイン）
             const nameboxWidth = Math.min(200, width * 0.3);
             const nameboxHeight = Math.min(30, height * 0.1);
-            this.namebox = this.add.rectangle(width * 0.15, height - 133, nameboxWidth, nameboxHeight, 0x333333, 0.9); // 少し明るい色で見やすく
+            this.namebox = this.add.rectangle(this.nameboxLeftMargin, height - 123, nameboxWidth, nameboxHeight, 0x333333, 0.9); // 左固定
             // ギャルゲ風の枠線を追加
             this.namebox.setStrokeStyle(2, 0x888888, 0.8);
         }
-        this.namebox.setOrigin(0.5, 0.5);
+        this.namebox.setOrigin(0, 0.5); // 左端基準
         
         // テキスト表示用（高さを動的に調整）
         const textWrapWidth = Math.min(width - 80, 600); // PCでは大きく、スマホでは小さく
@@ -80,7 +81,7 @@ export class ConversationScene extends Phaser.Scene {
         
         // 名前表示用
         const nameFontSize = width < 600 ? '16px' : '20px'; // スマホでは小さいフォント
-        this.nameText = this.add.text(width * 0.15, height - 140, '', { // 位置を調整
+        this.nameText = this.add.text(this.nameboxLeftMargin + (this.namebox.displayWidth || 0) / 2, height - 130, '', { // 名前ボックス中心に配置
             fontSize: nameFontSize,
             fill: '#ffffff',
             fontStyle: 'bold',
@@ -192,6 +193,10 @@ export class ConversationScene extends Phaser.Scene {
             if (this.namebox) this.namebox.setVisible(true);
             if (this.nameText) this.nameText.setVisible(true);
             this.nameText.setText(dialog.speaker || '');
+            // 名前の長さに応じて名前ボックスの幅だけを調整（高さ・位置は固定）
+            if (dialog.speaker) {
+                this.adjustNameboxWidth(dialog.speaker);
+            }
         }
         // テキストのアニメーション表示
         this.animateText(dialog.text);
@@ -316,32 +321,48 @@ export class ConversationScene extends Phaser.Scene {
         this.currentTextTimer = timer;
     }
     
-    // テキストの表示高さを動的に調整
-    adjustTextDisplayHeight(text) {
-        if (!this.dialogText) return;
+    // テキストの表示高さは固定にする（テキストボックスは高さ90固定）
+    // ここでは何も変更しないことで、見た目の安定性を担保する
+    adjustTextDisplayHeight() {
+        return;
+    }
+
+    // 名前ボックスの幅を動的に調整
+    adjustNameboxWidth(speakerName) {
+        if (!this.namebox || !this.nameText) return;
         
-        // テキストの行数を計算
-        const fontSize = parseInt(this.dialogText.style.fontSize) || 24;
-        const lineHeight = fontSize + 8; // lineSpacingを考慮
+        // 画面幅から最大幅の上限を決定（広めに許可）
+        const screenWidth = this.sys?.game?.canvas?.width || this.sys?.game?.config?.width || 800;
         
-        // テキストを一時的に設定して実際の行数を取得
-        this.dialogText.setText(text);
-        const lines = this.dialogText.getWrappedText().length;
+        // 名前の長さに応じて幅を計算（高さや位置は不変）
+        const minWidth = 160; // 最小幅を広げる
+        const maxWidth = Math.min(600, screenWidth * 0.6); // 最大幅を拡大
+        const padding = 30; // 左右余白を拡大
         
-        // 必要な高さを計算（最低120px、最大300px）
-        const requiredHeight = Math.max(90, Math.min(300, lines * lineHeight + 20));
+        // 一時的に名前を設定して実際の幅を測定
+        this.nameText.setText(speakerName);
+        const textWidth = this.nameText.width;
         
-        // テキストの表示高さを調整（PhaserのTextオブジェクトではsetFixedHeightは使用不可）
-        // 代わりに、テキストの位置とテキストボックスのサイズを調整
-        this.dialogText.setStyle({ 
-            fixedHeight: requiredHeight 
-        });
+        // 必要な幅を計算（余白を含む）
+        const requiredWidth = Math.max(minWidth, Math.min(maxWidth, textWidth + padding));
         
-        // テキストボックスの高さも調整
-        if (this.textbox) {
-            const currentWidth = this.textbox.displayWidth;
-            this.textbox.setDisplaySize(currentWidth, requiredHeight + 20);
+        // 名前ボックスが画像の場合は位置のみ調整、四角形の場合はサイズも調整
+        if (this.textures.exists('namebox')) {
+            // 画像の場合は位置のみ調整（幅は画像のサイズに依存）
+            // 必要に応じてスケールを調整することも可能
+        } else {
+            // 四角形の場合は幅のみ動的に調整（高さと位置は変更しない）
+            const currentHeight = this.namebox.displayHeight;
+            this.namebox.setDisplaySize(requiredWidth, currentHeight);
+            
+            // ギャルゲ風の枠線を再設定（視覚品質維持のため）
+            this.namebox.setStrokeStyle(2, 0x888888, 0.8);
         }
+        
+        // 名前テキストは名前ボックスの中心に置く
+        const nbWidth = this.namebox?.displayWidth || 0;
+        const height = this.sys?.game?.canvas?.height || this.sys?.game?.config?.height || 600;
+        this.nameText.setPosition(this.nameboxLeftMargin + nbWidth / 2, height - 130);
     }
     
 
@@ -524,14 +545,14 @@ export class ConversationScene extends Phaser.Scene {
         // 名前ボックスのリサイズ（createメソッドと同じロジック）
         if (this.namebox) {
             if (this.textures.exists('namebox')) {
-                // 画像がある場合は位置のみ調整
-                this.namebox.setPosition(width * 0.15, height - 133);
+                // 画像がある場合は左マージン固定
+                this.namebox.setPosition(this.nameboxLeftMargin, height - 123);
             } else {
-                // 代替の四角形の場合はサイズと位置を調整
+                // 代替の四角形の場合は幅は計算し直すが高さは元の設定を保持、左は固定
                 const nameboxWidth = Math.min(200, width * 0.3);
                 const nameboxHeight = Math.min(30, height * 0.1);
                 this.namebox.setDisplaySize(nameboxWidth, nameboxHeight);
-                this.namebox.setPosition(width * 0.15, height - 133);
+                this.namebox.setPosition(this.nameboxLeftMargin, height - 123);
                 
                 // ギャルゲ風の枠線を再設定
                 this.namebox.setStrokeStyle(2, 0x888888, 0.8);
@@ -552,8 +573,15 @@ export class ConversationScene extends Phaser.Scene {
         if (this.nameText) {
             const nameFontSize = width < 600 ? '16px' : '20px';
             
-            this.nameText.setPosition(width * 0.15, height - 140);
+            // 名前テキストは名前ボックスの中心に置く
+            const nbWidth = this.namebox?.displayWidth || 0;
+            this.nameText.setPosition(this.nameboxLeftMargin + nbWidth / 2, height - 130);
             this.nameText.setFontSize(nameFontSize);
+            
+            // 現在の名前がある場合は名前ボックスの幅も再調整
+            if (this.nameText.text && this.nameText.text !== '') {
+                this.adjustNameboxWidth(this.nameText.text);
+            }
         }
         
         // キャラクタースプライトの位置調整
