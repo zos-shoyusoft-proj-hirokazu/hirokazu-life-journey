@@ -66,6 +66,8 @@ export class ConversationScene extends Phaser.Scene {
             this.namebox.setStrokeStyle(2, 0x888888, 0.8);
         }
         this.namebox.setOrigin(0, 0.5); // 左端基準
+        // 見た目の装飾レイヤー（レイアウトは絶対に変更しない）
+        this.createDecorationsForConversationUI();
         
         // テキスト表示用（高さを動的に調整）
         const textWrapWidth = Math.min(width - 80, 600); // PCでは大きく、スマホでは小さく
@@ -78,6 +80,10 @@ export class ConversationScene extends Phaser.Scene {
             wordWrap: { width: textWrapWidth, useAdvancedWrap: true },
         });
         this.dialogText.setOrigin(0, 0);
+        // 可読性向上のためのシャドウ（位置・サイズは不変）
+        if (this.dialogText && this.dialogText.setShadow) {
+            this.dialogText.setShadow(2, 2, '#000000', 4, false, true);
+        }
         
         // 名前表示用
         const nameFontSize = width < 600 ? '16px' : '20px'; // スマホでは小さいフォント
@@ -89,6 +95,9 @@ export class ConversationScene extends Phaser.Scene {
             fixedHeight: 50
         });
         this.nameText.setOrigin(0.5, 0.2);
+        if (this.nameText && this.nameText.setShadow) {
+            this.nameText.setShadow(1, 1, '#000000', 3, false, true);
+        }
         
         // クリックでテキスト進行（多重登録防止）
         this.input.removeAllListeners('pointerdown');
@@ -122,6 +131,86 @@ export class ConversationScene extends Phaser.Scene {
             this.background.destroy();
             this.background = null;
         }
+        // 装飾レイヤーを削除
+        if (this.textboxDecoFrame) { this.textboxDecoFrame.destroy(); this.textboxDecoFrame = null; }
+        if (this.textboxDecoShine) { this.textboxDecoShine.destroy(); this.textboxDecoShine = null; }
+        if (this.nameboxDecoFrame) { this.nameboxDecoFrame.destroy(); this.nameboxDecoFrame = null; }
+        if (this.nameboxDecoShine) { this.nameboxDecoShine.destroy(); this.nameboxDecoShine = null; }
+    }
+
+    // =========================
+    // 装飾レイヤー（見た目のみ強化）
+    // =========================
+    createDecorationsForConversationUI() {
+        this.redrawTextboxDecorations();
+        this.redrawNameboxDecorations();
+    }
+
+    redrawTextboxDecorations() {
+        if (!this.textbox) return;
+        const w = this.textbox.displayWidth || this.textbox.width || 0;
+        const h = this.textbox.displayHeight || this.textbox.height || 0;
+        const left = (this.textbox.x || 0) - w / 2;
+        const top = (this.textbox.y || 0) - h / 2;
+        const radius = Math.max(8, Math.min(20, Math.floor(h / 3)));
+
+        // フレーム（縁取り・角飾り）
+        if (!this.textboxDecoFrame) this.textboxDecoFrame = this.add.graphics();
+        const g = this.textboxDecoFrame;
+        g.clear();
+        // 外枠（柔らかいピンク）
+        g.lineStyle(3, 0xffb7d5, 0.9);
+        g.strokeRoundedRect(left - 4, top - 4, w + 8, h + 8, radius + 6);
+        // 内枠（淡い水色）
+        g.lineStyle(2, 0xc5d8ff, 0.9);
+        g.strokeRoundedRect(left + 2, top + 2, w - 4, h - 4, Math.max(6, radius - 4));
+        // 角飾り（小さな円）
+        g.fillStyle(0xffe6f2, 0.95);
+        const dotR = 3;
+        g.fillCircle(left + 10, top + 10, dotR);
+        g.fillCircle(left + w - 10, top + 10, dotR);
+        g.fillCircle(left + 10, top + h - 10, dotR);
+        g.fillCircle(left + w - 10, top + h - 10, dotR);
+
+        // 上部ハイライト（光沢）
+        if (!this.textboxDecoShine) this.textboxDecoShine = this.add.graphics();
+        const s = this.textboxDecoShine;
+        s.clear();
+        s.fillStyle(0xffffff, 0.10);
+        const shineH = Math.max(8, Math.floor(h * 0.22));
+        s.fillRoundedRect(left + 6, top + 6, w - 12, shineH, Math.max(4, radius - 6));
+    }
+
+    redrawNameboxDecorations() {
+        if (!this.namebox) return;
+        const w = this.namebox.displayWidth || this.namebox.width || 0;
+        const h = this.namebox.displayHeight || this.namebox.height || 0;
+        const left = (this.namebox.x || 0);
+        const top = (this.namebox.y || 0) - h / 2;
+        const radius = Math.max(6, Math.min(14, Math.floor(h / 2)));
+
+        // フレーム
+        if (!this.nameboxDecoFrame) this.nameboxDecoFrame = this.add.graphics();
+        const g = this.nameboxDecoFrame;
+        g.clear();
+        // 外枠（ラベンダー）
+        g.lineStyle(2, 0xc8b6ff, 0.9);
+        g.strokeRoundedRect(left - 6, top - 4, w + 12, h + 8, radius + 4);
+        // 内枠（ピンク）
+        g.lineStyle(2, 0xffb7d5, 0.9);
+        g.strokeRoundedRect(left + 1, top + 1, w - 2, h - 2, Math.max(4, radius - 2));
+        // サイドの小飾り
+        g.fillStyle(0xffe6f2, 0.95);
+        g.fillCircle(left + 6, top + h / 2, 2.5);
+        g.fillCircle(left + w - 6, top + h / 2, 2.5);
+
+        // ハイライト
+        if (!this.nameboxDecoShine) this.nameboxDecoShine = this.add.graphics();
+        const s = this.nameboxDecoShine;
+        s.clear();
+        s.fillStyle(0xffffff, 0.12);
+        const shineH = Math.max(4, Math.floor(h * 0.4));
+        s.fillRoundedRect(left + 4, top + 3, w - 8, shineH, Math.max(3, radius - 3));
     }
 
     // 会話開始
@@ -189,6 +278,8 @@ export class ConversationScene extends Phaser.Scene {
             this.nameText.setText('');
             if (this.namebox) this.namebox.setVisible(false);
             if (this.nameText) this.nameText.setVisible(false);
+            if (this.nameboxDecoFrame) this.nameboxDecoFrame.setVisible(false);
+            if (this.nameboxDecoShine) this.nameboxDecoShine.setVisible(false);
         } else {
             if (this.namebox) this.namebox.setVisible(true);
             if (this.nameText) this.nameText.setVisible(true);
@@ -197,6 +288,9 @@ export class ConversationScene extends Phaser.Scene {
             if (dialog.speaker) {
                 this.adjustNameboxWidth(dialog.speaker);
             }
+            // 装飾の可視性も同期
+            if (this.nameboxDecoFrame) this.nameboxDecoFrame.setVisible(true);
+            if (this.nameboxDecoShine) this.nameboxDecoShine.setVisible(true);
         }
         // テキストのアニメーション表示
         this.animateText(dialog.text);
@@ -363,6 +457,8 @@ export class ConversationScene extends Phaser.Scene {
         const nbWidth = this.namebox?.displayWidth || 0;
         const height = this.sys?.game?.canvas?.height || this.sys?.game?.config?.height || 600;
         this.nameText.setPosition(this.nameboxLeftMargin + nbWidth / 2, height - 130);
+        // 見た目だけを再描画（レイアウトは不変）
+        this.redrawNameboxDecorations && this.redrawNameboxDecorations();
     }
     
 
@@ -540,6 +636,8 @@ export class ConversationScene extends Phaser.Scene {
                 // ギャルゲ風の枠線を再設定
                 this.textbox.setStrokeStyle(2, 0xFFFFFF, 1.0);
             }
+            // 装飾の再描画（位置・サイズはUIに追従）
+            this.redrawTextboxDecorations && this.redrawTextboxDecorations();
         }
         
         // 名前ボックスのリサイズ（createメソッドと同じロジック）
@@ -557,6 +655,8 @@ export class ConversationScene extends Phaser.Scene {
                 // ギャルゲ風の枠線を再設定
                 this.namebox.setStrokeStyle(2, 0x888888, 0.8);
             }
+            // 装飾の再描画
+            this.redrawNameboxDecorations && this.redrawNameboxDecorations();
         }
         
         // テキストのリサイズ（createメソッドと同じロジック）
@@ -567,6 +667,8 @@ export class ConversationScene extends Phaser.Scene {
             this.dialogText.setPosition(width * 0.1 + 20, height - 80);
             this.dialogText.setWordWrapWidth(textWrapWidth);
             this.dialogText.setFontSize(fontSize);
+            // テキストシャドウは一度設定すれば保持されるが、安全に再設定
+            if (this.dialogText.setShadow) this.dialogText.setShadow(2, 2, '#000000', 4, false, true);
         }
         
         // 名前テキストのリサイズ（createメソッドと同じロジック）
@@ -577,6 +679,7 @@ export class ConversationScene extends Phaser.Scene {
             const nbWidth = this.namebox?.displayWidth || 0;
             this.nameText.setPosition(this.nameboxLeftMargin + nbWidth / 2, height - 130);
             this.nameText.setFontSize(nameFontSize);
+            if (this.nameText.setShadow) this.nameText.setShadow(1, 1, '#000000', 3, false, true);
             
             // 現在の名前がある場合は名前ボックスの幅も再調整
             if (this.nameText.text && this.nameText.text !== '') {
