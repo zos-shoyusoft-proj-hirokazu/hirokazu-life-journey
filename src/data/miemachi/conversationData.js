@@ -1127,9 +1127,113 @@ export const miemachiConversationData = {
         'bgm': 'togetogetarumeiro',
         'conversations': [
             {
-                'speaker': 'ひろかず',
-                'character': 'hirokazu',
-                'text': 'アネックス（ももいろ女学園）--- キャラ等で濁す',
+                'character': 'narrator',
+                'text': 'ここに、二匹の狼がいた。',
+                'expression': 'A'
+            },
+            {
+                'character': 'narrator',
+                'text': '賢い狼と、気のいい狼。二匹は共に狩りや水浴びをするほど仲がよかった。',
+                'expression': 'A'
+            },
+            {
+                'character': 'narrator',
+                'text': 'あるとき、賢い狼が言った。「いつも追いかけるより、待ち伏せをしよう。そうすれば遠くまで出かけずとも、獲物のほうからやって来るだろう」',
+                'expression': 'A'
+            },
+            {
+                'character': 'narrator',
+                'text': '気のいい狼は二つ返事でうなずいた。だが、二匹には待ち伏せに適した場所の心当たりがなかった。',
+                'expression': 'A'
+            },
+            {
+                'character': 'narrator',
+                'text': 'そこで二匹は、村の物知りな狼に相談することにした。',
+                'expression': 'A'
+            },
+            {
+                'character': 'narrator',
+                'text': '物知りな狼は言った。「知りたければ、対価を払いなさい」',
+                'expression': 'A'
+            },
+            {
+                'character': 'narrator',
+                'text': '二匹はしぶしぶ、以前に狩った獲物を物知りな狼に分け与えた。',
+                'expression': 'A'
+            },
+            {
+                'character': 'narrator',
+                'text': '満足そうにうなずいた物知りな狼は答えた。「村の外れに、使われていない洞窟が二か所ある。人目につきにくく、狩りには最適だ」',
+                'expression': 'A'
+            },
+            {
+                'character': 'narrator',
+                'text': '「そこは自然も豊かで、獲物も多く、丸々太ってうまそうに見える」とも。',
+                'expression': 'A'
+            },
+            {
+                'character': 'narrator',
+                'text': '物知りな狼は続けた。「ただし、そこから帰るには“対価”が必要だ。その中身はわしにも分からん」',
+                'expression': 'A'
+            },
+            {
+                'character': 'narrator',
+                'text': '少しの疑念を抱きながらも、二匹の狼は洞窟へ向かった。',
+                'expression': 'A'
+            },
+            {
+                'character': 'narrator',
+                'text': '日が沈み、夜が更けるころ、二つの気配が近づいてきた。',
+                'expression': 'A'
+            },
+            {
+                'character': 'narrator',
+                'text': '暗さにまぎれて獲物の全貌は見えない。それでも二匹は息を潜め、洞窟で待ち伏せを続けた。',
+                'expression': 'A'
+            },
+            {
+                'character': 'narrator',
+                'text': 'やがて、二匹の獲物が洞窟に入る。',
+                'expression': 'A'
+            },
+            {
+                'character': 'narrator',
+                'text': 'その瞬間、二匹の狼は躍りかかった——はずだった。',
+                'expression': 'A'
+            },
+            {
+                'character': 'narrator',
+                'text': 'だが次の瞬間、身体は止まり、狩りの本能も急停止した。',
+                'expression': 'A'
+            },
+            {
+                'character': 'narrator',
+                'text': '理由は単純。目の前の獲物が、たいそう好みではなかったのだ。端的に言えば——マズそう、だった。',
+                'expression': 'A'
+            },
+            {
+                'character': 'narrator',
+                'text': 'それでも二匹は引けなかった。ここに至るまでに、すでに対価を払ってしまっていたからだ。',
+                'expression': 'A'
+            },
+            {
+                'character': 'narrator',
+                'text': '何もせず帰ることは、二匹のプライドが許さなかった。',
+                'expression': 'A'
+            },
+            {
+                'character': 'narrator',
+                'text': '——狩りは終わった。昇る朝日を背に、肩を落として帰る道すがら。',
+                'expression': 'A'
+            },
+            {
+                'character': 'narrator',
+                'text': 'ぽつりと、気のいい狼がこぼした。「あの日、僕らは大人になった」',
+                'expression': 'A'
+            },
+            {
+                'character': 'narrator',
+                'text': '賢い狼は、それを苦い顔で聞き流した。',
                 'expression': 'A'
             }
         ]

@@ -149,10 +149,41 @@ export class ConversationScene extends Phaser.Scene {
     // 会話表示
     showDialog() {
         const dialog = this.currentConversation.conversations[this.currentConversationIndex];
-        // 立ち絵の更新
-        this.updateCharacterSprite(dialog.character, dialog.expression);
-        // 名前の表示
-        this.nameText.setText(dialog.speaker);
+        // ナレーション判定：speaker未指定 or characterがnarrator
+        const isNarration = !dialog.speaker || dialog.character === 'narrator';
+
+        // 立ち絵の表示/非表示制御
+        if (isNarration) {
+            // ナレーション時は全立ち絵を一時的に隠す
+            if (this.characterSprites) {
+                Object.values(this.characterSprites).forEach(sprite => {
+                    if (sprite && sprite.setVisible) {
+                        sprite.setVisible(false);
+                    }
+                });
+            }
+        } else {
+            // 通常発話時は全立ち絵を表示状態に戻す（以降のdim処理は既存ロジックに委譲）
+            if (this.characterSprites) {
+                Object.values(this.characterSprites).forEach(sprite => {
+                    if (sprite && sprite.setVisible) {
+                        sprite.setVisible(true);
+                    }
+                });
+            }
+            this.updateCharacterSprite(dialog.character, dialog.expression);
+        }
+
+        // 名前の表示（ナレーション時は非表示）
+        if (isNarration) {
+            this.nameText.setText('');
+            if (this.namebox) this.namebox.setVisible(false);
+            if (this.nameText) this.nameText.setVisible(false);
+        } else {
+            if (this.namebox) this.namebox.setVisible(true);
+            if (this.nameText) this.nameText.setVisible(true);
+            this.nameText.setText(dialog.speaker || '');
+        }
         // テキストのアニメーション表示
         this.animateText(dialog.text);
     }
