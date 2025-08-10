@@ -32,7 +32,7 @@
         {
          "draworder":"topdown",
          "id":2,
-         "name":"zenkoku",
+         "name":"zennkoku",
          "objects":[
                 {
                  "ellipse":true,
@@ -67,8 +67,8 @@
                  "type":"",
                  "visible":true,
                  "width":242.424242424242,
-                 "x":42.4242424242424,
-                 "y":212.121212121212
+                 "x":1181.81818181818,
+                 "y":112.121212121212
                 }, 
                 {
                  "ellipse":true,
@@ -79,8 +79,8 @@
                  "type":"",
                  "visible":true,
                  "width":275.757575757576,
-                 "x":1260.60606060606,
-                 "y":112.121212121212
+                 "x":1530.30303030303,
+                 "y":239.393939393939
                 }, 
                 {
                  "ellipse":true,
@@ -91,20 +91,32 @@
                  "type":"",
                  "visible":true,
                  "width":400,
-                 "x":615.151515151515,
-                 "y":593.939393939394
+                 "x":430.30303030303,
+                 "y":421.212121212121
                 }, 
                 {
                  "ellipse":true,
                  "height":251.515151515152,
                  "id":6,
-                 "name":"gray_bytes",
+                 "name":"first_rising_sun",
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":312.121212121212,
-                 "x":166.666666666667,
-                 "y":666.666666666667
+                 "x":936.363636363637,
+                 "y":748.484848484849
+                }, 
+                {
+                 "ellipse":true,
+                 "height":115.151515151515,
+                 "id":7,
+                 "name":"arechi",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":130.30303030303,
+                 "x":75.7575757575758,
+                 "y":833.333333333333
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -113,7 +125,7 @@
          "y":0
         }],
  "nextlayerid":3,
- "nextobjectid":7,
+ "nextobjectid":10,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",
@@ -122,7 +134,7 @@
         {
          "columns":30,
          "firstgid":1,
-         "image":"zennkoku.png",
+         "image":"..\/taild\/\u3082\u3068\/\u5168\u56fd\/zennkoku.png",
          "imageheight":1080,
          "imagewidth":1924,
          "margin":0,

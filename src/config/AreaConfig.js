@@ -173,7 +173,9 @@ export const AreaConfig = {
         tilesetKey: 'zennkoku',
         mapTitle: '日本マップ',
         bgm: {
-            map: 'assets/audio/bgm/Theme_from_Back_To_The_Future.mp3' // 通常マップBGM
+            map: 'assets/audio/bgm/Theme_from_Back_To_The_Future.mp3', // 通常マップBGM
+            curono: 'assets/audio/bgm/curono.mp3',
+            togetogetarumeiroo: 'assets/audio/bgm/togetogetarumeiroo.mp3'
         },
         se: {
             touch: 'assets/audio/se/touch_7.mp3', // ダイアログ用タッチSE

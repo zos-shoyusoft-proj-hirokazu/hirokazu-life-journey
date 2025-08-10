@@ -3,7 +3,7 @@ export const miemachiConversationData = {
     // 出生エピソード
     'oreno_koto': {
         'background': 'test_1',
-        'bgm': 'curono',
+        'bgm': 'Fantasy',
         'conversations': [
             {
                 'speaker': 'ひろかず',
@@ -101,7 +101,7 @@ export const miemachiConversationData = {
     // 志学エピソード
     'shigaku': {
         'background': 'test_1',
-        'bgm': 'Fantasy',
+        'bgm': 'metoroido',
         'conversations': [
             {
                 'speaker': 'ひろかず',
@@ -198,7 +198,7 @@ export const miemachiConversationData = {
     // チーム醤油飲み会
     'team_shoyu_drinking': {
         'background': 'test_1',
-        'bgm': 'Jounetsu_Tairiku',
+        'bgm': 'nightbarth',
         'conversations': [
             {
                 'speaker': 'ひろかず',
@@ -863,7 +863,7 @@ export const miemachiConversationData = {
     // アンタレス
     'antares': {
         'background': 'test_1',
-        'bgm': 'nightbarth',
+        'bgm': 'Nagisa_Moderato',
         'conversations': [
             {
                 'speaker': 'ひろかず',
@@ -919,7 +919,7 @@ export const miemachiConversationData = {
     // ドンキの謎酒"ずつ"
     'drink_zutsu': {
         'background': 'test_1',
-        'bgm': 'ON_THE_BEACH',
+        'bgm': 'nightbarth',
         'conversations': [
             {
                 'speaker': 'ひろかず',
@@ -1108,7 +1108,7 @@ export const miemachiConversationData = {
     // スナック街の夜
     'snack_street_night': {
         'background': 'test_1',
-        'bgm': 'curono',
+        'bgm': 'nightbarth',
         'conversations': [
             {
                 'speaker': 'ひろかず',
@@ -1362,7 +1362,7 @@ export const miemachiConversationData = {
     // おかがみとの会話
     'okagami_conversation': {
         'background': 'test_1',
-        'bgm': 'curono',
+        'bgm': 'Fantasy',
         'conversations': [
             {
                 'speaker': 'おかがみ',
@@ -1412,7 +1412,7 @@ export const miemachiConversationData = {
     // だいちとの会話
     'daichi_conversation': {
         'background': 'test_1',
-        'bgm': 'curono',
+        'bgm': 'Fantasy',
         'conversations': [
             {
                 'speaker': 'だいち',

@@ -156,7 +156,7 @@ export const taketaConversationData = {
     // 教室の入り口鍵かけ事件
     'classroom_lock_incident': {
         'background': 'classroom_door',
-        'bgm': 'Fantasy',
+        'bgm': 'Jounetsu_Tairiku',
         'conversations': [
             {
                 'speaker': '安藤先生',
@@ -424,7 +424,7 @@ export const taketaConversationData = {
     // 文化祭後の謝罪
     'culture_festival_apology': {
         'background': 'classroom',
-        'bgm': 'The_Terminator',
+        'bgm': 'Nagisa_Moderato',
         'conversations': [
             {
                 'speaker': '先生',
@@ -608,7 +608,7 @@ export const taketaConversationData = {
     // 昼休みドラマ撮影クラブ（ゴスペラーズ等々）
     'drama_filming': {
         'background': 'classroom',
-        'bgm': 'Fantasy',
+        'bgm': 'nightbarth',
         'conversations': [
             {
                 'speaker': 'ひろかず',
@@ -1016,7 +1016,7 @@ export const taketaConversationData = {
     // 竹田から三重まで歩いて帰る
     'working_go_to_home_miemachi': {
         'background': 'street',
-        'bgm': 'nightbarth',
+        'bgm': 'Spain',
         'conversations': [
             {
                 'speaker': 'かなと',
