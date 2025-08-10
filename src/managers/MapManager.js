@@ -146,7 +146,7 @@ export class MapManager {
         const layerNames = {
             'bunngo_mie_city': 'miemachi',
             'taketa_city': 'taketa',
-            'japan': 'zenkoku'
+            'japan': 'zennkoku'
         };
         
         // マップキーが登録されていない場合は警告を出す

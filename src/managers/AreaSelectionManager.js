@@ -3,6 +3,8 @@ import { taketaConversationData } from '../data/taketa/conversationData.js';
 import { miemachiConversationData } from '../data/miemachi/conversationData.js';
 import { japanConversationData } from '../data/japan/conversationData.js';
 
+
+
 export class AreaSelectionManager {
     constructor(scene) {
         this.scene = scene;
@@ -64,24 +66,29 @@ export class AreaSelectionManager {
             'Trial': 'トライアル',
             'Flash_land_mie': 'フラッシュランド三重',
             'oreno_koto': '俺のこと',
-            'momoiro_jyogakuenn': '桃色女学院',
+            'momoiro_jyogakuenn': '２匹の狼と獲物',
             'drinking_dutu': 'づつ',
             'Weeds_burn': '雑草がもえるぅぅ',
             'mie_high_school': '三重中学校',
             'raizu': 'ライズ',
-            'dole': 'ドール',
+            'snack_street_night': '三重町の歓楽街',
             'souce': 'ソース',
             'koutaroupoteto': 'こうたろうポテト',
+            'seven': 'セブン',
             // 竹田ステージのエリア説明
             'taketa_station': '竹田駅',
             'taketa_high_school': '竹田高校',
             'galaxy_water': '銀河の水',
             'udefuriojisann': 'ウデフリオジサン',
+            'working_go_to_home_miemachi': '飲み会後三重町まで歩く',
             // 日本ステージのエリア説明
-            'computer': 'コンピュータエリア',
-            'breaking_car': '故障車エリア',
-            'special_scam': '特殊詐欺エリア',
-            'rojyounopenki': '路上の噴水',
+            'computer': 'エンジニア',
+            'breaking_car': 'BMW',
+            'special_scam': 'あやしいおじさん',
+            'rojyounopenki': '路上のペンキ',
+            'tereapo': 'テレアポ',
+            'first_rising_sun': '初日の出',
+            'arechi': '荒地',
             'gray_bytes': 'グレーバイト'
         };
         
@@ -481,6 +488,9 @@ export class AreaSelectionManager {
                 case 'udefuriojisann':
                     eventId = 'arm_swinging_person';
                     break;
+                case 'working_go_to_home_miemachi':
+                    eventId = 'working_go_to_home_miemachi';
+                    break;
                 default:
                     // 会話イベントがない場合は通常の移動
                     this.scene.time.delayedCall(1000, () => {
@@ -534,8 +544,11 @@ export class AreaSelectionManager {
                 case 'tereapo':
                     eventId = 'tereapo';
                     break;
-                case 'gray_bytes':
-                    eventId = 'gray_bytes';
+                case 'first_rising_sun':
+                    eventId = 'first_rising_sun';
+                    break;
+                case 'arechi':
+                    eventId = 'arechi';
                     break;
                 default:
                     // 会話イベントがない場合は通常の移動
@@ -593,8 +606,8 @@ export class AreaSelectionManager {
                 case 'drinking_dutu':
                     eventId = 'drink_zutsu';
                     break;
-                case 'dole':
-                    eventId = 'doll';
+                case 'snack_street_night':
+                    eventId = 'snack_street_night';
                     break;
                 case 'momoiro_jyogakuenn':
                     eventId = 'annex_momo';

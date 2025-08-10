@@ -49,7 +49,11 @@ export const AreaConfig = {
             'hirokazu_E': 'assets/characters/portraits/hirokazu_E.png',
             'hirokazu_F': 'assets/characters/portraits/hirokazu_F.png',
             'daichi_A': 'assets/characters/portraits/daichi_A.png',
-            'naoki_A': 'assets/characters/portraits/naoki_A.png'
+            'naoki_A': 'assets/characters/portraits/naoki_A.png',
+            'kanato_A': 'assets/characters/portraits/kanato_A.png',
+            'kanato_B': 'assets/characters/portraits/kanato_B.png',
+            'koutarou_A': 'assets/characters/portraits/koutarou_A.png',
+            'koutarou_B': 'assets/characters/portraits/koutarou_B.png'
         },
         backgrounds: {
 
@@ -72,21 +76,20 @@ export const AreaConfig = {
         //     'profile': 'assets/audio/bgm/events/default_event.mp3'
         // },
         areas: [
-            { name: 'Trial', scene: 'TrialScene', conversationId:'trial' },
-            { name: 'Flash_land_mie', scene: 'FlashLandMieScene', conversationId:'flash_land_mie' },
-            { name: 'oreno_koto', scene: 'OrenoKotoScene', conversationId: 'oreno_koto' },
-            { name: 'momoiro_jyogakuenn', scene: 'MomoiroJyogakuennScene', conversationId: 'annex_momo' },
-            { name: 'drinking_dutu', scene: 'DrinkingDutuScene', conversationId: 'drink_zutsu' },
-            { name: 'Weeds_burn', scene: 'WeedsBurnScene', conversationId: 'river_fire' },
+            { name: 'oreno_koto', scene: null, conversationId: 'oreno_koto' },
+            { name: 'momoiro_jyogakuenn', scene: null, conversationId: 'annex_momo' },
+            { name: 'drinking_dutu', scene: null, conversationId: 'drink_zutsu' },
+            { name: 'Weeds_burn', scene: null, conversationId: 'river_fire' },
             { name: 'mie_high_school', scene: 'startPhaserGame', sceneParam: 1, conversationId: null },
-            { name: 'raizu', scene: 'RaizuScene', conversationId: 'shigaku' },
-            { name: 'dole', scene: 'DoleScene', conversationId: 'doll' },
-            { name: 'souce', scene: 'SouceScene', conversationId: 'team_shoyu_drinking' },
-            { name: 'koutaroupoteto', scene: 'KoutarouPotetoScene', conversationId: 'koutarou_potato' }
+            { name: 'raizu', scene: null, conversationId: 'shigaku' },
+            { name: 'snack_street_night', scene: null, conversationId: 'snack_street_night' },
+            { name: 'souce', scene: null, conversationId: 'team_shoyu_drinking' },
+            { name: 'koutaroupoteto', scene: null, conversationId: 'koutarou_potato' },
+            { name: 'seven', scene: null, conversationId: 'seven' }
         ]
     },
     
-    // 竹田ステージ
+            // 竹田ステージ
     taketastage: {
         mapKey: 'taketa_city',
         tilesetKey: 'taketa_map',
@@ -110,17 +113,23 @@ export const AreaConfig = {
             'hirokazu_E': 'assets/characters/portraits/hirokazu_E.png',
             'hirokazu_F': 'assets/characters/portraits/hirokazu_F.png',
             'daichi_A': 'assets/characters/portraits/daichi_A.png',
-            'naoki_A': 'assets/characters/portraits/naoki_A.png'
+            'naoki_A': 'assets/characters/portraits/naoki_A.png',
+            'kanato_A': 'assets/characters/portraits/kanato_A.png',
+            'kanato_B': 'assets/characters/portraits/kanato_B.png',
+            'kanato_C': 'assets/characters/portraits/kanato_C.png',
+            'koutarou_A': 'assets/characters/portraits/koutarou_A.png',
+            'koutarou_B': 'assets/characters/portraits/koutarou_B.png'
         },
         backgrounds: {
-
-            'test_1': 'assets/backgrounds/background_test.png'
+            'test_1': 'assets/backgrounds/background_test.png',
+            'street': 'assets/backgrounds/street.png'
         },
         areas: [
             { name: 'taketa_station', scene: null, conversationId: 'taketa_station' },
             { name: 'taketa_high_school', scene: 'startPhaserGame', sceneParam: 2, conversationId: null },
             { name: 'galaxy_water', scene: null, conversationId: 'ginnga_water' },
-            { name: 'udefuriojisann', scene: null, conversationId: 'arm_swinging_person' }
+            { name: 'udefuriojisann', scene: null, conversationId: 'arm_swinging_person' },
+            { name: 'working_go_to_home_miemachi', scene: null, conversationId: 'working_go_to_home_miemachi' }
         ]
     },
     

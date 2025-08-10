@@ -24,7 +24,6 @@ function initializeGame() {
 
 // ゲーム開始関数（動的シーン読み込み）
 export function startPhaserGame(stageNumber) {
-    console.log('[startPhaserGame] 開始:', stageNumber);
     const game = initializeGame();
 
     let sceneClass, sceneKey;
@@ -40,11 +39,9 @@ export function startPhaserGame(stageNumber) {
         case 'taketa_city': sceneClass = createMapStage('taketastage', 'TaketastageStage'); sceneKey = 'TaketastageStage'; break;
 
         default: 
-            console.log('[DEBUG] gameController: 未定義のシーン:', stageNumber, '→ Stage1に飛ぶ');
             sceneClass = Stage1; 
             sceneKey = 'Stage1Scene';
     }
-    console.log('[startPhaserGame] シーンを追加:', sceneKey);
     game.scene.add(sceneKey, sceneClass, true);
 }
 

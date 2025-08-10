@@ -14,75 +14,87 @@ export const miemachiConversationData = {
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
-                'text': '生まれた時間は１９９６年のx月x年ｘ曜日xx時だぜ☆',
+                'text': '生まれた時間は１９９６年９月２９年日曜日で晴れの日だぜ☆',
                 'expression': 'A'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
-                'text': '生まれた病院はｘだったらしいぜ☆',
+                'text': '生まれた病院は佐藤産婦人科でうまれたぜ',
                 'expression': 'A'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
-                'text': '名前の由来はｘだったらしいぜ☆',
+                'text': '名前の由来は「寛」の字はマッチョマンが気に入ってた字で、和は母さんから取ったぜ',
                 'expression': 'A'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
-                'text': '予定日からｘｘｘ日くらいずれていたぜ☆',
+                'text': '出産は予定日から１９日前に２６４８gで生まれたぜ☆',
                 'expression': 'B'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
-                'text': '難産だったらしいぜ',
-                'expression': 'C'
-            },
-            {
-                'speaker': 'ひろかず',
-                'character': 'hirokazu',
-                'text': '天気はｘだったらしいぜ☆',
-                'expression': 'A'
-            },
-            {
-                'speaker': 'ひろかず',
-                'character': 'hirokazu',
-                'text': '俺の体重はｘだったらしいぜ☆、Ａ型になりたかったぜ♡',
+                'text': '血液型はAB型だぜ☆',
                 'expression': 'B'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
-                'text': '俺の血液型はX型だったらしいぜ☆、Ｂ型になりたかったぜ♡',
+                'text': '安産だったらしいぜ',
+                'expression': 'C'
+            },
+            {
+                'speaker': 'ひろかず',
+                'character': 'hirokazu',
+                'text': '生まれた時髪の毛は比較的多かったぜ',
                 'expression': 'B'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
-                'text': '生まれたときの髪の毛の量はｘだったらしいぜ',
+                'text': '生まれたときの第一声が「オギャー」だぜ',
+                'expression': 'B'
+            },
+            {
+                'speaker': 'ひろかず',
+                'character': 'hirokazu',
+                'text': '最後に俺の自信作の漫画を紹介するぜ',
+                'expression': 'C'
+            },
+            {
+                'speaker': '自信作の漫画',
+                'character': 'mannga',
                 'expression': 'A'
             },
             {
-                'speaker': 'ひろかず',
-                'character': 'hirokazu',
-                'text': 'めちゃくちゃでかい声で泣いて生まれたらしいぜ☆',
+                'speaker': '自信作の漫画',
+                'character': 'mannga',
+                'expression': 'B'
+            },
+            {
+                'speaker': '自信作の漫画',
+                'character': 'mannga',
                 'expression': 'C'
             },
             {
-                'speaker': 'ひろかず',
-                'character': 'hirokazu',
-                'text': '皆俺のことを覚えてくれるとうれしいぜ！',
-                'expression': 'C'
+                'speaker': '自信作の漫画',
+                'character': 'mannga',
+                'expression': 'D'
             },
             {
-                'speaker': 'ひろかず',
-                'character': 'hirokazu',
-                'text': 'じゃあな！',
-                'expression': 'C'
-            }
+                'speaker': '自信作の漫画',
+                'character': 'mannga',
+                'expression': 'E'
+            },
+            {
+                'speaker': '自信作の漫画',
+                'character': 'mannga',
+                'expression': 'F'
+            },
         ]
     },
     
@@ -407,7 +419,7 @@ export const miemachiConversationData = {
     },
     
     // セブンエピソード
-    'seven_episode': {
+    'seven': {
         'background': 'test_1',
         'bgm': 'Last_Summer_In_Rio',
         'conversations': [
@@ -1093,29 +1105,117 @@ export const miemachiConversationData = {
         ]
     },
     
-    // バスケ（中学）
-    'basketball_middle_school': {
+    // スナック街の夜
+    'snack_street_night': {
         'background': 'test_1',
-        'bgm': 'nightbarth',
+        'bgm': 'curono',
         'conversations': [
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
-                'text': 'バスケ（中学）',
+                'text': 'あー飲んだなー',
                 'expression': 'A'
-            }
-        ]
-    },
-    
-    // ドール
-    'doll': {
-        'background': 'test_1',
-        'bgm': 'togetogetarumeiro',
-        'conversations': [
+            },
+            {
+                'speaker': 'かなと',
+                'character': 'kanato',
+                'text': 'まだ21時か……',
+                'expression': 'B'
+            },
+            {
+                'speaker': 'こうたろう',
+                'character': 'koutarou',
+                'text': '2軒目いくか',
+                'expression': 'A'
+            },
+            {
+                'speaker': 'なおき',
+                'character': 'naoki',
+                'text': '空いてるのスナックしかないよなー',
+                'expression': 'B'
+            },
+            {
+                'speaker': 'だいち',
+                'character': 'daichi',
+                'text': '三重町はこの時間もう眠ってるからな',
+                'expression': 'C'
+            },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
-                'text': 'ドール',
+                'text': 'よし、じゃあスナック行くぞ！',
+                'expression': 'A'
+            },
+            {
+                'speaker': 'ナレーター',
+                'character': 'narrator',
+                'text': 'ここは三重町駅前。推定平均年齢50歳、無数のママたちがひしめく三重町最大の歓楽街。',
+                'expression': 'A'
+            },
+            {
+                'speaker': 'ナレーター',
+                'character': 'narrator',
+                'text': '【スナック名鑑 in 三重町】',
+                'expression': 'A'
+            },
+            {
+                'speaker': 'ナレーター',
+                'character': 'narrator',
+                'text': 'まずはここ！！『シリウス』クセの強い「よいしょ⤴あそれ⤴」のカラオケ合いの手が名物！文字では伝わらないニュアンス！あともう店は潰れてるぞ！',
+                'expression': 'A'
+            },
+            {
+                'speaker': 'ナレーター',
+                'character': 'narrator',
+                'text': '『シリウス』！！！！',
+                'expression': 'A'
+            },
+            {
+                'speaker': 'ナレーター',
+                'character': 'narrator',
+                'text': 'クセの強い「よいしょ⤴あっそれ⤴」のカラオケ合いの手が名物！文字では伝わらないニュアンス！あともう店は潰れてるぞ！',
+                'expression': 'A'
+            },
+            {
+                'speaker': 'ナレーター',
+                'character': 'narrator',
+                'text': '次に、『ジュエリー』鳴物入りでやってきたルーキー！原液9割のレモンサワーで飛べるぞ！',
+                'expression': 'A'
+            },
+            {
+                'speaker': 'ナレーター',
+                'character': 'narrator',
+                'text': '更に『ドール』唯一の同世代・アイドルまゆちゃん！三重町最後の希望だ！でももう引退したぞ！あと同級生の親とかも通ってる！',
+                'expression': 'A'
+            },
+            {
+                'speaker': 'ナレーター',
+                'character': 'narrator',
+                'text': '『シークレット』カラオケが盛り上がりすぎて会話できない！最高なフィリピンママによるネイティブ洋楽とフィリピン料理が魅力！料金はちょっと不安になるくらい安いぞ！',
+                'expression': 'A'
+            },
+            {
+                'speaker': 'ナレーター',
+                'character': 'narrator',
+                'text': '『花市場』『ジョエリン』『さくら』『クール』他にも愉快なスナックが勢揃いだ！',
+                'expression': 'A'
+            },
+            {
+                'speaker': 'ナレーター',
+                'character': 'narrator',
+                'text': '4時間後',
+                'expression': 'A'
+            },
+            {
+                'speaker': 'ひろかず',
+                'character': 'hirokazu',
+                'text': 'やっぱスナックのあとに、コンビニで3次会するのが最高なんだよな〜',
+                'expression': 'A'
+            },
+            {
+                'speaker': 'ナレーター',
+                'character': 'narrator',
+                'text': '三重町の夜は、まだまだ寝かせてくれない。',
                 'expression': 'A'
             }
         ]
@@ -1138,7 +1238,12 @@ export const miemachiConversationData = {
             },
             {
                 'character': 'narrator',
-                'text': 'あるとき、賢い狼が言った。「いつも追いかけるより、待ち伏せをしよう。そうすれば遠くまで出かけずとも、獲物のほうからやって来るだろう」',
+                'text': 'あるとき、賢い狼が言った。',
+                'expression': 'A'
+            },
+            {
+                'character': 'narrator',
+                'text': '「獲物を追いかけるより、待ち伏せをしよう。そうすれば遠くまで出かけずとも、獲物のほうからやって来るだろう」',
                 'expression': 'A'
             },
             {
@@ -1153,7 +1258,12 @@ export const miemachiConversationData = {
             },
             {
                 'character': 'narrator',
-                'text': '物知りな狼は言った。「知りたければ、対価を払いなさい」',
+                'text': '物知りな狼は言った。',
+                'expression': 'A'
+            },
+            {
+                'character': 'narrator',
+                'text': '「知りたければ、対価を払いなさい」',
                 'expression': 'A'
             },
             {
@@ -1163,7 +1273,12 @@ export const miemachiConversationData = {
             },
             {
                 'character': 'narrator',
-                'text': '満足そうにうなずいた物知りな狼は答えた。「村の外れに、使われていない洞窟が二か所ある。人目につきにくく、狩りには最適だ」',
+                'text': '満足そうにうなずいた物知りな狼は答えた。',
+                'expression': 'A'
+            },
+            {
+                'character': 'narrator',
+                'text': '「村の外れに、使われていない洞窟が二か所ある。人目につきにくく、狩りには最適だ」',
                 'expression': 'A'
             },
             {
@@ -1173,7 +1288,12 @@ export const miemachiConversationData = {
             },
             {
                 'character': 'narrator',
-                'text': '物知りな狼は続けた。「ただし、そこから帰るには“対価”が必要だ。その中身はわしにも分からん」',
+                'text': '物知りな狼は続けた。',
+                'expression': 'A'
+            },
+            {
+                'character': 'narrator',
+                'text': '「ただし、そこから帰るには“対価”が必要だ。その対価はわしにも分からん」',
                 'expression': 'A'
             },
             {
@@ -1188,7 +1308,7 @@ export const miemachiConversationData = {
             },
             {
                 'character': 'narrator',
-                'text': '暗さにまぎれて獲物の全貌は見えない。それでも二匹は息を潜め、洞窟で待ち伏せを続けた。',
+                'text': '夜闇にまぎれて獲物の全貌は見えない。それでも二匹は息を潜め、洞窟で待ち伏せを続けた。',
                 'expression': 'A'
             },
             {
@@ -1198,37 +1318,37 @@ export const miemachiConversationData = {
             },
             {
                 'character': 'narrator',
-                'text': 'その瞬間、二匹の狼は躍りかかった——はずだった。',
+                'text': 'その瞬間、二匹の狼は獲物をとらえるため、行動を起こした',
                 'expression': 'A'
             },
             {
                 'character': 'narrator',
-                'text': 'だが次の瞬間、身体は止まり、狩りの本能も急停止した。',
+                'text': 'しかし、２匹の狼は行動を停止した。狩りの本能も急止した。',
                 'expression': 'A'
             },
             {
                 'character': 'narrator',
-                'text': '理由は単純。目の前の獲物が、たいそう好みではなかったのだ。端的に言えば——マズそう、だった。',
+                'text': '理由は簡単だった、目の前の獲物が、たいそう好みではなかったのだ。端的に言えば——マズそう、だった。',
                 'expression': 'A'
             },
             {
                 'character': 'narrator',
-                'text': 'それでも二匹は引けなかった。ここに至るまでに、すでに対価を払ってしまっていたからだ。',
+                'text': 'それでも二匹は引けなかった。ここに至るまでに、物知りな狼に対価を払ってしまっていたからだ。',
                 'expression': 'A'
             },
             {
                 'character': 'narrator',
-                'text': '何もせず帰ることは、二匹のプライドが許さなかった。',
+                'text': '何も、しないで帰ることは、二匹のプライドが許さなかった。',
                 'expression': 'A'
             },
             {
                 'character': 'narrator',
-                'text': '——狩りは終わった。昇る朝日を背に、肩を落として帰る道すがら。',
+                'text': '——狩りは終わった。昇る朝日を背に、肩を落とした帰り道に、ぽつりと気のいい狼が言葉をこぼした。',
                 'expression': 'A'
             },
             {
                 'character': 'narrator',
-                'text': 'ぽつりと、気のいい狼がこぼした。「あの日、僕らは大人になった」',
+                'text': '「あの日、僕らは大人になった」',
                 'expression': 'A'
             },
             {
@@ -1239,34 +1359,105 @@ export const miemachiConversationData = {
         ]
     },
     
-    // フラッシュランド三重
-    'flash_land_mie': {
-        'background': 'test_1',
-        'bgm': 'togetogetarumeiro',
-        'conversations': [
-            {
-                'speaker': 'ひろかず',
-                'character': 'hirokazu',
-                'text': 'フラッシュランド三重',
-                'expression': 'A'
-            }
-        ]
-    },
-    
-    // トライアルエピソード
-    'trial': {
+    // おかがみとの会話
+    'okagami_conversation': {
         'background': 'test_1',
         'bgm': 'curono',
         'conversations': [
             {
+                'speaker': 'おかがみ',
+                'character': 'okagami',
+                'text': 'タバコが切れた...',
+                'expression': 'C'
+            },
+            {
+                'speaker': 'おかがみ',
+                'character': 'okagami',
+                'text': '集合！！',
+                'expression': 'A'
+            },
+            {
+                'speaker': 'おかがみ',
+                'character': 'okagami',
+                'text': '釘宮！お前はまじでダメ！やる気が足りない！サボるな！',
+                'expression': 'A'
+            },
+            {
+                'speaker': 'おかがみ',
+                'character': 'okagami',
+                'text': '河室！なんだその髪の毛は桜木花道じゃねえか！',
+                'expression': 'A'
+            },
+            {
+                'speaker': 'おかがみ',
+                'character': 'okagami',
+                'text': 'ボコっ！ (殴る音)',
+                'expression': 'A'
+            },
+            {
+                'speaker': '自分',
+                'character': 'player',
+                'text': '俺らの時代だからまだ許されてる感あるよな....',
+                'expression': 'C'
+            },
+            {
+                'speaker': '自分',
+                'character': 'player',
+                'text': 'まじで痛えな...',
+                'expression': 'C'
+            }
+        ]
+    },
+    
+    // だいちとの会話
+    'daichi_conversation': {
+        'background': 'test_1',
+        'bgm': 'curono',
+        'conversations': [
+            {
+                'speaker': 'だいち',
+                'character': 'daichi',
+                'text': '副リーダーとかいうの嫌すぎるな',
+                'expression': 'C'
+            },
+            {
+                'speaker': 'だいち',
+                'character': 'daichi',
+                'text': 'どっかでサボろうぜ',
+                'expression': 'A'
+            },
+            {
+                'speaker': 'だいち',
+                'character': 'daichi',
+                'text': 'またおかがみに怒られるだけかもだけど...',
+                'expression': 'C'
+            },
+            {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
-                'text': 'トライアル',
+                'text': 'だいちはいっつも冷めてるよな',
+                'expression': 'B'
+            },
+            {
+                'speaker': 'ひろかず',
+                'character': 'hirokazu',
+                'text': 'まあ、いいやチョロQ持ってきてるからこれで遊ぶぞ',
+                'expression': 'A'
+            },
+            {
+                'speaker': 'ひろかず',
+                'character': 'hirokazu',
+                'text': 'それか、このバス釣りの雑誌みんなで見ようぜ',
+                'expression': 'A'
+            },
+            {
+                'speaker': 'だいち',
+                'character': 'daichi',
+                'text': 'いつもの流れだけど、これが一番楽しいよな笑',
                 'expression': 'A'
             }
         ]
     },
-
 };
 
 // 三重町ステージ会話データを管理するクラス
