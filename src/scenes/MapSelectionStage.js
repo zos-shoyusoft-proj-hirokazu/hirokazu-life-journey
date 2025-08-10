@@ -188,15 +188,13 @@ export class MapSelectionStage extends Phaser.Scene {
             // スケール切り替えボタンを追加
             this.createScaleToggleButton();
             
-            // AudioManagerを初期化（シーンの初期化完了を待つ）
-            this.time.delayedCall(200, () => {
-                try {
-                    this.audioManager = new AudioManager(this);
-                    this.audioManager.playBgm('bgm_map', 0.3);
-                } catch (error) {
-                    // エラーは無視
-                }
-            });
+            // AudioManagerを即時初期化（イベントBGM切替のレースを防ぐ）
+            try {
+                this.audioManager = new AudioManager(this);
+                this.audioManager.playBgm('bgm_map', 0.3);
+            } catch (error) {
+                // エラーは無視
+            }
             // リサイズイベントを設定
             this.scale.on('resize', this.handleResize, this);
             // シーンシャットダウン時のクリーンアップ登録

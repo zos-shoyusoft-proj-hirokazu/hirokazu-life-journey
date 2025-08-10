@@ -26,7 +26,7 @@ export const miemachiConversationData = {
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
-                'text': '名前の由来は「寛」の字はマッチョマンが気に入ってた字で、和は母さんから取ったぜ',
+                'text': '名前の由来は「寛」の字は父親が気に入ってた字で、和は母さんから取ったぜ',
                 'expression': 'A'
             },
             {

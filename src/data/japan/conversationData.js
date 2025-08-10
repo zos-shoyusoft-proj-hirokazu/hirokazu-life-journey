@@ -55,7 +55,7 @@ export const japanConversationData = {
     // 特殊詐欺エリア
     'special_scam': {
         'background': 'test_1',
-        'bgm': 'togetogetarumeiroo',
+        'bgm': 'togetogetarumeiro',
         'conversations': [
             {
                 'speaker': 'ひろかず',
