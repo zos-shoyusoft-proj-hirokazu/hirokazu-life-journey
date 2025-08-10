@@ -42,42 +42,45 @@ export class ConversationScene extends Phaser.Scene {
         
         // テキストボックスの設定（画像がない場合は黒い四角形で代替）
         if (this.textures.exists('textbox')) {
-            this.textbox = this.add.image(width / 2, height - 60, 'textbox');
+            this.textbox = this.add.image(width / 2, height - 80, 'textbox'); // Y座標を調整
         } else {
-            // 代替：黒い四角形を作成（スマホ対応）
-            const textboxWidth = Math.min(width - 40, 700); // PCでは大きく、スマホでは小さく
-            const textboxHeight = Math.min(150, height * 0.25); // 画面高の最大25%
-            this.textbox = this.add.rectangle(width / 2, height - 60, textboxWidth, textboxHeight, 0x000000, 0.8);
+            // 代替：黒い四角形を作成（ギャルゲ風デザイン）
+            const textboxWidth = width - 60; // 画面幅から60px引いた幅を使用
+            const textboxHeight = 90; // 固定の高さ
+            this.textbox = this.add.rectangle(width / 2, height - 60, textboxWidth, textboxHeight, 0x000000, 0.9); // 透明度を上げて見やすく
+            // ギャルゲ風の枠線を追加
+            this.textbox.setStrokeStyle(2, 0xFFFFFF, 1.0);
         }
         this.textbox.setOrigin(0.5, 0.5);
         
         // 名前ボックスの設定（画像がない場合は黒い四角形で代替）
         if (this.textures.exists('namebox')) {
-            this.namebox = this.add.image(width * 0.2, height - 100, 'namebox');
+            this.namebox = this.add.image(width * 0.15, height - 130, 'namebox'); // 位置を調整
         } else {
-            // 代替：黒い四角形を作成（スマホ対応）
-            const nameboxWidth = Math.min(200, width * 0.4); // PCでは200px、スマホでは画面幅の40%
-            const nameboxHeight = Math.min(50, height * 0.08); // 画面高の最大8%
-            this.namebox = this.add.rectangle(width * 0.2, height - 100, nameboxWidth, nameboxHeight, 0x000000, 0.8);
+            // 代替：黒い四角形を作成（ギャルゲ風デザイン）
+            const nameboxWidth = Math.min(200, width * 0.3);
+            const nameboxHeight = Math.min(30, height * 0.1);
+            this.namebox = this.add.rectangle(width * 0.15, height - 133, nameboxWidth, nameboxHeight, 0x333333, 0.9); // 少し明るい色で見やすく
+            // ギャルゲ風の枠線を追加
+            this.namebox.setStrokeStyle(2, 0x888888, 0.8);
         }
         this.namebox.setOrigin(0.5, 0.5);
         
-        // テキスト表示用
+        // テキスト表示用（高さを動的に調整）
         const textWrapWidth = Math.min(width - 80, 600); // PCでは大きく、スマホでは小さく
         const fontSize = width < 600 ? '18px' : '24px'; // スマホでは小さいフォント
-        this.dialogText = this.add.text(width / 2, height - 60, '', {
+        this.dialogText = this.add.text(width * 0.1 + 20, height - 95, '', { // Y座標を調整
             fontSize: fontSize,
             fill: '#ffffff',
             lineSpacing: 8,
             padding: { x: 10, y: 10 },
             wordWrap: { width: textWrapWidth, useAdvancedWrap: true },
-            fixedHeight: 50
         });
-        this.dialogText.setOrigin(0.5, 0.5);
+        this.dialogText.setOrigin(0, 0);
         
         // 名前表示用
         const nameFontSize = width < 600 ? '16px' : '20px'; // スマホでは小さいフォント
-        this.nameText = this.add.text(width * 0.2, height - 100, '', {
+        this.nameText = this.add.text(width * 0.15, height - 140, '', { // 位置を調整
             fontSize: nameFontSize,
             fill: '#ffffff',
             fontStyle: 'bold',
@@ -97,8 +100,10 @@ export class ConversationScene extends Phaser.Scene {
             this.nextDialog();
         });
         
-        // UI作成完了フラグを設定
-        this.isUICreated = true;
+        // 会話データが設定されている場合は開始
+        if (this.currentConversation) {
+            // this.showDialog(); // startConversationで呼ばれるので削除
+        }
     }
     
     // UIをリセット（再作成せずに初期化）
@@ -123,12 +128,16 @@ export class ConversationScene extends Phaser.Scene {
         this.currentConversation = conversationData;
         this.currentConversationIndex = 0;
         
-        // 背景を変更
-        this.updateBackground(conversationData.background);
+        // 背景とBGMの設定
+        if (conversationData.background) {
+            this.updateBackground(conversationData.background);
+        }
         
-        // イベント用BGMに切り替え
-        this.switchToEventBgm(conversationData.bgm);
+        if (conversationData.bgm) {
+            this.switchToEventBgm(conversationData.bgm);
+        }
         
+        // 最初のダイアログを表示
         this.showDialog();
     }
 
@@ -275,6 +284,9 @@ export class ConversationScene extends Phaser.Scene {
         this.isTextAnimating = true;
         this.dialogText.setText('');
         
+        // テキストの長さに応じて表示高さを動的に調整
+        this.adjustTextDisplayHeight(text);
+        
         if (this.isMobile()) {
             // スマホ版：アニメーション無効（即座に全文表示）
             this.dialogText.setText(text);
@@ -304,6 +316,34 @@ export class ConversationScene extends Phaser.Scene {
         this.currentTextTimer = timer;
     }
     
+    // テキストの表示高さを動的に調整
+    adjustTextDisplayHeight(text) {
+        if (!this.dialogText) return;
+        
+        // テキストの行数を計算
+        const fontSize = parseInt(this.dialogText.style.fontSize) || 24;
+        const lineHeight = fontSize + 8; // lineSpacingを考慮
+        
+        // テキストを一時的に設定して実際の行数を取得
+        this.dialogText.setText(text);
+        const lines = this.dialogText.getWrappedText().length;
+        
+        // 必要な高さを計算（最低120px、最大300px）
+        const requiredHeight = Math.max(90, Math.min(300, lines * lineHeight + 20));
+        
+        // テキストの表示高さを調整（PhaserのTextオブジェクトではsetFixedHeightは使用不可）
+        // 代わりに、テキストの位置とテキストボックスのサイズを調整
+        this.dialogText.setStyle({ 
+            fixedHeight: requiredHeight 
+        });
+        
+        // テキストボックスの高さも調整
+        if (this.textbox) {
+            const currentWidth = this.textbox.displayWidth;
+            this.textbox.setDisplaySize(currentWidth, requiredHeight + 20);
+        }
+    }
+    
 
 
     // テキストアニメーション完了
@@ -314,6 +354,10 @@ export class ConversationScene extends Phaser.Scene {
         
         const dialog = this.currentConversation.conversations[this.currentConversationIndex];
         this.dialogText.setText(dialog.text);
+        
+        // テキストの高さを再調整
+        this.adjustTextDisplayHeight(dialog.text);
+        
         this.isTextAnimating = false;
     }
 
@@ -460,39 +504,55 @@ export class ConversationScene extends Phaser.Scene {
             this.background.setScale(scale);
         }
         
-        // テキストボックスのリサイズ（スマホ対応）
+        // テキストボックスのリサイズ（createメソッドと同じロジック）
         if (this.textbox) {
-            this.textbox.setPosition(width / 2, height - 60);
-            const textboxWidth = Math.min(width - 40, 700);
-            const textboxHeight = Math.min(150, height * 0.25);
-            this.textbox.setDisplaySize(textboxWidth, textboxHeight);
+            if (this.textures.exists('textbox')) {
+                // 画像がある場合は位置のみ調整
+                this.textbox.setPosition(width / 2, height - 60);
+            } else {
+                // 代替の四角形の場合はサイズと位置を調整
+                const textboxWidth = width - 60;
+                const textboxHeight = 90;
+                this.textbox.setDisplaySize(textboxWidth, textboxHeight);
+                this.textbox.setPosition(width / 2, height - 60);
+                
+                // ギャルゲ風の枠線を再設定
+                this.textbox.setStrokeStyle(2, 0xFFFFFF, 1.0);
+            }
         }
         
-        // 名前ボックスのリサイズ（スマホ対応）
+        // 名前ボックスのリサイズ（createメソッドと同じロジック）
         if (this.namebox) {
-            this.namebox.setPosition(width * 0.2, height - 100);
-            const nameboxWidth = Math.min(200, width * 0.4);
-            const nameboxHeight = Math.min(50, height * 0.08);
-            this.namebox.setDisplaySize(nameboxWidth, nameboxHeight);
+            if (this.textures.exists('namebox')) {
+                // 画像がある場合は位置のみ調整
+                this.namebox.setPosition(width * 0.15, height - 133);
+            } else {
+                // 代替の四角形の場合はサイズと位置を調整
+                const nameboxWidth = Math.min(200, width * 0.3);
+                const nameboxHeight = Math.min(30, height * 0.1);
+                this.namebox.setDisplaySize(nameboxWidth, nameboxHeight);
+                this.namebox.setPosition(width * 0.15, height - 133);
+                
+                // ギャルゲ風の枠線を再設定
+                this.namebox.setStrokeStyle(2, 0x888888, 0.8);
+            }
         }
         
-        // テキストのリサイズ（スマホ対応）
+        // テキストのリサイズ（createメソッドと同じロジック）
         if (this.dialogText) {
-            this.dialogText.setPosition(width / 2, height - 60);
             const textWrapWidth = Math.min(width - 80, 600);
-            this.dialogText.setWordWrapWidth(textWrapWidth);
-            
-            // フォントサイズも調整
             const fontSize = width < 600 ? '18px' : '24px';
+            
+            this.dialogText.setPosition(width * 0.1 + 20, height - 80);
+            this.dialogText.setWordWrapWidth(textWrapWidth);
             this.dialogText.setFontSize(fontSize);
         }
         
-        // 名前テキストのリサイズ（スマホ対応）
+        // 名前テキストのリサイズ（createメソッドと同じロジック）
         if (this.nameText) {
-            this.nameText.setPosition(width * 0.2, height - 100);
-            
-            // フォントサイズも調整
             const nameFontSize = width < 600 ? '16px' : '20px';
+            
+            this.nameText.setPosition(width * 0.15, height - 140);
             this.nameText.setFontSize(nameFontSize);
         }
         
