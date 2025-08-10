@@ -81,6 +81,18 @@
                  "width":129.333333333333,
                  "x":1681.33333333333,
                  "y":284
+                }, 
+                {
+                 "ellipse":true,
+                 "height":200,
+                 "id":8,
+                 "name":"working_go_to_home_miemachi",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":209,
+                 "x":662,
+                 "y":106
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -89,7 +101,7 @@
          "y":0
         }],
  "nextlayerid":3,
- "nextobjectid":8,
+ "nextobjectid":10,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",

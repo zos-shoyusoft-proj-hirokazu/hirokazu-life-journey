@@ -36,29 +36,6 @@
          "objects":[
                 {
                  "ellipse":true,
-                 "height":232,
-                 "id":16,
-                 "name":"Flash_land_mie",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":166,
-                 "x":676,
-                 "y":16
-                }, 
-                {
-                 "height":198,
-                 "id":19,
-                 "name":"Trial",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":202,
-                 "x":1092,
-                 "y":132
-                }, 
-                {
-                 "ellipse":true,
                  "height":236,
                  "id":20,
                  "name":"oreno_koto",
@@ -133,7 +110,7 @@
                  "ellipse":true,
                  "height":210,
                  "id":28,
-                 "name":"dole",
+                 "name":"snack_street_night",
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -164,6 +141,18 @@
                  "width":116,
                  "x":404,
                  "y":500
+                }, 
+                {
+                 "ellipse":true,
+                 "height":151.515151515152,
+                 "id":32,
+                 "name":"seven",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":169.69696969697,
+                 "x":718.181818181818,
+                 "y":351.515151515152
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -172,7 +161,7 @@
          "y":0
         }],
  "nextlayerid":3,
- "nextobjectid":31,
+ "nextobjectid":34,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",
