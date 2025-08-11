@@ -124,6 +124,7 @@
     align-items: flex-start;
     padding-top: 0;
     margin-top: -10px;
+    gap: 20px; /* 左右の要素間にギャップを追加 */
 }
 
 .stage-buttons {
@@ -132,6 +133,8 @@
     gap: 10px;
     padding: 10px;
     width: 350px;
+    min-width: 350px; /* 最小幅を固定 */
+    flex-shrink: 0; /* 縮小しないように設定 */
     background: transparent;
     border-radius: 15px;
     z-index: 20;
@@ -278,7 +281,8 @@
     padding: 20px;
     background: transparent;
     filter: none;
-    margin-left: 10px;
+    margin-left: 0; /* 左マージンを削除 */
+    min-width: 0; /* 最小幅を0に設定 */
 }
 
 .preview-area {
@@ -363,17 +367,21 @@
     .stage-content {
         flex-direction: column;
         align-items: center;
+        gap: 15px; /* モバイルでもギャップを設定 */
     }
     
     .stage-buttons {
         width: 90%;
         max-width: 400px;
+        min-width: auto; /* モバイルでは最小幅を解除 */
+        flex-shrink: 1; /* モバイルでは縮小可能に */
     }
     
     .content-area {
         width: 90%;
         margin-left: 0;
         margin-top: 20px;
+        min-width: 0;
     }
     
     .description-area {
