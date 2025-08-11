@@ -1109,10 +1109,6 @@
             const moveButton = document.getElementById(moveButtonId);
             if (moveButton) {
                 moveButton.style.display = 'block';
-                // アニメーション効果を追加
-                setTimeout(() => {
-                    moveButton.classList.add('show');
-                }, 100);
                 console.log('Move button displayed for:', stageId);
                 
                 // ボタンのクリックイベントを設定
@@ -1120,11 +1116,6 @@
                 if (moveBtn) {
                     moveBtn.onclick = function() {
                         console.log('移動するボタンがクリックされました:', stageId);
-                        // クリック時のエフェクト
-                        moveBtn.style.transform = 'scale(0.95)';
-                        setTimeout(() => {
-                            moveBtn.style.transform = '';
-                        }, 150);
                         startStage(stageId);
                     };
                 }
