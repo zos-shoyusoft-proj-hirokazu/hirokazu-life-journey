@@ -9,91 +9,91 @@ export const taketaConversationData = {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'なんか、今鬼ごっこしたくね？',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'だいち',
                 'character': 'daichi',
                 'text': 'いやっ、うーん、、、したいなぁ、、',
-                'expression': 'B'
+                'expression': 'b'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'おらぁ、、、たっち',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'なおき',
                 'character': 'naoki',
                 'text': 'えっ？？？？いきなり？',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'なおき',
                 'character': 'naoki',
                 'text': 'なら、あ、、はい',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'かなと',
                 'character': 'kanato',
                 'text': 'おおっと、順応はえーんだよ',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'ひろかず、なおき、こうたろう、だいち、あきざわ、しゅうへい',
                 'character': 'hirokazu',
                 'text': 'にげろぉぉぉ！！！！！',
-                'expression': 'C'
+                'expression': 'c'
             },
             {
                 'speaker': 'かなと',
                 'character': 'kanato',
                 'text': 'おらぁぁぁぁ！！！！！',
-                'expression': 'C'
+                'expression': 'c'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'ばりあーーーーーーーーー！！！！',
-                'expression': 'D'
+                'expression': 'd'
             },
             {
                 'speaker': 'かなと',
                 'character': 'kanato',
                 'text': 'それだけは、しちゃだめだろぉぉぉ！！',
-                'expression': 'C'
+                'expression': 'c'
             },
             {
                 'speaker': 'かなと',
                 'character': 'kanato',
                 'text': 'あーーくそぉ、、なんで、高校生になって鬼ごっこしなきゃならんのだ',
-                'expression': 'C'
+                'expression': 'c'
             },
             {
                 'speaker': 'こうたろう',
                 'character': 'koutarou',
                 'text': 'ばりあーーーーーーーーー！！！！',
-                'expression': 'D'
+                'expression': 'd'
             },
             {
                 'speaker': 'かなと',
                 'character': 'kanato',
                 'text': 'だから、だめだろ！！！！',
-                'expression': 'C'
+                'expression': 'c'
             },
             {
                 'speaker': 'かなと',
                 'character': 'kanato',
                 'text': '、、、、、、、、',
-                'expression': 'E'
+                'expression': 'e'
             },
             {
                 'speaker': 'かなと',
                 'character': 'kanato',
                 'text': 'これは、ゲームじゃない、いじめだ、、、',
-                'expression': 'F'
+                'expression': 'f'
             }
         ]
     },
@@ -107,19 +107,19 @@ export const taketaConversationData = {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'ゴスペラーズの「ひとり」を歌うぞ、、、',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'だいち',
                 'character': 'daichi',
                 'text': 'えっ、なんで？',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'かなと',
                 'character': 'kanato',
                 'text': 'まぁ、やるか、、、',
-                'expression': 'B'
+                'expression': 'b'
             },
             {
                 'se': 'hitori'
@@ -128,7 +128,7 @@ export const taketaConversationData = {
                 'speaker': 'ひろかず,だいち,こうたろう,かなと',
                 'character': 'hirokazu,daichi,koutarou,kanato',
                 'text': '、、、、、やめよう',
-                'expression': 'B'
+                'expression': 'b'
             },
         ]
     },
@@ -142,13 +142,13 @@ export const taketaConversationData = {
                 'speaker': 'かなと',
                 'character': 'kanato',
                 'text': 'あれ、ひろかずどうした？その指？',
-                'expression': 'B'
+                'expression': 'b'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'クライミングでケガした',
-                'expression': 'D'
+                'expression': 'd'
             }
         ]
     },
@@ -162,121 +162,121 @@ export const taketaConversationData = {
                 'speaker': '安藤先生',
                 'character': 'ando_sensei',
                 'text': 'なんかしまってる',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': '反対側に行く、こっちもしまっている',
-                'expression': 'B'
+                'expression': 'b'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'ちょっと、工藤あけて',
-                'expression': 'C'
+                'expression': 'c'
             },
             {
                 'speaker': '工藤',
                 'character': 'kudo',
                 'text': 'ヴぉ。',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': '（あけて閉めろ）',
-                'expression': 'D'
+                'expression': 'd'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'がちゃがちゃり（２回なる）',
-                'expression': 'E'
+                'expression': 'e'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'あいてないぞ！もう一度',
-                'expression': 'F'
+                'expression': 'f'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': '反対側は？',
-                'expression': 'C'
+                'expression': 'c'
             },
             {
                 'speaker': '工藤',
                 'character': 'kudo',
                 'text': 'ヴぉ。',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': '（あけて閉めろ）',
-                'expression': 'D'
+                'expression': 'd'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'がちゃがちゃり（２回なる）',
-                'expression': 'E'
+                'expression': 'e'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'ここも空いてない、あけて',
-                'expression': 'F'
+                'expression': 'f'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'おい！わざとしめただろ',
-                'expression': 'G'
+                'expression': 'g'
             },
             {
                 'speaker': '工藤',
                 'character': 'kudo',
                 'text': '。。。',
-                'expression': 'B'
+                'expression': 'b'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': '（工藤閉めろ）',
-                'expression': 'D'
+                'expression': 'd'
             },
             {
                 'speaker': '工藤',
                 'character': 'kudo',
                 'text': 'ヴぉ。',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'たったったッ（がチャリ）',
-                'expression': 'E'
+                'expression': 'e'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'いま、しめただろ！！！',
-                'expression': 'G'
+                'expression': 'g'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'ひろかず、逃走',
-                'expression': 'H'
+                'expression': 'h'
             },
             {
                 'speaker': '工藤',
                 'character': 'kudo',
                 'text': '工藤　逃げ遅れる',
-                'expression': 'D'
+                'expression': 'd'
             }
         ]
     },
@@ -290,133 +290,133 @@ export const taketaConversationData = {
                 'speaker': 'こうたろう',
                 'character': 'koutarou',
                 'text': '俺おしっこ近いんよね、',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'こうたろう',
                 'character': 'koutarou',
                 'text': 'おしっこ行ってくるわ',
-                'expression': 'B'
+                'expression': 'b'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': '１限目休憩',
-                'expression': 'C'
+                'expression': 'c'
             },
             {
                 'speaker': 'こうたろう',
                 'character': 'koutarou',
                 'text': 'おしっこ行ってくるわ',
-                'expression': 'B'
+                'expression': 'b'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': '２限目休憩',
-                'expression': 'C'
+                'expression': 'c'
             },
             {
                 'speaker': 'こうたろう',
                 'character': 'koutarou',
                 'text': '水飲だからかな、おしっこ行ってくるわ',
-                'expression': 'B'
+                'expression': 'b'
             },
             {
                 'speaker': 'こうたろう',
                 'character': 'koutarou',
                 'text': 'うんこも、行ってくるわ',
-                'expression': 'B'
+                'expression': 'b'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': '、、、',
-                'expression': 'D'
+                'expression': 'd'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': '３分後',
-                'expression': 'C'
+                'expression': 'c'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': '早くね？',
-                'expression': 'B'
+                'expression': 'b'
             },
             {
                 'speaker': 'こうたろう',
                 'character': 'koutarou',
                 'text': 'おれ、うんこめっちゃ早いんよね',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': '3限目休憩',
-                'expression': 'C'
+                'expression': 'c'
             },
             {
                 'speaker': 'こうたろう',
                 'character': 'koutarou',
                 'text': 'おしっこ行ってくるわ',
-                'expression': 'B'
+                'expression': 'b'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'こうたろう、俺も行ってくるわ',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'いや、お前は行っちゃダメだ',
-                'expression': 'C'
+                'expression': 'c'
             },
             {
                 'speaker': 'こうたろう',
                 'character': 'koutarou',
                 'text': 'なんで？',
-                'expression': 'B'
+                'expression': 'b'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': '膀胱でかいから',
-                'expression': 'D'
+                'expression': 'd'
             },
             {
                 'speaker': 'こうたろう',
                 'character': 'koutarou',
                 'text': 'かんけいないだろ。。、',
-                'expression': 'E'
+                'expression': 'e'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': '４限目終了昼休み',
-                'expression': 'C'
+                'expression': 'c'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'よし、こうたろう、いっていいぞ',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': '他',
                 'character': 'others',
                 'text': '（こうたろうは膀胱大きいんだな）',
-                'expression': 'B'
+                'expression': 'b'
             },
             {
                 'speaker': 'ナレーション',
                 'character': 'narrator',
                 'text': 'ひろかずにより、この日からこうたろうは昼休みまでおしっこにいけなくなった',
-                'expression': 'A'
+                'expression': 'a'
             }
         ]
     },
@@ -430,73 +430,73 @@ export const taketaConversationData = {
                 'speaker': '先生',
                 'character': 'teacher',
                 'text': 'とりあえず、教職員の会議があるから、いったん教室で待機しといて',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': '、、、、、、、、',
-                'expression': 'B'
+                'expression': 'b'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': '今帰ったら、４：３０の電車にまにあう！',
-                'expression': 'C'
+                'expression': 'c'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': '竹田は一時間に１本しか電車がない',
-                'expression': 'D'
+                'expression': 'd'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'おい、行くぞ！',
-                'expression': 'E'
+                'expression': 'e'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'たったったっ（ｓE）',
-                'expression': 'F'
+                'expression': 'f'
             },
             {
                 'speaker': '先生',
                 'character': 'teacher',
                 'text': '次の日',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': '先生',
                 'character': 'teacher',
                 'text': 'えー、みんながちゃんと待っている間輪をみだして、先に帰った者がいます、',
-                'expression': 'C'
+                'expression': 'c'
             },
             {
                 'speaker': '先生',
                 'character': 'teacher',
                 'text': '前にでて、一人づつ反省の言葉を言ってください',
-                'expression': 'D'
+                'expression': 'd'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': '先にかえって申し訳ありませんでした！',
-                'expression': 'E'
+                'expression': 'e'
             },
             {
                 'speaker': '先生',
                 'character': 'teacher',
                 'text': 'えー、先に帰ったので責任とって、今回の席替えは帰った人全員一番前の席になります',
-                'expression': 'F'
+                'expression': 'f'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'くっ、、、',
-                'expression': 'G'
+                'expression': 'g'
             }
         ]
     },
@@ -512,7 +512,7 @@ export const taketaConversationData = {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': '電車内うんこおじさん事件',
-                'expression': 'A'
+                'expression': 'a'
             }
         ]
     },
@@ -526,17 +526,17 @@ export const taketaConversationData = {
         'conversations': [
             {
                 'text': '銀河と書いている水がウィンドウに置いてある',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'text': 'その下に１５００円と書いてある、、、',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'だいち',
                 'character': 'daichi',
                 'text': 'たっか！！！！！！！！',
-                'expression': 'B'
+                'expression': 'b'
             }
         ]
     },
@@ -550,13 +550,13 @@ export const taketaConversationData = {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': '竹田駅だ',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': '電車で来たな',
-                'expression': 'B'
+                'expression': 'b'
             }
         ]
     },
@@ -570,37 +570,37 @@ export const taketaConversationData = {
                 'speaker': 'かなと',
                 'character': 'kanato',
                 'text': 'ちょっと、みしろー',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'なにー？',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'かなと',
                 'character': 'kanato',
                 'text': 'ごめん、ビデオカメラ落とした、そして、割れた、、、',
-                'expression': 'C'
+                'expression': 'c'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': '今度、修理代払うわ、、、',
-                'expression': 'D'
+                'expression': 'd'
             },
             {
                 'speaker': 'かなと',
                 'character': 'kanato',
                 'text': 'まじかーー、しゃーないなぁ、、、',
-                'expression': 'C'
+                'expression': 'c'
             },
             {
                 'speaker': 'ナレーション',
                 'character': 'narrator',
                 'text': '12年後、いまだにビデオカメラが直ることはないようだ',
-                'expression': 'A'
+                'expression': 'a'
             }
         ]
     },
@@ -614,307 +614,307 @@ export const taketaConversationData = {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'せっかくビデオカメラあるし、なんか、ドラマを撮ろう',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'かなと',
                 'character': 'kanato',
                 'text': 'まぁ、ええけど何をとる？',
-                'expression': 'B'
+                'expression': 'b'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'じゃあ、各々座ってくれ、ほら',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'だいち、こうたろう、しゅうへい、まさと、かなと',
                 'character': 'daichi,koutarou,shuuhei,masato,kanato',
                 'text': 'まぁ、了解',
-                'expression': 'B'
+                'expression': 'b'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'おれには自信のある、アイデアがあるんだ',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'かなと',
                 'character': 'kanato',
                 'text': 'アイデアとは？',
-                'expression': 'B'
+                'expression': 'b'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'まさとが教師訳で、順番に当てていくから最後みしろは▢ってますっていって、立つな',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'かなと',
                 'character': 'kanato',
                 'text': '・・・・・',
-                'expression': 'C'
+                'expression': 'c'
             },
             {
                 'speaker': 'だいち、こうたろう、しゅうへい、まさと',
                 'character': 'daichi,koutarou,shuuhei,masato',
                 'text': '了解！',
-                'expression': 'B'
+                'expression': 'b'
             },
             {
                 'speaker': 'かなと',
                 'character': 'kanato',
                 'text': 'えっ、なんも、理解できなかったんだけど？',
-                'expression': 'C'
+                'expression': 'c'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'はい位置についてー',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'まさと',
                 'character': 'masato',
                 'text': 'きりーつ、礼！',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'だいち、しゅうへい、こうたろう',
                 'character': 'daichi,shuuhei,koutarou',
                 'text': 'おねがいしまーす！',
-                'expression': 'B'
+                'expression': 'b'
             },
             {
                 'speaker': 'かなと',
                 'character': 'kanato',
                 'text': 'ちょっ、まてよ、、',
-                'expression': 'C'
+                'expression': 'c'
             },
             {
                 'speaker': 'まさと',
                 'character': 'masato',
                 'text': 'きょうはキノコについて、授業をする',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'まさと',
                 'character': 'masato',
                 'text': 'きのことはなんだ？だいち。席を立ってこたえてみろ',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'かなと',
                 'character': 'kanato',
                 'text': '拒否はできないんですかね？',
-                'expression': 'C'
+                'expression': 'c'
             },
             {
                 'speaker': 'だいち',
                 'character': 'daichi',
                 'text': '菌です。',
-                'expression': 'B'
+                'expression': 'b'
             },
             {
                 'speaker': 'まさと',
                 'character': 'masato',
                 'text': 'そうだ、ではキノコはどこにはえる？こうたろうこたえてみろ',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'こうたろう',
                 'character': 'koutarou',
                 'text': '森などじめじめしたところに生えることが多いです',
-                'expression': 'B'
+                'expression': 'b'
             },
             {
                 'speaker': 'かなと',
                 'character': 'kanato',
                 'text': '拒否権はないんですかね？？？？？？',
-                'expression': 'C'
+                'expression': 'c'
             },
             {
                 'speaker': 'まさと',
                 'character': 'masato',
                 'text': '正解だ、じゃ、このきのこはなんていうんだ？しゅうへい',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'しゅうへい',
                 'character': 'shuuhei',
                 'text': 'しいたけです',
-                'expression': 'B'
+                'expression': 'b'
             },
             {
                 'speaker': 'かなと',
                 'character': 'kanato',
                 'text': 'ないんですね！くそがっ',
-                'expression': 'C'
+                'expression': 'c'
             },
             {
                 'speaker': 'まさと',
                 'character': 'masato',
                 'text': 'そうだな、これはよく食卓などで食べられるきのこだ',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'まさと',
                 'character': 'masato',
                 'text': 'じゃあ、次は、これは何ていうんだ？みしろー',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'かなと',
                 'character': 'kanato',
                 'text': '、、、、、',
-                'expression': 'C'
+                'expression': 'c'
             },
             {
                 'speaker': 'かなと',
                 'character': 'kanato',
                 'text': '、、、、、、、、、、すみません、▢ってます。',
-                'expression': 'C'
+                'expression': 'c'
             },
             {
                 'speaker': 'まさと',
                 'character': 'masato',
                 'text': 'どうしたー？みしろー',
-                'expression': 'B'
+                'expression': 'b'
             },
             {
                 'speaker': 'かなと',
                 'character': 'kanato',
                 'text': 'あっ、いや、▢ってます。',
-                'expression': 'C'
+                'expression': 'c'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'ミシロどうした？ちゃんと立てよ',
-                'expression': 'D'
+                'expression': 'd'
             },
             {
                 'speaker': 'だいち',
                 'character': 'daichi',
                 'text': 'かなとどうした？ほら立てよ',
-                'expression': 'B'
+                'expression': 'b'
             },
             {
                 'speaker': 'こうたろう',
                 'character': 'koutarou',
                 'text': 'ほらぁ',
-                'expression': 'B'
+                'expression': 'b'
             },
             {
                 'speaker': 'しゅうへい',
                 'character': 'shuuhei',
                 'text': 'みしろどうした？',
-                'expression': 'B'
+                'expression': 'b'
             },
             {
                 'speaker': 'かなと',
                 'character': 'kanato',
                 'text': 'だから、▢ってます。もうすでに▢ってます。',
-                'expression': 'C'
+                'expression': 'c'
             },
             {
                 'speaker': 'ひろかず、だいち、こうたろう、しゅうへい、まさと',
                 'character': 'hirokazu,daichi,koutarou,shuuhei,masato',
                 'text': '・・・・・',
-                'expression': 'C'
+                'expression': 'c'
             },
             {
                 'speaker': 'しゅうへい',
                 'character': 'shuuhei',
                 'text': 'うわーーー',
-                'expression': 'C'
+                'expression': 'c'
             },
             {
                 'speaker': 'だいち',
                 'character': 'daichi',
                 'text': '・・・',
-                'expression': 'C'
+                'expression': 'c'
             },
             {
                 'speaker': 'こうたろう',
                 'character': 'koutarou',
                 'text': '、、、、、',
-                'expression': 'C'
+                'expression': 'c'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'きもちわるいなぁ',
-                'expression': 'D'
+                'expression': 'd'
             },
             {
                 'speaker': 'かなと',
                 'character': 'kanato',
                 'text': 'ひろかずさん、オブラートって知ってます？',
-                'expression': 'C'
+                'expression': 'c'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': '当たり前だろ。薬も言葉も包める便利なものさ',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'かなと',
                 'character': 'kanato',
                 'text': 'じゃあ、包めよ！！！その、言葉の刃をさぁ、やらせたの、お前じゃねーか！',
-                'expression': 'C'
+                'expression': 'c'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': '・・・',
-                'expression': 'C'
+                'expression': 'c'
             },
             {
                 'speaker': 'かなと',
                 'character': 'kanato',
                 'text': 'やらせといて、引くのやめてもらえます？',
-                'expression': 'C'
+                'expression': 'c'
             },
             {
                 'speaker': 'まさと',
                 'character': 'masato',
                 'text': 'みしろ、不正解',
-                'expression': 'D'
+                'expression': 'd'
             },
             {
                 'speaker': 'かなと',
                 'character': 'kanato',
                 'text': 'うるせーよ！',
-                'expression': 'C'
+                'expression': 'c'
             },
             {
                 'speaker': 'かなと',
                 'character': 'kanato',
                 'text': 'ってか、損するの俺だけじゃねーかよ。',
-                'expression': 'C'
+                'expression': 'c'
             },
             {
                 'speaker': 'だいち',
                 'character': 'daichi',
                 'text': 'そうだよ',
-                'expression': 'B'
+                'expression': 'b'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'まぁ、座れよ',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'かなと',
                 'character': 'kanato',
                 'text': '最初から、立ってねーよ！？',
-                'expression': 'C'
+                'expression': 'c'
             }
         ]
     },
@@ -928,43 +928,43 @@ export const taketaConversationData = {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'これいいな',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'くどう',
                 'character': 'kudo',
                 'text': 'ふんっふんっふんっ',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'なおき',
                 'character': 'naoki',
                 'text': '何してんの？',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'くどうにカンナムスタイルを躍らせている',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'かなと',
                 'character': 'kanato',
                 'text': 'なんで？',
-                'expression': 'B'
+                'expression': 'b'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'おもしろいから',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'なおき、かなと、だいち',
                 'character': 'naoki,kanato,daichi',
                 'text': '・・・',
-                'expression': 'C'
+                'expression': 'c'
             }
         ]
     },
@@ -978,37 +978,37 @@ export const taketaConversationData = {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'なんか竹田から帰るときさ、腕をさげないでってか突き上げて、歩いてる人いるよな',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'ダイチ',
                 'character': 'daichi',
                 'text': 'なんか見たことあるな、、',
-                'expression': 'B'
+                'expression': 'b'
             },
             {
                 'speaker': 'かなと',
                 'character': 'kanato',
                 'text': 'その人、めっちゃ歩くのはえーんだよな、竹田でやってる塾の先生らしいけど',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'ちゃんとした、歩き方おしえてもらってないんかな',
-                'expression': 'B'
+                'expression': 'b'
             },
             {
                 'speaker': 'だいち',
                 'character': 'daichi',
                 'text': 'ちゃんとした歩き方ってなんだよ',
-                'expression': 'B'
+                'expression': 'b'
             },
             {
                 'speaker': 'かなと',
                 'character': 'kanato',
                 'text': '、、、まぁ、足は、正しい型だよ',
-                'expression': 'A'
+                'expression': 'a'
             }
         ]
     },
@@ -1022,745 +1022,745 @@ export const taketaConversationData = {
                 'speaker': 'かなと',
                 'character': 'kanato',
                 'text': 'はじめてだな、高校のメンバーで飲み会するのは',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': '三重の人間は三重町で飲むからな',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'だいち',
                 'character': 'daichi',
                 'text': 'そういえば、、、、、竹田の終電ってどうなっている、、、',
-                'expression': 'B'
+                'expression': 'b'
             },
             {
                 'speaker': 'かなと',
                 'character': 'kanato',
                 'text': '今何時だ？？？',
-                'expression': 'C'
+                'expression': 'c'
             },
             {
                 'speaker': 'こうたろう',
                 'character': 'koutarou',
                 'text': 'もう、11時すぎたな、、、',
-                'expression': 'B'
+                'expression': 'b'
             },
             {
                 'speaker': 'なおき',
                 'character': 'naoki',
                 'text': '２２時にはもう終電なかったぞ',
-                'expression': 'B'
+                'expression': 'b'
             },
             {
                 'speaker': 'かなと',
                 'character': 'kanato',
                 'text': 'なぜ言わない',
-                'expression': 'C'
+                'expression': 'c'
             },
             {
                 'speaker': 'なおき',
                 'character': 'naoki',
                 'text': 'きかれなかったから',
-                'expression': 'B'
+                'expression': 'b'
             },
             {
                 'speaker': 'だいち',
                 'character': 'daichi',
                 'text': '馬鹿やろー',
-                'expression': 'C'
+                'expression': 'c'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'どうするよ、竹田はどこにも泊まるあてもないぞ',
-                'expression': 'D'
+                'expression': 'd'
             },
             {
                 'speaker': 'かなと',
                 'character': 'kanato',
                 'text': 'タクシーは？',
-                'expression': 'B'
+                'expression': 'b'
             },
             {
                 'speaker': 'なおき',
                 'character': 'naoki',
                 'text': '車で３０分以上かかるから、いくらかかるかわからないぞ',
-                'expression': 'B'
+                'expression': 'b'
             },
             {
                 'speaker': 'かなと',
                 'character': 'kanato',
                 'text': 'そもそも、一台のタクシーに５人も乗れないから、2-3で別れるしかないしな',
-                'expression': 'B'
+                'expression': 'b'
             },
             {
                 'speaker': 'だいち',
                 'character': 'daichi',
                 'text': '２台いるということか、、、',
-                'expression': 'B'
+                'expression': 'b'
             },
             {
                 'speaker': 'こうたろう',
                 'character': 'koutarou',
                 'text': 'どうするか、、、、、',
-                'expression': 'B'
+                'expression': 'b'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': '歩いて帰るぞ！！！',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'だいち',
                 'character': 'daichi',
                 'text': '、、、歩くぞ！！！',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'なおき',
                 'character': 'naoki',
                 'text': 'そうするしかないか！！！',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'かなと',
                 'character': 'kanato',
                 'text': '仕方ないな、やるしかねーな！！！',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'こうたろう',
                 'character': 'koutarou',
                 'text': 'やるかっ！！',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': '竹田のメンバー',
                 'character': 'others',
                 'text': 'こいつらマジか、、、、、大丈夫か？',
-                'expression': 'B'
+                'expression': 'b'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'おらぁ！！！！！',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': '竹田のメンバー',
                 'character': 'others',
                 'text': '今、１２月だけど、大丈夫か？',
-                'expression': 'B'
+                'expression': 'b'
             },
             {
                 'speaker': 'かなと',
                 'character': 'kanato',
                 'text': 'いけるいける',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'だいち',
                 'character': 'daichi',
                 'text': '大丈夫！！！！いける！！！！',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'なおき',
                 'character': 'naoki',
                 'text': 'よゆーよゆー',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'こうたろう',
                 'character': 'koutarou',
                 'text': 'マジ、よゆー',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'おらぁ、いくぞ！！！！',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': '竹田のメンバー',
                 'character': 'others',
                 'text': 'おっ、、、おっ、、まぁ、頑張れ',
-                'expression': 'B'
+                'expression': 'b'
             },
             {
                 'speaker': 'ナレーション',
                 'character': 'narrator',
                 'text': '１時間後',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'なんか寒くねーか？',
-                'expression': 'B'
+                'expression': 'b'
             },
             {
                 'speaker': 'なおき',
                 'character': 'naoki',
                 'text': 'あれ、なんか寒いな',
-                'expression': 'B'
+                'expression': 'b'
             },
             {
                 'speaker': 'かなと',
                 'character': 'kanato',
                 'text': '寒い気がするな',
-                'expression': 'B'
+                'expression': 'b'
             },
             {
                 'speaker': 'だいち',
                 'character': 'daichi',
                 'text': 'もしかして、アルコールのおかげだったか？',
-                'expression': 'B'
+                'expression': 'b'
             },
             {
                 'speaker': 'こうたろう',
                 'character': 'koutarou',
                 'text': 'そうかも、しれない',
-                'expression': 'B'
+                'expression': 'b'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'あっ、言ってなかったんだけど、',
-                'expression': 'B'
+                'expression': 'b'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'おれ、足にひびが入っていてあんまり、うまく歩けないんだよね、今',
-                'expression': 'D'
+                'expression': 'd'
             },
             {
                 'speaker': 'だいち',
                 'character': 'daichi',
                 'text': 'いまいう？',
-                'expression': 'C'
+                'expression': 'c'
             },
             {
                 'speaker': 'ナレーション',
                 'character': 'narrator',
                 'text': '２時間後',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'あっ、これやべーさむいわ、足いてーわ',
-                'expression': 'D'
+                'expression': 'd'
             },
             {
                 'speaker': 'だいち',
                 'character': 'daichi',
                 'text': 'これはいかんぞ',
-                'expression': 'C'
+                'expression': 'c'
             },
             {
                 'speaker': 'なおき',
                 'character': 'naoki',
                 'text': 'なめてたかもしれん',
-                'expression': 'B'
+                'expression': 'b'
             },
             {
                 'speaker': 'こうたろう',
                 'character': 'koutarou',
                 'text': 'それにしても、夜空はきれいだな',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'かなと',
                 'character': 'kanato',
                 'text': 'こんなに夜空を眺めるのは久しぶりだな、きれいだ',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'ナレーション',
                 'character': 'narrator',
                 'text': '３時間後',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'かなと',
                 'character': 'kanato',
                 'text': '大丈夫か？なんか、足を引きずりながら、歩いているけど',
-                'expression': 'B'
+                'expression': 'b'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'あんまり大丈夫じゃない',
-                'expression': 'D'
+                'expression': 'd'
             },
             {
                 'speaker': 'なおき',
                 'character': 'naoki',
                 'text': 'さむい、、、、人が死ぬレベル、、、',
-                'expression': 'D'
+                'expression': 'd'
             },
             {
                 'speaker': 'こうたろう',
                 'character': 'koutarou',
                 'text': '夜空がきれいだな、、、ステキ、、、',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'だいち',
                 'character': 'daichi',
                 'text': 'ちょっと、やばい、とっ、とりあえず、暖を取らねーと死ぬ',
-                'expression': 'C'
+                'expression': 'c'
             },
             {
                 'speaker': 'かなと',
                 'character': 'kanato',
                 'text': 'もうちょっといったら、コンビニがあるはず、開いているとは思うけど、、、',
-                'expression': 'B'
+                'expression': 'b'
             },
             {
                 'speaker': 'ナレーション',
                 'character': 'narrator',
                 'text': '４時間後',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'かなと',
                 'character': 'kanato',
                 'text': 'コンビニ開いていたな、、助かった、、マジで',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'あ、、、アルコール買うぞ',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'なおき',
                 'character': 'naoki',
                 'text': '・・・',
-                'expression': 'C'
+                'expression': 'c'
             },
             {
                 'speaker': 'だいち',
                 'character': 'daichi',
                 'text': 'なおきがしゃべらない、、、',
-                'expression': 'B'
+                'expression': 'b'
             },
             {
                 'speaker': 'こうたろう',
                 'character': 'koutarou',
                 'text': '酒、、、酒、、、、寒い、、空がきれい、、、きれい、、？',
-                'expression': 'C'
+                'expression': 'c'
             },
             {
                 'speaker': 'ナレーション',
                 'character': 'narrator',
                 'text': '５時間後',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'かなと',
                 'character': 'kanato',
                 'text': 'なおきどうした？',
-                'expression': 'B'
+                'expression': 'b'
             },
             {
                 'speaker': 'なおき',
                 'character': 'naoki',
                 'text': 'やばいかも、俺も足が痛いかも',
-                'expression': 'D'
+                'expression': 'd'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': '俺この前、医者にいったんだよな',
-                'expression': 'B'
+                'expression': 'b'
             },
             {
                 'speaker': 'だいち',
                 'character': 'daichi',
                 'text': 'なんで、歩いて帰るとかいったんだよ',
-                'expression': 'C'
+                'expression': 'c'
             },
             {
                 'speaker': 'こうたろう',
                 'character': 'koutarou',
                 'text': 'なんか、夜空がキレイなのがムカついてきた',
-                'expression': 'C'
+                'expression': 'c'
             },
             {
                 'speaker': 'なおき',
                 'character': 'naoki',
                 'text': 'ひろかずくん、ちょっと肩を貸しあおう、、',
-                'expression': 'B'
+                'expression': 'b'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'そうだな、、、',
-                'expression': 'B'
+                'expression': 'b'
             },
             {
                 'speaker': 'なおき、ひろかず',
                 'character': 'naoki,hirokazu',
                 'text': 'いち、に、いち、に、いち、に、、、、、、',
-                'expression': 'B'
+                'expression': 'b'
             },
             {
                 'speaker': 'こうたろう',
                 'character': 'koutarou',
                 'text': 'あーーーーーーーー、くそ！！！空がキレイだなぁーーーー、くそが',
-                'expression': 'C'
+                'expression': 'c'
             },
             {
                 'speaker': 'ナレーション',
                 'character': 'narrator',
                 'text': '６時間後',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'かなと',
                 'character': 'kanato',
                 'text': 'あっ、みんなあきらめるな、、、歩きを止めたら、死ぬぞ',
-                'expression': 'C'
+                'expression': 'c'
             },
             {
                 'speaker': 'こうたろう',
                 'character': 'koutarou',
                 'text': 'ちょっと、マジで死ぬぞ',
-                'expression': 'C'
+                'expression': 'c'
             },
             {
                 'speaker': 'だいち',
                 'character': 'daichi',
                 'text': 'えぐい、えぐいえぐい、川沿いえぐいぞ、冗談抜きで凍え死ぬぞ',
-                'expression': 'C'
+                'expression': 'c'
             },
             {
                 'speaker': 'ひろかず、なおき',
                 'character': 'hirokazu,naoki',
                 'text': '・・・',
-                'expression': 'C'
+                'expression': 'c'
             },
             {
                 'speaker': 'だいち',
                 'character': 'daichi',
                 'text': 'アルコールが、アルコールが、アルコールが、、、、、、、、',
-                'expression': 'C'
+                'expression': 'c'
             },
             {
                 'speaker': 'こうたろう',
                 'character': 'koutarou',
                 'text': 'ここにきて、夜空が、めっちゃきれいに見えるのめっちゃむかついてきた',
-                'expression': 'C'
+                'expression': 'c'
             },
             {
                 'speaker': 'かなと',
                 'character': 'kanato',
                 'text': 'さむいさむいさむい、ちょっと、冗談じゃないぞ',
-                'expression': 'C'
+                'expression': 'c'
             },
             {
                 'speaker': 'かなと',
                 'character': 'kanato',
                 'text': 'ちょっと、皆みてみろ！！なにか、、、なにかの光が見えるぞ',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'だいち、こうたろう、ひろかず、なおき',
                 'character': 'daichi,koutarou,hirokazu,naoki',
                 'text': '？？？',
-                'expression': 'B'
+                'expression': 'b'
             },
             {
                 'speaker': 'かなと',
                 'character': 'kanato',
                 'text': 'あれは、、、、、、、',
-                'expression': 'B'
+                'expression': 'b'
             },
             {
                 'speaker': 'かなと',
                 'character': 'kanato',
                 'text': 'コインランドリーだ、、コインランドリーがあったぞ！！！！！',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'だいち',
                 'character': 'daichi',
                 'text': '暖がとれるかもしれない',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'こうたろう',
                 'character': 'koutarou',
                 'text': 'とりあえず、あそこまでかんばるぞ',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'ひろかず、なおき',
                 'character': 'hirokazu,naoki',
                 'text': 'はぁ、、、はぁ、、',
-                'expression': 'C'
+                'expression': 'c'
             },
             {
                 'speaker': 'かなと',
                 'character': 'kanato',
                 'text': 'あと、ちょっとの辛抱だ、頑張れ！！！！',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'ナレーション',
                 'character': 'narrator',
                 'text': '・・・',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'かなと',
                 'character': 'kanato',
                 'text': 'よかった、コインランドリーについた、開いているみたいだな',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'だいち',
                 'character': 'daichi',
                 'text': 'これで、暖が取れる',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'こうたろう',
                 'character': 'koutarou',
                 'text': 'とりあえず、少し休憩しよう',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'もうだめかと思った',
-                'expression': 'B'
+                'expression': 'b'
             },
             {
                 'speaker': 'なおき',
                 'character': 'naoki',
                 'text': '飲み物を買おう',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'かなと',
                 'character': 'kanato',
                 'text': '落ち着いたら、いくか、、、',
-                'expression': 'B'
+                'expression': 'b'
             },
             {
                 'speaker': 'ナレーション',
                 'character': 'narrator',
                 'text': '７時間後',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'かなと',
                 'character': 'kanato',
                 'text': 'み、、、見えたぞ、これは、、',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'こうたろう',
                 'character': 'koutarou',
                 'text': '三重町だ、、、、',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'だいち',
                 'character': 'daichi',
                 'text': 'やったぞ、、、やったぞ、、、',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'うおおおおおおお',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'なおき',
                 'character': 'naoki',
                 'text': 'よかった、、、よかった、、、',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'かなと',
                 'character': 'kanato',
                 'text': 'あと、もう一息だ',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'ナレーション',
                 'character': 'narrator',
                 'text': '８時間後',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'かなと',
                 'character': 'kanato',
                 'text': 'なんか、、、日が昇ってきたな',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'こうたろう',
                 'character': 'koutarou',
                 'text': 'きれいだった、星々もみえなくなった',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'だいち',
                 'character': 'daichi',
                 'text': '寒さも凍えるほどではなくなってきたな',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': '日の光をこれほど、ありがたいと思うとは、、、',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'なおき',
                 'character': 'naoki',
                 'text': 'やりとげたんだな、、、おれたち、、、',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'かなと',
                 'character': 'kanato',
                 'text': 'もしかして、もう少ししたら、ジョイフルが開いているんじゃないのか？',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'だいち',
                 'character': 'daichi',
                 'text': '朝ご飯食べるか、、',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'こうたろう',
                 'character': 'koutarou',
                 'text': 'そうだな、、、',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'せっかくだし行くか、、、、',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'なおき',
                 'character': 'naoki',
                 'text': 'うん、、、、',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'ナレーション',
                 'character': 'narrator',
                 'text': 'ジョイフル到着',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'かなと',
                 'character': 'kanato',
                 'text': 'なんか、涙出てきた',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'こんなにうまい、ジョイフルは初めてだ、、',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'こうたろう',
                 'character': 'koutarou',
                 'text': '達成感がやばいな',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'なおき',
                 'character': 'naoki',
                 'text': '俺たち生きてたんだな、、、',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': '全員',
                 'character': 'all',
                 'text': '・・・・・',
-                'expression': 'C'
+                'expression': 'c'
             },
             {
                 'speaker': 'だいち',
                 'character': 'daichi',
                 'text': 'ところで、ここまで結構歩いて帰るのにお金使ってきたけど',
-                'expression': 'B'
+                'expression': 'b'
             },
             {
                 'speaker': 'だいち',
                 'character': 'daichi',
                 'text': 'お酒とか、自動販売機で温かい飲み物とか、ジョイフルとかで、、、',
-                'expression': 'B'
+                'expression': 'b'
             },
             {
                 'speaker': 'だいち',
                 'character': 'daichi',
                 'text': 'タクシー代を割り勘したときの金額と変わらないってことはないよな、、、',
-                'expression': 'B'
+                'expression': 'b'
             },
             {
                 'speaker': '全員',
                 'character': 'all',
                 'text': '・・・・・',
-                'expression': 'C'
+                'expression': 'c'
             },
             {
                 'speaker': 'かなと',
                 'character': 'kanato',
                 'text': '野暮なことを考えるのはよそうぜ、、、',
-                'expression': 'B'
+                'expression': 'b'
             },
             {
                 'speaker': 'なおき',
                 'character': 'naoki',
                 'text': '無事帰れたんだからな、、、',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'こうたろう',
                 'character': 'koutarou',
                 'text': 'そうだな',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'う、、、む、、、',
-                'expression': 'B'
+                'expression': 'b'
             },
             {
                 'speaker': 'だいち',
                 'character': 'daichi',
                 'text': 'わるい、忘れてくれ',
-                'expression': 'B'
+                'expression': 'b'
             },
             {
                 'speaker': 'ナレーション',
                 'character': 'narrator',
                 'text': 'やっぱり、歩いて帰ったほうが、高くついたのは知らないほうがよかった話',
-                'expression': 'A'
+                'expression': 'a'
             }
         ]
     },
