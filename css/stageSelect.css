@@ -146,6 +146,18 @@
     gap: 15px;
     position: relative;
     width: 100%;
+    /* Google Chrome対応 */
+    min-height: 50px;
+    flex-wrap: nowrap;
+}
+
+/* 移動ボタンコンテナの配置調整 */
+.button-row .move-button-container {
+    flex-shrink: 0;
+    margin-left: auto;
+    /* Google Chrome対応 */
+    position: relative;
+    z-index: 100;
 }
 
 .stage-buttons button {
@@ -217,6 +229,11 @@
     opacity: 0;
     transform: translateX(-20px);
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    /* Google Chrome対応 */
+    min-width: 120px;
+    height: 40px;
+    position: relative;
+    z-index: 100;
 }
 
 .move-button-container.show {
@@ -245,7 +262,15 @@
     position: relative;
     overflow: hidden;
     min-width: 80px;
+    height: 40px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     transform: translateY(0);
+    /* Google Chrome対応 */
+    box-sizing: border-box;
+    flex-shrink: 0;
 }
 
 .move-button::before {
