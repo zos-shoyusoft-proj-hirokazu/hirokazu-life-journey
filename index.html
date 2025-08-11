@@ -589,12 +589,24 @@
                 console.log('既存のBGMを停止');
             }
             
-            // 新しいBGMを再生
+            // 新しいBGMを再生（エラーハンドリング付き）
             currentBGM = new Audio(audioPath);
             currentBGM.loop = true;
             currentBGM.volume = 0.5;
-            currentBGM.play().catch(e => console.log('BGM再生エラー:', e));
-            console.log('新しいBGMを再生:', audioPath);
+            
+            // ユーザーインタラクション後に音声を再生
+            const playPromise = currentBGM.play();
+            if (playPromise !== undefined) {
+                playPromise
+                    .then(() => {
+                        console.log('新しいBGMを再生:', audioPath);
+                    })
+                    .catch(e => {
+                        console.log('BGM再生エラー（自動再生制限）:', e.message);
+                        // 自動再生制限の場合は、ユーザーインタラクション後に再生を試行
+                        console.log('ユーザーインタラクション後に音声再生を試行します');
+                    });
+            }
         }
         
         // SE再生関数
@@ -1109,6 +1121,10 @@
             const moveButton = document.getElementById(moveButtonId);
             if (moveButton) {
                 moveButton.style.display = 'block';
+                // アニメーション効果を追加
+                setTimeout(() => {
+                    moveButton.classList.add('show');
+                }, 100);
                 console.log('Move button displayed for:', stageId);
                 
                 // ボタンのクリックイベントを設定
@@ -1116,6 +1132,11 @@
                 if (moveBtn) {
                     moveBtn.onclick = function() {
                         console.log('移動するボタンがクリックされました:', stageId);
+                        // クリック時のエフェクト
+                        moveBtn.style.transform = 'scale(0.95)';
+                        setTimeout(() => {
+                            moveBtn.style.transform = '';
+                        }, 150);
                         startStage(stageId);
                     };
                 }
@@ -1250,8 +1271,10 @@
             if (stageSelect) stageSelect.style.display = 'none';
             if (gameContainer) gameContainer.style.display = 'none';
             
-            // メインメニューBGM再生
-            playBGM('assets/audio/bgm/zelda_menu_select.mp3');
+            // メインメニューBGM再生（ユーザーインタラクション後に遅延）
+            setTimeout(() => {
+                playBGM('assets/audio/bgm/zelda_menu_select.mp3');
+            }, 100);
         }
         
         // PWAとしてインストール可能にするためのService Worker登録
