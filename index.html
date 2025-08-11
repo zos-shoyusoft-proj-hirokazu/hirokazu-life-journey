@@ -197,9 +197,241 @@
             #game-container {
                 height: -webkit-fill-available;
             }
-        }</style><script defer="defer" src="bundle.js"></script></head><body><button id="fullscreen-button" onclick="toggleFullscreen()">全画面</button><div id="game-container"></div><script src="https://cdn.jsdelivr.net/npm/phaser@3.70.0/dist/phaser.min.js"></script><div id="opening-video" style="display: none;"><div id="video-container"><iframe id="youtube-video" width="100%" height="100%" frameborder="0" allowfullscreen></iframe><button id="skip-video" class="skip-button">スキップ</button></div></div><div id="main-menu" style="display: none;"><div class="main-menu-container"><div class="game-title"><h1>Hirokazu Life Journey</h1><p class="subtitle">ひろかずの人生を追体験しよう！</p></div><div class="menu-buttons"><button id="start-game" class="menu-button primary">START</button></div><div class="game-info"><p>結婚式で披露するゲーム</p><p>新郎の人生をRPGで体験！</p></div></div></div><div id="stage-select"><div class="background-image"></div><div class="background-overlay"></div><div class="stage-select-container"><div class="stage-title">ステージ選択画面</div><div class="stage-content"><div class="stage-buttons"><div class="button-row"><button id="miemachi">三重シティ</button><div id="miemachi-move-btn" class="move-button-container" style="display: none;"><button class="move-button">移動する</button></div></div><div class="button-row"><button id="taketastage">竹田シティ</button><div id="taketa-move-btn" class="move-button-container" style="display: none;"><button class="move-button">移動する</button></div></div><div class="button-row"><button id="japan">全国</button><div id="japan-move-btn" class="move-button-container" style="display: none;"><button class="move-button">移動する</button></div></div><button id="opening-video-btn">オープニング動画</button></div><div class="content-area"><div class="description-area" id="description-area"><p>ステージを選択してください</p></div></div></div></div></div><script>// 音声管理
+        }
+        
+        /* インストール促進バナーのスタイル */
+        #install-banner {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            z-index: 10000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            animation: slideDown 0.3s ease-out;
+        }
+        
+        .install-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 600px;
+            margin: 0 auto;
+            gap: 15px;
+        }
+        
+        .install-content span {
+            flex: 1;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        #install-btn {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+            white-space: nowrap;
+        }
+        
+        #install-btn:hover {
+            background: #45a049;
+        }
+        
+        #dismiss-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 5px;
+            min-width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        #dismiss-btn:hover {
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+        }
+        
+        /* iOS用インストール案内のスタイル */
+        #ios-install-guide {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            z-index: 10001;
+            max-width: 90vw;
+            width: 400px;
+        }
+        
+        .ios-guide-content h3 {
+            margin: 0 0 20px 0;
+            color: #333;
+            text-align: center;
+        }
+        
+        .ios-guide-content ol {
+            margin: 0 0 20px 0;
+            padding-left: 20px;
+            color: #555;
+            line-height: 1.6;
+        }
+        
+        .ios-guide-content li {
+            margin-bottom: 10px;
+        }
+        
+        .ios-guide-content button {
+            background: #2196F3;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+        }
+        
+        .ios-guide-content button:hover {
+            background: #1976D2;
+        }
+        
+        @keyframes slideDown {
+            from { transform: translateY(-100%); }
+            to { transform: translateY(0); }
+        }
+        
+        /* モバイル対応 */
+        @media (max-width: 768px) {
+            .install-content {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+            
+            .install-content span {
+                font-size: 13px;
+            }
+            
+            #ios-install-guide {
+                width: 90vw;
+                margin: 20px;
+            }
+        }</style><script defer="defer" src="bundle.js"></script></head><body><button id="fullscreen-button" onclick="toggleFullscreen()">全画面</button><div id="install-banner" style="display: none;"><div class="install-content"><span>📱 ホーム画面に追加して、より快適にプレイ！</span> <button id="install-btn">追加する</button> <button id="dismiss-btn">×</button></div></div><div id="ios-install-guide" style="display: none;"><div class="ios-guide-content"><h3>📱 ホーム画面に追加する方法</h3><ol><li>ブラウザの共有ボタン（□↑）をタップ</li><li>「ホーム画面に追加」を選択</li><li>「追加」をタップ</li></ol><button onclick="this.parentElement.parentElement.remove()">了解</button></div></div><div id="game-container"></div><script src="https://cdn.jsdelivr.net/npm/phaser@3.70.0/dist/phaser.min.js"></script><div id="opening-video" style="display: none;"><div id="video-container"><iframe id="youtube-video" width="100%" height="100%" frameborder="0" allowfullscreen></iframe><button id="skip-video" class="skip-button">スキップ</button></div></div><div id="main-menu" style="display: none;"><div class="main-menu-container"><div class="game-title"><h1>Hirokazu Life Journey</h1><p class="subtitle">ひろかずの人生を追体験しよう！</p></div><div class="menu-buttons"><button id="start-game" class="menu-button primary">START</button></div><div class="game-info"><p>結婚式で披露するゲーム</p><p>新郎の人生をRPGで体験！</p></div></div></div><div id="stage-select"><div class="background-image"></div><div class="background-overlay"></div><div class="stage-select-container"><div class="stage-title">ステージ選択画面</div><div class="stage-content"><div class="stage-buttons"><div class="button-row"><button id="miemachi">三重シティ</button><div id="miemachi-move-btn" class="move-button-container" style="display: none;"><button class="move-button">移動する</button></div></div><div class="button-row"><button id="taketastage">竹田シティ</button><div id="taketa-move-btn" class="move-button-container" style="display: none;"><button class="move-button">移動する</button></div></div><div class="button-row"><button id="japan">全国</button><div id="japan-move-btn" class="move-button-container" style="display: none;"><button class="move-button">移動する</button></div></div><button id="opening-video-btn">オープニング動画</button></div><div class="content-area"><div class="description-area" id="description-area"><p>ステージを選択してください</p></div></div></div></div></div><script>// 音声管理
         let currentBGM = null;
         let currentSE = null;
+        
+        // PWAインストール促進機能
+        let deferredPrompt = null;
+        
+        // インストール済みかチェック
+        function isInstalled() {
+            return window.matchMedia('(display-mode: standalone)').matches ||
+                   window.navigator.standalone === true;
+        }
+        
+        // インストール促進バナーの表示
+        function showInstallPrompt() {
+            // 既にインストール済みの場合は表示しない
+            if (isInstalled()) {
+                return;
+            }
+            
+            // 既に閉じられている場合は表示しない
+            if (localStorage.getItem('installPromptDismissed')) {
+                return;
+            }
+            
+            // インストール促進バナーを表示
+            const installBanner = document.getElementById('install-banner');
+            if (installBanner) {
+                installBanner.style.display = 'block';
+                
+                // インストールボタンのイベント
+                const installBtn = document.getElementById('install-btn');
+                if (installBtn) {
+                    installBtn.addEventListener('click', promptInstall);
+                }
+                
+                // 閉じるボタンのイベント
+                const dismissBtn = document.getElementById('dismiss-btn');
+                if (dismissBtn) {
+                    dismissBtn.addEventListener('click', () => {
+                        installBanner.style.display = 'none';
+                        // 次回表示しないように設定
+                        localStorage.setItem('installPromptDismissed', 'true');
+                    });
+                }
+            }
+        }
+        
+        // インストール処理
+        function promptInstall() {
+            if (deferredPrompt) {
+                // Android Chromeの場合
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('ユーザーがインストールを承認しました');
+                        // インストール促進バナーを非表示
+                        const installBanner = document.getElementById('install-banner');
+                        if (installBanner) {
+                            installBanner.style.display = 'none';
+                        }
+                    }
+                    deferredPrompt = null;
+                });
+            } else {
+                // iOS Safariの場合（手動インストール案内）
+                showIOSInstallGuide();
+            }
+        }
+        
+        // iOS用インストール案内
+        function showIOSInstallGuide() {
+            const guide = document.getElementById('ios-install-guide');
+            if (guide) {
+                guide.style.display = 'block';
+            }
+        }
+        
+        // PWAインストールイベントの監視
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            console.log('PWAインストール可能になりました');
+        });
+        
+        // インストール完了の監視
+        window.addEventListener('appinstalled', () => {
+            console.log('PWAがインストールされました');
+            // インストール促進バナーを非表示
+            const installBanner = document.getElementById('install-banner');
+            if (installBanner) {
+                installBanner.style.display = 'none';
+            }
+            // 全画面ボタンを非表示（インストール済みの場合）
+            if (isInstalled()) {
+                const fullscreenButton = document.getElementById('fullscreen-button');
+                if (fullscreenButton) {
+                    fullscreenButton.style.display = 'none';
+                }
+            }
+        });
         
         // BGM再生関数
         function playBGM(audioPath) {
@@ -462,6 +694,15 @@
             setupStageSelectButtons();
             
             console.log('イベントリスナーの設定完了');
+            
+            // インストール済みの場合は全画面ボタンを非表示
+            if (isInstalled()) {
+                const fullscreenButton = document.getElementById('fullscreen-button');
+                if (fullscreenButton) {
+                    fullscreenButton.style.display = 'none';
+                    console.log('PWAインストール済みのため、全画面ボタンを非表示にしました');
+                }
+            }
         });
         
         // ステージ選択画面のボタン設定
@@ -790,6 +1031,11 @@
                         playBGM('assets/audio/bgm/zelda_menu_select.mp3');
                     }
             }
+            
+            // インストール促進バナーの表示（3秒後に表示）
+            setTimeout(() => {
+                showInstallPrompt();
+            }, 3000);
         });
         
         // メインメニューを表示する関数
