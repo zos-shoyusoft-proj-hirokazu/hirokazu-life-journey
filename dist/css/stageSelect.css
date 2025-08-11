@@ -173,19 +173,18 @@
     outline: none;
     -webkit-focus-ring-color: transparent;
     -webkit-tap-highlight-color: transparent;
-}
-
-/* すべてのボタンの初期状態（光らない） */
-.stage-buttons button {
-    background: linear-gradient(145deg, #2c3e50 0%, #34495e 50%, #2c3e50 100%);
-    border-color: #3498db;
+    background: linear-gradient(145deg, #3498db 0%, #5dade2 50%, #3498db 100%);
+    border: 2px solid #3498db;
     color: #ffffff;
     box-shadow: 
         0 6px 12px rgba(0, 0, 0, 0.3),
         inset 0 2px 4px rgba(255, 255, 255, 0.1),
         inset 0 -2px 4px rgba(0, 0, 0, 0.2),
         0 0 0 1px rgba(255, 255, 255, 0.05);
+    animation: buttonGlow 2s ease-in-out infinite; /* 追加：すべてのボタンを光らせる */
 }
+
+
 
 @keyframes buttonGlow {
     0%, 100% { 
@@ -227,13 +226,14 @@
 
 .stage-buttons button.selected {
     background: linear-gradient(145deg, #e74c3c 0%, #c0392b 50%, #e74c3c 100%);
-    border-color: #3498db;
+    border: 2px solid #f39c12;
     color: #ffffff;
     font-weight: bold;
     box-shadow: 
         0 8px 16px rgba(231, 76, 60, 0.4),
         inset 0 1px 0 rgba(255, 255, 255, 0.2),
         0 0 20px rgba(231, 76, 60, 0.3);
+    animation: selectedPulse 2s ease-in-out infinite;
 }
 
 
@@ -253,18 +253,34 @@
     }
 }
 
+@keyframes moveButtonAppear {
+    0% {
+        opacity: 0;
+        transform: translateX(-30px) scale(0.8) rotateY(-15deg);
+    }
+    50% {
+        opacity: 0.7;
+        transform: translateX(-10px) scale(0.9) rotateY(-5deg);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0) scale(1) rotateY(0deg);
+    }
+}
+
 .move-button-container {
     display: none;
     align-items: center;
     opacity: 0;
-    transform: translateX(-20px);
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transform: translateX(-30px) scale(0.8);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .move-button-container.show {
     display: flex !important;
     opacity: 1;
-    transform: translateX(0);
+    transform: translateX(0) scale(1);
+    animation: moveButtonAppear 0.4s ease-out;
 }
 
 .move-button {

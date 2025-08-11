@@ -13,6 +13,66 @@
     overflow: hidden;
 }
 
+/* インストールポップアップを右下に小さく配置 */
+.install-banner {
+    position: relative;
+    background: rgba(0, 0, 0, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 6px;
+    padding: 6px;
+    color: white;
+    font-size: 0.6rem;
+    z-index: 9999;
+    max-width: 180px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+    display: block;
+    transform: scale(0.9);
+}
+
+.install-banner .install-text {
+    margin-bottom: 6px;
+    font-size: 0.65rem;
+    opacity: 0.9;
+    line-height: 1.2;
+}
+
+.install-banner .install-button {
+    background: #27ae60;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 4px 8px;
+    font-size: 0.65rem;
+    cursor: pointer;
+    margin-right: 6px;
+    transition: all 0.3s ease;
+}
+
+.install-banner .install-button:hover {
+    background: #2ecc71;
+    transform: scale(1.05);
+}
+
+.install-banner .close-button {
+    background: none;
+    border: none;
+    color: #ccc;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.3s ease;
+}
+
+.install-banner .close-button:hover {
+    color: white;
+}
+
 #main-menu::before {
     content: '';
     position: absolute;
@@ -45,13 +105,17 @@
 }
 
 .main-menu-container {
-    text-align: center;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
     color: white;
-    padding: 50px;
-    max-width: 800px;
-    width: 90%;
+    padding: 25px;
+    max-width: 1400px;
+    width: 95%;
+    min-height: 350px;
     background: rgba(0, 0, 0, 0.3);
-    border-radius: 30px;
+    border-radius: 25px;
     backdrop-filter: blur(20px);
     border: 2px solid rgba(255, 255, 255, 0.15);
     box-shadow: 
@@ -61,6 +125,32 @@
     position: relative;
     z-index: 10;
     animation: containerGlow 4s ease-in-out infinite alternate;
+    gap: 35px;
+    /* インストールポップアップの配置のため */
+    overflow: visible;
+}
+
+/* メインコンテンツエリア */
+.main-content {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 30px;
+    flex: 1;
+}
+
+/* インストールポップアップ専用領域 */
+.install-area {
+    position: absolute;
+    bottom: 30px;
+    right: 30px;
+    width: 200px;
+    height: auto;
+    z-index: 1000;
+    /* 確実に右下に配置 */
+    left: auto !important;
+    top: auto !important;
 }
 
 @keyframes containerGlow {
@@ -107,15 +197,20 @@
     }
 }
 
+.game-title {
+    flex: 1;
+    text-align: left;
+}
+
 .game-title h1 {
-    font-size: 4rem;
-    margin-bottom: 20px;
+    font-size: 3rem;
+    margin-bottom: 15px;
     text-shadow: 
         0 4px 8px rgba(0, 0, 0, 0.8),
         0 0 30px rgba(255, 255, 255, 0.4);
     animation: titleGlow 4s ease-in-out infinite alternate;
     font-weight: bold;
-    letter-spacing: 3px;
+    letter-spacing: 2px;
     color: #ffffff;
     text-transform: uppercase;
     position: relative;
@@ -138,8 +233,8 @@
 }
 
 .subtitle {
-    font-size: 1.6rem;
-    margin-bottom: 60px;
+    font-size: 1.2rem;
+    margin-bottom: 30px;
     opacity: 0.95;
     text-shadow: 0 3px 6px rgba(0, 0, 0, 0.8);
     animation: subtitlePulse 5s ease-in-out infinite;
@@ -162,22 +257,27 @@
 }
 
 .menu-buttons {
-    margin: 60px 0;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
 }
 
 .menu-button {
     display: block;
-    width: 300px;
-    margin: 25px auto;
-    padding: 25px 50px;
-    font-size: 1.6rem;
+    width: 250px;
+    margin: 20px auto;
+    padding: 20px 40px;
+    font-size: 1.4rem;
     font-weight: bold;
     border: none;
     border-radius: 20px;
     cursor: pointer;
     transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     text-transform: uppercase;
-    letter-spacing: 3px;
+    letter-spacing: 2px;
     position: relative;
     overflow: hidden;
     box-shadow: 
@@ -273,33 +373,128 @@
     }
 }
 
-/* スマホ対応 */
-@media (max-width: 768px) {
+/* スマホ対応 - 能動的にサイズ調整 */
+@media (max-width: 900px) {
+    .main-menu-container {
+        padding: 30px 20px;
+        gap: 30px;
+        width: 98%;
+        max-width: 800px;
+    }
+    
     .game-title h1 {
-        font-size: 3rem;
-        letter-spacing: 2px;
+        font-size: 2.5rem;
+        letter-spacing: 1px;
+        margin-bottom: 10px;
     }
     
     .subtitle {
-        font-size: 1.4rem;
+        font-size: 1rem;
+        margin-bottom: 20px;
     }
     
     .menu-button {
-        width: 250px;
-        font-size: 1.4rem;
-        padding: 22px 40px;
-        letter-spacing: 2px;
-    }
-    
-    .main-menu-container {
-        padding: 40px 25px;
+        width: 200px;
+        font-size: 1.2rem;
+        padding: 18px 30px;
+        letter-spacing: 1px;
+        margin: 15px auto;
     }
     
     .game-info {
-        padding: 20px;
+        padding: 15px;
+        margin-top: 30px;
     }
     
     .game-info p {
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 600px) {
+    .main-menu-container {
+        padding: 20px 15px;
+        gap: 20px;
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .game-title {
+        text-align: center;
+    }
+    
+    .game-title h1 {
+        font-size: 2rem;
+        letter-spacing: 0.5px;
+    }
+    
+    .subtitle {
+        font-size: 0.9rem;
+        margin-bottom: 15px;
+    }
+    
+    .menu-button {
+        width: 180px;
+        font-size: 1.1rem;
+        padding: 15px 25px;
+    }
+    
+    .game-info {
+        padding: 12px;
+        margin-top: 20px;
+    }
+    
+    .game-info p {
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 400px) {
+    .main-menu-container {
+        padding: 15px 10px;
+        gap: 15px;
+    }
+    
+    .game-title h1 {
+        font-size: 1.8rem;
+    }
+    
+    .subtitle {
+        font-size: 0.8rem;
+    }
+    
+    .menu-button {
+        width: 160px;
         font-size: 1rem;
+        padding: 12px 20px;
+    }
+}
+
+/* 横画面専用の調整 */
+@media (orientation: landscape) and (max-height: 500px) {
+    .main-menu-container {
+        padding: 20px 15px;
+        gap: 25px;
+    }
+    
+    .game-title h1 {
+        font-size: 2rem;
+        margin-bottom: 8px;
+    }
+    
+    .subtitle {
+        font-size: 0.9rem;
+        margin-bottom: 12px;
+    }
+    
+    .menu-button {
+        width: 180px;
+        padding: 15px 25px;
+        margin: 12px auto;
+    }
+    
+    .game-info {
+        padding: 15px;
+        margin-top: 20px;
     }
 } 

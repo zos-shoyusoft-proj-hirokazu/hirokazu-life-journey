@@ -248,65 +248,75 @@
         /* インストール促進バナーのスタイル */
         #install-banner {
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 6px;
+            padding: 8px;
             color: white;
-            padding: 15px;
+            font-size: 0.6rem;
             z-index: 10000;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            max-width: 180px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
             animation: slideDown 0.3s ease-out;
         }
         
         .install-content {
             display: flex;
+            flex-direction: column;
             align-items: center;
-            justify-content: space-between;
-            max-width: 600px;
-            margin: 0 auto;
-            gap: 15px;
+            justify-content: center;
+            gap: 10px;
+            text-align: center;
         }
         
         .install-content span {
-            flex: 1;
-            font-size: 14px;
+            font-size: 0.65rem;
             font-weight: 500;
+            line-height: 1.2;
+            margin-bottom: 6px;
         }
         
         #install-btn {
-            background: #4CAF50;
+            background: #27ae60;
             color: white;
             border: none;
-            padding: 8px 16px;
-            border-radius: 20px;
+            padding: 4px 8px;
+            border-radius: 4px;
             cursor: pointer;
             font-weight: bold;
-            font-size: 14px;
+            font-size: 0.65rem;
             white-space: nowrap;
+            margin-right: 6px;
+            transition: all 0.3s ease;
         }
         
         #install-btn:hover {
-            background: #45a049;
+            background: #2ecc71;
+            transform: scale(1.05);
         }
         
         #dismiss-btn {
             background: none;
             border: none;
-            color: white;
-            font-size: 20px;
+            color: #ccc;
+            font-size: 1.2rem;
             cursor: pointer;
-            padding: 5px;
-            min-width: 30px;
-            height: 30px;
+            padding: 0;
+            width: 20px;
+            height: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
+            transition: color 0.3s ease;
         }
         
         #dismiss-btn:hover {
             background: rgba(255,255,255,0.1);
             border-radius: 50%;
+            color: white;
         }
         
         /* iOS用インストール案内のスタイル */
@@ -415,8 +425,8 @@
         }
         
         @keyframes slideDown {
-            from { transform: translateY(-100%); }
-            to { transform: translateY(0); }
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
         }
         
         /* モバイル対応 */
@@ -442,14 +452,7 @@
     <!-- フルスクリーン切り替えボタン -->
     <button id="fullscreen-button" onclick="toggleFullscreen()">全画面</button>  
     
-    <!-- PWAインストール促進バナー -->
-    <div id="install-banner" style="display: none;">
-        <div class="install-content">
-            <span>このアプリをホーム画面に追加して、より快適に使用できます</span>
-            <button id="install-btn">インストール</button>
-            <button id="dismiss-btn">×</button>
-        </div>
-    </div>
+
     
     <div id="game-container"></div>
     <script src="https://cdn.jsdelivr.net/npm/phaser@3.70.0/dist/phaser.min.js"></script>
@@ -470,18 +473,30 @@
     <!-- メインメニュー画面 -->
     <div id="main-menu" style="display: flex;">
         <div class="main-menu-container">
-            <div class="game-title">
-                <h1>Hirokazu Life Journey</h1>
-                <p class="subtitle">ひろかずの人生を追体験しよう！</p>
+            <div class="main-content">
+                <div class="game-title">
+                    <h1>Hirokazu Life Journey</h1>
+                    <p class="subtitle">ひろかずの人生を追体験しよう！</p>
+                </div>
+                <div class="menu-buttons">
+                    <button id="start-game" class="menu-button primary">START</button>
+                </div>
+                <div class="game-info">
+                    <p>結婚式で披露するゲーム</p>
+                    <p>新郎の人生をRPGで体験！</p>
+                </div>
             </div>
-            <div class="menu-buttons">
-                <button id="start-game" class="menu-button primary">START</button>
-            </div>
-            <div class="game-info">
-                <p>結婚式で披露するゲーム</p>
-                <p>新郎の人生をRPGで体験！</p>
+            
+            <!-- インストールポップアップ専用領域（右下） -->
+            <div class="install-area">
+                <div class="install-banner" id="install-banner">
+                    <div class="install-text">このアプリをホーム画面に追加して、より快適に使用できます</div>
+                    <button class="install-button">インストール</button>
+                    <button class="close-button" id="close-install-btn">×</button>
+                </div>
             </div>
         </div>
+        
     </div>
     
     <!-- ステージ選択画面 -->
@@ -610,6 +625,9 @@
         
         // オープニング動画の管理（簡素化）
         function showOpeningVideo() {
+            // インストールポップアップを非表示にする
+            hideInstallBanner();
+            
             if (currentBGM) {
                 currentBGM.pause();
                 currentBGM.currentTime = 0;
@@ -682,6 +700,8 @@
             const startButton = document.getElementById('start-game');
             if (startButton) {
                 startButton.addEventListener('click', function() {
+                    // インストールポップアップを非表示にする
+                    hideInstallBanner();
                     showStageSelect();
                 });
             }
@@ -780,6 +800,9 @@
         function showStageSelect() {
             const mainMenu = document.getElementById('main-menu');
             const stageSelect = document.getElementById('stage-select');
+            
+            // インストールポップアップを非表示にする
+            hideInstallBanner();
             
             mainMenu.style.display = 'none';
             stageSelect.style.display = 'flex';
@@ -1080,6 +1103,44 @@
                 installBanner.style.display = 'none';
             }
         });
+        
+        // インストールバナーを閉じる関数
+        function closeInstallBanner() {
+            const installBanner = document.getElementById('install-banner');
+            if (installBanner) {
+                installBanner.style.display = 'none';
+                console.log('インストールバナーを閉じました');
+            }
+        }
+        
+        // メインメニューが非表示になった時にインストールポップアップも非表示にする
+        function hideInstallBanner() {
+            const installBanner = document.getElementById('install-banner');
+            if (installBanner) {
+                installBanner.style.display = 'none';
+            }
+        }
+        
+        // ページ読み込み時の処理
+        document.addEventListener('DOMContentLoaded', function() {
+            // ×ボタンのイベントリスナーを設定
+            const closeBtn = document.getElementById('close-install-btn');
+            if (closeBtn) {
+                closeBtn.addEventListener('click', function() {
+                    closeInstallBanner();
+                });
+            }
+            
+            // メインメニュー画面でのみインストールポップアップを表示
+            setTimeout(() => {
+                const installBanner = document.getElementById('install-banner');
+                if (installBanner) {
+                    installBanner.style.display = 'block';
+                }
+            }, 500);
+        });
+        
+
         
 
     </script>
