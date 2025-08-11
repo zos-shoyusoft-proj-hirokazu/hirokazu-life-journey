@@ -803,13 +803,6 @@
         function showOpeningVideo() {
             console.log('showOpeningVideo called');
             
-            // PWAモードかどうかを検出
-            const isPWA = window.matchMedia('(display-mode: standalone)').matches || 
-                          window.matchMedia('(display-mode: fullscreen)').matches ||
-                          navigator.standalone === true;
-            
-            console.log('PWAモード:', isPWA);
-            
             // BGMを停止
             if (currentBGM) {
                 currentBGM.pause();
@@ -832,81 +825,28 @@
                 console.log('オープニング動画を表示しました');
             }
             
-            // PWAモードでは、YouTubeのiframeの代わりに別のコンテンツを表示
-            if (isPWA) {
-                console.log('PWAモード: 代替コンテンツを表示');
-                
-                // 動画コンテナを非表示
-                const videoContainer = document.getElementById('video-container');
-                if (videoContainer) {
-                    videoContainer.style.display = 'none';
-                }
-                
-                // PWA用の代替コンテンツを作成
-                let pwaContent = document.getElementById('pwa-opening-content');
-                if (!pwaContent) {
-                    pwaContent = document.createElement('div');
-                    pwaContent.id = 'pwa-opening-content';
-                    pwaContent.style.cssText = `
-                        position: absolute;
-                        top: 0;
-                        left: 0;
-                        width: 100%;
-                        height: 100%;
-                        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                        display: flex;
-                        flex-direction: column;
-                        align-items: center;
-                        justify-content: center;
-                        color: white;
-                        text-align: center;
-                        z-index: 2000;
-                    `;
-                    
-                    pwaContent.innerHTML = `
-                        <h1 style="font-size: 2.5rem; margin-bottom: 2rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">
-                            Hirokazu Life Journey
-                        </h1>
-                        <p style="font-size: 1.2rem; margin-bottom: 3rem; max-width: 80%; line-height: 1.6;">
-                            ひろかずの人生を追体験しよう！<br>
-                            結婚式で披露するゲーム
-                        </p>
-                        <div style="font-size: 1rem; margin-bottom: 2rem; opacity: 0.8;">
-                            オープニング動画の代わりに、ゲームを開始します
-                        </div>
-                    `;
-                    
-                    openingVideo.appendChild(pwaContent);
-                }
-                
-                pwaContent.style.display = 'flex';
-                
-            } else {
-                // 通常のブラウザ用のYouTube動画
-                console.log('通常モード: YouTube動画を表示');
-                
-                // PWA用コンテンツを非表示
-                const pwaContent = document.getElementById('pwa-opening-content');
-                if (pwaContent) {
-                    pwaContent.style.display = 'none';
-                }
-                
-                // 動画コンテナを表示
-                const videoContainer = document.getElementById('video-container');
-                if (videoContainer) {
-                    videoContainer.style.display = 'block';
-                }
-                
-                // YouTube動画のURLを設定
-                const videoId = 'P2KXyM27XK4';
-                const iframe = document.getElementById('youtube-video');
-                if (iframe) {
-                    iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&showinfo=0&controls=1&playsinline=1`;
-                    console.log('通常モード用のYouTube動画を設定:', videoId);
-                }
+            // 動画コンテナを表示
+            const videoContainer = document.getElementById('video-container');
+            if (videoContainer) {
+                videoContainer.style.display = 'block';
             }
             
-            // スキップボタンのイベント（PWAモード対応）
+            // PWA用コンテンツを非表示（もし存在する場合）
+            const pwaContent = document.getElementById('pwa-opening-content');
+            if (pwaContent) {
+                pwaContent.style.display = 'none';
+            }
+            
+            // YouTube動画のURLを設定（PWA対応）
+            const videoId = 'P2KXyM27XK4';
+            const iframe = document.getElementById('youtube-video');
+            if (iframe) {
+                // PWAでも動作するように設定
+                iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&showinfo=0&controls=1&playsinline=1&enablejsapi=1&origin=${window.location.origin}`;
+                console.log('YouTube動画を設定しました（PWA対応）:', videoId);
+            }
+            
+            // スキップボタンのイベント（確実に動作するように）
             const skipButton = document.getElementById('skip-video');
             if (skipButton) {
                 // 既存のイベントリスナーを削除
@@ -923,34 +863,15 @@
                     hideOpeningVideo();
                 });
                 
-                // PWAモードでは複数のイベントを追加
-                if (isPWA) {
-                    // タッチイベント
-                    newSkipButton.addEventListener('touchstart', function(e) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        console.log('PWAモード: スキップボタンのタッチイベント');
-                        hideOpeningVideo();
-                    });
-                    
-                    // タッチエンドイベント
-                    newSkipButton.addEventListener('touchend', function(e) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        console.log('PWAモード: スキップボタンのタッチエンドイベント');
-                        hideOpeningVideo();
-                    });
-                    
-                    // マウスダウンイベント
-                    newSkipButton.addEventListener('mousedown', function(e) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        console.log('PWAモード: スキップボタンのマウスダウンイベント');
-                        hideOpeningVideo();
-                    });
-                }
+                // タッチイベント（PWA対応）
+                newSkipButton.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log('スキップボタンのタッチイベント');
+                    hideOpeningVideo();
+                });
                 
-                console.log('スキップボタンのイベントを設定しました（PWA対応）');
+                console.log('スキップボタンのイベントを設定しました');
             }
         }
         
