@@ -832,38 +832,75 @@
                 console.log('オープニング動画を表示しました');
             }
             
-            // YouTube動画のURLを設定（PWAモード対応）
-            const videoId = 'P2KXyM27XK4';
-            const iframe = document.getElementById('youtube-video');
-            if (iframe) {
-                if (isPWA) {
-                    // PWAモードでは、より確実な設定を使用
-                    iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&showinfo=0&controls=1&playsinline=1&enablejsapi=1&origin=${window.location.origin}&modestbranding=1&fs=0`;
-                    console.log('PWAモード用のYouTube動画を設定:', videoId);
+            // PWAモードでは、YouTubeのiframeの代わりに別のコンテンツを表示
+            if (isPWA) {
+                console.log('PWAモード: 代替コンテンツを表示');
+                
+                // 動画コンテナを非表示
+                const videoContainer = document.getElementById('video-container');
+                if (videoContainer) {
+                    videoContainer.style.display = 'none';
+                }
+                
+                // PWA用の代替コンテンツを作成
+                let pwaContent = document.getElementById('pwa-opening-content');
+                if (!pwaContent) {
+                    pwaContent = document.createElement('div');
+                    pwaContent.id = 'pwa-opening-content';
+                    pwaContent.style.cssText = `
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        justify-content: center;
+                        color: white;
+                        text-align: center;
+                        z-index: 2000;
+                    `;
                     
-                    // PWAモードでは、iframeの読み込み完了を待つ
-                    iframe.onload = function() {
-                        console.log('PWAモード: YouTube動画の読み込み完了');
-                        // 読み込み完了後にスキップボタンを有効化
-                        const skipButton = document.getElementById('skip-video');
-                        if (skipButton) {
-                            skipButton.style.pointerEvents = 'auto';
-                            skipButton.style.opacity = '1';
-                        }
-                    };
+                    pwaContent.innerHTML = `
+                        <h1 style="font-size: 2.5rem; margin-bottom: 2rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">
+                            Hirokazu Life Journey
+                        </h1>
+                        <p style="font-size: 1.2rem; margin-bottom: 3rem; max-width: 80%; line-height: 1.6;">
+                            ひろかずの人生を追体験しよう！<br>
+                            結婚式で披露するゲーム
+                        </p>
+                        <div style="font-size: 1rem; margin-bottom: 2rem; opacity: 0.8;">
+                            オープニング動画の代わりに、ゲームを開始します
+                        </div>
+                    `;
                     
-                    // PWAモードでは、iframeのエラーハンドリングも追加
-                    iframe.onerror = function() {
-                        console.log('PWAモード: YouTube動画の読み込みエラー');
-                        // エラー時は直接スキップ可能にする
-                        const skipButton = document.getElementById('skip-video');
-                        if (skipButton) {
-                            skipButton.style.pointerEvents = 'auto';
-                            skipButton.style.opacity = '1';
-                        }
-                    };
-                } else {
-                    // 通常のブラウザ用の設定
+                    openingVideo.appendChild(pwaContent);
+                }
+                
+                pwaContent.style.display = 'flex';
+                
+            } else {
+                // 通常のブラウザ用のYouTube動画
+                console.log('通常モード: YouTube動画を表示');
+                
+                // PWA用コンテンツを非表示
+                const pwaContent = document.getElementById('pwa-opening-content');
+                if (pwaContent) {
+                    pwaContent.style.display = 'none';
+                }
+                
+                // 動画コンテナを表示
+                const videoContainer = document.getElementById('video-container');
+                if (videoContainer) {
+                    videoContainer.style.display = 'block';
+                }
+                
+                // YouTube動画のURLを設定
+                const videoId = 'P2KXyM27XK4';
+                const iframe = document.getElementById('youtube-video');
+                if (iframe) {
                     iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&showinfo=0&controls=1&playsinline=1`;
                     console.log('通常モード用のYouTube動画を設定:', videoId);
                 }
