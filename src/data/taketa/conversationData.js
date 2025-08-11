@@ -1016,7 +1016,7 @@ export const taketaConversationData = {
     // 竹田から三重まで歩いて帰る
     'working_go_to_home_miemachi': {
         'background': 'street',
-        'bgm': 'Spain',
+        'bgm': 'Nagisa_Moderato',
         'conversations': [
             {
                 'speaker': 'かなと',
