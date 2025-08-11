@@ -271,6 +271,8 @@ export class ConversationScene extends Phaser.Scene {
                 });
             }
             this.updateCharacterSprite(dialog.character, dialog.expression);
+            // 人数に応じた等間隔レイアウト
+            this.layoutVisibleCharacters();
         }
 
         // 名前の表示（ナレーション時は非表示）
@@ -309,22 +311,15 @@ export class ConversationScene extends Phaser.Scene {
         }
         
         if (character && expression) {
-            const spriteKey = `${character}_${expression}`;
+            const spriteKey = this.resolveExistingSpriteKey(character, expression);
+            if (!spriteKey) {
+                return; // 利用可能なテクスチャがない場合は表示しない
+            }
             const width = this.sys?.game?.canvas?.width || this.sys?.game?.config?.width || 800;
             const height = this.sys?.game?.canvas?.height || this.sys?.game?.config?.height || 600;
             
-            // キャラクターの位置を決定（複数キャラクター対応）
-            const characterPositions = {
-                'heroine': { x: width * 0.7, y: height * 0.4 },
-                'friend': { x: width * 0.3, y: height * 0.4 },
-                'teacher': { x: width * 0.5, y: height * 0.4 },
-                'kawamuro': { x: width * 0.7, y: height * 0.4 },
-                'hirokazu': { x: width * 0.7, y: height * 0.4 },
-                'daichi': { x: width * 0.3, y: height * 0.4 },
-                'naoki': { x: width * 0.5, y: height * 0.4 }
-            };
-            
-            let position = characterPositions[character] || { x: width * 0.7, y: height * 0.4 };
+            // 位置は layoutVisibleCharacters で一括調整するため一旦中央付近
+            let position = { x: width * 0.5, y: height * 0.4 };
             
             // 既存のキャラクターがいる場合は、テクスチャのみ変更
             if (this.characterSprites[character]) {
@@ -367,6 +362,81 @@ export class ConversationScene extends Phaser.Scene {
             // 話していないキャラクターを少し暗くする
             this.dimOtherCharacters(character);
         }
+    }
+
+    // 利用可能なテクスチャキーを解決（希望の表情が無ければフォールバック）
+    resolveExistingSpriteKey(character, preferredExpression) {
+        const tryList = [];
+        // まずは希望の表情
+        tryList.push({ ch: character, ex: preferredExpression });
+        // よく使う順でフォールバック
+        const fallbacks = ['L','A','B','C','D','E','F','G','H','I','J','K','M','N','R','S'];
+        fallbacks.forEach(ex => { if (ex !== preferredExpression) tryList.push({ ch: character, ex }); });
+        // 若年キャラはベース名にもフォールバック（例: hirokazu_young → hirokazu）
+        if (/_young$/.test(character)) {
+            const base = character.replace(/_young$/, '');
+            tryList.push({ ch: base, ex: preferredExpression });
+            fallbacks.forEach(ex => { if (ex !== preferredExpression) tryList.push({ ch: base, ex }); });
+        }
+        // 実在する最初のキーを返す
+        for (const { ch, ex } of tryList) {
+            const key = `${ch}_${ex}`;
+            if (this.textures && this.textures.exists && this.textures.exists(key)) {
+                return key;
+            }
+        }
+        return null;
+    }
+
+    // 可視スプライトを人数に応じて中央基準で左右に均等配置（1〜5人以上対応）
+    layoutVisibleCharacters() {
+        if (!this.characterSprites) return;
+        const sprites = Object.values(this.characterSprites).filter(s => s && s.visible !== false);
+        const count = sprites.length;
+        if (count === 0) return;
+        const width = this.sys?.game?.canvas?.width || this.sys?.game?.config?.width || 800;
+        const height = this.sys?.game?.canvas?.height || this.sys?.game?.config?.height || 600;
+        const marginLeft = width * 0.08;
+        const marginRight = width * 0.92;
+        const centerX = width * 0.5;
+
+        // 各スプライトの見かけサイズ（スケール後）を見積もって最小間隔を決定
+        const scales = sprites.map(s => this.getPortraitTargetScale(s.width, s.height));
+        const scaledWidths = sprites.map((s, i) => s.width * scales[i]);
+        const maxScaledWidth = Math.max.apply(null, scaledWidths);
+        // 最小間隔は最大幅の約1.05倍（わずかに余白）
+        let spacing = maxScaledWidth * 1.05;
+        // 画面に収まるように上限を設定
+        const available = (marginRight - marginLeft);
+        if (count > 1) spacing = Math.min(spacing, available / (count - 1));
+
+        // 中央から左右に広げる配置
+        const positions = new Array(count);
+        const mid = (count - 1) / 2;
+        for (let i = 0; i < count; i++) {
+            const offsetIndex = i - mid; // 負は左、正は右
+            positions[i] = centerX + offsetIndex * spacing;
+        }
+        // 余白に収めるためのクリップ
+        const minX = marginLeft;
+        const maxX = marginRight;
+        // 端がはみ出る場合は全体をシフト
+        const first = positions[0];
+        const last = positions[count - 1];
+        let shift = 0;
+        if (first < minX) shift = minX - first;
+        if (last > maxX) shift = Math.min(shift, maxX - last);
+        if (shift !== 0) {
+            for (let i = 0; i < count; i++) positions[i] += shift;
+        }
+
+        sprites.forEach((sprite, idx) => {
+            const targetScale = scales[idx];
+            const scaledHeight = sprite.height * targetScale;
+            const y = scaledHeight >= (height * 0.95) ? height * 0.5 : height * 0.4;
+            sprite.setPosition(positions[idx], y);
+            this.applyPortraitScale(sprite);
+        });
     }
 
     // 立ち絵が画面いっぱいに収まる目標スケールを算出（拡大も許可）
@@ -720,38 +790,10 @@ export class ConversationScene extends Phaser.Scene {
             }
         }
         
-        // キャラクタースプライトの位置調整
-        this.repositionCharacterSprites();
+        // 人数に応じた等間隔レイアウト
+        this.layoutVisibleCharacters();
     }
     
     // キャラクタースプライトの位置調整
-    repositionCharacterSprites() {
-        if (this.characterSprites) {
-            const width = this.sys?.game?.canvas?.width || this.sys?.game?.config?.width || 800;
-            const height = this.sys?.game?.canvas?.height || this.sys?.game?.config?.height || 600;
-            
-            const characterPositions = {
-                'heroine': { x: width * 0.7, y: height * 0.4 },
-                'friend': { x: width * 0.3, y: height * 0.4 },
-                'teacher': { x: width * 0.5, y: height * 0.4 },
-                'hirokazu': { x: width * 0.7, y: height * 0.4 },
-                'daichi': { x: width * 0.3, y: height * 0.4 },
-                'naoki': { x: width * 0.5, y: height * 0.4 }
-            };
-            
-            Object.keys(this.characterSprites).forEach(character => {
-                const sprite = this.characterSprites[character];
-                const position = characterPositions[character] || { x: width * 0.7, y: height * 0.4 };
-                if (sprite && sprite.setPosition) {
-                    // フルサイズに近い場合は中央に補正
-                    const targetScale = this.getPortraitTargetScale(sprite.width, sprite.height);
-                    const scaledHeight = sprite.height * targetScale;
-                    const finalY = scaledHeight >= (height * 0.95) ? height * 0.5 : position.y;
-                    sprite.setPosition(position.x, finalY);
-                    // 画面サイズ変更時にスケールも再適用
-                    this.applyPortraitScale(sprite);
-                }
-            });
-        }
-    }
+    repositionCharacterSprites() { this.layoutVisibleCharacters(); }
 } 

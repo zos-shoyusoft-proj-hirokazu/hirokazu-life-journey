@@ -52,13 +52,23 @@ export const AreaConfig = {
             'hirokazu_G': 'assets/characters/portraits/hirokazu_G.png',
             'hirokazu_H': 'assets/characters/portraits/hirokazu_H.png',
             'hirokazu_L': 'assets/characters/portraits/hirokazu_L.png',
-            // その他キャラクター
+            // その他キャラクター（miemachi会話で使う分を網羅）
             'daichi_A': 'assets/characters/portraits/daichi_A.png',
+            'daichi_B': 'assets/characters/portraits/daichi_B.png',
+            'daichi_C': 'assets/characters/portraits/daichi_C.png',
+            'daichi_D': 'assets/characters/portraits/daichi_D.png',
+            'daichi_E': 'assets/characters/portraits/daichi_E.png',
+            'daichi_F': 'assets/characters/portraits/daichi_F.png',
             'naoki_A': 'assets/characters/portraits/naoki_A.png',
+            'naoki_B': 'assets/characters/portraits/naoki_B.png',
+            'naoki_C': 'assets/characters/portraits/naoki_C.png',
             'kanato_A': 'assets/characters/portraits/kanato_A.png',
             'kanato_B': 'assets/characters/portraits/kanato_B.png',
+            'kanato_C': 'assets/characters/portraits/kanato_C.png',
             'koutarou_A': 'assets/characters/portraits/koutarou_A.png',
-            'koutarou_B': 'assets/characters/portraits/koutarou_B.png'
+            'koutarou_B': 'assets/characters/portraits/koutarou_B.png',
+            'koutarou_C': 'assets/characters/portraits/koutarou_c.png',
+            'yabajin_C': 'assets/characters/portraits/yabajinn_A.png'
         },
         backgrounds: {
 
