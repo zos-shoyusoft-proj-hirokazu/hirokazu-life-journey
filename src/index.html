@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <!-- ビューポート設定：ブラウザUIを考慮（改善版） -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, minimal-ui">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, minimal-ui, orientation=landscape">
     <!-- iOS用：Webアプリとして起動可能にする -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -40,9 +40,12 @@
             background: #000;
             overflow: hidden;
             width: 100vw;
-            /* ブラウザUIを考慮した高さ調整 */
+            /* 横画面対応：ブラウザUIを考慮した高さ調整 */
             height: 100vh;
             height: 100dvh; /* Dynamic Viewport Height (新しいブラウザ対応) */
+            /* 横画面強制 */
+            min-height: 100vh;
+            min-height: 100dvh;
             touch-action: none;
             -webkit-touch-callout: none;
             -webkit-user-select: none;
@@ -57,10 +60,32 @@
             top: 0;
             left: 0;
         }
+        
+        /* 横画面強制のためのスタイル */
+        body.force-landscape {
+            transform: rotate(90deg);
+            transform-origin: center center;
+            width: 100vh !important;
+            height: 100vw !important;
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+        
+        /* 横画面時のゲームコンテナ調整 */
+        body.force-landscape #game-container {
+            width: 100vh !important;
+            height: 100vw !important;
+            transform: rotate(-90deg);
+            transform-origin: center center;
+        }
         #game-container {
             width: 100vw;
             height: 100vh;
             height: 100dvh; /* Dynamic Viewport Height */
+            /* 横画面強制 */
+            min-height: 100vh;
+            min-height: 100dvh;
             display: block;
             position: absolute;
             top: 0;
@@ -221,11 +246,240 @@
                 height: -webkit-fill-available;
             }
         }
+        
+        /* インストール促進バナーのスタイル */
+        #install-banner {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            z-index: 10000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            animation: slideDown 0.3s ease-out;
+        }
+        
+        .install-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 600px;
+            margin: 0 auto;
+            gap: 15px;
+        }
+        
+        .install-content span {
+            flex: 1;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        #install-btn {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+            white-space: nowrap;
+        }
+        
+        #install-btn:hover {
+            background: #45a049;
+        }
+        
+        #dismiss-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 5px;
+            min-width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        #dismiss-btn:hover {
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+        }
+        
+        /* iOS用インストール案内のスタイル */
+        #ios-install-guide {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            z-index: 10001;
+            max-width: 90vw;
+            width: 400px;
+        }
+        
+        .ios-guide-content h3 {
+            margin: 0 0 20px 0;
+            color: #333;
+            text-align: center;
+        }
+        
+        .ios-guide-content ol {
+            margin: 0 0 20px 0;
+            padding-left: 20px;
+            color: #555;
+            line-height: 1.6;
+        }
+        
+        .ios-guide-content li {
+            margin-bottom: 10px;
+        }
+        
+        .ios-guide-content button {
+            background: #2196F3;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+        }
+        
+        .ios-guide-content button:hover {
+            background: #1976D2;
+        }
+        
+        /* Android用インストール案内のスタイル */
+        #android-install-guide {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            z-index: 10001;
+            max-width: 90vw;
+            width: 400px;
+        }
+        
+        .android-guide-content h3 {
+            margin: 0 0 20px 0;
+            color: #333;
+            text-align: center;
+        }
+        
+        .android-guide-content ol {
+            margin: 0 0 20px 0;
+            padding-left: 20px;
+            color: #555;
+            line-height: 1.6;
+        }
+        
+        .android-guide-content li {
+            margin-bottom: 10px;
+        }
+        
+        .android-guide-content .note {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 15px 0;
+            color: #856404;
+            font-size: 14px;
+            text-align: center;
+        }
+        
+        .android-guide-content button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+        }
+        
+        .android-guide-content button:hover {
+            background: #45a049;
+        }
+        
+        @keyframes slideDown {
+            from { transform: translateY(-100%); }
+            to { transform: translateY(0); }
+        }
+        
+        /* モバイル対応 */
+        @media (max-width: 768px) {
+            .install-content {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+            
+            .install-content span {
+                font-size: 13px;
+            }
+            
+            #ios-install-guide {
+                width: 90vw;
+                margin: 20px;
+            }
+        }
     </style>
 </head>
 <body>
     <!-- フルスクリーン切り替えボタン -->
     <button id="fullscreen-button" onclick="toggleFullscreen()">全画面</button>  
+    
+    <!-- インストール促進バナー -->
+    <div id="install-banner" style="display: none;">
+        <div class="install-content">
+            <span>📱 ホーム画面に追加して、より快適にプレイ！</span>
+            <button id="install-btn">追加する</button>
+            <button id="dismiss-btn">×</button>
+        </div>
+    </div>
+    
+    <!-- iOS用インストール案内 -->
+    <div id="ios-install-guide" style="display: none;">
+        <div class="ios-guide-content">
+            <h3>📱 ホーム画面に追加する方法</h3>
+            <ol>
+                <li>ブラウザの共有ボタン（□↑）をタップ</li>
+                <li>「ホーム画面に追加」を選択</li>
+                <li>「追加」をタップ</li>
+            </ol>
+            <button onclick="this.parentElement.parentElement.remove()">了解</button>
+        </div>
+    </div>
+    
+    <!-- Android用インストール案内 -->
+    <div id="android-install-guide" style="display: none;">
+        <div class="android-guide-content">
+            <h3>📱 PWAとしてインストールする方法</h3>
+            <ol>
+                <li>Chromeの右上メニュー（⋮）をタップ</li>
+                <li>「インストール」または「アプリをインストール」を選択</li>
+                <li>「インストール」をタップ</li>
+            </ol>
+            <p class="note">※「ホーム画面に追加」ではなく「インストール」を選択してください</p>
+            <button onclick="this.parentElement.parentElement.remove()">了解</button>
+        </div>
+    </div>
+    
     <div id="game-container"></div>
     <script src="https://cdn.jsdelivr.net/npm/phaser@3.70.0/dist/phaser.min.js"></script>
     
@@ -300,6 +554,140 @@
         // 音声管理
         let currentBGM = null;
         let currentSE = null;
+        
+        // PWAインストール促進機能
+        let deferredPrompt = null;
+        
+        // インストール済みかチェック
+        function isInstalled() {
+            return window.matchMedia('(display-mode: standalone)').matches ||
+                   window.navigator.standalone === true;
+        }
+        
+        // インストール促進バナーの表示
+        function showInstallPrompt() {
+            // 既にインストール済みの場合は表示しない
+            if (isInstalled()) {
+                console.log('PWAインストール済みのため、インストール促進バナーを表示しません');
+                return;
+            }
+            
+            // 既に閉じられている場合は表示しない
+            if (localStorage.getItem('installPromptDismissed')) {
+                console.log('インストール促進バナーは既に非表示にされています');
+                return;
+            }
+            
+            // インストール促進バナーを表示
+            const installBanner = document.getElementById('install-banner');
+            if (installBanner) {
+                installBanner.style.display = 'block';
+                
+                // スマホでのPWAインストール状況をログ出力
+                console.log('PWAインストール状況チェック:');
+                console.log('- Service Worker対応:', 'serviceWorker' in navigator);
+                console.log('- Manifest読み込み:', !!document.querySelector('link[rel="manifest"]'));
+                console.log('- スタンドアロンモード:', window.matchMedia('(display-mode: standalone)').matches);
+                console.log('- ユーザーエージェント:', navigator.userAgent);
+                console.log('- 現在のURL:', window.location.href);
+                
+                // インストールボタンのイベント
+                const installBtn = document.getElementById('install-btn');
+                if (installBtn) {
+                    installBtn.addEventListener('click', promptInstall);
+                }
+                
+                // 閉じるボタンのイベント
+                const dismissBtn = document.getElementById('dismiss-btn');
+                if (dismissBtn) {
+                    dismissBtn.addEventListener('click', () => {
+                        installBanner.style.display = 'none';
+                        // 次回表示しないように設定
+                        localStorage.setItem('installPromptDismissed', 'true');
+                    });
+                }
+            }
+        }
+        
+        // インストール処理
+        function promptInstall() {
+            if (deferredPrompt) {
+                // Android Chromeの場合
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('ユーザーがインストールを承認しました');
+                        // インストール促進バナーを非表示
+                        const installBanner = document.getElementById('install-banner');
+                        if (installBanner) {
+                            installBanner.style.display = 'none';
+                        }
+                    }
+                    deferredPrompt = null;
+                });
+            } else {
+                // iOS Safariの場合（手動インストール案内）
+                showPlatformSpecificInstallGuide();
+            }
+        }
+        
+        // iOS用インストール案内
+        function showIOSInstallGuide() {
+            const guide = document.getElementById('ios-install-guide');
+            if (guide) {
+                guide.style.display = 'block';
+            }
+        }
+        
+        // Android用インストール案内
+        function showAndroidInstallGuide() {
+            const guide = document.getElementById('android-install-guide');
+            if (guide) {
+                guide.style.display = 'block';
+            }
+        }
+        
+        // プラットフォーム別インストール案内
+        function showPlatformSpecificInstallGuide() {
+            const userAgent = navigator.userAgent;
+            if (/iPhone|iPad|iPod/i.test(userAgent)) {
+                showIOSInstallGuide();
+            } else if (/Android/i.test(userAgent)) {
+                showAndroidInstallGuide();
+            } else {
+                // デスクトップブラウザの場合
+                showDesktopInstallGuide();
+            }
+        }
+        
+        // デスクトップ用インストール案内
+        function showDesktopInstallGuide() {
+            alert('PWAのインストールには、モバイルデバイスが必要です。スマートフォンやタブレットでアクセスしてください。');
+        }
+        
+        // PWAインストールイベントの監視
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            console.log('PWAインストール可能になりました');
+        });
+        
+        // インストール完了の監視
+        window.addEventListener('appinstalled', () => {
+            console.log('PWAがインストールされました');
+            // インストール促進バナーを非表示
+            const installBanner = document.getElementById('install-banner');
+            if (installBanner) {
+                installBanner.style.display = 'none';
+            }
+            // 全画面ボタンを非表示（インストール済みの場合）
+            if (isInstalled()) {
+                const fullscreenButton = document.getElementById('fullscreen-button');
+                if (fullscreenButton) {
+                    fullscreenButton.style.display = 'none';
+                }
+            }
+        });
         
         // BGM再生関数
         function playBGM(audioPath) {
@@ -383,6 +771,83 @@
             }
         }
         
+        // 横画面強制機能
+        function forceLandscape() {
+            console.log('横画面強制を開始します');
+            
+            // まずCSS強制を実行（確実性のため）
+            forceLandscapeWithCSS();
+            
+            // 画面の向きを横画面に強制（サポートされている場合のみ）
+            if (window.screen && window.screen.orientation && window.screen.orientation.lock) {
+                window.screen.orientation.lock('landscape').then(() => {
+                    console.log('画面向きロック成功: landscape');
+                    // 成功した場合はCSS強制を解除
+                    document.body.classList.remove('force-landscape');
+                }).catch(e => {
+                    console.log('画面向きロック失敗:', e);
+                    // APIが使えない場合はCSSで強制を維持
+                    console.log('CSS強制を維持します');
+                });
+            } else {
+                console.log('screen.orientation.lock()がサポートされていません。CSSで強制します。');
+            }
+        }
+        
+        // CSSで横画面を強制する関数（改善版）
+        function forceLandscapeWithCSS() {
+            console.log('CSSで横画面強制を実行します');
+            
+            // デバイスを検出
+            const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+            const isAndroid = /Android/i.test(navigator.userAgent);
+            
+            console.log('デバイス検出:', { isMobile, isIOS, isAndroid });
+            
+            // 現在の画面サイズを取得
+            const screenWidth = window.screen.width;
+            const screenHeight = window.screen.height;
+            const windowWidth = window.innerWidth;
+            const windowHeight = window.innerHeight;
+            
+            console.log('画面サイズ:', { screenWidth, screenHeight, windowWidth, windowHeight });
+            
+            // 縦向きの場合は90度回転
+            if (screenHeight > screenWidth || windowHeight > windowWidth) {
+                // CSSクラスを適用
+                document.body.classList.add('force-landscape');
+                console.log('縦向き検出: CSSクラスで横画面強制');
+                
+                // ゲームコンテナも調整
+                const gameContainer = document.getElementById('game-container');
+                if (gameContainer) {
+                    gameContainer.style.width = '100vh';
+                    gameContainer.style.height = '100vw';
+                }
+                
+                // iOS/Android固有の調整
+                if (isIOS) {
+                    // iOS Safariでの追加調整
+                    document.documentElement.style.transform = 'rotate(90deg)';
+                    document.documentElement.style.transformOrigin = 'center center';
+                    document.documentElement.style.width = '100vh';
+                    document.documentElement.style.height = '100vw';
+                } else if (isAndroid) {
+                    // Androidでの追加調整
+                    document.documentElement.style.transform = 'rotate(90deg)';
+                    document.documentElement.style.transformOrigin = 'center center';
+                }
+            } else {
+                console.log('既に横向きです');
+                // 横向きの場合は強制クラスを削除
+                document.body.classList.remove('force-landscape');
+                document.documentElement.style.transform = '';
+                document.documentElement.style.width = '';
+                document.documentElement.style.height = '';
+            }
+        }
+        
         // ビューポート変更の監視を追加
         if (window.visualViewport) {
             window.visualViewport.addEventListener('resize', handleResize);
@@ -391,8 +856,19 @@
         // 従来のリサイズイベントリスナー
         window.addEventListener('resize', handleResize);
         window.addEventListener('orientationchange', function() {
+            console.log('画面向き変更:', window.screen.orientation.type);
+            // 横画面を強制
+            forceLandscape();
             setTimeout(handleResize, 500); // 向き変更後に少し待ってからリサイズ
         });
+        
+        // 画面向きの監視を追加
+        if (window.screen && window.screen.orientation) {
+            window.screen.orientation.addEventListener('change', function() {
+                console.log('画面向き変更イベント:', window.screen.orientation.type);
+                forceLandscape();
+            });
+        }
         
         // フルスクリーン状態変化の監視
         document.addEventListener('fullscreenchange', handleResize);
@@ -562,6 +1038,15 @@
             setupStageSelectButtons();
             
             console.log('イベントリスナーの設定完了');
+            
+            // インストール済みの場合は全画面ボタンを非表示
+            if (isInstalled()) {
+                const fullscreenButton = document.getElementById('fullscreen-button');
+                if (fullscreenButton) {
+                    fullscreenButton.style.display = 'none';
+                    console.log('PWAインストール済みのため、全画面ボタンを非表示にしました');
+                }
+            }
         });
         
         // ステージ選択画面のボタン設定
@@ -860,6 +1345,11 @@
         // ページ読み込み時の処理
         window.addEventListener('load', function() {
             console.log('window load event fired');
+            
+            // 横画面を強制
+            forceLandscape();
+            console.log('横画面強制を実行しました');
+            
             if (!localStorage.getItem('openingVideoShown')) {
                 console.log('showOpeningVideo will be called');
                 showOpeningVideo();
@@ -890,6 +1380,11 @@
                         playBGM('assets/audio/bgm/zelda_menu_select.mp3');
                     }
             }
+            
+            // インストール促進バナーの表示（3秒後に表示）
+            setTimeout(() => {
+                showInstallPrompt();
+            }, 3000);
         });
         
         // メインメニューを表示する関数
@@ -909,18 +1404,21 @@
         
         // PWAとしてインストール可能にするためのService Worker登録
         // 開発時（localhost/127.0.0.1）ではサービスワーカーを無効化
-        if ('serviceWorker' in navigator && !window.location.hostname.includes('localhost') && !window.location.hostname.includes('127.0.0.1')) {
+        if ('serviceWorker' in navigator) {
+            // 開発環境でもService Workerを登録（テスト用）
             window.addEventListener('load', function() {
                 navigator.serviceWorker.register('./sw.js')
                     .then(function(registration) {
                         console.log('SW registered: ', registration);
+                        console.log('Service Worker登録成功 - PWAインストール可能');
                     })
                     .catch(function(registrationError) {
                         console.log('SW registration failed: ', registrationError);
+                        console.log('Service Worker登録失敗 - PWAインストール不可');
                     });
             });
-        } else if (window.location.hostname.includes('localhost') || window.location.hostname.includes('127.0.0.1')) {
-            console.log('開発環境のため、サービスワーカーは無効化されています');
+        } else {
+            console.log('Service Worker非対応ブラウザです');
         }
     </script>
     <script src="./bundle.js"></script>
