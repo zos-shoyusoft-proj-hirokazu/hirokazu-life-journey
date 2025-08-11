@@ -1,4 +1,4 @@
-<!doctype html><html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover,minimal-ui,orientation=landscape"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="mobile-web-app-capable" content="yes"><meta name="theme-color" content="#000000"><meta name="description" content="Hirokazu Life Journey - ゲーム"><link rel="manifest" href="./manifest.json"><title>Hirokazu Life Journey</title><link rel="stylesheet" href="./css/stageSelect.css"><link rel="stylesheet" href="./css/mainMenu.css"><style>/* 全体のリセットとブラウザUI対応 */
+<!doctype html><html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover,minimal-ui,orientation=landscape,user-scalable=0,width=device-width,height=device-height"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="mobile-web-app-capable" content="yes"><meta name="theme-color" content="#000000"><meta name="description" content="Hirokazu Life Journey - ゲーム"><link rel="manifest" href="./manifest.json"><meta name="viewport-fit" content="cover"><meta name="format-detection" content="telephone=no"><meta name="mobile-web-app-capable" content="yes"><meta name="theme-color" content="#000000"><meta name="msapplication-TileColor" content="#000000"><title>Hirokazu Life Journey</title><link rel="stylesheet" href="./css/stageSelect.css"><link rel="stylesheet" href="./css/mainMenu.css"><style>/* 全体のリセットとブラウザUI対応 */
         * {
             margin: 0;
             padding: 0;
@@ -38,7 +38,7 @@
             left: 0;
         }
         
-        /* 横画面強制のためのスタイル */
+        /* 横画面強制のためのスタイル（UI崩れ修正版） */
         body.force-landscape {
             transform: rotate(90deg);
             transform-origin: center center;
@@ -47,14 +47,169 @@
             position: fixed;
             top: 0;
             left: 0;
+            /* iOS Safariでの追加調整 */
+            -webkit-transform: rotate(90deg);
+            -webkit-transform-origin: center center;
+            /* UI崩れ防止のための追加設定 */
+            overflow: hidden;
+            box-sizing: border-box;
         }
         
-        /* 横画面時のゲームコンテナ調整 */
+        /* 横画面時のゲームコンテナ調整（UI崩れ修正版） */
         body.force-landscape #game-container {
             width: 100vh !important;
             height: 100vw !important;
             transform: rotate(-90deg);
             transform-origin: center center;
+            /* iOS Safariでの追加調整 */
+            -webkit-transform: rotate(-90deg);
+            -webkit-transform-origin: center center;
+            /* UI崩れ防止のための追加設定 */
+            position: absolute;
+            top: 0;
+            left: 0;
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+        
+        /* 横画面時の全要素の調整（UI崩れ防止） */
+        body.force-landscape * {
+            box-sizing: border-box;
+        }
+        
+        /* 横画面時のメインメニュー調整 */
+        body.force-landscape #main-menu {
+            width: 100vh !important;
+            height: 100vw !important;
+            transform: rotate(-90deg);
+            transform-origin: center center;
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* 横画面時のステージ選択画面調整 */
+        body.force-landscape #stage-select {
+            width: 100vh !important;
+            height: 100vw !important;
+            transform: rotate(-90deg);
+            transform-origin: center center;
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* 横画面時のオープニング動画調整 */
+        body.force-landscape #opening-video {
+            width: 100vh !important;
+            height: 100vw !important;
+            transform: rotate(-90deg);
+            transform-origin: center center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* 横画面時のボタン調整 */
+        body.force-landscape button {
+            transform: rotate(-90deg);
+            transform-origin: center center;
+        }
+        
+        /* 横画面時のテキスト調整 */
+        body.force-landscape p, 
+        body.force-landscape h1, 
+        body.force-landscape h2, 
+        body.force-landscape h3 {
+            transform: rotate(-90deg);
+            transform-origin: center center;
+        }
+        
+        /* iOS Safari固有の横画面強制 */
+        @supports (-webkit-touch-callout: none) {
+            body.force-landscape {
+                /* iOS Safariでの追加調整 */
+                -webkit-transform: rotate(90deg);
+                -webkit-transform-origin: center center;
+                width: 100vh !important;
+                height: 100vw !important;
+            }
+        }
+        
+        /* Android固有の横画面強制（強化版） */
+        @media screen and (max-width: 768px) {
+            body.force-landscape {
+                /* Androidでの追加調整 */
+                transform: rotate(90deg) !important;
+                transform-origin: center center !important;
+                width: 100vh !important;
+                height: 100vw !important;
+                position: fixed !important;
+                top: 0 !important;
+                left: 0 !important;
+                /* Android Chromeでの追加調整 */
+                -webkit-transform: rotate(90deg) !important;
+                -webkit-transform-origin: center center !important;
+                /* Android固有の調整 */
+                overflow: hidden !important;
+            }
+            
+            body.force-landscape #game-container {
+                width: 100vh !important;
+                height: 100vw !important;
+                transform: rotate(-90deg) !important;
+                transform-origin: center center !important;
+                -webkit-transform: rotate(-90deg) !important;
+                -webkit-transform-origin: center center !important;
+                position: absolute !important;
+                top: 0 !important;
+                left: 0 !important;
+            }
+            
+            /* Android用のUI要素調整 */
+            body.force-landscape #main-menu,
+            body.force-landscape #stage-select {
+                width: 100vh !important;
+                height: 100vw !important;
+                transform: rotate(-90deg) !important;
+                transform-origin: center center !important;
+                -webkit-transform: rotate(-90deg) !important;
+                -webkit-transform-origin: center center !important;
+                position: absolute !important;
+                top: 0 !important;
+                left: 0 !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+            }
+            
+            /* Android用のボタン調整 */
+            body.force-landscape button {
+                transform: rotate(-90deg) !important;
+                transform-origin: center center !important;
+                -webkit-transform: rotate(-90deg) !important;
+                -webkit-transform-origin: center center !important;
+            }
+        }
+        
+        /* Android Chrome固有の調整 */
+        @media screen and (max-width: 768px) and (-webkit-min-device-pixel-ratio: 1) {
+            body.force-landscape {
+                /* Android Chromeでの強制横画面 */
+                transform: rotate(90deg) !important;
+                transform-origin: center center !important;
+                width: 100vh !important;
+                height: 100vw !important;
+            }
         }
         #game-container {
             width: 100vw;
@@ -621,48 +776,85 @@
             }
         }
         
-        // 画面リサイズ時の処理を改善
+        // リサイズ処理（PWA時のみ横画面強制）
         function handleResize() {
-            const { width, height } = getActualViewportSize();
-            console.log('Viewport resize:', width, 'x', height);
-            
-            // ゲームインスタンスが存在する場合のみリサイズ処理
-            if (window.gameInstance && window.gameInstance.scale) {
-                setTimeout(() => {
-                    window.gameInstance.scale.resize(width, height);
-                }, 100);
+            if (isPWAInstalled()) {
+                console.log('PWA: リサイズ時に横画面強制を実行');
+                forceLandscape();
             }
+            // ブラウザの場合は何もしない（縦横自由）
         }
         
-        // 横画面強制機能
+        // PWAインストール状態を検出する関数
+        function isPWAInstalled() {
+            // display-mode: standalone または fullscreen の場合はPWA
+            if (window.matchMedia('(display-mode: standalone)').matches) {
+                console.log('PWAとしてインストールされています（standalone）');
+                return true;
+            }
+            if (window.matchMedia('(display-mode: fullscreen)').matches) {
+                console.log('PWAとしてインストールされています（fullscreen）');
+                return true;
+            }
+            // navigator.standalone でiOS SafariのPWA状態を検出
+            if (navigator.standalone === true) {
+                console.log('iOS PWAとしてインストールされています');
+                return true;
+            }
+            // その他のPWA検出方法
+            if (window.navigator && window.navigator.serviceWorker && window.navigator.serviceWorker.controller) {
+                console.log('Service Workerが動作中 - PWAの可能性');
+                return true;
+            }
+            console.log('ブラウザとして動作中 - 縦横自由');
+            return false;
+        }
+
+        // 横画面強制の関数（PWA時のみ）
         function forceLandscape() {
-            console.log('横画面強制を開始します');
+            // PWAとしてインストールされていない場合は何もしない
+            if (!isPWAInstalled()) {
+                console.log('ブラウザモード: 縦横自由にします');
+                document.body.classList.remove('force-landscape');
+                return;
+            }
             
-            // 画面の向きを横画面に強制（サポートされている場合のみ）
+            console.log('PWAモード: 横画面強制を開始します');
+            forceLandscapeWithCSS(); // First, apply CSS force for immediate effect
             if (window.screen && window.screen.orientation && window.screen.orientation.lock) {
                 window.screen.orientation.lock('landscape').then(() => {
                     console.log('画面向きロック成功: landscape');
+                    document.body.classList.remove('force-landscape'); // Remove CSS force if API succeeds
                 }).catch(e => {
                     console.log('画面向きロック失敗:', e);
-                    // APIが使えない場合はCSSで強制
-                    forceLandscapeWithCSS();
+                    console.log('CSS強制を維持します'); // Maintain CSS force if API fails
                 });
             } else {
                 console.log('screen.orientation.lock()がサポートされていません。CSSで強制します。');
-                forceLandscapeWithCSS();
             }
         }
         
-        // CSSで横画面を強制する関数
+        // CSSで横画面を強制する関数（改善版）
         function forceLandscapeWithCSS() {
             console.log('CSSで横画面強制を実行します');
+            
+            // デバイスを検出
+            const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+            const isAndroid = /Android/i.test(navigator.userAgent);
+            
+            console.log('デバイス検出:', { isMobile, isIOS, isAndroid });
             
             // 現在の画面サイズを取得
             const screenWidth = window.screen.width;
             const screenHeight = window.screen.height;
+            const windowWidth = window.innerWidth;
+            const windowHeight = window.innerHeight;
+            
+            console.log('画面サイズ:', { screenWidth, screenHeight, windowWidth, windowHeight });
             
             // 縦向きの場合は90度回転
-            if (screenHeight > screenWidth) {
+            if (screenHeight > screenWidth || windowHeight > windowWidth) {
                 // CSSクラスを適用
                 document.body.classList.add('force-landscape');
                 console.log('縦向き検出: CSSクラスで横画面強制');
@@ -673,8 +865,139 @@
                     gameContainer.style.width = '100vh';
                     gameContainer.style.height = '100vw';
                 }
+                
+                // iOS/Android固有の調整
+                if (isIOS) {
+                    // iOS Safariでの追加調整
+                    document.documentElement.style.transform = 'rotate(90deg)';
+                    document.documentElement.style.transformOrigin = 'center center';
+                    document.documentElement.style.width = '100vh';
+                    document.documentElement.style.height = '100vw';
+                } else if (isAndroid) {
+                    // Androidでの追加調整（強化版）
+                    console.log('Android用の横画面強制を実行');
+                    
+                    // body要素の直接スタイル設定
+                    document.body.style.transform = 'rotate(90deg)';
+                    document.body.style.transformOrigin = 'center center';
+                    document.body.style.width = '100vh';
+                    document.body.style.height = '100vw';
+                    document.body.style.position = 'fixed';
+                    document.body.style.top = '0';
+                    document.body.style.left = '0';
+                    document.body.style.overflow = 'hidden';
+                    
+                    // html要素にも適用
+                    document.documentElement.style.transform = 'rotate(90deg)';
+                    document.documentElement.style.transformOrigin = 'center center';
+                    document.documentElement.style.width = '100vh';
+                    document.documentElement.style.height = '100vw';
+                    document.documentElement.style.overflow = 'hidden';
+                    
+                    // ゲームコンテナの直接調整
+                    if (gameContainer) {
+                        gameContainer.style.transform = 'rotate(-90deg)';
+                        gameContainer.style.transformOrigin = 'center center';
+                        gameContainer.style.width = '100vh';
+                        gameContainer.style.height = '100vw';
+                        gameContainer.style.position = 'absolute';
+                        gameContainer.style.top = '0';
+                        gameContainer.style.left = '0';
+                    }
+                    
+                    // メインメニューの調整
+                    const mainMenu = document.getElementById('main-menu');
+                    if (mainMenu) {
+                        mainMenu.style.width = '100vh';
+                        mainMenu.style.height = '100vw';
+                        mainMenu.style.transform = 'rotate(-90deg)';
+                        mainMenu.style.transformOrigin = 'center center';
+                        mainMenu.style.position = 'absolute';
+                        mainMenu.style.top = '0';
+                        mainMenu.style.left = '0';
+                        mainMenu.style.display = 'flex';
+                        mainMenu.style.alignItems = 'center';
+                        mainMenu.style.justifyContent = 'center';
+                    }
+                    
+                    // ステージ選択画面の調整
+                    const stageSelect = document.getElementById('stage-select');
+                    if (stageSelect) {
+                        stageSelect.style.width = '100vh';
+                        stageSelect.style.height = '100vw';
+                        stageSelect.style.transform = 'rotate(-90deg)';
+                        stageSelect.style.transformOrigin = 'center center';
+                        stageSelect.style.position = 'absolute';
+                        stageSelect.style.top = '0';
+                        stageSelect.style.left = '0';
+                        stageSelect.style.display = 'flex';
+                        stageSelect.style.alignItems = 'center';
+                        stageSelect.style.justifyContent = 'center';
+                    }
+                    
+                    // オープニング動画の調整
+                    const openingVideo = document.getElementById('opening-video');
+                    if (openingVideo) {
+                        openingVideo.style.width = '100vh';
+                        openingVideo.style.height = '100vw';
+                        openingVideo.style.transform = 'rotate(-90deg)';
+                        openingVideo.style.transformOrigin = 'center center';
+                        openingVideo.style.position = 'fixed';
+                        openingVideo.style.top = '0';
+                        openingVideo.style.left = '0';
+                        openingVideo.style.display = 'flex';
+                        openingVideo.style.alignItems = 'center';
+                        openingVideo.style.justifyContent = 'center';
+                    }
+                    
+                    // Android固有の追加調整
+                    setTimeout(() => {
+                        console.log('Android用の遅延調整を実行');
+                        document.body.style.transform = 'rotate(90deg)';
+                        document.body.style.width = '100vh';
+                        document.body.style.height = '100vw';
+                        
+                        // 全ボタンの調整
+                        const allButtons = document.querySelectorAll('button');
+                        allButtons.forEach(button => {
+                            button.style.transform = 'rotate(-90deg)';
+                            button.style.transformOrigin = 'center center';
+                        });
+                        
+                        // 全テキスト要素の調整
+                        const allTexts = document.querySelectorAll('p, h1, h2, h3, span, div');
+                        allTexts.forEach(text => {
+                            if (text.textContent && text.textContent.trim()) {
+                                text.style.transform = 'rotate(-90deg)';
+                                text.style.transformOrigin = 'center center';
+                            }
+                        });
+                    }, 100);
+                }
             } else {
                 console.log('既に横向きです');
+                // 横向きの場合は強制クラスを削除
+                document.body.classList.remove('force-landscape');
+                document.documentElement.style.transform = '';
+                document.documentElement.style.width = '';
+                document.documentElement.style.height = '';
+                document.body.style.transform = '';
+                document.body.style.width = '';
+                document.body.style.height = '';
+                
+                // 全UI要素のスタイルをリセット
+                const allElements = document.querySelectorAll('#main-menu, #stage-select, #game-container, #opening-video, button, p, h1, h2, h3, span, div');
+                allElements.forEach(element => {
+                    element.style.transform = '';
+                    element.style.width = '';
+                    element.style.height = '';
+                    element.style.position = '';
+                    element.style.top = '';
+                    element.style.left = '';
+                    element.style.display = '';
+                    element.style.alignItems = '';
+                    element.style.justifyContent = '';
+                });
             }
         }
         
@@ -692,11 +1015,46 @@
             setTimeout(handleResize, 500); // 向き変更後に少し待ってからリサイズ
         });
         
-        // 画面向きの監視を追加
+        // 画面向きの監視を追加（強化版）
         if (window.screen && window.screen.orientation) {
             window.screen.orientation.addEventListener('change', function() {
                 console.log('画面向き変更イベント:', window.screen.orientation.type);
                 forceLandscape();
+            });
+        }
+        
+        // 追加の画面向き監視（確実性のため）
+        let lastOrientation = window.innerHeight > window.innerWidth ? 'portrait' : 'landscape';
+        setInterval(() => {
+            const currentOrientation = window.innerHeight > window.innerWidth ? 'portrait' : 'landscape';
+            if (currentOrientation !== lastOrientation) {
+                console.log('画面向き変更を検出:', lastOrientation, '→', currentOrientation);
+                lastOrientation = currentOrientation;
+                if (currentOrientation === 'portrait') {
+                    console.log('縦向き検出: 横画面強制を実行');
+                    forceLandscape();
+                }
+            }
+        }, 1000); // 1秒ごとにチェック
+        
+        // Android用の追加監視（より頻繁にチェック）
+        if (/Android/i.test(navigator.userAgent)) {
+            console.log('Android用の追加監視を開始');
+            setInterval(() => {
+                const isPortrait = window.innerHeight > window.innerWidth;
+                if (isPortrait) {
+                    console.log('Android: 縦向き検出、横画面強制を実行');
+                    forceLandscape();
+                }
+            }, 500); // 0.5秒ごとにチェック
+            
+            // Android用のタッチイベントでも横画面強制
+            document.addEventListener('touchstart', function() {
+                const isPortrait = window.innerHeight > window.innerWidth;
+                if (isPortrait) {
+                    console.log('Android: タッチ時に縦向き検出、横画面強制を実行');
+                    forceLandscape();
+                }
             });
         }
         
@@ -849,6 +1207,15 @@
         // ステージ選択画面の初期化
         document.addEventListener('DOMContentLoaded', function() {
             console.log('DOMContentLoaded - メインメニュー画面を初期化');
+            
+            // PWAとしてインストールされている場合のみ横画面強制を実行
+            if (isPWAInstalled()) {
+                console.log('PWAモード: 横画面強制を実行');
+                forceLandscape(); // Execute on DOMContentLoaded
+            } else {
+                console.log('ブラウザモード: 縦横自由にします');
+                document.body.classList.remove('force-landscape');
+            }
             
             // メインメニューのボタンイベントを設定
             const startGameBtn = document.getElementById('start-game');
@@ -1176,9 +1543,60 @@
         window.addEventListener('load', function() {
             console.log('window load event fired');
             
-            // 横画面を強制
-            forceLandscape();
-            console.log('横画面強制を実行しました');
+            // PWAとしてインストールされている場合のみ横画面強制を実行
+            if (isPWAInstalled()) {
+                console.log('PWAモード: 横画面強制を実行');
+                forceLandscape(); // Immediate execution
+                setTimeout(() => { // Delayed execution 1
+                    console.log('PWA: 遅延横画面強制を実行');
+                    forceLandscape();
+                }, 1000);
+                setTimeout(() => { // Delayed execution 2
+                    console.log('PWA: 最終横画面強制を実行');
+                    forceLandscape();
+                }, 3000);
+                if (/Android/i.test(navigator.userAgent)) { // Android-specific delayed execution
+                    console.log('Android PWA: 追加遅延実行を設定');
+                    setTimeout(() => {
+                        console.log('Android PWA: 5秒後の横画面強制を実行');
+                        forceLandscape();
+                    }, 5000);
+                    setTimeout(() => {
+                        console.log('Android PWA: 10秒後の横画面強制を実行');
+                        forceLandscape();
+                    }, 10000);
+                }
+            } else {
+                console.log('ブラウザモード: 縦横自由にします');
+                // ブラウザの場合は強制クラスを削除
+                document.body.classList.remove('force-landscape');
+            }
+            
+            // 遅延実行も追加（確実性のため）
+            setTimeout(() => {
+                console.log('遅延横画面強制を実行');
+                forceLandscape();
+            }, 1000);
+            
+            // さらに遅延実行（確実性のため）
+            setTimeout(() => {
+                console.log('最終横画面強制を実行');
+                forceLandscape();
+            }, 3000);
+            
+            // Android用の追加遅延実行
+            if (/Android/i.test(navigator.userAgent)) {
+                console.log('Android用の追加遅延実行を設定');
+                setTimeout(() => {
+                    console.log('Android: 5秒後の横画面強制を実行');
+                    forceLandscape();
+                }, 5000);
+                
+                setTimeout(() => {
+                    console.log('Android: 10秒後の横画面強制を実行');
+                    forceLandscape();
+                }, 10000);
+            }
             
             if (!localStorage.getItem('openingVideoShown')) {
                 console.log('showOpeningVideo will be called');
