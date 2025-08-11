@@ -796,6 +796,13 @@
         function showOpeningVideo() {
             console.log('showOpeningVideo called');
             
+            // PWAモードかどうかを検出
+            const isPWA = window.matchMedia('(display-mode: standalone)').matches || 
+                          window.matchMedia('(display-mode: fullscreen)').matches ||
+                          navigator.standalone === true;
+            
+            console.log('PWAモード:', isPWA);
+            
             // BGMを停止
             if (currentBGM) {
                 currentBGM.pause();
@@ -818,21 +825,44 @@
                 console.log('オープニング動画を表示しました');
             }
             
-            // YouTube動画のURLを設定
+            // YouTube動画のURLを設定（PWAモード対応）
             const videoId = 'P2KXyM27XK4';
             const iframe = document.getElementById('youtube-video');
             if (iframe) {
-                iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&showinfo=0&controls=1&playsinline=1`;
-                console.log('YouTube動画を設定しました:', videoId);
+                if (isPWA) {
+                    // PWAモード用の設定
+                    iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&showinfo=0&controls=1&playsinline=1&enablejsapi=1&origin=${window.location.origin}`;
+                    console.log('PWAモード用のYouTube動画を設定:', videoId);
+                } else {
+                    // 通常のブラウザ用の設定
+                    iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&showinfo=0&controls=1&playsinline=1`;
+                    console.log('通常モード用のYouTube動画を設定:', videoId);
+                }
             }
             
-            // スキップボタンのイベント
+            // スキップボタンのイベント（PWAモード対応）
             const skipButton = document.getElementById('skip-video');
             if (skipButton) {
-                skipButton.addEventListener('click', function() {
+                // 既存のイベントリスナーを削除
+                skipButton.replaceWith(skipButton.cloneNode(true));
+                
+                // 新しいスキップボタンを取得
+                const newSkipButton = document.getElementById('skip-video');
+                newSkipButton.addEventListener('click', function() {
                     console.log('スキップボタンがクリックされました');
                     hideOpeningVideo();
                 });
+                
+                // PWAモードではタッチイベントも追加
+                if (isPWA) {
+                    newSkipButton.addEventListener('touchstart', function(e) {
+                        e.preventDefault();
+                        console.log('PWAモード: スキップボタンのタッチイベント');
+                        hideOpeningVideo();
+                    });
+                }
+                
+                console.log('スキップボタンのイベントを設定しました（PWA対応）');
             }
         }
         
