@@ -110,11 +110,12 @@
     align-items: center;
     justify-content: space-between;
     color: white;
-    padding: 30px;
+    padding: 25px;
     max-width: 1400px;
     width: 95%;
+    min-height: 350px;
     background: rgba(0, 0, 0, 0.3);
-    border-radius: 30px;
+    border-radius: 25px;
     backdrop-filter: blur(20px);
     border: 2px solid rgba(255, 255, 255, 0.15);
     box-shadow: 
@@ -124,7 +125,7 @@
     position: relative;
     z-index: 10;
     animation: containerGlow 4s ease-in-out infinite alternate;
-    gap: 40px;
+    gap: 35px;
     /* インストールポップアップの配置のため */
     overflow: visible;
 }
@@ -135,18 +136,21 @@
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    gap: 40px;
+    gap: 30px;
     flex: 1;
 }
 
 /* インストールポップアップ専用領域 */
 .install-area {
-    position: relative;
+    position: absolute;
+    bottom: 30px;
+    right: 30px;
     width: 200px;
-    height: 100%;
-    display: flex;
-    align-items: flex-end;
-    justify-content: flex-end;
+    height: auto;
+    z-index: 1000;
+    /* 確実に右下に配置 */
+    left: auto !important;
+    top: auto !important;
 }
 
 @keyframes containerGlow {
