@@ -406,11 +406,13 @@
         function showInstallPrompt() {
             // 既にインストール済みの場合は表示しない
             if (isInstalled()) {
+                console.log('PWAインストール済みのため、インストール促進バナーを表示しません');
                 return;
             }
             
             // 既に閉じられている場合は表示しない
             if (localStorage.getItem('installPromptDismissed')) {
+                console.log('インストール促進バナーは既に非表示にされています');
                 return;
             }
             
@@ -418,6 +420,14 @@
             const installBanner = document.getElementById('install-banner');
             if (installBanner) {
                 installBanner.style.display = 'block';
+                
+                // スマホでのPWAインストール状況をログ出力
+                console.log('PWAインストール状況チェック:');
+                console.log('- Service Worker対応:', 'serviceWorker' in navigator);
+                console.log('- Manifest読み込み:', !!document.querySelector('link[rel="manifest"]'));
+                console.log('- スタンドアロンモード:', window.matchMedia('(display-mode: standalone)').matches);
+                console.log('- ユーザーエージェント:', navigator.userAgent);
+                console.log('- 現在のURL:', window.location.href);
                 
                 // インストールボタンのイベント
                 const installBtn = document.getElementById('install-btn');
@@ -1139,16 +1149,19 @@
         
         // PWAとしてインストール可能にするためのService Worker登録
         // 開発時（localhost/127.0.0.1）ではサービスワーカーを無効化
-        if ('serviceWorker' in navigator && !window.location.hostname.includes('localhost') && !window.location.hostname.includes('127.0.0.1')) {
+        if ('serviceWorker' in navigator) {
+            // 開発環境でもService Workerを登録（テスト用）
             window.addEventListener('load', function() {
                 navigator.serviceWorker.register('./sw.js')
                     .then(function(registration) {
                         console.log('SW registered: ', registration);
+                        console.log('Service Worker登録成功 - PWAインストール可能');
                     })
                     .catch(function(registrationError) {
                         console.log('SW registration failed: ', registrationError);
+                        console.log('Service Worker登録失敗 - PWAインストール不可');
                     });
             });
-        } else if (window.location.hostname.includes('localhost') || window.location.hostname.includes('127.0.0.1')) {
-            console.log('開発環境のため、サービスワーカーは無効化されています');
+        } else {
+            console.log('Service Worker非対応ブラウザです');
         }</script><script src="./bundle.js"></script></body></html>
