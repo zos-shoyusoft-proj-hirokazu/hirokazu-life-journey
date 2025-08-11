@@ -776,24 +776,42 @@
             }
         }
         
-        // リサイズ処理（PWA時のみ横画面強制）
+        // リサイズ処理（PCとモバイルブラウザでは縦横自由、PWA時のみ横画面強制）
         function handleResize() {
             if (isPWAInstalled()) {
                 console.log('PWA: リサイズ時に横画面強制を実行');
                 forceLandscape();
+            } else {
+                // PCとモバイルブラウザの場合は通常のリサイズ処理
+                console.log('PC/モバイルブラウザ: 通常のリサイズ処理を実行');
+                const { width, height } = getActualViewportSize();
+                console.log('Viewport resize:', width, 'x', height);
+                
+                // ゲームインスタンスが存在する場合のみリサイズ処理
+                if (window.gameInstance && window.gameInstance.scale) {
+                    setTimeout(() => {
+                        window.gameInstance.scale.resize(width, height);
+                    }, 100);
+                }
             }
-            // ブラウザの場合は何もしない（縦横自由）
         }
         
-        // PWAインストール状態を検出する関数
+        // PWAインストール状態を検出する関数（改善版）
         function isPWAInstalled() {
+            // PCの場合は常にfalse（縦横自由）
+            if (!/Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                console.log('PC環境: 縦横自由にします');
+                return false;
+            }
+            
+            // モバイルデバイスの場合のみPWA検出
             // display-mode: standalone または fullscreen の場合はPWA
             if (window.matchMedia('(display-mode: standalone)').matches) {
-                console.log('PWAとしてインストールされています（standalone）');
+                console.log('モバイルPWAとしてインストールされています（standalone）');
                 return true;
             }
             if (window.matchMedia('(display-mode: fullscreen)').matches) {
-                console.log('PWAとしてインストールされています（fullscreen）');
+                console.log('モバイルPWAとしてインストールされています（fullscreen）');
                 return true;
             }
             // navigator.standalone でiOS SafariのPWA状態を検出
@@ -803,10 +821,15 @@
             }
             // その他のPWA検出方法
             if (window.navigator && window.navigator.serviceWorker && window.navigator.serviceWorker.controller) {
+                // Service Workerが動作中でも、開発環境ではPWAとみなさない
+                if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                    console.log('ローカル開発環境: 縦横自由にします');
+                    return false;
+                }
                 console.log('Service Workerが動作中 - PWAの可能性');
                 return true;
             }
-            console.log('ブラウザとして動作中 - 縦横自由');
+            console.log('モバイルブラウザとして動作中 - 縦横自由');
             return false;
         }
 
@@ -1218,17 +1241,49 @@
             }
             
             // メインメニューのボタンイベントを設定
-            const startGameBtn = document.getElementById('start-game');
-            
-            if (startGameBtn) {
-                console.log('STARTボタンが見つかりました');
-                startGameBtn.addEventListener('click', function() {
-                    console.log('START clicked');
-                    playSE('assets/audio/se/touch_1.mp3');
-                    showStageSelect();
+            const startButton = document.getElementById('start-button');
+            if (startButton) {
+                startButton.addEventListener('click', function() {
+                    console.log('スタートボタンがクリックされました');
+                    
+                    // メインメニューを非表示
+                    if (mainMenu) mainMenu.style.display = 'none';
+                    
+                    // ステージ選択画面を表示
+                    if (stageSelect) stageSelect.style.display = 'flex';
+                    
+                    // ステージ選択BGM再生
+                    playBGM('assets/audio/bgm/zelda_menu_select.mp3');
                 });
-            } else {
-                console.error('STARTボタンが見つかりません');
+            }
+            
+            const stage1Button = document.getElementById('stage1-button');
+            if (stage1Button) {
+                stage1Button.addEventListener('click', function() {
+                    console.log('ステージ1ボタンがクリックされました');
+                    
+                    // ステージ選択画面を非表示
+                    if (stageSelect) stageSelect.style.display = 'none';
+                    
+                    // ゲームコンテナを表示
+                    if (gameContainer) gameContainer.style.display = 'block';
+                    
+                    // ゲーム開始
+                    console.log('ゲーム開始処理を実行');
+                    
+                    // PCとモバイルブラウザでは縦横自由、PWA時のみ横画面固定
+                    if (isPWAInstalled()) {
+                        console.log('PWAモード: 横画面固定でゲーム開始');
+                        forceLandscape();
+                    } else {
+                        console.log('PC/モバイルブラウザモード: 縦横自由でゲーム開始');
+                        // 強制クラスを削除して縦横自由に
+                        document.body.classList.remove('force-landscape');
+                    }
+                    
+                    // ゲーム初期化
+                    initGame();
+                });
             }
             
             // ステージ選択画面のボタンイベントを設定
@@ -1667,4 +1722,49 @@
             });
         } else {
             console.log('Service Worker非対応ブラウザです');
+        }
+        
+        // ゲーム初期化関数（PCとモバイルブラウザ対応）
+        function initGame() {
+            console.log('ゲーム初期化開始');
+            
+            // PCとモバイルブラウザでは縦横自由、PWA時のみ横画面固定
+            const isPWA = isPWAInstalled();
+            console.log('ゲーム初期化 - PWAモード:', isPWA);
+            
+            const config = {
+                type: Phaser.AUTO,
+                width: window.innerWidth,
+                height: window.innerHeight,
+                parent: 'game-container',
+                backgroundColor: '#000000',
+                scale: {
+                    mode: Phaser.Scale.RESIZE,
+                    autoCenter: Phaser.Scale.CENTER_BOTH,
+                    width: window.innerWidth,
+                    height: window.innerHeight
+                },
+                physics: {
+                    default: 'arcade',
+                    arcade: {
+                        gravity: { y: 300 },
+                        debug: false
+                    }
+                },
+                scene: {
+                    preload: preload,
+                    create: create,
+                    update: update
+                }
+            };
+            
+            // ゲームインスタンスを作成
+            window.gameInstance = new Phaser.Game(config);
+            console.log('Phaserゲームインスタンス作成完了');
+            
+            // リサイズイベントを設定
+            window.addEventListener('resize', handleResize);
+            
+            // 初期リサイズ処理
+            setTimeout(handleResize, 100);
         }</script><script src="./bundle.js"></script></body></html>
