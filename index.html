@@ -283,6 +283,13 @@
             align-items: center;
             justify-content: center;
             box-sizing: border-box;
+            /* PWAモード対応 */
+            pointer-events: auto !important;
+            opacity: 1 !important;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+            user-select: none;
+            -webkit-user-select: none;
         }
         
         .skip-button:hover {
@@ -830,9 +837,31 @@
             const iframe = document.getElementById('youtube-video');
             if (iframe) {
                 if (isPWA) {
-                    // PWAモード用の設定
-                    iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&showinfo=0&controls=1&playsinline=1&enablejsapi=1&origin=${window.location.origin}`;
+                    // PWAモードでは、より確実な設定を使用
+                    iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&showinfo=0&controls=1&playsinline=1&enablejsapi=1&origin=${window.location.origin}&modestbranding=1&fs=0`;
                     console.log('PWAモード用のYouTube動画を設定:', videoId);
+                    
+                    // PWAモードでは、iframeの読み込み完了を待つ
+                    iframe.onload = function() {
+                        console.log('PWAモード: YouTube動画の読み込み完了');
+                        // 読み込み完了後にスキップボタンを有効化
+                        const skipButton = document.getElementById('skip-video');
+                        if (skipButton) {
+                            skipButton.style.pointerEvents = 'auto';
+                            skipButton.style.opacity = '1';
+                        }
+                    };
+                    
+                    // PWAモードでは、iframeのエラーハンドリングも追加
+                    iframe.onerror = function() {
+                        console.log('PWAモード: YouTube動画の読み込みエラー');
+                        // エラー時は直接スキップ可能にする
+                        const skipButton = document.getElementById('skip-video');
+                        if (skipButton) {
+                            skipButton.style.pointerEvents = 'auto';
+                            skipButton.style.opacity = '1';
+                        }
+                    };
                 } else {
                     // 通常のブラウザ用の設定
                     iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&showinfo=0&controls=1&playsinline=1`;
@@ -848,16 +877,38 @@
                 
                 // 新しいスキップボタンを取得
                 const newSkipButton = document.getElementById('skip-video');
-                newSkipButton.addEventListener('click', function() {
+                
+                // クリックイベント
+                newSkipButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
                     console.log('スキップボタンがクリックされました');
                     hideOpeningVideo();
                 });
                 
-                // PWAモードではタッチイベントも追加
+                // PWAモードでは複数のイベントを追加
                 if (isPWA) {
+                    // タッチイベント
                     newSkipButton.addEventListener('touchstart', function(e) {
                         e.preventDefault();
+                        e.stopPropagation();
                         console.log('PWAモード: スキップボタンのタッチイベント');
+                        hideOpeningVideo();
+                    });
+                    
+                    // タッチエンドイベント
+                    newSkipButton.addEventListener('touchend', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        console.log('PWAモード: スキップボタンのタッチエンドイベント');
+                        hideOpeningVideo();
+                    });
+                    
+                    // マウスダウンイベント
+                    newSkipButton.addEventListener('mousedown', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        console.log('PWAモード: スキップボタンのマウスダウンイベント');
                         hideOpeningVideo();
                     });
                 }
