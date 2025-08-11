@@ -13,25 +13,21 @@
     overflow: hidden;
 }
 
-/* インストールポップアップを右下に小さく配置 - メインメニューのみ表示 */
+/* インストールポップアップを右下に小さく配置 */
 .install-banner {
-    position: fixed !important;
-    bottom: 10px !important;
-    right: 10px !important;
-    background: rgba(0, 0, 0, 0.95) !important;
-    border: 1px solid rgba(255, 255, 255, 0.3) !important;
-    border-radius: 6px !important;
-    padding: 6px !important;
-    color: white !important;
-    font-size: 0.6rem !important;
-    z-index: 9999 !important;
-    max-width: 180px !important;
-    backdrop-filter: blur(10px) !important;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4) !important;
-    display: block !important;
-    top: auto !important;
-    left: auto !important;
-    transform: scale(0.9) !important;
+    position: relative;
+    background: rgba(0, 0, 0, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 6px;
+    padding: 6px;
+    color: white;
+    font-size: 0.6rem;
+    z-index: 9999;
+    max-width: 180px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+    display: block;
+    transform: scale(0.9);
 }
 
 .install-banner .install-text {
@@ -129,6 +125,28 @@
     z-index: 10;
     animation: containerGlow 4s ease-in-out infinite alternate;
     gap: 40px;
+    /* インストールポップアップの配置のため */
+    overflow: visible;
+}
+
+/* メインコンテンツエリア */
+.main-content {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 40px;
+    flex: 1;
+}
+
+/* インストールポップアップ専用領域 */
+.install-area {
+    position: relative;
+    width: 200px;
+    height: 100%;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
 }
 
 @keyframes containerGlow {
