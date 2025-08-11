@@ -68,3 +68,126 @@
 .install-banner .close-button:hover {
     color: white;
 }
+
+/* iOS用インストール案内のスタイル */
+#ios-install-guide {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    z-index: 10001;
+    max-width: 90vw;
+    width: 400px;
+}
+
+.ios-guide-content h3 {
+    margin: 0 0 20px 0;
+    color: #333;
+    text-align: center;
+}
+
+.ios-guide-content ol {
+    margin: 0 0 20px 0;
+    padding-left: 20px;
+    color: #555;
+    line-height: 1.6;
+}
+
+.ios-guide-content li {
+    margin-bottom: 10px;
+}
+
+.ios-guide-content button {
+    background: #2196F3;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    width: 100%;
+}
+
+.ios-guide-content button:hover {
+    background: #1976D2;
+}
+
+/* Android用インストール案内のスタイル */
+#android-install-guide {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    z-index: 10001;
+    max-width: 90vw;
+    width: 400px;
+}
+
+.android-guide-content h3 {
+    margin: 0 0 20px 0;
+    color: #333;
+    text-align: center;
+}
+
+.android-guide-content ol {
+    margin: 0 0 20px 0;
+    padding-left: 20px;
+    color: #555;
+    line-height: 1.6;
+}
+
+.android-guide-content li {
+    margin-bottom: 10px;
+}
+
+.android-guide-content .note {
+    background: #fff3cd;
+    border: 1px solid #ffeaa7;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 15px 0;
+    color: #856404;
+    font-size: 14px;
+    text-align: center;
+}
+
+.android-guide-content button {
+    background: #4CAF50;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    width: 100%;
+}
+
+.android-guide-content button:hover {
+    background: #45a049;
+}
+
+/* モバイル対応 */
+@media (max-width: 768px) {
+    .install-content {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
+    
+    .install-content span {
+        font-size: 13px;
+    }
+    
+    #ios-install-guide {
+        width: 90vw;
+        margin: 20px;
+    }
+}
