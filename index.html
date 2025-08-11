@@ -887,38 +887,7 @@
                 console.error('STARTボタンが見つかりません');
             }
             
-            const stage1Button = document.getElementById('stage1-button');
-            if (stage1Button) {
-                console.log('ステージ1ボタンが見つかりました');
-                stage1Button.addEventListener('click', function() {
-                    console.log('ステージ1ボタンがクリックされました');
-                    
-                    // ステージ選択画面を非表示
-                    const stageSelect = document.getElementById('stage-select');
-                    if (stageSelect) stageSelect.style.display = 'none';
-                    
-                    // ゲームコンテナを表示
-                    const gameContainer = document.getElementById('game-container');
-                    if (gameContainer) gameContainer.style.display = 'block';
-                    
-                    // ゲーム開始
-                    console.log('ゲーム開始処理を実行');
-                    
-                    // 全環境で縦横自由にします
-                    console.log('全環境: 縦横自由でゲーム開始');
-                    // 強制クラスを削除して縦横自由に
-                    document.body.classList.remove('force-landscape');
-                    
-                    // 現在の画面向きを検出
-                    const orientation = detectOrientation();
-                    console.log('ゲーム開始時の画面向き:', orientation);
-                    
-                    // ゲーム初期化
-                    initGame();
-                });
-            } else {
-                console.error('ステージ1ボタンが見つかりません');
-            }
+
             
             // ステージ選択画面のボタンイベントを設定
             setupStageSelectButtons();
