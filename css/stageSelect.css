@@ -169,9 +169,12 @@
     overflow: hidden;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
     transform: translateY(0);
+    outline: none;
+    -webkit-focus-ring-color: transparent;
+    -webkit-tap-highlight-color: transparent;
 }
 
-/* すべてのボタンの初期状態で光る */
+/* すべてのボタンの初期状態（光らない） */
 .stage-buttons button {
     background: linear-gradient(145deg, #2c3e50 0%, #34495e 50%, #2c3e50 100%);
     border-color: #3498db;
@@ -181,7 +184,6 @@
         inset 0 2px 4px rgba(255, 255, 255, 0.1),
         inset 0 -2px 4px rgba(0, 0, 0, 0.2),
         0 0 0 1px rgba(255, 255, 255, 0.05);
-    animation: buttonGlow 2s ease-in-out infinite;
 }
 
 @keyframes buttonGlow {
@@ -216,16 +218,21 @@
     color: #ffffff;
 }
 
+.stage-buttons button:focus {
+    outline: none;
+    -webkit-focus-ring-color: transparent;
+    -webkit-tap-highlight-color: transparent;
+}
+
 .stage-buttons button.selected {
-    background: linear-gradient(145deg, #e74c3c 0%, #c0392b 50%, #e74c3c 100%) !important;
-    border-color: #f39c12 !important;
-    color: #ffffff !important;
+    background: linear-gradient(145deg, #e74c3c 0%, #c0392b 50%, #e74c3c 100%);
+    border-color: #3498db;
+    color: #ffffff;
     font-weight: bold;
     box-shadow: 
         0 8px 16px rgba(231, 76, 60, 0.4),
         inset 0 1px 0 rgba(255, 255, 255, 0.2),
-        0 0 20px rgba(231, 76, 60, 0.3) !important;
-    animation: selectedPulse 2s ease-in-out infinite !important;
+        0 0 20px rgba(231, 76, 60, 0.3);
 }
 
 
