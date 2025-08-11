@@ -331,7 +331,7 @@
                 width: 90vw;
                 margin: 20px;
             }
-        }</style><script defer="defer" src="bundle.js"></script></head><body><button id="fullscreen-button" onclick="toggleFullscreen()">全画面</button><div id="install-banner" style="display: none;"><div class="install-content"><span>📱 ホーム画面に追加して、より快適にプレイ！</span> <button id="install-btn">追加する</button> <button id="dismiss-btn">×</button></div></div><div id="ios-install-guide" style="display: none;"><div class="ios-guide-content"><h3>📱 ホーム画面に追加する方法</h3><ol><li>ブラウザの共有ボタン（□↑）をタップ</li><li>「ホーム画面に追加」を選択</li><li>「追加」をタップ</li></ol><button onclick="this.parentElement.parentElement.remove()">了解</button></div></div><div id="game-container"></div><script src="https://cdn.jsdelivr.net/npm/phaser@3.70.0/dist/phaser.min.js"></script><div id="opening-video" style="display: none;"><div id="video-container"><iframe id="youtube-video" width="100%" height="100%" frameborder="0" allowfullscreen></iframe><button id="skip-video" class="skip-button">スキップ</button></div></div><div id="main-menu" style="display: none;"><div class="main-menu-container"><div class="game-title"><h1>Hirokazu Life Journey</h1><p class="subtitle">ひろかずの人生を追体験しよう！</p></div><div class="menu-buttons"><button id="start-game" class="menu-button primary">START</button></div><div class="game-info"><p>結婚式で披露するゲーム</p><p>新郎の人生をRPGで体験！</p></div></div></div><div id="stage-select"><div class="background-image"></div><div class="background-overlay"></div><div class="stage-select-container"><div class="stage-title">ステージ選択画面</div><div class="stage-content"><div class="stage-buttons"><div class="button-row"><button id="miemachi">三重シティ</button><div id="miemachi-move-btn" class="move-button-container" style="display: none;"><button class="move-button">移動する</button></div></div><div class="button-row"><button id="taketastage">竹田シティ</button><div id="taketa-move-btn" class="move-button-container" style="display: none;"><button class="move-button">移動する</button></div></div><div class="button-row"><button id="japan">全国</button><div id="japan-move-btn" class="move-button-container" style="display: none;"><button class="move-button">移動する</button></div></div><button id="opening-video-btn">オープニング動画</button></div><div class="content-area"><div class="description-area" id="description-area"><p>ステージを選択してください</p></div></div></div></div></div><script>// 音声管理
+        }</style><script defer="defer" src="bundle.js"></script></head><body><button id="fullscreen-button" onclick="toggleFullscreen()">全画面</button><div id="install-banner" style="display: none;"><div class="install-content"><span>📱 ホーム画面に追加して、より快適にプレイ！</span> <button id="install-btn">追加する</button> <button id="dismiss-btn">×</button></div></div><div id="ios-install-guide" style="display: none;"><div class="ios-guide-content"><h3>📱 ホーム画面に追加する方法</h3><ol><li>ブラウザの共有ボタン（□↑）をタップ</li><li>「ホーム画面に追加」を選択</li><li>「追加」をタップ</li></ol><button onclick="this.parentElement.parentElement.remove()">了解</button></div></div><div id="android-install-guide" style="display: none;"><div class="android-guide-content"><h3>📱 PWAとしてインストールする方法</h3><ol><li>Chromeの右上メニュー（⋮）をタップ</li><li>「インストール」または「アプリをインストール」を選択</li><li>「インストール」をタップ</li></ol><p class="note">※「ホーム画面に追加」ではなく「インストール」を選択してください</p><button onclick="this.parentElement.parentElement.remove()">了解</button></div></div><div id="game-container"></div><script src="https://cdn.jsdelivr.net/npm/phaser@3.70.0/dist/phaser.min.js"></script><div id="opening-video" style="display: none;"><div id="video-container"><iframe id="youtube-video" width="100%" height="100%" frameborder="0" allowfullscreen></iframe><button id="skip-video" class="skip-button">スキップ</button></div></div><div id="main-menu" style="display: none;"><div class="main-menu-container"><div class="game-title"><h1>Hirokazu Life Journey</h1><p class="subtitle">ひろかずの人生を追体験しよう！</p></div><div class="menu-buttons"><button id="start-game" class="menu-button primary">START</button></div><div class="game-info"><p>結婚式で披露するゲーム</p><p>新郎の人生をRPGで体験！</p></div></div></div><div id="stage-select"><div class="background-image"></div><div class="background-overlay"></div><div class="stage-select-container"><div class="stage-title">ステージ選択画面</div><div class="stage-content"><div class="stage-buttons"><div class="button-row"><button id="miemachi">三重シティ</button><div id="miemachi-move-btn" class="move-button-container" style="display: none;"><button class="move-button">移動する</button></div></div><div class="button-row"><button id="taketastage">竹田シティ</button><div id="taketa-move-btn" class="move-button-container" style="display: none;"><button class="move-button">移動する</button></div></div><div class="button-row"><button id="japan">全国</button><div id="japan-move-btn" class="move-button-container" style="display: none;"><button class="move-button">移動する</button></div></div><button id="opening-video-btn">オープニング動画</button></div><div class="content-area"><div class="description-area" id="description-area"><p>ステージを選択してください</p></div></div></div></div></div><script>// 音声管理
         let currentBGM = null;
         let currentSE = null;
         
@@ -397,7 +397,7 @@
                 });
             } else {
                 // iOS Safariの場合（手動インストール案内）
-                showIOSInstallGuide();
+                showPlatformSpecificInstallGuide();
             }
         }
         
@@ -407,6 +407,32 @@
             if (guide) {
                 guide.style.display = 'block';
             }
+        }
+        
+        // Android用インストール案内
+        function showAndroidInstallGuide() {
+            const guide = document.getElementById('android-install-guide');
+            if (guide) {
+                guide.style.display = 'block';
+            }
+        }
+        
+        // プラットフォーム別インストール案内
+        function showPlatformSpecificInstallGuide() {
+            const userAgent = navigator.userAgent;
+            if (/iPhone|iPad|iPod/i.test(userAgent)) {
+                showIOSInstallGuide();
+            } else if (/Android/i.test(userAgent)) {
+                showAndroidInstallGuide();
+            } else {
+                // デスクトップブラウザの場合
+                showDesktopInstallGuide();
+            }
+        }
+        
+        // デスクトップ用インストール案内
+        function showDesktopInstallGuide() {
+            alert('PWAのインストールには、モバイルデバイスが必要です。スマートフォンやタブレットでアクセスしてください。');
         }
         
         // PWAインストールイベントの監視
