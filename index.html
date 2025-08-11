@@ -574,140 +574,6 @@
         let currentBGM = null;
         let currentSE = null;
         
-        // PWAインストール促進機能
-        let deferredPrompt = null;
-        
-        // インストール済みかチェック
-        function isInstalled() {
-            return window.matchMedia('(display-mode: standalone)').matches ||
-                   window.navigator.standalone === true;
-        }
-        
-        // インストール促進バナーの表示
-        function showInstallPrompt() {
-            // 既にインストール済みの場合は表示しない
-            if (isInstalled()) {
-                console.log('PWAインストール済みのため、インストール促進バナーを表示しません');
-                return;
-            }
-            
-            // 既に閉じられている場合は表示しない
-            if (localStorage.getItem('installPromptDismissed')) {
-                console.log('インストール促進バナーは既に非表示にされています');
-                return;
-            }
-            
-            // インストール促進バナーを表示
-            const installBanner = document.getElementById('install-banner');
-            if (installBanner) {
-                installBanner.style.display = 'block';
-                
-                // スマホでのPWAインストール状況をログ出力
-                console.log('PWAインストール状況チェック:');
-                console.log('- Service Worker対応:', 'serviceWorker' in navigator);
-                console.log('- Manifest読み込み:', !!document.querySelector('link[rel="manifest"]'));
-                console.log('- スタンドアロンモード:', window.matchMedia('(display-mode: standalone)').matches);
-                console.log('- ユーザーエージェント:', navigator.userAgent);
-                console.log('- 現在のURL:', window.location.href);
-                
-                // インストールボタンのイベント
-                const installBtn = document.getElementById('install-btn');
-                if (installBtn) {
-                    installBtn.addEventListener('click', promptInstall);
-                }
-                
-                // 閉じるボタンのイベント
-                const dismissBtn = document.getElementById('dismiss-btn');
-                if (dismissBtn) {
-                    dismissBtn.addEventListener('click', () => {
-                        installBanner.style.display = 'none';
-                        // 次回表示しないように設定
-                        localStorage.setItem('installPromptDismissed', 'true');
-                    });
-                }
-            }
-        }
-        
-        // インストール処理
-        function promptInstall() {
-            if (deferredPrompt) {
-                // Android Chromeの場合
-                deferredPrompt.prompt();
-                deferredPrompt.userChoice.then((choiceResult) => {
-                    if (choiceResult.outcome === 'accepted') {
-                        console.log('ユーザーがインストールを承認しました');
-                        // インストール促進バナーを非表示
-                        const installBanner = document.getElementById('install-banner');
-                        if (installBanner) {
-                            installBanner.style.display = 'none';
-                        }
-                    }
-                    deferredPrompt = null;
-                });
-            } else {
-                // iOS Safariの場合（手動インストール案内）
-                showPlatformSpecificInstallGuide();
-            }
-        }
-        
-        // iOS用インストール案内
-        function showIOSInstallGuide() {
-            const guide = document.getElementById('ios-install-guide');
-            if (guide) {
-                guide.style.display = 'block';
-            }
-        }
-        
-        // Android用インストール案内
-        function showAndroidInstallGuide() {
-            const guide = document.getElementById('android-install-guide');
-            if (guide) {
-                guide.style.display = 'block';
-            }
-        }
-        
-        // プラットフォーム別インストール案内
-        function showPlatformSpecificInstallGuide() {
-            const userAgent = navigator.userAgent;
-            if (/iPhone|iPad|iPod/i.test(userAgent)) {
-                showIOSInstallGuide();
-            } else if (/Android/i.test(userAgent)) {
-                showAndroidInstallGuide();
-            } else {
-                // デスクトップブラウザの場合
-                showDesktopInstallGuide();
-            }
-        }
-        
-        // デスクトップ用インストール案内
-        function showDesktopInstallGuide() {
-            alert('PWAのインストールには、モバイルデバイスが必要です。スマートフォンやタブレットでアクセスしてください。');
-        }
-        
-        // PWAインストールイベントの監視
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            console.log('PWAインストール可能になりました');
-        });
-        
-        // インストール完了の監視
-        window.addEventListener('appinstalled', () => {
-            console.log('PWAがインストールされました');
-            // インストール促進バナーを非表示
-            const installBanner = document.getElementById('install-banner');
-            if (installBanner) {
-                installBanner.style.display = 'none';
-            }
-            // 全画面ボタンを非表示（インストール済みの場合）
-            if (isInstalled()) {
-                const fullscreenButton = document.getElementById('fullscreen-button');
-                if (fullscreenButton) {
-                    fullscreenButton.style.display = 'none';
-                }
-            }
-        });
-        
         // BGM再生関数
         function playBGM(audioPath) {
             // 同じBGMが既に再生中の場合は何もしない
@@ -930,102 +796,32 @@
             const stageSelect = document.getElementById('stage-select');
             const gameContainer = document.getElementById('game-container');
             
-            // YouTube動画のURLを設定（autoplay=0で自動再生を無効化）
-            const videoId = 'P2KXyM27XK4'; // ← 実際の動画ID
+            // ステージ選択画面とゲームコンテナを非表示
+            if (stageSelect) stageSelect.style.display = 'none';
+            if (gameContainer) gameContainer.style.display = 'none';
+            
+            // オープニング動画を表示
+            if (openingVideo) {
+                openingVideo.style.display = 'flex';
+                console.log('オープニング動画を表示しました');
+            }
+            
+            // YouTube動画のURLを設定
+            const videoId = 'P2KXyM27XK4';
             const iframe = document.getElementById('youtube-video');
-            iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=0&rel=0&showinfo=0&controls=1&playsinline=1&enablejsapi=1&origin=${window.location.origin}`;
-            
-            openingVideo.style.display = 'flex';
-            stageSelect.style.display = 'none';
-            gameContainer.style.display = 'none';
-            
-            // 再生開始ボタンを追加
-            const playButton = document.createElement('button');
-            playButton.textContent = '動画を再生';
-            playButton.className = 'play-button';
-            playButton.onclick = function() {
-                // ユーザー操作で動画を再生
-                const newSrc = iframe.src.replace('autoplay=0', 'autoplay=1');
-                iframe.src = newSrc;
-                playButton.style.display = 'none';
-                
-                // モバイル対応：少し待ってから再生状態を確認
-                setTimeout(() => {
-                    if (window.youtubePlayer && typeof window.youtubePlayer.playVideo === 'function') {
-                        try {
-                            window.youtubePlayer.playVideo();
-                        } catch (error) {
-                            console.log('YouTube player playVideo error:', error);
-                        }
-                    }
-                }, 1000);
-            };
-            
-            const videoContainer = document.getElementById('video-container');
-            videoContainer.appendChild(playButton);
-            
-            // モバイル対応：タッチイベントも追加
-            playButton.addEventListener('touchstart', function(e) {
-                e.preventDefault();
-                playButton.onclick();
-            });
+            if (iframe) {
+                iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&showinfo=0&controls=1&playsinline=1`;
+                console.log('YouTube動画を設定しました:', videoId);
+            }
             
             // スキップボタンのイベント
             const skipButton = document.getElementById('skip-video');
-            skipButton.addEventListener('click', function() {
-                hideOpeningVideo();
-            });
-            
-            // モバイル対応：スキップボタンにもタッチイベントを追加
-            skipButton.addEventListener('touchstart', function(e) {
-                e.preventDefault();
-                hideOpeningVideo();
-            });
-            
-            // 動画終了時の処理（YouTube APIを使用）
-            const tag = document.createElement('script');
-            tag.src = 'https://www.youtube.com/iframe_api';
-            const firstScriptTag = document.getElementsByTagName('script')[0];
-            firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-            
-            window.onYouTubeIframeAPIReady = function() {
-                const player = new YT.Player('youtube-video', {
-                    events: {
-                        'onStateChange': function(event) {
-                            console.log('YouTube player state changed:', event.data);
-                            if (event.data === YT.PlayerState.ENDED) {
-                                console.log('Video ended, hiding opening video');
-                                hideOpeningVideo();
-                            }
-                        },
-                        'onReady': function(event) {
-                            console.log('YouTube player ready');
-                        },
-                        'onError': function(event) {
-                            console.log('YouTube player error:', event.data);
-                        }
-                    }
+            if (skipButton) {
+                skipButton.addEventListener('click', function() {
+                    console.log('スキップボタンがクリックされました');
+                    hideOpeningVideo();
                 });
-                
-                // グローバルに保存して後でアクセスできるようにする
-                window.youtubePlayer = player;
-            };
-            
-            // エラーをコンソールに表示しないようにする
-            window.addEventListener('message', function(event) {
-                if (event.origin !== 'https://www.youtube.com') {
-                    return;
-                }
-            });
-            
-            // YouTubeのpostMessageエラーを無視
-            const originalConsoleError = console.error;
-            console.error = function(...args) {
-                if (args[0] && typeof args[0] === 'string' && args[0].includes('postMessage')) {
-                    return; // YouTubeのpostMessageエラーを無視
-                }
-                originalConsoleError.apply(console, args);
-            };
+            }
         }
         
         function hideOpeningVideo() {
@@ -1260,6 +1056,22 @@
             console.log('Stage select screen displayed');
         }
 
+        // STARTボタンのイベントリスナーを設定
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOMContentLoaded - STARTボタンのイベントリスナーを設定');
+            
+            const startButton = document.getElementById('start-game');
+            if (startButton) {
+                console.log('STARTボタンが見つかりました');
+                startButton.addEventListener('click', function() {
+                    console.log('STARTボタンがクリックされました');
+                    showStageSelect();
+                });
+            } else {
+                console.error('STARTボタンが見つかりません');
+            }
+        });
+
         // 背景画像の切り替え機能
         function setupPreviewImages() {
             const buttons = ['miemachi', 'taketastage', 'japan'];
@@ -1471,10 +1283,7 @@
                 showMainMenu();
             }
             
-            // インストール促進バナーの表示（3秒後に表示）
-            setTimeout(() => {
-                showInstallPrompt();
-            }, 3000);
+
         });
         
         // メインメニューを表示する関数
