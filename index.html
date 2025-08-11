@@ -601,11 +601,11 @@
         function setupStageSelectButtons() {
             const miemachi = document.getElementById('miemachi');
             const taketastage = document.getElementById('taketastage');
-            const japan = document.getElementById('japan');
+            const zenkoku = document.getElementById('zenkoku');
             const openingVideoBtn = document.getElementById('opening-video-btn');
 
             // ボタンにホバー効果を追加
-            const buttons = [miemachi, taketastage, japan, openingVideoBtn];
+            const buttons = [miemachi, taketastage, zenkoku, openingVideoBtn];
             buttons.forEach(button => {
                 if (button) {
                     button.addEventListener('mouseenter', function() {
@@ -636,8 +636,8 @@
                 });
             }
             
-            if (japan) {
-                japan.addEventListener('click', function() {
+            if (zenkoku) {
+                zenkoku.addEventListener('click', function() {
                     playSE('assets/audio/se/touch_1.mp3');
                     this.style.transform = 'scale(0.95)';
                     setTimeout(() => {
