@@ -39,179 +39,7 @@
             left: 0;
         }
         
-        /* 横画面強制のためのスタイル（UI崩れ修正版） */
-        body.force-landscape {
-            transform: rotate(90deg);
-            transform-origin: center center;
-            width: 100vh !important;
-            height: 100vw !important;
-            position: fixed;
-            top: 0;
-            left: 0;
-            /* iOS Safariでの追加調整 */
-            -webkit-transform: rotate(90deg);
-            -webkit-transform-origin: center center;
-            /* UI崩れ防止のための追加設定 */
-            overflow: hidden;
-            box-sizing: border-box;
-        }
-        
-        /* 横画面時のゲームコンテナ調整（UI崩れ修正版） */
-        body.force-landscape #game-container {
-            width: 100vh !important;
-            height: 100vw !important;
-            transform: rotate(-90deg);
-            transform-origin: center center;
-            /* iOS Safariでの追加調整 */
-            -webkit-transform: rotate(-90deg);
-            -webkit-transform-origin: center center;
-            /* UI崩れ防止のための追加設定 */
-            position: absolute;
-            top: 0;
-            left: 0;
-            overflow: hidden;
-            box-sizing: border-box;
-        }
-        
-        /* 横画面時の全要素の調整（UI崩れ防止） */
-        body.force-landscape * {
-            box-sizing: border-box;
-        }
-        
-        /* 横画面時のメインメニュー調整 */
-        body.force-landscape #main-menu {
-            width: 100vh !important;
-            height: 100vw !important;
-            transform: rotate(-90deg);
-            transform-origin: center center;
-            position: absolute;
-            top: 0;
-            left: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        /* 横画面時のステージ選択画面調整 */
-        body.force-landscape #stage-select {
-            width: 100vh !important;
-            height: 100vw !important;
-            transform: rotate(-90deg);
-            transform-origin: center center;
-            position: absolute;
-            top: 0;
-            left: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        /* 横画面時のオープニング動画調整 */
-        body.force-landscape #opening-video {
-            width: 100vh !important;
-            height: 100vw !important;
-            transform: rotate(-90deg);
-            transform-origin: center center;
-            position: fixed;
-            top: 0;
-            left: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        /* 横画面時のボタン調整 */
-        body.force-landscape button {
-            transform: rotate(-90deg);
-            transform-origin: center center;
-        }
-        
-        /* 横画面時のテキスト調整 */
-        body.force-landscape p, 
-        body.force-landscape h1, 
-        body.force-landscape h2, 
-        body.force-landscape h3 {
-            transform: rotate(-90deg);
-            transform-origin: center center;
-        }
-        
-        /* iOS Safari固有の横画面強制 */
-        @supports (-webkit-touch-callout: none) {
-            body.force-landscape {
-                /* iOS Safariでの追加調整 */
-                -webkit-transform: rotate(90deg);
-                -webkit-transform-origin: center center;
-                width: 100vh !important;
-                height: 100vw !important;
-            }
-        }
-        
-        /* Android固有の横画面強制（強化版） */
-        @media screen and (max-width: 768px) {
-            body.force-landscape {
-                /* Androidでの追加調整 */
-                transform: rotate(90deg) !important;
-                transform-origin: center center !important;
-                width: 100vh !important;
-                height: 100vw !important;
-                position: fixed !important;
-                top: 0 !important;
-                left: 0 !important;
-                /* Android Chromeでの追加調整 */
-                -webkit-transform: rotate(90deg) !important;
-                -webkit-transform-origin: center center !important;
-                /* Android固有の調整 */
-                overflow: hidden !important;
-            }
-            
-            body.force-landscape #game-container {
-                width: 100vh !important;
-                height: 100vw !important;
-                transform: rotate(-90deg) !important;
-                transform-origin: center center !important;
-                -webkit-transform: rotate(-90deg) !important;
-                -webkit-transform-origin: center center !important;
-                position: absolute !important;
-                top: 0 !important;
-                left: 0 !important;
-            }
-            
-            /* Android用のUI要素調整 */
-            body.force-landscape #main-menu,
-            body.force-landscape #stage-select {
-                width: 100vh !important;
-                height: 100vw !important;
-                transform: rotate(-90deg) !important;
-                transform-origin: center center !important;
-                -webkit-transform: rotate(-90deg) !important;
-                -webkit-transform-origin: center center !important;
-                position: absolute !important;
-                top: 0 !important;
-                left: 0 !important;
-                display: flex !important;
-                align-items: center !important;
-                justify-content: center !important;
-            }
-            
-            /* Android用のボタン調整 */
-            body.force-landscape button {
-                transform: rotate(-90deg) !important;
-                transform-origin: center center !important;
-                -webkit-transform: rotate(-90deg) !important;
-                -webkit-transform-origin: center center !important;
-            }
-        }
-        
-        /* Android Chrome固有の調整 */
-        @media screen and (max-width: 768px) and (-webkit-min-device-pixel-ratio: 1) {
-            body.force-landscape {
-                /* Android Chromeでの強制横画面 */
-                transform: rotate(90deg) !important;
-                transform-origin: center center !important;
-                width: 100vh !important;
-                height: 100vw !important;
-            }
-        }
+
         #game-container {
             width: 100vw;
             height: 100vh;
@@ -577,72 +405,53 @@
                 width: 90vw;
                 margin: 20px;
             }
-        }</style><script defer="defer" src="bundle.js"></script></head><body><button id="fullscreen-button" onclick="toggleFullscreen()">全画面</button><div id="install-banner" style="display: none;"><div class="install-content"><span>このアプリをホーム画面に追加して、より快適に使用できます</span> <button id="install-btn">インストール</button> <button id="dismiss-btn">×</button></div></div><div id="game-container"></div><script src="https://cdn.jsdelivr.net/npm/phaser@3.70.0/dist/phaser.min.js"></script><div id="opening-video" style="display: none;"><div id="video-container"><iframe id="youtube-video" width="100%" height="100%" frameborder="0" allowfullscreen></iframe><button id="skip-video" class="skip-button">スキップ</button></div></div><div id="main-menu" style="display: flex;"><div class="main-menu-container"><div class="game-title"><h1>Hirokazu Life Journey</h1><p class="subtitle">ひろかずの人生を追体験しよう！</p></div><div class="menu-buttons"><button id="start-game" class="menu-button primary">START</button></div><div class="game-info"><p>結婚式で披露するゲーム</p><p>新郎の人生をRPGで体験！</p></div></div></div><div id="stage-select" style="display: none;"><div class="background-image"></div><div class="background-overlay"></div><div class="stage-select-container"><div class="stage-title">ステージ選択画面</div><div class="stage-content"><div class="stage-buttons"><div class="button-row"><button id="miemachi">三重シティ</button><div id="miemachi-move-btn" class="move-button-container" style="display: none;"><button class="move-button">移動する</button></div></div><div class="button-row"><button id="taketastage">竹田シティ</button><div id="taketastage-move-btn" class="move-button-container" style="display: none;"><button class="move-button">移動する</button></div></div><div class="button-row"><button id="japan">全国</button><div id="japan-move-btn" class="move-button-container" style="display: none;"><button class="move-button">移動する</button></div></div><button id="opening-video-btn">オープニング動画</button></div><div class="content-area"><div class="description-area" id="description-area"><p>ステージを選択してください</p></div></div></div></div></div><script>// 音声管理
+        }</style><script defer="defer" src="bundle.js"></script></head><body><button id="fullscreen-button" onclick="toggleFullscreen()">全画面</button><div id="install-banner" style="display: none;"><div class="install-content"><span>このアプリをホーム画面に追加して、より快適に使用できます</span> <button id="install-btn">インストール</button> <button id="dismiss-btn">×</button></div></div><div id="game-container"></div><script src="https://cdn.jsdelivr.net/npm/phaser@3.70.0/dist/phaser.min.js"></script><div id="opening-video" style="display: none;"><div id="video-container"><iframe id="youtube-video" width="100%" height="100%" frameborder="0" allowfullscreen></iframe><button id="skip-video" class="skip-button">スキップ</button></div></div><div id="main-menu" style="display: flex;"><div class="main-menu-container"><div class="game-title"><h1>Hirokazu Life Journey</h1><p class="subtitle">ひろかずの人生を追体験しよう！</p></div><div class="menu-buttons"><button id="start-game" class="menu-button primary">START</button></div><div class="game-info"><p>結婚式で披露するゲーム</p><p>新郎の人生をRPGで体験！</p></div></div></div><div id="stage-select" style="display: none;"><div class="background-image"></div><div class="background-overlay"></div><div class="stage-select-container"><div class="stage-title">ステージ選択画面</div><div class="stage-content"><div class="stage-buttons"><div class="button-row"><button id="miemachi">三重シティ</button><div id="miemachi-move-btn" class="move-button-container" style="display: none;"><button class="move-button">移動する</button></div></div><div class="button-row"><button id="taketastage">竹田シティ</button><div id="taketastage-move-btn" class="move-button-container" style="display: none;"><button class="move-button">移動する</button></div></div><div class="button-row"><button id="zenkoku">全国</button><div id="zenkoku-move-btn" class="move-button-container" style="display: none;"><button class="move-button">移動する</button></div></div><button id="opening-video-btn">オープニング動画</button></div><div class="content-area"><div class="description-area" id="description-area"><p>ステージを選択してください</p></div></div></div></div></div><script>// 音声管理（簡素化）
         let currentBGM = null;
-        let currentSE = null;
         
-        // BGM再生関数
+        // BGM再生関数（簡素化）
         function playBGM(audioPath) {
-            // 同じBGMが既に再生中の場合は何もしない
-            if (currentBGM && currentBGM.src.includes(audioPath.split('/').pop())) {
-                console.log('同じBGMが既に再生中:', audioPath);
-                return;
-            }
-            
-            // 既存のBGMを停止
             if (currentBGM) {
                 currentBGM.pause();
                 currentBGM = null;
-                console.log('既存のBGMを停止');
             }
-            
-            // 新しいBGMを再生（エラーハンドリング付き）
             currentBGM = new Audio(audioPath);
             currentBGM.loop = true;
             currentBGM.volume = 0.5;
-            
-            // ユーザーインタラクション後に音声を再生
-            const playPromise = currentBGM.play();
-            if (playPromise !== undefined) {
-                playPromise
-                    .then(() => {
-                        console.log('新しいBGMを再生:', audioPath);
-                    })
-                    .catch(e => {
-                        console.log('BGM再生エラー（自動再生制限）:', e.message);
-                        // 自動再生制限の場合は、ユーザーインタラクション後に再生を試行
-                        console.log('ユーザーインタラクション後に音声再生を試行します');
-                    });
-            }
+            currentBGM.play().catch(e => console.log('BGM再生エラー:', e));
         }
         
-        // SE再生関数
+        // SE再生関数（簡素化）
         function playSE(audioPath) {
             const se = new Audio(audioPath);
             se.volume = 0.3;
             se.play().catch(e => console.log('SE再生エラー:', e));
         }
         
-        // 実際の表示エリアサイズを取得する関数
-        function getActualViewportSize() {
-            let width = window.innerWidth;
-            let height;
-            
-            if (window.visualViewport) {
-                height = window.visualViewport.height;
-            } else {
-                height = window.innerHeight;
-                // モバイルブラウザでアドレスバーを考慮
-                if (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-                    height = Math.min(window.innerHeight, window.screen.height - 100);
-                }
-            }
-            
-            return { width, height };
-        }
+
         
         // フルスクリーン機能の切り替え
         function toggleFullscreen() {
+            console.log('全画面ボタンがクリックされました');
+            
+            // 全画面ボタンクリックフラグを設定
+            window.fullscreenButtonRecentlyClicked = true;
+            setTimeout(() => {
+                window.fullscreenButtonRecentlyClicked = false;
+            }, 2000); // 2秒間フラグを維持
+            
+            // 全画面ボタンを押した時にオープニング動画が表示されないようにする
+            const openingVideo = document.getElementById('opening-video');
+            if (openingVideo && openingVideo.style.display !== 'none') {
+                console.log('全画面ボタンクリック時にオープニング動画を強制非表示にします');
+                openingVideo.style.display = 'none';
+                
+                // ステージ選択画面を再表示
+                const stageSelect = document.getElementById('stage-select');
+                if (stageSelect) {
+                    stageSelect.style.display = 'flex';
+                }
+            }
+            
             if (!document.fullscreenElement) {
                 if (document.documentElement.requestFullscreen) {
                     document.documentElement.requestFullscreen();
@@ -662,226 +471,80 @@
             }
         }
         
-        // リサイズ処理（全環境で縦横自由）
-        function handleResize() {
-            console.log('リサイズ処理を実行 - 縦横自由');
-            
-            // 現在の画面向きを検出
-            const orientation = detectOrientation();
-            console.log('リサイズ後の画面向き:', orientation);
-            
-            // 全環境で通常のリサイズ処理を実行
-            const { width, height } = getActualViewportSize();
-            console.log('Viewport resize:', width, 'x', height);
-            
-            // ゲームインスタンスが存在する場合のみリサイズ処理
-            if (window.gameInstance && window.gameInstance.scale) {
-                setTimeout(() => {
-                    window.gameInstance.scale.resize(width, height);
-                }, 100);
-            }
-            
-            // 強制クラスを削除して縦横自由に
-            document.body.classList.remove('force-landscape');
-            
-            // 全要素のスタイルをリセット
-            const allElements = document.querySelectorAll('#main-menu, #stage-select, #game-container, #opening-video, button, p, h1, h2, h3, span, div');
-            allElements.forEach(element => {
-                element.style.transform = '';
-                element.style.width = '';
-                element.style.height = '';
-                element.style.position = '';
-                element.style.top = '';
-                element.style.left = '';
-                element.style.display = '';
-                element.style.alignItems = '';
-                element.style.justifyContent = '';
-            });
-        }
-        
-        // PWAインストール状態を検出する関数（縦横自由版）
-        function isPWAInstalled() {
-            // PCの場合は常にfalse（縦横自由）
-            if (!/Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-                console.log('PC環境: 縦横自由にします');
-                return false;
-            }
-            
-            // モバイルデバイスの場合のみPWA検出
-            // display-mode: standalone または fullscreen の場合はPWA
-            if (window.matchMedia('(display-mode: standalone)').matches) {
-                console.log('モバイルPWAとしてインストールされています（standalone）- 縦横自由');
-                return true;
-            }
-            if (window.matchMedia('(display-mode: fullscreen)').matches) {
-                console.log('モバイルPWAとしてインストールされています（fullscreen）- 縦横自由');
-                return true;
-            }
-            // navigator.standalone でiOS SafariのPWA状態を検出
-            if (navigator.standalone === true) {
-                console.log('iOS PWAとしてインストールされています - 縦横自由');
-                return true;
-            }
-            // その他のPWA検出方法
-            if (window.navigator && window.navigator.serviceWorker && window.navigator.serviceWorker.controller) {
-                // Service Workerが動作中でも、開発環境ではPWAとみなさない
-                if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-                    console.log('ローカル開発環境: 縦横自由にします');
-                    return false;
-                }
-                console.log('Service Workerが動作中 - PWAの可能性（縦横自由）');
-                return true;
-            }
-            console.log('モバイルブラウザとして動作中 - 縦横自由');
-            return false;
-        }
 
-        // 横画面強制の関数（削除 - 縦横自由にするため）
-        // function forceLandscape() {
-        //     // この関数は使用しない（縦横自由のため）
-        // }
         
-        // 縦横自由のための関数（画面向きの検出のみ）
-        function detectOrientation() {
-            const isPortrait = window.innerHeight > window.innerWidth;
-            const orientation = isPortrait ? 'portrait' : 'landscape';
-            console.log('現在の画面向き:', orientation);
-            return orientation;
-        }
-        
-        // ビューポート変更の監視を追加
-        if (window.visualViewport) {
-            window.visualViewport.addEventListener('resize', handleResize);
-        }
-        
-        // 従来のリサイズイベントリスナー
-        window.addEventListener('resize', handleResize);
-        window.addEventListener('orientationchange', function() {
-            console.log('画面向き変更:', window.screen.orientation.type);
-            // 縦横自由なので強制はしない
-            setTimeout(handleResize, 500);
-        });
-        
-        if (window.screen && window.screen.orientation) {
-            window.screen.orientation.addEventListener('change', function() {
-                console.log('画面向き変更イベント:', window.screen.orientation.type);
-                // 縦横自由なので強制はしない
-            });
-        }
-        
-        // 画面向きの継続監視（全環境で縦横自由）
-        let lastOrientation = window.innerHeight > window.innerWidth ? 'portrait' : 'landscape';
-        setInterval(() => {
-            const currentOrientation = window.innerHeight > window.innerWidth ? 'portrait' : 'landscape';
-            if (currentOrientation !== lastOrientation) {
-                console.log('画面向き変更を検出:', lastOrientation, '→', currentOrientation);
-                lastOrientation = currentOrientation;
-                console.log('縦横自由: 画面向きの変更を許可');
+        // リサイズ処理（簡素化）
+        function handleResize() {
+            if (window.gameInstance && window.gameInstance.scale) {
+                window.gameInstance.scale.resize(window.innerWidth, window.innerHeight);
             }
-        }, 1000);
-        
-        // Android固有の追加監視（全環境で縦横自由）
-        if (/Android/i.test(navigator.userAgent)) {
-            console.log('Android用の追加監視を開始（縦横自由）');
-            setInterval(() => {
-                const isPortrait = window.innerHeight > window.innerWidth;
-                console.log('Android: 現在の画面向き:', isPortrait ? 'portrait' : 'landscape');
-            }, 500);
-            
-            document.addEventListener('touchstart', function() {
-                const isPortrait = window.innerHeight > window.innerWidth;
-                console.log('Android: タッチ時の画面向き:', isPortrait ? 'portrait' : 'landscape');
-            });
         }
         
-        // フルスクリーン状態変化の監視
-        document.addEventListener('fullscreenchange', handleResize);
-        document.addEventListener('webkitfullscreenchange', handleResize);
-        document.addEventListener('msfullscreenchange', handleResize);
+
         
-        // オープニング動画の管理
+        // リサイズイベントリスナー
+        window.addEventListener('resize', handleResize);
+        
+
+        
+
+        
+
+        
+        // オープニング動画の管理（簡素化）
         function showOpeningVideo() {
-            console.log('showOpeningVideo called');
-            
-            // BGMを停止
             if (currentBGM) {
                 currentBGM.pause();
                 currentBGM.currentTime = 0;
                 currentBGM = null;
-                console.log('BGM停止');
             }
             
             const openingVideo = document.getElementById('opening-video');
             const stageSelect = document.getElementById('stage-select');
             const gameContainer = document.getElementById('game-container');
             
-            // ステージ選択画面とゲームコンテナを非表示
             if (stageSelect) stageSelect.style.display = 'none';
             if (gameContainer) gameContainer.style.display = 'none';
             
-            // オープニング動画を表示
             if (openingVideo) {
                 openingVideo.style.display = 'flex';
-                console.log('オープニング動画を表示しました');
             }
             
-            // 動画コンテナを表示
             const videoContainer = document.getElementById('video-container');
             if (videoContainer) {
                 videoContainer.style.display = 'block';
             }
             
-            // PWA用コンテンツを非表示（もし存在する場合）
-            const pwaContent = document.getElementById('pwa-opening-content');
-            if (pwaContent) {
-                pwaContent.style.display = 'none';
-            }
-            
-            // YouTube動画のURLを設定（PWA対応）
             const videoId = 'P2KXyM27XK4';
             const iframe = document.getElementById('youtube-video');
             if (iframe) {
-                // PWAでも動作するように設定
                 iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&showinfo=0&controls=1&playsinline=1&enablejsapi=1&origin=${window.location.origin}`;
-                console.log('YouTube動画を設定しました（PWA対応）:', videoId);
             }
             
-            // スキップボタンのイベント（確実に動作するように）
             const skipButton = document.getElementById('skip-video');
             if (skipButton) {
-                // 既存のイベントリスナーを削除
                 skipButton.replaceWith(skipButton.cloneNode(true));
-                
-                // 新しいスキップボタンを取得
                 const newSkipButton = document.getElementById('skip-video');
                 
-                // クリックイベント
                 newSkipButton.addEventListener('click', function(e) {
                     e.preventDefault();
                     e.stopPropagation();
-                    console.log('スキップボタンがクリックされました');
                     hideOpeningVideo();
                 });
                 
-                // タッチイベント（PWA対応）
                 newSkipButton.addEventListener('touchstart', function(e) {
                     e.preventDefault();
                     e.stopPropagation();
-                    console.log('スキップボタンのタッチイベント');
                     hideOpeningVideo();
                 });
-                
-                console.log('スキップボタンのイベントを設定しました');
             }
         }
         
         function hideOpeningVideo() {
-            console.log('hideOpeningVideo called');
             const openingVideo = document.getElementById('opening-video');
             const mainMenu = document.getElementById('main-menu');
             const iframe = document.getElementById('youtube-video');
             
-            // YouTubeプレイヤーを停止（エラーハンドリング付き）
             try {
                 if (window.youtubePlayer && typeof window.youtubePlayer.stopVideo === 'function') {
                     window.youtubePlayer.stopVideo();
@@ -890,63 +553,32 @@
                 console.log('YouTube player stopVideo error:', error);
             }
             
-            // 動画を完全に停止
             iframe.src = '';
-            
             openingVideo.style.display = 'none';
             mainMenu.style.display = 'flex';
             
-            // メインメニューBGMを開始
             playBGM('assets/audio/bgm/zelda_menu_select.mp3');
-            
-            console.log('Opening video hidden, main menu shown');
         }
         
         // ステージ選択画面の初期化
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('DOMContentLoaded - アプリケーション初期化開始');
-            
-            // 全環境で縦横自由にします
-            console.log('全環境: 縦横自由にします');
-            document.body.classList.remove('force-landscape');
-            
-            // 現在の画面向きを検出
-            const orientation = detectOrientation();
-            console.log('DOMContentLoaded時の画面向き:', orientation);
-            
-            // メインメニューのボタンイベントを設定
             const startButton = document.getElementById('start-game');
             if (startButton) {
-                console.log('STARTボタンが見つかりました');
                 startButton.addEventListener('click', function() {
-                    console.log('STARTボタンがクリックされました');
                     showStageSelect();
                 });
-                console.log('STARTボタンのイベントリスナーを設定完了');
-            } else {
-                console.error('STARTボタンが見つかりません');
             }
             
-            // インストールボタンの設定
             const installBtn = document.getElementById('install-btn');
             const dismissBtn = document.getElementById('dismiss-btn');
             
             if (installBtn) {
                 installBtn.addEventListener('click', async () => {
-                    console.log('インストールボタンがクリックされました');
-                    
                     if (deferredPrompt) {
-                        // インストールプロンプトを表示
                         deferredPrompt.prompt();
-                        
-                        // ユーザーの選択を待つ
                         const { outcome } = await deferredPrompt.userChoice;
-                        console.log('インストール結果:', outcome);
-                        
-                        // プロンプトをクリア
                         deferredPrompt = null;
                         
-                        // インストールバナーを非表示
                         const installBanner = document.getElementById('install-banner');
                         if (installBanner) {
                             installBanner.style.display = 'none';
@@ -957,15 +589,12 @@
             
             if (dismissBtn) {
                 dismissBtn.addEventListener('click', () => {
-                    console.log('インストールバナーを閉じました');
                     const installBanner = document.getElementById('install-banner');
                     if (installBanner) {
                         installBanner.style.display = 'none';
                     }
                 });
             }
-            
-            console.log('イベントリスナーの設定完了');
         });
         
         // ステージ選択画面のボタン設定
@@ -980,85 +609,58 @@
             buttons.forEach(button => {
                 if (button) {
                     button.addEventListener('mouseenter', function() {
-                        // ホバー時の軽い音響効果
                         playSE('assets/audio/se/touch_1.mp3');
                     });
                 }
             });
 
             if (miemachi) {
-                console.log('三重シティボタンが見つかりました');
                 miemachi.addEventListener('click', function() {
-                    console.log('三重シティ clicked - selectStage will be called');
                     playSE('assets/audio/se/touch_1.mp3');
-                    // クリック時のエフェクト
                     this.style.transform = 'scale(0.95)';
                     setTimeout(() => {
                         this.style.transform = '';
                     }, 150);
                     selectStage('miemachi', '1996年の晴れた日曜日に生まれた一人の少年が、仲間たちと織りなす青春と日常の物語。幼い頃の危険な冒険、変わらぬ恩師との再会、偶然から生まれた絆の証、大人への階段を上る夜、失敗から学んだ教訓、手の届かない憧れへの想い...。時には笑い、時には涙し、共に成長していく仲間たちとの、かけがえのない日々が刻まれている。', './assets/backgrounds/stage_backgrounds/miemachi.png');
-                    console.log('selectStage called for miemachi');
                 });
-            } else {
-                console.error('三重シティボタンが見つかりません');
             }
             
             if (taketastage) {
-                console.log('竹田シティボタンが見つかりました');
                 taketastage.addEventListener('click', function() {
-                    console.log('竹田シティ clicked');
                     playSE('assets/audio/se/touch_1.mp3');
-                    // クリック時のエフェクト
                     this.style.transform = 'scale(0.95)';
                     setTimeout(() => {
                         this.style.transform = '';
                     }, 150);
                     selectStage('taketastage', '電車で通う山間の学び舎で繰り広げられる、高校生たちの日常と冒険の物語。教室での突然の鬼ごっこ、仲間を困らせるいたずら、共に歌う歌声、カメラ越しに見つめる友情、終電を逃した夜の決死の帰路...。笑いと涙、青春の痛みと喜び、そして何より仲間との絆を育んだ、忘れられない学生時代の記憶がここに刻まれている。', './assets/backgrounds/stage_backgrounds/taketa_map.png');
                 });
-            } else {
-                console.error('竹田シティボタンが見つかりません');
             }
             
             if (japan) {
-                console.log('全国ボタンが見つかりました');
                 japan.addEventListener('click', function() {
-                    console.log('全国 clicked');
                     playSE('assets/audio/se/touch_1.mp3');
-                    // クリック時のエフェクト
                     this.style.transform = 'scale(0.95)';
                     setTimeout(() => {
                         this.style.transform = '';
                     }, 150);
-                    selectStage('japan', '故郷を離れ、都市部で繰り広げられる大人の現実と向き合う物語。未来的な世界、突然の故障に立ち向かう日常、善意につけ込む悪意との遭遇、街角で出会う人々との交流、ランドマークが見守る都市の営み...。信頼と裏切り、希望と絶望、そして人生の厳しさを学びながらも、前に進み続ける強さを見つけていく成長の軌跡がここに描かれている。', './assets/backgrounds/stage_backgrounds/zennkoku.png');
+                    selectStage('zenkoku', '故郷を離れ、都市部で繰り広げられる大人の現実と向き合う物語。未来的な世界、突然の故障に立ち向かう日常、善意につけ込む悪意との遭遇、街角で出会う人々との交流、ランドマークが見守る都市の営み...。信頼と裏切り、希望と絶望、そして人生の厳しさを学びながらも、前に進み続ける強さを見つけていく成長の軌跡がここに描かれている。', './assets/backgrounds/stage_backgrounds/zennkoku.png');
                 });
-            } else {
-                console.error('全国ボタンが見つかりません');
             }
             
             if (openingVideoBtn) {
-                console.log('オープニング動画ボタンが見つかりました');
                 openingVideoBtn.addEventListener('click', function() {
-                    console.log('オープニング動画 clicked');
                     playSE('assets/audio/se/touch_1.mp3');
-                    // クリック時のエフェクト
                     this.style.transform = 'scale(0.95)';
                     setTimeout(() => {
                         this.style.transform = '';
                     }, 150);
                     showOpeningVideo();
                 });
-            } else {
-                console.error('オープニング動画ボタンが見つかりません');
             }
-            
-
-            
-
         }
         
         // ステージ選択画面を表示する関数
         function showStageSelect() {
-            console.log('showStageSelect called');
             const mainMenu = document.getElementById('main-menu');
             const stageSelect = document.getElementById('stage-select');
             
@@ -1070,7 +672,6 @@
             const bgImageElement = stageSelect.querySelector('.background-image');
             if (bgImageElement) {
                 bgImageElement.style.backgroundImage = `url(${defaultBgImage})`;
-                console.log('背景画像を設定:', defaultBgImage);
             }
             
             // デフォルトの説明を設定
@@ -1095,81 +696,46 @@
                 btn.classList.remove('show');
             });
             
-            // ステージ選択画面BGM再生（同じBGMの場合は継続再生）
+            // ステージ選択画面BGM再生
             playBGM('assets/audio/bgm/zelda_menu_select.mp3');
             
             // ステージボタンのイベントリスナーを設定
             setupStageSelectButtons();
             
             // 初期状態を確実に設定
-            setTimeout(() => {
-                // 説明エリアを初期状態に戻す
-                const descriptionArea = document.getElementById('description-area');
-                if (descriptionArea) {
-                    descriptionArea.innerHTML = '<p>ステージを選択してください</p>';
-                }
-                
-                // 背景画像をデフォルトに戻す
-                const bgImageElement = stageSelect.querySelector('.background-image');
-                if (bgImageElement) {
-                    bgImageElement.style.backgroundImage = 'url(./assets/backgrounds/stage_backgrounds/miemachi.png)';
-                }
-                
-                // すべてのボタンの選択状態を強制的にリセット
-                const allStageButtons = document.querySelectorAll('.stage-buttons button[id]');
-                allStageButtons.forEach(btn => {
-                    btn.classList.remove('selected');
-                });
-                console.log('すべてのボタンの選択状態をリセットしました');
-                
-                // 移動ボタンも確実に非表示にする
-                const allMoveButtons = document.querySelectorAll('.move-button-container');
-                allMoveButtons.forEach(btn => {
-                    btn.style.display = 'none';
-                    btn.classList.remove('show');
-                });
-                console.log('移動ボタンを非表示にしました');
-            }, 100);
+            if (descriptionArea) {
+                descriptionArea.innerHTML = '<p>ステージを選択してください</p>';
+            }
             
-            console.log('Stage select screen displayed');
+            if (bgImageElement) {
+                bgImageElement.style.backgroundImage = 'url(./assets/backgrounds/stage_backgrounds/miemachi.png)';
+            }
+            
+            allStageButtons.forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            
+            allMoveButtons.forEach(btn => {
+                btn.style.display = 'none';
+                btn.classList.remove('show');
+            });
         }
 
-        // STARTボタンのイベントリスナーを設定
-        // document.addEventListener('DOMContentLoaded', function() {
-        //     console.log('DOMContentLoaded - STARTボタンのイベントリスナーを設定');
-            
-        //     const startButton = document.getElementById('start-game');
-        //     if (startButton) {
-        //         console.log('STARTボタンが見つかりました');
-        //         startButton.addEventListener('click', function() {
-        //             console.log('STARTボタンがクリックされました');
-        //             showStageSelect();
-        //         });
-        //     } else {
-        //         console.error('STARTボタンが見つかりません');
-        //     }
-        // });
+
 
 
 
         // ステージ選択機能
         function selectStage(stageId, description, backgroundImage) {
-            console.log('selectStage called:', stageId, description, backgroundImage);
-            
-            // 背景画像を設定
             const stageSelect = document.getElementById('stage-select');
             const bgImageElement = stageSelect.querySelector('.background-image');
             if (bgImageElement) {
                 bgImageElement.style.backgroundImage = `url(${backgroundImage})`;
-                console.log('背景画像を設定:', backgroundImage);
             }
             
-            // 説明エリアを取得
             const descriptionArea = document.getElementById('description-area');
-            console.log('descriptionArea found:', !!descriptionArea);
             
             if (descriptionArea) {
-                // 説明テキストを更新
                 const descriptionP = descriptionArea.querySelector('p');
                 if (descriptionP) {
                     descriptionP.textContent = description;
@@ -1178,92 +744,34 @@
                     newP.textContent = description;
                     descriptionArea.appendChild(newP);
                 }
-            } else {
-                console.error('description-area not found!');
             }
             
-            // すべての移動ボタンを非表示にする
             const allMoveButtons = document.querySelectorAll('.move-button-container');
             allMoveButtons.forEach(btn => {
                 btn.style.display = 'none';
                 btn.classList.remove('show');
             });
             
-            // すべてのボタンの選択状態をリセット
             const allStageButtons = document.querySelectorAll('.stage-buttons button[id]');
             allStageButtons.forEach(btn => {
                 btn.classList.remove('selected');
             });
             
-            // 選択されたボタンに選択状態を設定
             const selectedButton = document.getElementById(stageId);
             if (selectedButton) {
                 selectedButton.classList.add('selected');
             }
             
-            // 選択されたステージの移動ボタンを表示
             const moveButtonId = `${stageId}-move-btn`;
-            console.log('Looking for move button with ID:', moveButtonId);
             const moveButton = document.getElementById(moveButtonId);
-            console.log('Move button element found:', !!moveButton);
             
             if (moveButton) {
-                console.log('Move button current styles:', {
-                    display: moveButton.style.display,
-                    opacity: moveButton.style.opacity,
-                    visibility: moveButton.style.visibility
-                });
-                
-                // 移動ボタンを表示
                 moveButton.style.display = 'flex';
+                moveButton.classList.add('show');
                 
-                // アニメーション効果を追加
-                setTimeout(() => {
-                    moveButton.classList.add('show');
-                }, 100);
-                
-                console.log('Move button styles after setting:', {
-                    display: moveButton.style.display,
-                    opacity: moveButton.style.opacity,
-                    visibility: moveButton.style.visibility
-                });
-                
-                // PWAモードでの追加対応
-                if (window.matchMedia('(display-mode: standalone)').matches || 
-                    window.matchMedia('(display-mode: fullscreen)').matches ||
-                    navigator.standalone === true) {
-                    console.log('PWAモード検出: 強制表示設定');
-                    // PWAモードではより強制的に表示
-                    moveButton.style.cssText = `
-                        display: block !important;
-                        opacity: 1 !important;
-                        visibility: visible !important;
-                        position: relative !important;
-                        z-index: 1000 !important;
-                    `;
-                }
-                
-                // アニメーション効果を追加
-                setTimeout(() => {
-                    moveButton.classList.add('show');
-                    // CSSクラスが適用された後、再度スタイルを強制設定
-                    moveButton.style.cssText = `
-                        display: flex !important;
-                        opacity: 1 !important;
-                        visibility: visible !important;
-                        transform: translateX(0) !important;
-                    `;
-                    console.log('Show class added to move button and styles forced');
-                }, 100);
-                
-                console.log('Move button displayed for:', stageId);
-                
-                // ボタンのクリックイベントを設定
                 const moveBtn = moveButton.querySelector('.move-button');
                 if (moveBtn) {
                     moveBtn.onclick = function() {
-                        console.log('移動するボタンがクリックされました:', stageId);
-                        // クリック時のエフェクト
                         moveBtn.style.transform = 'scale(0.95)';
                         setTimeout(() => {
                             moveBtn.style.transform = '';
@@ -1271,8 +779,6 @@
                         startStage(stageId);
                     };
                 }
-            } else {
-                console.error('Move button not found for:', stageId);
             }
         }
 
@@ -1280,111 +786,80 @@
 
         // ステージ開始関数
         function startStage(stageNumber) {
-            console.log('startStage called:', stageNumber);
-            
-            // BGMを停止
             if (currentBGM) {
                 currentBGM.pause();
                 currentBGM = null;
-                console.log('BGM停止');
             }
             
-            // ステージ選択画面を非表示
             const stageSelect = document.getElementById('stage-select');
             if (stageSelect) {
                 stageSelect.style.display = 'none';
             }
             
-            // ゲームコンテナを表示
             const gameContainer = document.getElementById('game-container');
             if (gameContainer) {
                 gameContainer.style.display = 'block';
             }
             
-            // ゲームを開始
-            console.log('🔥🔥🔥 startStage: ゲーム開始 🔥🔥🔥');
-            console.log('window.startPhaserGame:', window.startPhaserGame);
-            
-            // バンドルに含まれたgameController.jsを直接呼び出し
             if (window.startPhaserGame) {
-                console.log('🔥🔥🔥 startPhaserGame found in window 🔥🔥🔥');
                 window.startPhaserGame(stageNumber);
-            } else {
-                console.error('startPhaserGame not found in window');
             }
         }
 
         // ステージ選択画面に戻る関数
         window.returnToStageSelect = function() {
-            console.log('returnToStageSelect called');
-            
-            // ゲームを停止
             if (window.game && window.game.destroy) {
                 window.game.destroy(true);
                 window.game = null;
             }
             
-            // ステージ選択画面を表示
             const stageSelect = document.getElementById('stage-select');
             if (stageSelect) {
                 stageSelect.style.display = 'flex';
             }
             
-            // ゲームコンテナを非表示
             const gameContainer = document.getElementById('game-container');
             if (gameContainer) {
                 gameContainer.style.display = 'none';
             }
             
-            // ステージ選択画面BGMを再開（重複防止）
-            // playBGM('assets/audio/bgm/zelda_menu_select.mp3');
+            const allStageButtons = document.querySelectorAll('.stage-buttons button[id]');
+            allStageButtons.forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            
+            const descriptionArea = document.getElementById('description-area');
+            if (descriptionArea) {
+                descriptionArea.innerHTML = '<p>ステージを選択してください</p>';
+            }
+            
+            const bgImageElement = stageSelect.querySelector('.background-image');
+            if (bgImageElement) {
+                bgImageElement.style.backgroundImage = 'url(./assets/backgrounds/stage_backgrounds/miemachi.png)';
+            }
         };
 
         // ページ読み込み時の処理
         window.addEventListener('load', function() {
-            console.log('window load event fired');
+            const stageSelect = document.getElementById('stage-select');
+            const mainMenu = document.getElementById('main-menu');
             
-            // 全環境で縦横自由にします
-            console.log('全環境: 縦横自由にします');
+            const isStageSelectVisible = stageSelect && (stageSelect.style.display === 'flex' || stageSelect.style.display === '');
             
-            // 強制クラスを削除して縦横自由に
-            document.body.classList.remove('force-landscape');
-            
-            // 現在の画面向きを検出
-            const orientation = detectOrientation();
-            console.log('ページ読み込み時の画面向き:', orientation);
-            
-            // 遅延実行も追加（確実性のため）
-            setTimeout(() => {
-                console.log('遅延処理: 縦横自由を確認');
-                document.body.classList.remove('force-landscape');
-            }, 1000);
-            
-            setTimeout(() => {
-                console.log('最終処理: 縦横自由を確認');
-                document.body.classList.remove('force-landscape');
-            }, 3000);
-            
-
-            
-
+            if (isStageSelectVisible) {
+                return;
+            }
             
             if (!localStorage.getItem('openingVideoShown')) {
-                console.log('showOpeningVideo will be called');
                 showOpeningVideo();
                 localStorage.setItem('openingVideoShown', 'true');
             } else {
-                console.log('showMainMenu will be called');
-                // メインメニューを表示
                 showMainMenu();
             }
-            
-
         });
         
         // メインメニューを表示する関数
         function showMainMenu() {
-            console.log('showMainMenu called');
             const mainMenu = document.getElementById('main-menu');
             const stageSelect = document.getElementById('stage-select');
             const gameContainer = document.getElementById('game-container');
@@ -1393,10 +868,7 @@
             if (stageSelect) stageSelect.style.display = 'none';
             if (gameContainer) gameContainer.style.display = 'none';
             
-            // メインメニューBGM再生（ユーザーインタラクション後に遅延）
-            setTimeout(() => {
-                playBGM('assets/audio/bgm/zelda_menu_select.mp3');
-            }, 100);
+            playBGM('assets/audio/bgm/zelda_menu_select.mp3');
         }
         
         // PWAとしてインストール可能にするためのService Worker登録
@@ -1490,49 +962,4 @@
             if (installBanner) {
                 installBanner.style.display = 'none';
             }
-        });
-        
-        // ゲーム初期化関数（PCとモバイルブラウザ対応）
-        function initGame() {
-            console.log('ゲーム初期化開始');
-            
-            // PCとモバイルブラウザでは縦横自由、PWA時のみ横画面固定
-            const isPWA = isPWAInstalled();
-            console.log('ゲーム初期化 - PWAモード:', isPWA);
-            
-            const config = {
-                type: Phaser.AUTO,
-                width: window.innerWidth,
-                height: window.innerHeight,
-                parent: 'game-container',
-                backgroundColor: '#000000',
-                scale: {
-                    mode: Phaser.Scale.RESIZE,
-                    autoCenter: Phaser.Scale.CENTER_BOTH,
-                    width: window.innerWidth,
-                    height: window.innerHeight
-                },
-                physics: {
-                    default: 'arcade',
-                    arcade: {
-                        gravity: { y: 300 },
-                        debug: false
-                    }
-                },
-                scene: {
-                    preload: preload,
-                    create: create,
-                    update: update
-                }
-            };
-            
-            // ゲームインスタンスを作成
-            window.gameInstance = new Phaser.Game(config);
-            console.log('Phaserゲームインスタンス作成完了');
-            
-            // リサイズイベントを設定（重複防止）
-            // window.addEventListener('resize', handleResize);
-            
-            // 初期リサイズ処理（重複防止）
-            // setTimeout(handleResize, 100);
-        }</script><script src="./bundle.js"></script></body></html>
+        });</script><script src="./bundle.js"></script></body></html>

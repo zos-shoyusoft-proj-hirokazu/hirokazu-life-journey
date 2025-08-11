@@ -35,8 +35,14 @@
 }
 
 @keyframes backgroundPulse {
-    0%, 100% { filter: blur(4px) brightness(0.8); }
-    50% { filter: blur(3px) brightness(0.9); }
+    0%, 100% { 
+        filter: blur(4px) brightness(0.8); 
+        transform: scale(1);
+    }
+    50% { 
+        filter: blur(3px) brightness(0.9); 
+        transform: scale(1.02);
+    }
 }
 
 /* 背景のオーバーレイ */
@@ -105,6 +111,7 @@
             inset 0 1px 2px rgba(255, 255, 255, 0.1),
             inset 0 -1px 2px rgba(0, 0, 0, 0.2),
             0 0 10px rgba(52, 152, 219, 0.3);
+        transform: scale(1);
     }
     100% {
         text-shadow: 
@@ -115,6 +122,7 @@
             inset 0 1px 2px rgba(255, 255, 255, 0.1),
             inset 0 -1px 2px rgba(0, 0, 0, 0.2),
             0 0 15px rgba(52, 152, 219, 0.4);
+        transform: scale(1.05);
     }
 }
 
@@ -171,6 +179,38 @@
     transform: translateY(0);
 }
 
+/* すべてのボタンの初期状態で光る */
+.stage-buttons button:not(.selected) {
+    background: linear-gradient(145deg, #2c3e50 0%, #34495e 50%, #2c3e50 100%);
+    border-color: #3498db;
+    color: #ffffff;
+    box-shadow: 
+        0 6px 12px rgba(0, 0, 0, 0.3),
+        inset 0 2px 4px rgba(255, 255, 255, 0.1),
+        inset 0 -2px 4px rgba(0, 0, 0, 0.2),
+        0 0 0 1px rgba(255, 255, 255, 0.05);
+    animation: buttonGlow 2s ease-in-out infinite;
+}
+
+@keyframes buttonGlow {
+    0%, 100% { 
+        box-shadow: 
+            0 6px 12px rgba(0, 0, 0, 0.3),
+            inset 0 2px 4px rgba(255, 255, 255, 0.1),
+            inset 0 -2px 4px rgba(0, 0, 0, 0.2),
+            0 0 0 1px rgba(255, 255, 255, 0.05),
+            0 0 15px rgba(52, 152, 219, 0.3);
+    }
+    50% { 
+        box-shadow: 
+            0 6px 12px rgba(0, 0, 0, 0.3),
+            inset 0 2px 4px rgba(255, 255, 255, 0.1),
+            inset 0 -2px 4px rgba(0, 0, 0, 0.2),
+            0 0 0 1px rgba(255, 255, 255, 0.05),
+            0 0 25px rgba(52, 152, 219, 0.5);
+    }
+}
+
 .stage-buttons button:hover {
     background: linear-gradient(145deg, #3498db 0%, #2980b9 50%, #3498db 100%);
     border-color: #2ecc71;
@@ -185,15 +225,15 @@
 }
 
 .stage-buttons button.selected {
-    background: linear-gradient(145deg, #e74c3c 0%, #c0392b 50%, #e74c3c 100%);
-    border-color: #f39c12;
-    color: #ffffff;
+    background: linear-gradient(145deg, #e74c3c 0%, #c0392b 50%, #e74c3c 100%) !important;
+    border-color: #f39c12 !important;
+    color: #ffffff !important;
     font-weight: bold;
     box-shadow: 
         0 8px 16px rgba(231, 76, 60, 0.4),
         inset 0 1px 0 rgba(255, 255, 255, 0.2),
-        0 0 20px rgba(231, 76, 60, 0.3);
-    animation: selectedPulse 2s ease-in-out infinite;
+        0 0 20px rgba(231, 76, 60, 0.3) !important;
+    animation: selectedPulse 2s ease-in-out infinite !important;
 }
 
 
@@ -222,6 +262,7 @@
 }
 
 .move-button-container.show {
+    display: flex !important;
     opacity: 1;
     transform: translateX(0);
 }
