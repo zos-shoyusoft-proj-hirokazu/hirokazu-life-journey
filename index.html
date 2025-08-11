@@ -889,9 +889,6 @@
             
 
             
-            // ステージ選択画面のボタンイベントを設定
-            setupStageSelectButtons();
-            
             console.log('イベントリスナーの設定完了');
             
 
@@ -1014,6 +1011,9 @@
             
             // ステージ選択画面BGM再生（同じBGMの場合は継続再生）
             playBGM('assets/audio/bgm/zelda_menu_select.mp3');
+            
+            // ステージボタンのイベントリスナーを設定
+            setupStageSelectButtons();
             
             console.log('Stage select screen displayed');
         }
