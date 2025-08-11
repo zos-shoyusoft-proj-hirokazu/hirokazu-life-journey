@@ -9,61 +9,61 @@ export const miemachiConversationData = {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': '俺のことについてはなすぜ☆',
-                'expression': 'A'
+                'expression': 'L'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': '生まれた時間は１９９６年９月２９年日曜日で晴れの日だぜ☆',
-                'expression': 'A'
+                'expression': 'L'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': '生まれた病院は佐藤産婦人科でうまれたぜ',
-                'expression': 'A'
+                'expression': 'L'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': '名前の由来は「寛」の字は父親が気に入ってた字で、和は母さんから取ったぜ',
-                'expression': 'A'
+                'expression': 'L'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': '出産は予定日から１９日前に２６４８gで生まれたぜ☆',
-                'expression': 'B'
+                'expression': 'L'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': '血液型はAB型だぜ☆',
-                'expression': 'B'
+                'expression': 'L'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': '安産だったらしいぜ',
-                'expression': 'C'
+                'expression': 'L'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': '生まれた時髪の毛は比較的多かったぜ',
-                'expression': 'B'
+                'expression': 'L'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': '生まれたときの第一声が「オギャー」だぜ',
-                'expression': 'B'
+                'expression': 'L'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': '最後に俺の自信作の漫画を紹介するぜ',
-                'expression': 'C'
+                'expression': 'L'
             },
             {
                 'speaker': '自信作の漫画',
@@ -107,7 +107,7 @@ export const miemachiConversationData = {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': '昔さ、ライズっていうやば人の塾あったじゃん、今どんな感じ？',
-                'expression': 'A'
+                'expression': 'L'
             },
             {
                 'speaker': 'かなと',
@@ -204,7 +204,7 @@ export const miemachiConversationData = {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'お盆で暇だな、喜久でちょっと飲もうか',
-                'expression': 'A'
+                'expression': 'L'
             },
             {
                 'speaker': 'こうたろう',
@@ -222,7 +222,7 @@ export const miemachiConversationData = {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'どした？？',
-                'expression': 'B'
+                'expression': 'L'
             },
             {
                 'speaker': 'こうたろう',
@@ -240,7 +240,7 @@ export const miemachiConversationData = {
                 'speaker': 'ひろかず、こうたろう',
                 'character': 'hirokazu',
                 'text': '！？',
-                'expression': 'C'
+                'expression': 'L'
             },
             {
                 'speaker': 'こうたろう',
@@ -252,7 +252,7 @@ export const miemachiConversationData = {
                 'speaker': 'ひろかず、こうたろう',
                 'character': 'hirokazu',
                 'text': 'まったく、おれら心当たりはないんだが？',
-                'expression': 'C'
+                'expression': 'L'
             },
             {
                 'speaker': 'だいち',
@@ -348,7 +348,7 @@ export const miemachiConversationData = {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'かくれんぼにするか、、、',
-                'expression': 'B'
+                'expression': 'L'
             },
             {
                 'speaker': 'なおき',
@@ -360,7 +360,7 @@ export const miemachiConversationData = {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'まぁ、あそこはいけるやろ、あそこは、なんか知らんけどいつも空いてるやん',
-                'expression': 'A'
+                'expression': 'L'
             },
             {
                 'speaker': 'なおき',
@@ -372,7 +372,7 @@ export const miemachiConversationData = {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'えっと、どうする？',
-                'expression': 'C'
+                'expression': 'L'
             },
             {
                 'speaker': 'かなと',
@@ -384,7 +384,7 @@ export const miemachiConversationData = {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'もう、おれらのグループ名しょうゆにするか',
-                'expression': 'A'
+                'expression': 'L'
             },
             {
                 'speaker': 'だいち',
@@ -427,7 +427,7 @@ export const miemachiConversationData = {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': '帰るか、、、',
-                'expression': 'A'
+                'expression': 'D'
             },
             {
                 'speaker': 'だいち',
@@ -439,7 +439,7 @@ export const miemachiConversationData = {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'ん？？そりゃ、タクシーで、、',
-                'expression': 'C'
+                'expression': 'D'
             },
             {
                 'speaker': 'かなと',
@@ -476,7 +476,7 @@ export const miemachiConversationData = {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': '歩いて帰るのか、、、',
-                'expression': 'I'
+                'expression': 'D'
             },
             {
                 'speaker': 'だいち',
@@ -515,7 +515,7 @@ export const miemachiConversationData = {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'ん？？',
-                'expression': 'O'
+                'expression': 'D'
             },
             {
                 'speaker': 'だいち',
@@ -533,7 +533,7 @@ export const miemachiConversationData = {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'おい、やっぱりおっぱいか、おっぱいなんだな、嫁さんおっぱい大きいって言ってたもんな！',
-                'expression': 'Q'
+                'expression': 'D'
             },
             {
                 'speaker': 'こうたろう',
@@ -557,7 +557,7 @@ export const miemachiConversationData = {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'えっと、どうする？処すか？',
-                'expression': 'U'
+                'expression': 'D'
             },
             {
                 'speaker': 'だいち',
@@ -593,7 +593,7 @@ export const miemachiConversationData = {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'おれ、結婚するんだよな、、、',
-                'expression': 'Z'
+                'expression': 'D'
             },
             {
                 'speaker': 'かなと、なおき',
@@ -619,7 +619,7 @@ export const miemachiConversationData = {
                 'speaker': 'ひろかず少年',
                 'character': 'hirokazu_young',
                 'text': 'これを使えば、火遊びできるよ',
-                'expression': 'B'
+                'expression': 'G'
             },
             {
                 'speaker': 'だいち少年',
@@ -631,13 +631,13 @@ export const miemachiConversationData = {
                 'speaker': 'ひろかず少年',
                 'character': 'hirokazu_young',
                 'text': 'いや、まてさすがにここでは周りに火が付きそうなものがおおい',
-                'expression': 'B'
+                'expression': 'G'
             },
             {
                 'speaker': 'ひろかず少年',
                 'character': 'hirokazu_young',
                 'text': 'なので、距離をおいて火をつけよう',
-                'expression': 'B'
+                'expression': 'G'
             },
             {
                 'speaker': 'だいち少年',
@@ -655,7 +655,7 @@ export const miemachiConversationData = {
                 'speaker': 'ひろかず少年',
                 'character': 'hirokazu_young',
                 'text': 'ここならいける！！！！',
-                'expression': 'B'
+                'expression': 'G'
             },
             {
                 'speaker': 'だいち少年',
@@ -709,7 +709,7 @@ export const miemachiConversationData = {
                 'speaker': 'ダイチ少年、ひろかず少年',
                 'character': 'daichi_young',
                 'text': 'あっっっ！！！！！！！！！！！！！！！！',
-                'expression': 'E'
+                'expression': 'G'
             },
             {
                 'speaker': 'ダイチ少年',
@@ -727,7 +727,7 @@ export const miemachiConversationData = {
                 'speaker': 'ひろかず少年',
                 'character': 'hirokazu_young',
                 'text': '、、、、、けせーーーーーーーー！、水かけろ！！！！',
-                'expression': 'H'
+                'expression': 'G'
             },
             {
                 'speaker': 'ダイチ少年',
@@ -739,7 +739,7 @@ export const miemachiConversationData = {
                 'speaker': 'ひろかず少年',
                 'character': 'hirokazu_young',
                 'text': 'みっ、、、水をかけるんだ！！！はやく！！！！',
-                'expression': 'J'
+                'expression': 'G'
             },
             {
                 'speaker': 'ダイチ少年',
@@ -751,7 +751,7 @@ export const miemachiConversationData = {
                 'speaker': 'ひろかず少年',
                 'character': 'daichi_young',
                 'text': 'つっっつち！！！！土をなげろぉーーーーーーーーーー！！！！！',
-                'expression': 'K'
+                'expression': 'G'
             },
             {
                 'speaker': 'ダイチ少年',
@@ -775,7 +775,7 @@ export const miemachiConversationData = {
                 'speaker': 'ひろかず少年',
                 'character': 'hirokazu_young',
                 'text': 'あきらめるな！！！早くけせーーーーーーーー！！！',
-                'expression': 'L'
+                'expression': 'G'
             },
             {
                 'text': '３０分後',
@@ -795,7 +795,7 @@ export const miemachiConversationData = {
                 'speaker': 'ひろかず少年',
                 'character': 'hirokazu_young',
                 'text': '早くけせーーーーーーーー！！！',
-                'expression': 'L'
+                'expression': 'G'
             },
             {
                 'text': '３０分後',
@@ -811,7 +811,7 @@ export const miemachiConversationData = {
                 'speaker': 'ひろかず少年',
                 'character': 'hirokazu_young',
                 'text': 'やばかった、焦ったわ、、、、、',
-                'expression': 'N'
+                'expression': 'G'
             }
         ]
     },
@@ -831,7 +831,7 @@ export const miemachiConversationData = {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'ここは三重町で有名なポテト屋ですよ',
-                'expression': 'B'
+                'expression': 'C'
             },
             {
                 'speaker': 'だいち',
@@ -849,7 +849,7 @@ export const miemachiConversationData = {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'うまいからいいんだよ',
-                'expression': 'B'
+                'expression': 'C'
             },
             {
                 'speaker': 'だいち',

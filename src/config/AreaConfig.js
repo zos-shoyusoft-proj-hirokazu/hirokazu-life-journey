@@ -42,12 +42,17 @@ export const AreaConfig = {
             map_touch: 'assets/audio/se/touch_2.mp3', // マップ専用タッチSE
         },
         characters: {
+            // hirokazu: miemachi の会話データで使用している表情のみ
             'hirokazu_A': 'assets/characters/portraits/hirokazu_A.png',
             'hirokazu_B': 'assets/characters/portraits/hirokazu_B.png',
             'hirokazu_C': 'assets/characters/portraits/hirokazu_C.png',
             'hirokazu_D': 'assets/characters/portraits/hirokazu_D.png',
             'hirokazu_E': 'assets/characters/portraits/hirokazu_E.png',
             'hirokazu_F': 'assets/characters/portraits/hirokazu_F.png',
+            'hirokazu_G': 'assets/characters/portraits/hirokazu_G.png',
+            'hirokazu_H': 'assets/characters/portraits/hirokazu_H.png',
+            'hirokazu_L': 'assets/characters/portraits/hirokazu_L.png',
+            // その他キャラクター
             'daichi_A': 'assets/characters/portraits/daichi_A.png',
             'naoki_A': 'assets/characters/portraits/naoki_A.png',
             'kanato_A': 'assets/characters/portraits/kanato_A.png',

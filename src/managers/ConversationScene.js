@@ -319,11 +319,12 @@ export class ConversationScene extends Phaser.Scene {
                 'friend': { x: width * 0.3, y: height * 0.4 },
                 'teacher': { x: width * 0.5, y: height * 0.4 },
                 'kawamuro': { x: width * 0.7, y: height * 0.4 },
+                'hirokazu': { x: width * 0.7, y: height * 0.4 },
                 'daichi': { x: width * 0.3, y: height * 0.4 },
                 'naoki': { x: width * 0.5, y: height * 0.4 }
             };
             
-            const position = characterPositions[character] || { x: width * 0.7, y: height * 0.4 };
+            let position = characterPositions[character] || { x: width * 0.7, y: height * 0.4 };
             
             // 既存のキャラクターがいる場合は、テクスチャのみ変更
             if (this.characterSprites[character]) {
@@ -331,32 +332,64 @@ export class ConversationScene extends Phaser.Scene {
                 // テクスチャが変更されている場合のみ更新
                 if (existingSprite.texture.key !== spriteKey) {
                     existingSprite.setTexture(spriteKey);
+                    // テクスチャ変更時にもスケールを再計算
+                    this.applyPortraitScale(existingSprite);
                 }
             } else {
                 // 新しいスプライトを作成（最初から正しい位置で作成）
                 const sprite = this.add.image(position.x, position.y, spriteKey);
                 sprite.setOrigin(0.5, 0.5);
-                // 立ち絵は元のサイズで表示（引き延ばしなし）
-                
+                // 立ち絵を画面サイズに合わせて自然に収まるスケールへ
+                const targetScale = this.getPortraitTargetScale(sprite.width, sprite.height);
+                // フルサイズに近い場合はY位置を中央に補正（上が欠けないように）
+                const scaledHeight = sprite.height * targetScale;
+                if (scaledHeight >= (height * 0.95)) {
+                    position = { ...position, y: height * 0.5 };
+                    sprite.setPosition(position.x, position.y);
+                }
+                sprite.setAlpha(0);
+                sprite.setScale(Math.max(0.1, targetScale * 0.9));
                 this.characterContainer.add(sprite);
                 this.characterSprites[character] = sprite;
                 
                 // 立ち絵の登場アニメーション
-                sprite.setAlpha(0);
-                sprite.setScale(0.8);
                 this.tweens.add({
                     targets: sprite,
                     alpha: 1,
-                    scaleX: 1,
-                    scaleY: 1,
+                    scaleX: targetScale,
+                    scaleY: targetScale,
                     duration: 500,
                     ease: 'Power2'
                 });
+                //aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
             }
             
             // 話していないキャラクターを少し暗くする
             this.dimOtherCharacters(character);
         }
+    }
+
+    // 立ち絵が画面いっぱいに収まる目標スケールを算出（拡大も許可）
+    getPortraitTargetScale(textureWidth, textureHeight) {
+        const width = this.sys?.game?.canvas?.width || this.sys?.game?.config?.width || 800;
+        const height = this.sys?.game?.canvas?.height || this.sys?.game?.config?.height || 600;
+        // 画像キャンバス全体を画面に収める（余白込み）
+        const maxDisplayHeight = Math.max(1, height);
+        const maxDisplayWidth = Math.max(1, width);
+        const scaleByHeight = maxDisplayHeight / Math.max(1, textureHeight);
+        const scaleByWidth = maxDisplayWidth / Math.max(1, textureWidth);
+        const target = Math.min(scaleByHeight, scaleByWidth);
+        // 要望に合わせて拡大も許可（1でクランプしない）
+        return target;
+    }
+
+    // 既存スプライトに目標スケールを適用
+    applyPortraitScale(sprite) {
+        if (!sprite || !sprite.texture) return;
+        const texWidth = sprite.width;   // 現在のテクスチャ本来の幅（スケール前）
+        const texHeight = sprite.height; // 現在のテクスチャ本来の高さ（スケール前）
+        const targetScale = this.getPortraitTargetScale(texWidth, texHeight);
+        sprite.setScale(targetScale);
     }
     
     // 他のキャラクターを暗くする
@@ -710,7 +743,13 @@ export class ConversationScene extends Phaser.Scene {
                 const sprite = this.characterSprites[character];
                 const position = characterPositions[character] || { x: width * 0.7, y: height * 0.4 };
                 if (sprite && sprite.setPosition) {
-                    sprite.setPosition(position.x, position.y);
+                    // フルサイズに近い場合は中央に補正
+                    const targetScale = this.getPortraitTargetScale(sprite.width, sprite.height);
+                    const scaledHeight = sprite.height * targetScale;
+                    const finalY = scaledHeight >= (height * 0.95) ? height * 0.5 : position.y;
+                    sprite.setPosition(position.x, finalY);
+                    // 画面サイズ変更時にスケールも再適用
+                    this.applyPortraitScale(sprite);
                 }
             });
         }
