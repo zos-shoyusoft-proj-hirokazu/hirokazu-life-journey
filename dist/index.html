@@ -415,7 +415,7 @@
                 width: 90vw;
                 margin: 20px;
             }
-        }</style><script defer="defer" src="bundle.js"></script></head><body><button id="fullscreen-button" onclick="toggleFullscreen()">全画面</button><div id="game-container"></div><script src="https://cdn.jsdelivr.net/npm/phaser@3.70.0/dist/phaser.min.js"></script><div id="opening-video" style="display: none;"><div id="video-container"><iframe id="youtube-video" width="100%" height="100%" frameborder="0" allowfullscreen></iframe><button id="skip-video" class="skip-button">スキップ</button></div></div><div id="main-menu" style="display: flex;"><div class="main-menu-container"><div class="main-content"><div class="game-title"><h1>Hirokazu Life Journey</h1><p class="subtitle">ひろかずの人生を追体験しよう！</p></div><div class="menu-buttons"><button id="start-game" class="menu-button primary">START</button></div><div class="game-info"><p>結婚式で披露するゲーム</p><p>新郎の人生をRPGで体験！</p></div></div><div class="install-area"><div class="install-banner" id="install-banner"><div class="install-text">このアプリをホーム画面に追加して、より快適に使用できます</div><button class="install-button">インストール</button> <button class="close-button" id="close-install-btn">×</button></div></div></div></div><div id="stage-select" style="display: none;"><div class="background-image"></div><div class="background-overlay"></div><div class="stage-select-container"><div class="stage-title">ステージ選択画面</div><div class="stage-content"><div class="stage-buttons"><div class="button-row"><button id="miemachi">三重シティ</button><div id="miemachi-move-btn" class="move-button-container" style="display: none;"><button class="move-button">移動する</button></div></div><div class="button-row"><button id="taketa">竹田シティ</button><div id="taketa-move-btn" class="move-button-container" style="display: none;"><button class="move-button">移動する</button></div></div><div class="button-row"><button id="zenkoku">全国</button><div id="zenkoku-move-btn" class="move-button-container" style="display: none;"><button class="move-button">移動する</button></div></div><button id="opening-video-btn">オープニング動画</button></div><div class="content-area"><div class="description-area" id="description-area"><p>ステージを選択してください</p></div></div></div></div></div><script>// 音声管理（簡素化）
+        }</style><script defer="defer" src="bundle.js"></script></head><body><button id="fullscreen-button" onclick="toggleFullscreen()">全画面</button><div id="game-container"></div><script src="https://cdn.jsdelivr.net/npm/phaser@3.70.0/dist/phaser.min.js"></script><div id="opening-video" style="display: none;"><div id="video-container"><iframe id="youtube-video" width="100%" height="100%" frameborder="0" allowfullscreen></iframe><button id="skip-video" class="skip-button">スキップ</button></div></div><div id="main-menu" style="display: flex;"><div class="main-menu-container"><div class="main-content"><div class="game-title"><h1>Hirokazu Life Journey</h1><p class="subtitle">ひろかずの人生を追体験しよう！</p></div><div class="menu-buttons"><button id="start-game" class="menu-button primary">START</button></div><div class="game-info"><p>結婚式で披露するゲーム</p><p>新郎の人生をRPGで体験！</p></div></div><div class="install-area"><div class="install-banner" id="install-banner"><div class="install-text">このアプリをホーム画面に追加して、より快適に使用できます</div><button class="install-button" id="install-btn">インストール</button> <button class="close-button" id="close-install-btn">×</button></div></div></div></div><div id="stage-select" style="display: none;"><div class="background-image"></div><div class="background-overlay"></div><div class="stage-select-container"><div class="stage-title">ステージ選択画面</div><div class="stage-content"><div class="stage-buttons"><div class="button-row"><button id="miemachi">三重シティ</button><div id="miemachi-move-btn" class="move-button-container" style="display: none;"><button class="move-button">移動する</button></div></div><div class="button-row"><button id="taketa">竹田シティ</button><div id="taketa-move-btn" class="move-button-container" style="display: none;"><button class="move-button">移動する</button></div></div><div class="button-row"><button id="zenkoku">全国</button><div id="zenkoku-move-btn" class="move-button-container" style="display: none;"><button class="move-button">移動する</button></div></div><button id="opening-video-btn">オープニング動画</button></div><div class="content-area"><div class="description-area" id="description-area"><p>ステージを選択してください</p></div></div></div></div></div><script>// 音声管理（簡素化）
         let currentBGM = null;
         
         // BGM再生関数（簡素化）
@@ -504,7 +504,9 @@
         // オープニング動画の管理（簡素化）
         function showOpeningVideo() {
             // インストールポップアップを非表示にする
-            hideInstallBanner();
+            if (window.pwaManager) {
+                window.pwaManager.hideInstallBanner();
+            }
             
             if (currentBGM) {
                 currentBGM.pause();
@@ -579,37 +581,14 @@
             if (startButton) {
                 startButton.addEventListener('click', function() {
                     // インストールポップアップを非表示にする
-                    hideInstallBanner();
+                    if (window.pwaManager) {
+                        window.pwaManager.hideInstallBanner();
+                    }
                     showStageSelect();
                 });
             }
             
-            const installBtn = document.getElementById('install-btn');
-            const dismissBtn = document.getElementById('dismiss-btn');
-            
-            if (installBtn) {
-                installBtn.addEventListener('click', async () => {
-                    if (deferredPrompt) {
-                        deferredPrompt.prompt();
-                        const { outcome } = await deferredPrompt.userChoice;
-                        deferredPrompt = null;
-                        
-                        const installBanner = document.getElementById('install-banner');
-                        if (installBanner) {
-                            installBanner.style.display = 'none';
-                        }
-                    }
-                });
-            }
-            
-            if (dismissBtn) {
-                dismissBtn.addEventListener('click', () => {
-                    const installBanner = document.getElementById('install-banner');
-                    if (installBanner) {
-                        installBanner.style.display = 'none';
-                    }
-                });
-            }
+            // 古いPWAインストール処理は削除 - 新しい処理に統一済み
         });
         
         // ステージ選択画面のボタン設定
@@ -680,7 +659,9 @@
             const stageSelect = document.getElementById('stage-select');
             
             // インストールポップアップを非表示にする
-            hideInstallBanner();
+            if (window.pwaManager) {
+                window.pwaManager.hideInstallBanner();
+            }
             
             mainMenu.style.display = 'none';
             stageSelect.style.display = 'flex';
@@ -908,112 +889,4 @@
             console.log('Service Worker非対応ブラウザです');
         }
         
-        // PWAインストール促進機能
-        let deferredPrompt;
-        
-        // beforeinstallpromptイベントの処理
-        window.addEventListener('beforeinstallprompt', (e) => {
-            console.log('beforeinstallprompt event fired');
-            // デフォルトのインストールプロンプトを防止
-            e.preventDefault();
-            // イベントを保存
-            deferredPrompt = e;
-            
-            // インストールバナーを表示
-            showInstallBanner();
-        });
-        
-        // インストールバナーの表示
-        function showInstallBanner() {
-            const installBanner = document.getElementById('install-banner');
-            if (installBanner) {
-                installBanner.style.display = 'block';
-                console.log('インストールバナーを表示');
-            }
-        }
-        
-        // インストールボタンのクリック処理
-        // document.addEventListener('DOMContentLoaded', function() {
-        //     const installBtn = document.getElementById('install-btn');
-        //     const dismissBtn = document.getElementById('dismiss-btn');
-            
-        //     if (installBtn) {
-        //         installBtn.addEventListener('click', async () => {
-        //             console.log('インストールボタンがクリックされました');
-                    
-        //             if (deferredPrompt) {
-        //                 // インストールプロンプトを表示
-        //                 deferredPrompt.prompt();
-                        
-        //                 // ユーザーの選択を待つ
-        //                 const { outcome } = await deferredPrompt.userChoice;
-        //                 console.log('インストール結果:', outcome);
-                        
-        //                 // プロンプトをクリア
-        //                 deferredPrompt = null;
-                        
-        //                 // インストールバナーを非表示
-        //                 const installBanner = document.getElementById('install-banner');
-        //                 if (installBanner) {
-        //                     installBanner.style.display = 'none';
-        //                 }
-        //             }
-        //         });
-        //     }
-            
-        //     if (dismissBtn) {
-        //         dismissBtn.addEventListener('click', () => {
-        //             console.log('インストールバナーを閉じました');
-        //             const installBanner = document.getElementById('install-banner');
-        //             if (installBanner) {
-        //                 installBanner.style.display = 'none';
-        //             }
-        //         });
-        //     }
-        // });
-        
-        // appinstalledイベントの処理
-        window.addEventListener('appinstalled', (evt) => {
-            console.log('PWAがインストールされました');
-            // インストールバナーを非表示
-            const installBanner = document.getElementById('install-banner');
-            if (installBanner) {
-                installBanner.style.display = 'none';
-            }
-        });
-        
-        // インストールバナーを閉じる関数
-        function closeInstallBanner() {
-            const installBanner = document.getElementById('install-banner');
-            if (installBanner) {
-                installBanner.style.display = 'none';
-                console.log('インストールバナーを閉じました');
-            }
-        }
-        
-        // メインメニューが非表示になった時にインストールポップアップも非表示にする
-        function hideInstallBanner() {
-            const installBanner = document.getElementById('install-banner');
-            if (installBanner) {
-                installBanner.style.display = 'none';
-            }
-        }
-        
-        // ページ読み込み時の処理
-        document.addEventListener('DOMContentLoaded', function() {
-            // ×ボタンのイベントリスナーを設定
-            const closeBtn = document.getElementById('close-install-btn');
-            if (closeBtn) {
-                closeBtn.addEventListener('click', function() {
-                    closeInstallBanner();
-                });
-            }
-            
-            // メインメニュー画面でのみインストールポップアップを表示
-            setTimeout(() => {
-                const installBanner = document.getElementById('install-banner');
-                if (installBanner) {
-                    installBanner.style.display = 'block';
-                }
-            }, 500);
-        });</script><script src="./bundle.js"></script></body></html>
+        // PWAの処理はPWAManager.jsに移動済み</script><script src="./bundle.js"></script></body></html>

@@ -491,7 +491,7 @@
             <div class="install-area">
                 <div class="install-banner" id="install-banner">
                     <div class="install-text">このアプリをホーム画面に追加して、より快適に使用できます</div>
-                    <button class="install-button">インストール</button>
+                    <button class="install-button" id="install-btn">インストール</button>
                     <button class="close-button" id="close-install-btn">×</button>
                 </div>
             </div>
@@ -626,7 +626,9 @@
         // オープニング動画の管理（簡素化）
         function showOpeningVideo() {
             // インストールポップアップを非表示にする
-            hideInstallBanner();
+            if (window.pwaManager) {
+                window.pwaManager.hideInstallBanner();
+            }
             
             if (currentBGM) {
                 currentBGM.pause();
@@ -701,37 +703,14 @@
             if (startButton) {
                 startButton.addEventListener('click', function() {
                     // インストールポップアップを非表示にする
-                    hideInstallBanner();
+                    if (window.pwaManager) {
+                        window.pwaManager.hideInstallBanner();
+                    }
                     showStageSelect();
                 });
             }
             
-            const installBtn = document.getElementById('install-btn');
-            const dismissBtn = document.getElementById('dismiss-btn');
-            
-            if (installBtn) {
-                installBtn.addEventListener('click', async () => {
-                    if (deferredPrompt) {
-                        deferredPrompt.prompt();
-                        const { outcome } = await deferredPrompt.userChoice;
-                        deferredPrompt = null;
-                        
-                        const installBanner = document.getElementById('install-banner');
-                        if (installBanner) {
-                            installBanner.style.display = 'none';
-                        }
-                    }
-                });
-            }
-            
-            if (dismissBtn) {
-                dismissBtn.addEventListener('click', () => {
-                    const installBanner = document.getElementById('install-banner');
-                    if (installBanner) {
-                        installBanner.style.display = 'none';
-                    }
-                });
-            }
+            // 古いPWAインストール処理は削除 - 新しい処理に統一済み
         });
         
         // ステージ選択画面のボタン設定
@@ -802,7 +781,9 @@
             const stageSelect = document.getElementById('stage-select');
             
             // インストールポップアップを非表示にする
-            hideInstallBanner();
+            if (window.pwaManager) {
+                window.pwaManager.hideInstallBanner();
+            }
             
             mainMenu.style.display = 'none';
             stageSelect.style.display = 'flex';
@@ -1030,119 +1011,7 @@
             console.log('Service Worker非対応ブラウザです');
         }
         
-        // PWAインストール促進機能
-        let deferredPrompt;
-        
-        // beforeinstallpromptイベントの処理
-        window.addEventListener('beforeinstallprompt', (e) => {
-            console.log('beforeinstallprompt event fired');
-            // デフォルトのインストールプロンプトを防止
-            e.preventDefault();
-            // イベントを保存
-            deferredPrompt = e;
-            
-            // インストールバナーを表示
-            showInstallBanner();
-        });
-        
-        // インストールバナーの表示
-        function showInstallBanner() {
-            const installBanner = document.getElementById('install-banner');
-            if (installBanner) {
-                installBanner.style.display = 'block';
-                console.log('インストールバナーを表示');
-            }
-        }
-        
-        // インストールボタンのクリック処理
-        // document.addEventListener('DOMContentLoaded', function() {
-        //     const installBtn = document.getElementById('install-btn');
-        //     const dismissBtn = document.getElementById('dismiss-btn');
-            
-        //     if (installBtn) {
-        //         installBtn.addEventListener('click', async () => {
-        //             console.log('インストールボタンがクリックされました');
-                    
-        //             if (deferredPrompt) {
-        //                 // インストールプロンプトを表示
-        //                 deferredPrompt.prompt();
-                        
-        //                 // ユーザーの選択を待つ
-        //                 const { outcome } = await deferredPrompt.userChoice;
-        //                 console.log('インストール結果:', outcome);
-                        
-        //                 // プロンプトをクリア
-        //                 deferredPrompt = null;
-                        
-        //                 // インストールバナーを非表示
-        //                 const installBanner = document.getElementById('install-banner');
-        //                 if (installBanner) {
-        //                     installBanner.style.display = 'none';
-        //                 }
-        //             }
-        //         });
-        //     }
-            
-        //     if (dismissBtn) {
-        //         dismissBtn.addEventListener('click', () => {
-        //             console.log('インストールバナーを閉じました');
-        //             const installBanner = document.getElementById('install-banner');
-        //             if (installBanner) {
-        //                 installBanner.style.display = 'none';
-        //             }
-        //         });
-        //     }
-        // });
-        
-        // appinstalledイベントの処理
-        window.addEventListener('appinstalled', (evt) => {
-            console.log('PWAがインストールされました');
-            // インストールバナーを非表示
-            const installBanner = document.getElementById('install-banner');
-            if (installBanner) {
-                installBanner.style.display = 'none';
-            }
-        });
-        
-        // インストールバナーを閉じる関数
-        function closeInstallBanner() {
-            const installBanner = document.getElementById('install-banner');
-            if (installBanner) {
-                installBanner.style.display = 'none';
-                console.log('インストールバナーを閉じました');
-            }
-        }
-        
-        // メインメニューが非表示になった時にインストールポップアップも非表示にする
-        function hideInstallBanner() {
-            const installBanner = document.getElementById('install-banner');
-            if (installBanner) {
-                installBanner.style.display = 'none';
-            }
-        }
-        
-        // ページ読み込み時の処理
-        document.addEventListener('DOMContentLoaded', function() {
-            // ×ボタンのイベントリスナーを設定
-            const closeBtn = document.getElementById('close-install-btn');
-            if (closeBtn) {
-                closeBtn.addEventListener('click', function() {
-                    closeInstallBanner();
-                });
-            }
-            
-            // メインメニュー画面でのみインストールポップアップを表示
-            setTimeout(() => {
-                const installBanner = document.getElementById('install-banner');
-                if (installBanner) {
-                    installBanner.style.display = 'block';
-                }
-            }, 500);
-        });
-        
-
-        
-
+        // PWAの処理はPWAManager.jsに移動済み
     </script>
     <script src="./bundle.js"></script>
 </body>
