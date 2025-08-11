@@ -505,7 +505,7 @@
         function showOpeningVideo() {
             // インストールポップアップを非表示にする
             if (window.pwaManager) {
-                window.pwaManager.forceHideInstallBanner();
+                window.pwaManager.hideInstallBanner();
             }
             
             if (currentBGM) {
@@ -582,7 +582,7 @@
                 startButton.addEventListener('click', function() {
                     // インストールポップアップを非表示にする
                     if (window.pwaManager) {
-                        window.pwaManager.forceHideInstallBanner();
+                        window.pwaManager.hideInstallBanner();
                     }
                     showStageSelect();
                 });
@@ -660,7 +660,7 @@
             
             // インストールポップアップを非表示にする
             if (window.pwaManager) {
-                window.pwaManager.forceHideInstallBanner();
+                window.pwaManager.hideInstallBanner();
             }
             
             mainMenu.style.display = 'none';
