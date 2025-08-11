@@ -1,4 +1,4 @@
-<!doctype html><html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover,minimal-ui,orientation=landscape,user-scalable=0,width=device-width,height=device-height"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="mobile-web-app-capable" content="yes"><meta name="theme-color" content="#000000"><meta name="description" content="Hirokazu Life Journey - ゲーム"><link rel="manifest" href="./manifest.json"><meta name="viewport-fit" content="cover"><meta name="format-detection" content="telephone=no"><meta name="mobile-web-app-capable" content="yes"><meta name="theme-color" content="#000000"><meta name="msapplication-TileColor" content="#000000"><title>Hirokazu Life Journey</title><link rel="stylesheet" href="./css/stageSelect.css"><link rel="stylesheet" href="./css/mainMenu.css"><style>/* 全体のリセットとブラウザUI対応 */
+<!doctype html><html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover,minimal-ui,orientation=landscape,user-scalable=0,width=device-width,height=device-height"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="mobile-web-app-capable" content="yes"><meta name="theme-color" content="#000000"><meta name="description" content="Hirokazu Life Journey - ゲーム"><link rel="manifest" href="./manifest.json"><meta name="viewport-fit" content="cover"><meta name="format-detection" content="telephone=no"><meta name="mobile-web-app-capable" content="yes"><meta name="theme-color" content="#000000"><meta name="msapplication-TileColor" content="#000000"><title>Hirokazu Life Journey</title><link rel="stylesheet" href="./css/stageSelect.css"><link rel="stylesheet" href="./css/mainMenu.css"><link rel="stylesheet" href="./css/install-banner.css"><style>/* 全体のリセットとブラウザUI対応 */
         * {
             margin: 0;
             padding: 0;
@@ -213,80 +213,6 @@
             #game-container {
                 height: -webkit-fill-available;
             }
-        }
-        
-        /* インストール促進バナーのスタイル */
-        #install-banner {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: rgba(0, 0, 0, 0.95);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 6px;
-            padding: 8px;
-            color: white;
-            font-size: 0.6rem;
-            z-index: 10000;
-            max-width: 180px;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
-            animation: slideDown 0.3s ease-out;
-        }
-        
-        .install-content {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            text-align: center;
-        }
-        
-        .install-content span {
-            font-size: 0.65rem;
-            font-weight: 500;
-            line-height: 1.2;
-            margin-bottom: 6px;
-        }
-        
-        #install-btn {
-            background: #27ae60;
-            color: white;
-            border: none;
-            padding: 4px 8px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 0.65rem;
-            white-space: nowrap;
-            margin-right: 6px;
-            transition: all 0.3s ease;
-        }
-        
-        #install-btn:hover {
-            background: #2ecc71;
-            transform: scale(1.05);
-        }
-        
-        #dismiss-btn {
-            background: none;
-            border: none;
-            color: #ccc;
-            font-size: 1.2rem;
-            cursor: pointer;
-            padding: 0;
-            width: 20px;
-            height: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: color 0.3s ease;
-        }
-        
-        #dismiss-btn:hover {
-            background: rgba(255,255,255,0.1);
-            border-radius: 50%;
-            color: white;
         }
         
         /* iOS用インストール案内のスタイル */
@@ -571,6 +497,11 @@
             iframe.src = '';
             openingVideo.style.display = 'none';
             mainMenu.style.display = 'flex';
+            
+            // インストールバナーを再表示
+            if (window.pwaManager) {
+                window.pwaManager.showInstallBanner();
+            }
             
             playBGM('assets/audio/bgm/zelda_menu_select.mp3');
         }

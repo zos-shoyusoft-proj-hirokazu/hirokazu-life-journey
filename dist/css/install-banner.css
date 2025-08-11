@@ -1,0 +1,70 @@
+/* インストールポップアップを右下に小さく配置 */
+.install-area {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1500;
+    overflow: hidden;
+}
+
+.install-banner {
+    position: relative;
+    background: rgba(0, 0, 0, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 6px;
+    padding: 6px;
+    color: white;
+    font-size: 0.6rem;
+    z-index: 9999;
+    max-width: 180px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+    display: block;
+    transform: scale(0.9);
+}
+
+.install-banner .install-text {
+    margin-bottom: 6px;
+    font-size: 0.65rem;
+    opacity: 0.9;
+    line-height: 1.2;
+}
+
+.install-banner .install-button {
+    background: #27ae60;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 4px 8px;
+    font-size: 0.65rem;
+    cursor: pointer;
+    margin-right: 6px;
+    transition: all 0.3s ease;
+}
+
+.install-banner .install-button:hover {
+    background: #2ecc71;
+    transform: scale(1.05);
+}
+
+.install-banner .close-button {
+    background: none;
+    border: none;
+    color: #ccc;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.3s ease;
+}
+
+.install-banner .close-button:hover {
+    color: white;
+}
