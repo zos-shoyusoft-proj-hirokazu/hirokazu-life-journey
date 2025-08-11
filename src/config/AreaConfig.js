@@ -65,12 +65,12 @@ export const AreaConfig = {
             'naoki_b': 'assets/characters/portraits/naoki_b.png',
             'naoki_c': 'assets/characters/portraits/naoki_c.png',
             'kanato_a': 'assets/characters/portraits/kanato_a.png',
-            'kanato_b': 'assets/characters/portraits/bkanato_.png',
+            'kanato_b': 'assets/characters/portraits/kanato_b.png',
             'kanato_c': 'assets/characters/portraits/kanato_c.png',
             'koutarou_a': 'assets/characters/portraits/koutarou_a.png',
             'koutarou_b': 'assets/characters/portraits/koutarou_b.png',
             'koutarou_c': 'assets/characters/portraits/koutarou_c.png',
-            'yabajin_C': 'assets/characters/portraits/yabajinn_A.png'
+            'yabajin_c': 'assets/characters/portraits/yabajin_a.png'
         },
         backgrounds: {
 
@@ -123,19 +123,19 @@ export const AreaConfig = {
             map_touch: 'assets/audio/se/touch_2.mp3', // マップ専用タッチSE
         },
         characters: {
-            'hirokazu_A': 'assets/characters/portraits/hirokazu_A.png',
-            'hirokazu_B': 'assets/characters/portraits/hirokazu_B.png',
-            'hirokazu_C': 'assets/characters/portraits/hirokazu_C.png',
-            'hirokazu_D': 'assets/characters/portraits/hirokazu_D.png',
-            'hirokazu_E': 'assets/characters/portraits/hirokazu_E.png',
-            'hirokazu_F': 'assets/characters/portraits/hirokazu_F.png',
-            'daichi_A': 'assets/characters/portraits/daichi_A.png',
-            'naoki_A': 'assets/characters/portraits/naoki_A.png',
-            'kanato_A': 'assets/characters/portraits/kanato_A.png',
-            'kanato_B': 'assets/characters/portraits/kanato_B.png',
-            'kanato_C': 'assets/characters/portraits/kanato_C.png',
-            'koutarou_A': 'assets/characters/portraits/koutarou_A.png',
-            'koutarou_B': 'assets/characters/portraits/koutarou_B.png'
+            'hirokazu_a': 'assets/characters/portraits/hirokazu_a.png',
+            'hirokazu_b': 'assets/characters/portraits/hirokazu_b.png',
+            'hirokazu_c': 'assets/characters/portraits/hirokazu_c.png',
+            'hirokazu_d': 'assets/characters/portraits/hirokazu_d.png',
+            'hirokazu_e': 'assets/characters/portraits/hirokazu_e.png',
+            'hirokazu_f': 'assets/characters/portraits/hirokazu_f.png',
+            'daichi_a': 'assets/characters/portraits/daichi_a.png',
+            'naoki_a': 'assets/characters/portraits/naoki_a.png',
+            'kanato_a': 'assets/characters/portraits/kanato_a.png',
+            'kanato_b': 'assets/characters/portraits/kanato_b.png',
+            'kanato_c': 'assets/characters/portraits/kanato_c.png',
+            'koutarou_a': 'assets/characters/portraits/koutarou_a.png',
+            'koutarou_b': 'assets/characters/portraits/koutarou_b.png'
         },
         backgrounds: {
             'test_1': 'assets/backgrounds/background_test.png',
@@ -199,14 +199,14 @@ export const AreaConfig = {
             map_touch: 'assets/audio/se/touch_2.mp3', // マップ専用タッチSE
         },
         characters: {
-            'hirokazu_A': 'assets/characters/portraits/hirokazu_A.png',
-            'hirokazu_B': 'assets/characters/portraits/hirokazu_B.png',
-            'hirokazu_C': 'assets/characters/portraits/hirokazu_C.png',
-            'hirokazu_D': 'assets/characters/portraits/hirokazu_D.png',
-            'hirokazu_E': 'assets/characters/portraits/hirokazu_E.png',
-            'hirokazu_F': 'assets/characters/portraits/hirokazu_F.png',
-            'daichi_A': 'assets/characters/portraits/daichi_A.png',
-            'naoki_A': 'assets/characters/portraits/naoki_A.png'
+            'hirokazu_a': 'assets/characters/portraits/hirokazu_a.png',
+            'hirokazu_b': 'assets/characters/portraits/hirokazu_b.png',
+            'hirokazu_c': 'assets/characters/portraits/hirokazu_c.png',
+            'hirokazu_d': 'assets/characters/portraits/hirokazu_d.png',
+            'hirokazu_e': 'assets/characters/portraits/hirokazu_e.png',
+            'hirokazu_f': 'assets/characters/portraits/hirokazu_f.png',
+            'daichi_a': 'assets/characters/portraits/daichi_a.png',
+            'naoki_a': 'assets/characters/portraits/naoki_a.png'
         },
         backgrounds: {
 

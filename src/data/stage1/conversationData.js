@@ -9,43 +9,43 @@ export const conversationData = {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'おれけっこんすんだ',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'だいち',
                 'character': 'daichi',
                 'text': 'お前もか',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': '河村',
                 'character': 'hirokazu',
                 'text': 'そんなに固くならなくてもいい',
-                'expression': 'B'
+                'expression': 'b'
             },
             {
                 'speaker': 'なおき',
                 'character': 'naoki',
                 'text': 'ちんぽかためます',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'だいち',
                 'character': 'daichi',
                 'text': 'やったね！',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'なおき',
                 'character': 'naoki',
                 'text': '俺の特殊能力、メタルチンコはがねのように硬いぜ★',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': 'なおき',
                 'character': 'naoki',
                 'text': '金玉もでかいぜ！',
-                'expression': 'A'
+                'expression': 'a'
             }
         ]
     },
@@ -58,37 +58,37 @@ export const conversationData = {
                 'speaker': '河室',
                 'character': 'hirokazu',
                 'text': '（新しいクラスか...少し緊張するな）',
-                'expression': 'E'
+                'expression': 'e'
             },
             {
                 'speaker': '河室',
                 'character': 'hirokazu',
                 'text': 'あ、あなたが転校生の方ですね！',
-                'expression': 'F'
+                'expression': 'f'
             },
             {
                 'speaker': '河室',
                 'character': 'hirokazu',
                 'text': 'はい、今日からお世話になります',
-                'expression': 'D'
+                'expression': 'd'
             },
             {
                 'speaker': '河室',
                 'character': 'hirokazu',
                 'text': '私、田中花子です。よろしくお願いします！',
-                'expression': 'C'
+                'expression': 'c'
             },
             {
                 'speaker': '河室',
                 'character': 'hirokazu',
                 'text': 'こちらこそ。分からないことがあったら教えてください',
-                'expression': 'A'
+                'expression': 'a'
             },
             {
                 'speaker': '河室',
                 'character': 'hirokazu',
                 'text': 'はい！何でも聞いてくださいね♪',
-                'expression': 'E'
+                'expression': 'e'
             }
         ]
     },

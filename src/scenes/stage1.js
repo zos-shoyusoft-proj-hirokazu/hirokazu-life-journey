@@ -82,14 +82,14 @@ export class Stage1 extends Phaser.Scene {
         });
         
         // 新しい会話システム用の画像
-        this.load.image('hirokazu_A', 'assets/characters/portraits/hirokazu_A.png');
-        this.load.image('hirokazu_B', 'assets/characters/portraits/hirokazu_B.png');
-        this.load.image('hirokazu_C', 'assets/characters/portraits/hirokazu_C.png');
-        this.load.image('hirokazu_D', 'assets/characters/portraits/hirokazu_D.png');
-        this.load.image('hirokazu_E', 'assets/characters/portraits/hirokazu_E.png');
-        this.load.image('hirokazu_F', 'assets/characters/portraits/hirokazu_F.png');
-        this.load.image('daichi_A', 'assets/characters/portraits/daichi_A.png');
-        this.load.image('naoki_A', 'assets/characters/portraits/naoki_A.png');
+        this.load.image('hirokazu_a', 'assets/characters/portraits/hirokazu_a.png');
+        this.load.image('hirokazu_b', 'assets/characters/portraits/hirokazu_b.png');
+        this.load.image('hirokazu_c', 'assets/characters/portraits/hirokazu_c.png');
+        this.load.image('hirokazu_d', 'assets/characters/portraits/hirokazu_d.png');
+        this.load.image('hirokazu_e', 'assets/characters/portraits/hirokazu_e.png');
+        this.load.image('hirokazu_f', 'assets/characters/portraits/hirokazu_f.png');
+        this.load.image('daichi_a', 'assets/characters/portraits/daichi_a.png');
+        this.load.image('naoki_a', 'assets/characters/portraits/naoki_a.png');
         
         // 会話システム用の背景とUI要素
         this.load.image('test_1', 'assets/backgrounds/background_test.png');
