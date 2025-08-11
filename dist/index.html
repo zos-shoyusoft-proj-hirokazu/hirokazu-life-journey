@@ -218,65 +218,75 @@
         /* インストール促進バナーのスタイル */
         #install-banner {
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 6px;
+            padding: 8px;
             color: white;
-            padding: 15px;
+            font-size: 0.6rem;
             z-index: 10000;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            max-width: 180px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
             animation: slideDown 0.3s ease-out;
         }
         
         .install-content {
             display: flex;
+            flex-direction: column;
             align-items: center;
-            justify-content: space-between;
-            max-width: 600px;
-            margin: 0 auto;
-            gap: 15px;
+            justify-content: center;
+            gap: 10px;
+            text-align: center;
         }
         
         .install-content span {
-            flex: 1;
-            font-size: 14px;
+            font-size: 0.65rem;
             font-weight: 500;
+            line-height: 1.2;
+            margin-bottom: 6px;
         }
         
         #install-btn {
-            background: #4CAF50;
+            background: #27ae60;
             color: white;
             border: none;
-            padding: 8px 16px;
-            border-radius: 20px;
+            padding: 4px 8px;
+            border-radius: 4px;
             cursor: pointer;
             font-weight: bold;
-            font-size: 14px;
+            font-size: 0.65rem;
             white-space: nowrap;
+            margin-right: 6px;
+            transition: all 0.3s ease;
         }
         
         #install-btn:hover {
-            background: #45a049;
+            background: #2ecc71;
+            transform: scale(1.05);
         }
         
         #dismiss-btn {
             background: none;
             border: none;
-            color: white;
-            font-size: 20px;
+            color: #ccc;
+            font-size: 1.2rem;
             cursor: pointer;
-            padding: 5px;
-            min-width: 30px;
-            height: 30px;
+            padding: 0;
+            width: 20px;
+            height: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
+            transition: color 0.3s ease;
         }
         
         #dismiss-btn:hover {
             background: rgba(255,255,255,0.1);
             border-radius: 50%;
+            color: white;
         }
         
         /* iOS用インストール案内のスタイル */
@@ -385,8 +395,8 @@
         }
         
         @keyframes slideDown {
-            from { transform: translateY(-100%); }
-            to { transform: translateY(0); }
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
         }
         
         /* モバイル対応 */
@@ -405,7 +415,7 @@
                 width: 90vw;
                 margin: 20px;
             }
-        }</style><script defer="defer" src="bundle.js"></script></head><body><button id="fullscreen-button" onclick="toggleFullscreen()">全画面</button><div id="game-container"></div><script src="https://cdn.jsdelivr.net/npm/phaser@3.70.0/dist/phaser.min.js"></script><div id="opening-video" style="display: none;"><div id="video-container"><iframe id="youtube-video" width="100%" height="100%" frameborder="0" allowfullscreen></iframe><button id="skip-video" class="skip-button">スキップ</button></div></div><div id="main-menu" style="display: flex;"><div class="main-menu-container"><div class="main-content"><div class="game-title"><h1>Hirokazu Life Journey</h1><p class="subtitle">ひろかずの人生を追体験しよう！</p></div><div class="menu-buttons"><button id="start-game" class="menu-button primary">START</button></div><div class="game-info"><p>結婚式で披露するゲーム</p><p>新郎の人生をRPGで体験！</p></div></div><div class="install-area"><div class="install-banner" id="install-banner"><div class="install-text">このアプリをホーム画面に追加して、より快適に使用できます</div><button class="install-button">インストール</button> <button class="close-button" id="close-install-btn">×</button></div></div></div></div><div id="stage-select" style="display: none;"><div class="background-image"></div><div class="background-overlay"></div><div class="stage-select-container"><div class="stage-title">ステージ選択画面</div><div class="stage-content"><div class="stage-buttons"><div class="button-row"><button id="miemachi">三重シティ</button><div id="miemachi-move-btn" class="move-button-container" style="display: none;"><button class="move-button">移動する</button></div></div><div class="button-row"><button id="taketastage">竹田シティ</button><div id="taketastage-move-btn" class="move-button-container" style="display: none;"><button class="move-button">移動する</button></div></div><div class="button-row"><button id="zenkoku">全国</button><div id="zenkoku-move-btn" class="move-button-container" style="display: none;"><button class="move-button">移動する</button></div></div><button id="opening-video-btn">オープニング動画</button></div><div class="content-area"><div class="description-area" id="description-area"><p>ステージを選択してください</p></div></div></div></div></div><script>// 音声管理（簡素化）
+        }</style><script defer="defer" src="bundle.js"></script></head><body><button id="fullscreen-button" onclick="toggleFullscreen()">全画面</button><div id="game-container"></div><script src="https://cdn.jsdelivr.net/npm/phaser@3.70.0/dist/phaser.min.js"></script><div id="opening-video" style="display: none;"><div id="video-container"><iframe id="youtube-video" width="100%" height="100%" frameborder="0" allowfullscreen></iframe><button id="skip-video" class="skip-button">スキップ</button></div></div><div id="main-menu" style="display: flex;"><div class="main-menu-container"><div class="main-content"><div class="game-title"><h1>Hirokazu Life Journey</h1><p class="subtitle">ひろかずの人生を追体験しよう！</p></div><div class="menu-buttons"><button id="start-game" class="menu-button primary">START</button></div><div class="game-info"><p>結婚式で披露するゲーム</p><p>新郎の人生をRPGで体験！</p></div></div><div class="install-area"><div class="install-banner" id="install-banner"><div class="install-text">このアプリをホーム画面に追加して、より快適に使用できます</div><button class="install-button">インストール</button> <button class="close-button" id="close-install-btn">×</button></div></div></div></div><div id="stage-select" style="display: none;"><div class="background-image"></div><div class="background-overlay"></div><div class="stage-select-container"><div class="stage-title">ステージ選択画面</div><div class="stage-content"><div class="stage-buttons"><div class="button-row"><button id="miemachi">三重シティ</button><div id="miemachi-move-btn" class="move-button-container" style="display: none;"><button class="move-button">移動する</button></div></div><div class="button-row"><button id="taketa">竹田シティ</button><div id="taketa-move-btn" class="move-button-container" style="display: none;"><button class="move-button">移動する</button></div></div><div class="button-row"><button id="zenkoku">全国</button><div id="zenkoku-move-btn" class="move-button-container" style="display: none;"><button class="move-button">移動する</button></div></div><button id="opening-video-btn">オープニング動画</button></div><div class="content-area"><div class="description-area" id="description-area"><p>ステージを選択してください</p></div></div></div></div></div><script>// 音声管理（簡素化）
         let currentBGM = null;
         
         // BGM再生関数（簡素化）
@@ -605,12 +615,12 @@
         // ステージ選択画面のボタン設定
         function setupStageSelectButtons() {
             const miemachi = document.getElementById('miemachi');
-            const taketastage = document.getElementById('taketastage');
+            const taketa = document.getElementById('taketa');
             const zenkoku = document.getElementById('zenkoku');
             const openingVideoBtn = document.getElementById('opening-video-btn');
 
             // ボタンにホバー効果を追加
-            const buttons = [miemachi, taketastage, zenkoku, openingVideoBtn];
+            const buttons = [miemachi, taketa, zenkoku, openingVideoBtn];
             buttons.forEach(button => {
                 if (button) {
                     button.addEventListener('mouseenter', function() {
@@ -630,14 +640,14 @@
                 });
             }
             
-            if (taketastage) {
-                taketastage.addEventListener('click', function() {
+            if (taketa) {
+                taketa.addEventListener('click', function() {
                     playSE('assets/audio/se/touch_1.mp3');
                     this.style.transform = 'scale(0.95)';
                     setTimeout(() => {
                         this.style.transform = '';
                     }, 150);
-                    selectStage('taketastage', '電車で通う山間の学び舎で繰り広げられる、高校生たちの日常と冒険の物語。教室での突然の鬼ごっこ、仲間を困らせるいたずら、共に歌う歌声、カメラ越しに見つめる友情、終電を逃した夜の決死の帰路...。笑いと涙、青春の痛みと喜び、そして何より仲間との絆を育んだ、忘れられない学生時代の記憶がここに刻まれている。', './assets/backgrounds/stage_backgrounds/taketa_map.png');
+                    selectStage('taketa', '電車で通う山間の学び舎で繰り広げられる、高校生たちの日常と冒険の物語。教室での突然の鬼ごっこ、仲間を困らせるいたずら、共に歌う歌声、カメラ越しに見つめる友情、終電を逃した夜の決死の帰路...。笑いと涙、青春の痛みと喜び、そして何より仲間との絆を育んだ、忘れられない学生時代の記憶がここに刻まれている。', './assets/backgrounds/stage_backgrounds/taketa_map.png');
                 });
             }
             

@@ -34,8 +34,8 @@ export function startPhaserGame(stageNumber) {
         case 'miemachi': sceneClass = createMapStage('miemachi', 'MiemachiStage'); sceneKey = 'MiemachiStage'; break;
         case 'taketa': sceneClass = createMapStage('taketastage', 'TaketastageStage'); sceneKey = 'TaketastageStage'; break;
         case 'japan': sceneClass = createMapStage('japan', 'JapanStage'); sceneKey = 'JapanStage'; break;
-        case 'zenkoku': sceneClass = createMapStage('japan', 'JapanStage'); sceneKey = 'JapanStage'; break;
 
+        case 'zenkoku': sceneClass = createMapStage('japan', 'JapanStage'); sceneKey = 'JapanStage'; break;
         case 'bunngo_mie_city': sceneClass = createMapStage('miemachi', 'MiemachiStage'); sceneKey = 'MiemachiStage'; break;
         case 'taketa_city': sceneClass = createMapStage('taketastage', 'TaketastageStage'); sceneKey = 'TaketastageStage'; break;
 
