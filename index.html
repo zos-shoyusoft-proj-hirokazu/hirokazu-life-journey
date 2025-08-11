@@ -1,4 +1,4 @@
-<!doctype html><html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover,minimal-ui"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="mobile-web-app-capable" content="yes"><meta name="theme-color" content="#000000"><meta name="description" content="Hirokazu Life Journey - ゲーム"><link rel="manifest" href="./manifest.json"><title>Hirokazu Life Journey</title><link rel="stylesheet" href="./css/stageSelect.css"><link rel="stylesheet" href="./css/mainMenu.css"><style>/* 全体のリセットとブラウザUI対応 */
+<!doctype html><html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover,minimal-ui,orientation=landscape"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="mobile-web-app-capable" content="yes"><meta name="theme-color" content="#000000"><meta name="description" content="Hirokazu Life Journey - ゲーム"><link rel="manifest" href="./manifest.json"><title>Hirokazu Life Journey</title><link rel="stylesheet" href="./css/stageSelect.css"><link rel="stylesheet" href="./css/mainMenu.css"><style>/* 全体のリセットとブラウザUI対応 */
         * {
             margin: 0;
             padding: 0;
@@ -17,9 +17,12 @@
             background: #000;
             overflow: hidden;
             width: 100vw;
-            /* ブラウザUIを考慮した高さ調整 */
+            /* 横画面対応：ブラウザUIを考慮した高さ調整 */
             height: 100vh;
             height: 100dvh; /* Dynamic Viewport Height (新しいブラウザ対応) */
+            /* 横画面強制 */
+            min-height: 100vh;
+            min-height: 100dvh;
             touch-action: none;
             -webkit-touch-callout: none;
             -webkit-user-select: none;
@@ -34,10 +37,32 @@
             top: 0;
             left: 0;
         }
+        
+        /* 横画面強制のためのスタイル */
+        body.force-landscape {
+            transform: rotate(90deg);
+            transform-origin: center center;
+            width: 100vh !important;
+            height: 100vw !important;
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+        
+        /* 横画面時のゲームコンテナ調整 */
+        body.force-landscape #game-container {
+            width: 100vh !important;
+            height: 100vw !important;
+            transform: rotate(-90deg);
+            transform-origin: center center;
+        }
         #game-container {
             width: 100vw;
             height: 100vh;
             height: 100dvh; /* Dynamic Viewport Height */
+            /* 横画面強制 */
+            min-height: 100vh;
+            min-height: 100dvh;
             display: block;
             position: absolute;
             top: 0;
@@ -609,6 +634,50 @@
             }
         }
         
+        // 横画面強制機能
+        function forceLandscape() {
+            console.log('横画面強制を開始します');
+            
+            // 画面の向きを横画面に強制（サポートされている場合のみ）
+            if (window.screen && window.screen.orientation && window.screen.orientation.lock) {
+                window.screen.orientation.lock('landscape').then(() => {
+                    console.log('画面向きロック成功: landscape');
+                }).catch(e => {
+                    console.log('画面向きロック失敗:', e);
+                    // APIが使えない場合はCSSで強制
+                    forceLandscapeWithCSS();
+                });
+            } else {
+                console.log('screen.orientation.lock()がサポートされていません。CSSで強制します。');
+                forceLandscapeWithCSS();
+            }
+        }
+        
+        // CSSで横画面を強制する関数
+        function forceLandscapeWithCSS() {
+            console.log('CSSで横画面強制を実行します');
+            
+            // 現在の画面サイズを取得
+            const screenWidth = window.screen.width;
+            const screenHeight = window.screen.height;
+            
+            // 縦向きの場合は90度回転
+            if (screenHeight > screenWidth) {
+                // CSSクラスを適用
+                document.body.classList.add('force-landscape');
+                console.log('縦向き検出: CSSクラスで横画面強制');
+                
+                // ゲームコンテナも調整
+                const gameContainer = document.getElementById('game-container');
+                if (gameContainer) {
+                    gameContainer.style.width = '100vh';
+                    gameContainer.style.height = '100vw';
+                }
+            } else {
+                console.log('既に横向きです');
+            }
+        }
+        
         // ビューポート変更の監視を追加
         if (window.visualViewport) {
             window.visualViewport.addEventListener('resize', handleResize);
@@ -617,8 +686,19 @@
         // 従来のリサイズイベントリスナー
         window.addEventListener('resize', handleResize);
         window.addEventListener('orientationchange', function() {
+            console.log('画面向き変更:', window.screen.orientation.type);
+            // 横画面を強制
+            forceLandscape();
             setTimeout(handleResize, 500); // 向き変更後に少し待ってからリサイズ
         });
+        
+        // 画面向きの監視を追加
+        if (window.screen && window.screen.orientation) {
+            window.screen.orientation.addEventListener('change', function() {
+                console.log('画面向き変更イベント:', window.screen.orientation.type);
+                forceLandscape();
+            });
+        }
         
         // フルスクリーン状態変化の監視
         document.addEventListener('fullscreenchange', handleResize);
@@ -1095,6 +1175,11 @@
         // ページ読み込み時の処理
         window.addEventListener('load', function() {
             console.log('window load event fired');
+            
+            // 横画面を強制
+            forceLandscape();
+            console.log('横画面強制を実行しました');
+            
             if (!localStorage.getItem('openingVideoShown')) {
                 console.log('showOpeningVideo will be called');
                 showOpeningVideo();
