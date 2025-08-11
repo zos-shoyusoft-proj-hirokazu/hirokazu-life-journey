@@ -52,7 +52,6 @@ export const AreaConfig = {
             'hirokazu_G': 'assets/characters/portraits/hirokazu_G.png',
             'hirokazu_H': 'assets/characters/portraits/hirokazu_H.png',
             'hirokazu_L': 'assets/characters/portraits/hirokazu_L.png',
-            // その他キャラクター（miemachi会話で使う分を網羅）
             'daichi_A': 'assets/characters/portraits/daichi_A.png',
             'daichi_B': 'assets/characters/portraits/daichi_B.png',
             'daichi_C': 'assets/characters/portraits/daichi_C.png',
