@@ -1114,17 +1114,39 @@
             const allMoveButtons = document.querySelectorAll('.move-button-container');
             allMoveButtons.forEach(btn => {
                 btn.style.display = 'none';
+                btn.style.opacity = '0';
+                btn.style.visibility = 'hidden';
             });
             
             // 選択されたステージの移動ボタンを表示
             const moveButtonId = `${stageId}-move-btn`;
             const moveButton = document.getElementById(moveButtonId);
             if (moveButton) {
+                // 確実に表示されるように複数の方法で設定
                 moveButton.style.display = 'block';
+                moveButton.style.opacity = '1';
+                moveButton.style.visibility = 'visible';
+                
+                // PWAモードでの追加対応
+                if (window.matchMedia('(display-mode: standalone)').matches || 
+                    window.matchMedia('(display-mode: fullscreen)').matches ||
+                    navigator.standalone === true) {
+                    console.log('PWAモード検出: 強制表示設定');
+                    // PWAモードではより強制的に表示
+                    moveButton.style.cssText = `
+                        display: block !important;
+                        opacity: 1 !important;
+                        visibility: visible !important;
+                        position: relative !important;
+                        z-index: 1000 !important;
+                    `;
+                }
+                
                 // アニメーション効果を追加
                 setTimeout(() => {
                     moveButton.classList.add('show');
                 }, 100);
+                
                 console.log('Move button displayed for:', stageId);
                 
                 // ボタンのクリックイベントを設定
