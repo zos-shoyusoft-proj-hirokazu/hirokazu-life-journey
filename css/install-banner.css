@@ -1,14 +1,5 @@
-/* インストールポップアップを右下に小さく配置 */
-.install-area {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1500;
-    overflow: hidden;
-}
+/* レイアウトは画面ごとのコンテナ側で制御するため、
+   .install-area の位置指定はここでは行わない（衝突回避） */
 
 .install-banner {
     position: relative;
