@@ -755,6 +755,38 @@
         }
         
         // PWAの処理はPWAManager.jsに移動済み
+        
+        // 縦横レイアウト調整関数
+        function adjustLayoutForOrientation() {
+            const mainContent = document.querySelector('.main-content');
+            const installArea = document.querySelector('.install-area');
+            
+            if (!mainContent || !installArea) return;
+            
+            if (window.innerHeight > window.innerWidth) { // 縦向き
+                // インストールエリアをmain-contentの最後に移動
+                if (installArea.parentNode !== mainContent) {
+                    mainContent.appendChild(installArea);
+                }
+            } else { // 横向き
+                // 元の位置（main-menu-container）に戻す
+                const mainMenuContainer = document.querySelector('.main-menu-container');
+                if (installArea.parentNode !== mainMenuContainer) {
+                    mainMenuContainer.appendChild(installArea);
+                }
+            }
+        }
+        
+        // 画面向き変更時に実行
+        window.addEventListener('orientationchange', function() {
+            setTimeout(adjustLayoutForOrientation, 300);
+        });
+        
+        // リサイズ時にも実行
+        window.addEventListener('resize', adjustLayoutForOrientation);
+        
+        // ページ読み込み時にも実行
+        window.addEventListener('load', adjustLayoutForOrientation);
     </script>
     <script src="./bundle.js"></script>
 </body>

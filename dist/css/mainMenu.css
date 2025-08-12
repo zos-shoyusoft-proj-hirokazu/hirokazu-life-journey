@@ -82,17 +82,12 @@
     flex: 1;
 }
 
-/* インストールポップアップ専用領域 */
+/* インストールポップアップ専用領域（横向きデフォルトは右下） */
 .install-area {
     position: absolute;
     bottom: 30px;
     right: 30px;
-    width: 200px;
-    height: auto;
     z-index: 1000;
-    /* 確実に右下に配置 */
-    left: auto !important;
-    top: auto !important;
 }
 
 @keyframes containerGlow {
@@ -438,5 +433,112 @@
     .game-info {
         padding: 15px;
         margin-top: 20px;
+    }
+}
+
+/* 縦向き専用の調整 */
+@media (orientation: portrait) {
+    .main-menu-container {
+        flex-direction: column;
+        padding: 30px 20px;
+        gap: 40px;
+        min-height: 400px;
+        justify-content: flex-start;
+        align-items: center;
+    }
+    
+    .main-content {
+        flex-direction: column;
+        gap: 40px;
+        align-items: center;
+        text-align: center;
+        width: 100%;
+    }
+    
+    .game-title {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    
+    .game-title h1 {
+        font-size: 2.5rem;
+        margin-bottom: 20px;
+        letter-spacing: 1px;
+    }
+    
+    .subtitle {
+        font-size: 1.1rem;
+        margin-bottom: 40px;
+        text-align: center;
+    }
+    
+    .menu-buttons {
+        margin: 20px 0;
+    }
+    
+    .menu-button {
+        width: 220px;
+        margin: 25px auto;
+        padding: 22px 35px;
+        font-size: 1.3rem;
+    }
+    
+    .game-info {
+        margin-top: 40px;
+        padding: 20px;
+        text-align: center;
+        width: 100%;
+    }
+    
+    .game-info p {
+        font-size: 1rem;
+        margin: 12px 0;
+    }
+    
+    .install-area {
+        position: static;
+        bottom: auto;
+        right: auto;
+        width: 100%;
+        margin-top: 30px;
+        text-align: center;
+        order: 3;
+    }
+    
+    .install-banner {
+        width: 100%;
+        max-width: 400px;
+        margin: 0 auto;
+    }
+}
+
+/* 縦向きで小さい画面の調整 */
+@media (orientation: portrait) and (max-height: 600px) {
+    .main-menu-container {
+        padding: 25px 15px;
+        gap: 30px;
+        min-height: 350px;
+    }
+    
+    .game-title h1 {
+        font-size: 2.2rem;
+        margin-bottom: 15px;
+    }
+    
+    .subtitle {
+        font-size: 1rem;
+        margin-bottom: 30px;
+    }
+    
+    .menu-button {
+        width: 200px;
+        margin: 20px auto;
+        padding: 20px 30px;
+        font-size: 1.2rem;
+    }
+    
+    .game-info {
+        margin-top: 30px;
+        padding: 18px;
     }
 } 
