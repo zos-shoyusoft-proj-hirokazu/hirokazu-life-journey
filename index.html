@@ -557,6 +557,8 @@
                     const scenes = window.game.scene.getScenes(true) || [];
                     scenes.forEach(s => {
                         try { s.sound && s.sound.stopAll && s.sound.stopAll(); } catch(e){}
+                        // iOS用の手動HTMLAudio（MapSelectionStage）も停止
+                        try { if (s._htmlBgm) { s._htmlBgm.pause(); s._htmlBgm = null; } } catch(e){}
                     });
                 }
             } catch(e){}
