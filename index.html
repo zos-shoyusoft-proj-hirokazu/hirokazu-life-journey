@@ -221,8 +221,12 @@
         
         // リサイズ処理（簡素化）
         function handleResize() {
-            if (window.gameInstance && window.gameInstance.scale) {
-                window.gameInstance.scale.resize(window.innerWidth, window.innerHeight);
+            try {
+                if (window.gameInstance && window.gameInstance.scale && !window.gameInstance.isDestroyed) {
+                    window.gameInstance.scale.resize(window.innerWidth, window.innerHeight);
+                }
+            } catch (e) {
+                // ignore
             }
         }
         
@@ -566,6 +570,8 @@
             if (window.game && window.game.destroy) {
                 window.game.destroy(true);
                 window.game = null;
+                // 破棄済みインスタンス参照を必ず外す（resize等のハンドラから参照されるのを防止）
+                window.gameInstance = null;
             }
             
             const stageSelect = document.getElementById('stage-select');
