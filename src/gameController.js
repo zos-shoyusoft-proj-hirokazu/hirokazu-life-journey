@@ -72,6 +72,21 @@ function initializeGame() {
 
 // ゲーム開始関数（動的シーン読み込み）
 export function startPhaserGame(stageNumber) {
+    // 多重起動防止（高速連打対策）
+    // 起動前に残骸を掃除（直接呼ばれた場合の保険）
+    try {
+        if (window.game && window.game.scene && window.game.scene.getScenes) {
+            const scenes = window.game.scene.getScenes(false) || [];
+            for (const s of scenes) {
+                try { if (s.load && s.load.reset) s.load.reset(); } catch(err) { /* ignore */ }
+                try { if (s.load && s.load.removeAllListeners) s.load.removeAllListeners(); } catch(err) { /* ignore */ }
+                try { if (s.sound && s.sound.stopAll) s.sound.stopAll(); } catch(err) { /* ignore */ }
+                try { if (s.audioManager && s.audioManager.stopAll) s.audioManager.stopAll(); } catch(err) { /* ignore */ }
+                try { if (s.scene && s.scene.isActive && s.scene.isActive()) s.scene.stop(); } catch(err) { /* ignore */ }
+                try { if (s.scene && s.scene.remove) s.scene.remove(); } catch(err) { /* ignore */ }
+            }
+        }
+    } catch(err) { /* ignore */ }
     const game = initializeGame();
 
     let sceneClass, sceneKey;

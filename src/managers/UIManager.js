@@ -74,66 +74,79 @@ export class UIManager {
         }
         
         // === ボタンクリック時の処理 ===
-        this.backButtonGraphics.on('pointerdown', () => {
+        this.backButtonGraphics.on('pointerdown', (pointer, x, y, event) => {
+            try { if (event && event.preventDefault) event.preventDefault(); } catch (e) { /* ignore */ }
+            try { if (event && event.stopImmediatePropagation) event.stopImmediatePropagation(); } catch (e) { /* ignore */ }
             
             // シーンの種類に応じて戻る処理を分岐
             if (scene.scene?.key === 'Stage1Scene' || scene.scene?.key === 'Stage2Scene' || scene.scene?.key === 'Stage3Scene') {
                 // ステージから戻る（returnToMapが優先、returnToStageSelectがフォールバック）
-                if (window.returnToMap) {
-                    window.returnToMap();
-                } else if (window.returnToStageSelect) {
-                    window.returnToStageSelect();
-                } else if (window.returnToMiemachi) {
-                    window.returnToMiemachi();
-                } else {
-                    // フォールバック：直接ステージ選択画面を表示
-                    const stageSelect = document.getElementById('stage-select');
-                    const gameContainer = document.getElementById('game-container');
-                    if (stageSelect) {
-                        stageSelect.style.display = 'flex';
+                // まずこのタップで音の解錠・再生やロードが走らないように全て抑止
+                try { if (scene.input && scene.input.removeAllListeners) scene.input.removeAllListeners('pointerdown'); } catch(e) { /* ignore */ }
+                try { if (scene.sound && scene.sound.removeAllListeners) scene.sound.removeAllListeners('unlocked'); } catch(e) { /* ignore */ }
+                try { if (scene.sound && scene.sound.stopAll) scene.sound.stopAll(); } catch(e) { /* ignore */ }
+                try { if (scene.audioManager && scene.audioManager.stopAll) scene.audioManager.stopAll(); } catch(e) { /* ignore */ }
+                try { if (scene._htmlBgm) { scene._htmlBgm.pause(); scene._htmlBgm = null; } } catch(e) { /* ignore */ }
+                try { if (scene._eventHtmlBgm) { scene._eventHtmlBgm.pause(); scene._eventHtmlBgm = null; } } catch(e) { /* ignore */ }
+                try { if (scene.load && scene.load.reset) scene.load.reset(); } catch(e) { /* ignore */ }
+                try { if (scene.load && scene.load.removeAllListeners) scene.load.removeAllListeners(); } catch(e) { /* ignore */ }
+                try { if (scene.scene && scene.scene.get && scene.scene.get('ConversationScene')) scene.scene.remove('ConversationScene'); } catch(e) { /* ignore */ }
+                
+                const goBack = () => {
+                    if (window.returnToMap) {
+                        window.returnToMap();
+                    } else if (window.returnToStageSelect) {
+                        window.returnToStageSelect();
+                    } else if (window.returnToMiemachi) {
+                        window.returnToMiemachi();
+                    } else {
+                        const stageSelect = document.getElementById('stage-select');
+                        const gameContainer = document.getElementById('game-container');
+                        if (stageSelect) stageSelect.style.display = 'flex';
+                        if (gameContainer) gameContainer.style.display = 'none';
                     }
-                    if (gameContainer) {
-                        gameContainer.style.display = 'none';
-                    }
-                }
+                };
+                try { requestAnimationFrame(() => setTimeout(goBack, 0)); } catch (_) { goBack(); }
             } else if (scene.scene?.key === 'MiemachiStage' || scene.scene?.key === 'TaketastageStage' || scene.scene?.key === 'JapanStage') {
                 // マップからステージ選択画面に戻る
                 
                 // returnToMapをクリア
                 window.returnToMap = null;
+                // マップBGMの自動起動をこのタップで絶対に発生させない
+                try { scene._suppressMapBgm = true; } catch(e) { /* ignore */ }
+                try { if (scene._bgmRetry && scene._bgmRetry.remove) { scene._bgmRetry.remove(false); scene._bgmRetry = null; } } catch(e) { /* ignore */ }
+                try { if (scene.input && scene.input.removeAllListeners) { scene.input.removeAllListeners('pointerdown'); } } catch(e) { /* ignore */ }
+                try { if (scene._htmlBgm) { scene._htmlBgm.pause(); scene._htmlBgm = null; } } catch(e) { /* ignore */ }
+                try { if (scene.audioManager && scene.audioManager.stopAll) scene.audioManager.stopAll(); } catch(e) { /* ignore */ }
+                // サウンドのunlocked待ちリスナーも除去（戻るタップで解放されても発火させない）
+                try { if (scene.sound && scene.sound.removeAllListeners) scene.sound.removeAllListeners('unlocked'); } catch(e) { /* ignore */ }
                 
-                if (window.returnToStageSelect) {
+                const backToSelect = () => {
                     try {
-                        window.returnToStageSelect();
-                    } catch (error) {
-                        // エラーハンドリング
-                    }
-                } else {
-                    // フォールバック：直接ステージ選択画面を表示
-                    const stageSelect = document.getElementById('stage-select');
-                    const gameContainer = document.getElementById('game-container');
-                    if (stageSelect) {
-                        stageSelect.style.display = 'flex';
-                    }
-                    if (gameContainer) {
-                        gameContainer.style.display = 'none';
-                    }
-                }
+                        if (window.returnToStageSelect) {
+                            window.returnToStageSelect();
+                        } else {
+                            const stageSelect = document.getElementById('stage-select');
+                            const gameContainer = document.getElementById('game-container');
+                            if (stageSelect) stageSelect.style.display = 'flex';
+                            if (gameContainer) gameContainer.style.display = 'none';
+                        }
+                    } catch (err) { /* ignore */ }
+                };
+                try { requestAnimationFrame(() => setTimeout(backToSelect, 0)); } catch (_) { backToSelect(); }
             } else {
                 // その他のシーン：ステージ選択画面に戻る
-                if (window.returnToStageSelect) {
-                    window.returnToStageSelect();
-                } else {
-                    // フォールバック：直接ステージ選択画面を表示
-                    const stageSelect = document.getElementById('stage-select');
-                    const gameContainer = document.getElementById('game-container');
-                    if (stageSelect) {
-                        stageSelect.style.display = 'flex';
+                const back = () => {
+                    if (window.returnToStageSelect) {
+                        window.returnToStageSelect();
+                    } else {
+                        const stageSelect = document.getElementById('stage-select');
+                        const gameContainer = document.getElementById('game-container');
+                        if (stageSelect) stageSelect.style.display = 'flex';
+                        if (gameContainer) gameContainer.style.display = 'none';
                     }
-                    if (gameContainer) {
-                        gameContainer.style.display = 'none';
-                    }
-                }
+                };
+                try { requestAnimationFrame(() => setTimeout(back, 0)); } catch (_) { back(); }
             }
         });
         

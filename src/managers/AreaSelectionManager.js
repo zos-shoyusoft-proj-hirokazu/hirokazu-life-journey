@@ -695,46 +695,44 @@ export class AreaSelectionManager {
             
             // 現在のマップに戻るための関数を設定
             window.returnToMap = () => {
-                
-                // 現在のシーンを停止してから指定されたマップを開始
-                if (window.game && window.game.scene) {
-                    // すべてのシーンを停止して削除
-                    window.game.scene.scenes.forEach(scene => {
-                        if (scene && scene.scene) {
-                            if (scene.scene.isActive()) {
-                                scene.scene.stop();
-                            }
-                            scene.scene.remove();
+                // 多重起動ガード
+                if (window.__navigating) return;
+                window.__navigating = true;
+                // すべて停止
+                try { if (window.game && window.game.sound) window.game.sound.stopAll(); } catch(e){ /* ignore */ }
+                try {
+                    if (window.game && window.game.scene && window.game.scene.getScenes) {
+                        const scenes = window.game.scene.getScenes(false) || [];
+                        for (const s of scenes) {
+                            try { if (s.scene && s.scene.stop) s.scene.stop(); } catch(err) { /* ignore */ }
+                            try { if (s.scene && s.scene.remove) s.scene.remove(); } catch(err) { /* ignore */ }
                         }
-                    });
-                }
-                
-                // ゲームインスタンスを完全に再初期化
-                if (window.game) {
-                    window.game.destroy(true);
-                    window.game = null;
-                }
-                if (window.gameInstance) {
-                    window.gameInstance = null;
-                }
-                
-                // マップを再開始
-                import('../gameController.js').then(({ startPhaserGame }) => {
-                    startPhaserGame(currentMapId);
-                });
+                    }
+                } catch(err){ /* ignore */ }
+                try { if (window.game) window.game.destroy(true); } catch(_){ /* ignore */ }
+                window.game = null; window.gameInstance = null;
+                // 少し遅延してから再起動（破棄完了を待つ）
+                setTimeout(() => {
+                    import('../gameController.js').then(({ startPhaserGame }) => {
+                        try { startPhaserGame(currentMapId); } finally { window.__navigating = false; }
+                    }).catch(() => { window.__navigating = false; });
+                }, 50);
             };
             
-            // ステージを開始
+            // ステージを開始（高速連打ガード）
             
             // ステージに移動する前に、現在のマップのConversationSceneを削除
             if (this.scene.scene.get('ConversationScene')) {
                 this.scene.scene.remove('ConversationScene');
             }
             
-            this.scene.scene.stop();
+            // ローダー進行中ならキャンセルしてから停止
+            try { if (this.scene.load && this.scene.load.reset) this.scene.load.reset(); } catch(e) { /* ignore */ }
+            try { if (this.scene.load && this.scene.load.removeAllListeners) this.scene.load.removeAllListeners(); } catch(e) { /* ignore */ }
+            try { this.scene.scene.stop(); } catch(e) { /* ignore */ }
             
             import('../gameController.js').then(({ startPhaserGame }) => {
-                startPhaserGame(stageNumber);
+                try { startPhaserGame(stageNumber); } catch(e) { /* ignore */ }
             });
             
         } else {

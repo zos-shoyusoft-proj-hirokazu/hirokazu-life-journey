@@ -30,6 +30,8 @@
     <link rel="stylesheet" href="./css/opening-video.css">
     
     <style>
+        /* 開発時のエラーオーバーレイを隠す（実機動作には影響なし） */
+        #webpack-dev-server-client-overlay, .webpack-dev-server-overlay { display: none !important; visibility: hidden !important; }
         /* 全体のリセットとブラウザUI対応 */
         * {
             margin: 0;
@@ -277,6 +279,70 @@
     <script>
         // 音声管理（簡素化）
         let currentBGM = null;
+            
+            // グローバルエラーハンドラ（原因特定用の詳細ログ）
+            (function installGlobalErrorLogging(){
+                if (window.__globalErrorLoggingInstalled) return;
+                window.__globalErrorLogs = [];
+                // 先にキャプチャ段階でもフック（dev-server overlayより先に処理）
+                function handleWindowError(e){
+                    try {
+                        const details = {
+                            type: 'error',
+                            message: e.message,
+                            file: e.filename,
+                            line: e.lineno,
+                            column: e.colno,
+                            error: (e.error && e.error.stack) ? e.error.stack : String(e.error || '')
+                        };
+                        window.__globalErrorLogs.push(details);
+                        console.error('[window.onerror]', details);
+                        const msg = String(e.message || '');
+                        // 既知の無害（既に再試行・停止で吸収している）エラーは抑制
+                        if (msg.includes("The play() request was interrupted") || msg.includes("reading 'cache'")) {
+                            try { e.preventDefault(); e.stopImmediatePropagation(); } catch(_){}
+                            return false;
+                        }
+                    } catch(_) {}
+                }
+                window.addEventListener('error', handleWindowError, true);
+                window.addEventListener('error', handleWindowError, false);
+                window.addEventListener('unhandledrejection', function(e){
+                    try {
+                        const reason = e.reason;
+                        const details = {
+                            type: 'unhandledrejection',
+                            message: (reason && reason.message) ? reason.message : String(reason),
+                            stack: (reason && reason.stack) ? reason.stack : ''
+                        };
+                        window.__globalErrorLogs.push(details);
+                        console.error('[unhandledrejection]', details);
+                        const msg = String(details.message || '');
+                        if (msg.includes('The play() request was interrupted')) {
+                            try { e.preventDefault(); e.stopImmediatePropagation && e.stopImmediatePropagation(); } catch(_){}
+                            return false;
+                        }
+                    } catch(_) {}
+                });
+                window.__globalErrorLoggingInstalled = true;
+            })();
+
+            // dev-server overlay をDOMレベルで除去（開発時のみ）
+            (function suppressWDSOverlay(){
+                try {
+                    const hide = () => {
+                        try {
+                            const el = document.getElementById('webpack-dev-server-client-overlay');
+                            if (el && el.parentNode) el.parentNode.removeChild(el);
+                            const els = document.querySelectorAll('.webpack-dev-server-overlay');
+                            els.forEach(n => { try { n.remove(); } catch(_){} });
+                        } catch(_){}
+                    };
+                    hide();
+                    const mo = new MutationObserver(hide);
+                    mo.observe(document.documentElement, { childList: true, subtree: true });
+                } catch(_) {}
+            })();
         
         // BGM再生関数（簡素化）
         function playBGM(audioPath) {
@@ -669,39 +735,88 @@
                 gameContainer.style.display = 'block';
             }
             
-            if (window.startPhaserGame) {
-                window.startPhaserGame(stageNumber);
-            }
+                if (window.startPhaserGame) {
+                    window.startPhaserGame(stageNumber);
+                }
         }
 
         // ステージ選択画面に戻る関数
         window.returnToStageSelect = function() {
+            if (window.__navigating) return; // 多重実行ガード
+            window.__navigating = true;
             // 先にゲーム内の全サウンドを停止（多重再生防止）
             try {
                 if (window.game && window.game.sound) {
                     window.game.sound.stopAll();
                 }
-                if (window.game && window.game.scene && window.game.scene.getScenes) {
-                    const scenes = window.game.scene.getScenes(true) || [];
-                    scenes.forEach(s => {
+                if (window.game && window.game.scene) {
+                    let all = [];
+                    try { all = all.concat(window.game.scene.getScenes(false) || []); } catch(e){}
+                    try { all = all.concat(window.game.scene.getScenes(true) || []); } catch(e){}
+                    try { all = all.concat(window.game.scene.scenes || []); } catch(e){}
+                    const seen = new Set();
+                    all.forEach(s => {
+                        if (!s || seen.has(s)) return; seen.add(s);
                         try { s.sound && s.sound.stopAll && s.sound.stopAll(); } catch(e){}
-                        // iOS用の手動HTMLAudio（MapSelectionStage）も停止
                         try { if (s._htmlBgm) { s._htmlBgm.pause(); s._htmlBgm = null; } } catch(e){}
+                        try { if (s._eventHtmlBgm) { s._eventHtmlBgm.pause(); s._eventHtmlBgm = null; } } catch(e){}
+                        try { if (s.audioManager && s.audioManager.stopAll) s.audioManager.stopAll(); } catch(e){}
+                        // 進行中のロードをキャンセル
+                        try { if (s.load && s.load.reset) s.load.reset(); } catch(e){}
+                        try { if (s.load && s.load.removeAllListeners) s.load.removeAllListeners(); } catch(e){}
+                        // シーン自体も停止・削除してリソース競合を避ける
+                        try { if (s.scene && s.scene.isActive && s.scene.isActive()) s.scene.stop(); } catch(e){}
+                        try { if (s.scene && s.scene.remove) s.scene.remove(); } catch(e){}
                     });
                 }
             } catch(e){}
+            // ローダーや会話シーンの残骸を念のため掃除
+            try {
+                if (window.game && window.game.scene) {
+                    const scenes = (window.game.scene.getScenes && window.game.scene.getScenes(false)) || [];
+                    scenes.forEach(s => {
+                        try { if (s.load && s.load.reset) s.load.reset(); } catch(_){}
+                        try { if (s.load && s.load.removeAllListeners) s.load.removeAllListeners(); } catch(_){}
+                        try { if (s.scene && s.scene.get && s.scene.get('ConversationScene')) s.scene.remove('ConversationScene'); } catch(_){}
+                    });
+                }
+            } catch(_){}
 
-            // ゲームインスタンスは保持（再利用）。破棄すると再初期化レースで読み込み漏れが出るため
-            
+            // ここで一旦ゲームを完全破棄（Phaser内部cacheの参照をクリアする）
+            try {
+                if (window.game) {
+                    try { if (window.game.sound) window.game.sound.stopAll(); } catch(_){ }
+                    try {
+                        const scenes = (window.game.scene && window.game.scene.getScenes) ? window.game.scene.getScenes(false) : [];
+                        (scenes || []).forEach(s => { try { s.scene && s.scene.stop && s.scene.stop(); } catch(_){ } try { s.scene && s.scene.remove && s.scene.remove(); } catch(_){ } });
+                    } catch(_){ }
+                    window.game.destroy(true);
+                }
+            } catch(_){ }
+            window.game = null;
+            window.gameInstance = null;
+
             const stageSelect = document.getElementById('stage-select');
-            if (stageSelect) {
-                stageSelect.style.display = 'flex';
-            }
-            
+            if (stageSelect) stageSelect.style.display = 'flex';
             const gameContainer = document.getElementById('game-container');
-            if (gameContainer) {
-                gameContainer.style.display = 'none';
-            }
+            if (gameContainer) gameContainer.style.display = 'none';
+
+            // 安全化：ゲーム全体のサウンド・ローダー・シーンを最後にもう一度クリーンにする
+            try {
+                if (window.game && window.game.scene) {
+                    const scenes = (window.game.scene.getScenes && window.game.scene.getScenes(false)) || [];
+                    scenes.forEach(s => {
+                        try { if (s.sound && s.sound.stopAll) s.sound.stopAll(); } catch(_){}
+                        try { if (s.audioManager && s.audioManager.stopAll) s.audioManager.stopAll(); } catch(_){}
+                        try { if (s._htmlBgm) { s._htmlBgm.pause(); s._htmlBgm = null; } } catch(_){}
+                        try { if (s._eventHtmlBgm) { s._eventHtmlBgm.pause(); s._eventHtmlBgm = null; } } catch(_){}
+                        try { if (s.load && s.load.reset) s.load.reset(); } catch(_){}
+                        try { if (s.load && s.load.removeAllListeners) s.load.removeAllListeners(); } catch(_){}
+                        try { if (s.scene && s.scene.isActive && s.scene.isActive()) s.scene.stop(); } catch(_){}
+                        try { if (s.scene && s.scene.remove) s.scene.remove(); } catch(_){}
+                    });
+                }
+            } catch(_){}
 
             // ステージ選択画面のBGMを再開
             try {
@@ -722,6 +837,7 @@
             if (bgImageElement) {
                 bgImageElement.style.backgroundImage = 'url(./assets/backgrounds/stage_backgrounds/miemachi.png)';
             }
+            setTimeout(() => { window.__navigating = false; }, 600);
         };
 
         // ページ読み込み時の処理

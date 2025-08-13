@@ -209,9 +209,12 @@ export class MapSelectionStage extends Phaser.Scene {
                 this.audioManager = new AudioManager(this);
 
                 const startMapBgm = () => {
+                    try { if (!this.sys || !this.sys.isActive || !this.sys.isActive()) return; } catch (_) { /* ignore */ }
                     if (this._suppressMapBgm) return;
                     try {
-                        // 既存のPhaserサウンドは停止しない（会話側で制御）
+                        // 既存のサウンドを念のため停止（二重回避）
+                        try { if (this.sound && this.sound.stopAll) this.sound.stopAll(); } catch(e) { /* ignore */ }
+                        try { if (this.audioManager && this.audioManager.stopAll) this.audioManager.stopAll(); } catch(e) { /* ignore */ }
 
                         if (IS_IOS && this.mapConfig?.bgm?.map) {
                             // iOSではHTMLAudioで直接再生（タイトルと同方式）
@@ -219,6 +222,7 @@ export class MapSelectionStage extends Phaser.Scene {
                                 this._htmlBgm = new Audio(this.mapConfig.bgm.map);
                                 this._htmlBgm.loop = true;
                                 this._htmlBgm.volume = 0.3;
+                                this._htmlBgm.onended = () => { try { this._htmlBgm.currentTime = 0; const p = this._htmlBgm.play(); if (p && p.catch) p.catch(()=>{}); } catch(e) { /* ignore */ } };
                             }
                             // 既に再生中なら何もしない
                             if (!this._htmlBgm.paused && !this._htmlBgm.ended) return;
@@ -230,12 +234,9 @@ export class MapSelectionStage extends Phaser.Scene {
                                 this._bgmStarted = true;
                             }
                         } else {
-                            // Phaser WebAudio 側：既に同キーが再生中ならスキップ
-                            const playing = this.audioManager && this.audioManager.bgm && this.audioManager.bgm.isPlaying;
-                            if (!playing) {
-                                this.audioManager.playBgm('bgm_map', 0.3);
-                            }
-                            this._bgmStarted = true;
+                            // Phaser WebAudio 側：フレーム分離後に開始（他処理と競合させない）
+                            const play = () => { try { this.audioManager.playBgm('bgm_map', 0.3); this._bgmStarted = true; } catch(err) { /* ignore */ } };
+                            try { this.time.delayedCall(0, play); } catch(err) { play(); }
                         }
                     } catch (e) {
                         // BGM開始に失敗してもフラグは立てない（後続の再試行を許可）
@@ -338,7 +339,11 @@ export class MapSelectionStage extends Phaser.Scene {
             this.scale.on('resize', this.handleResize, this);
             this._onResizeBound = true;
             // シーンシャットダウン時のクリーンアップ登録
-            this.events.on('shutdown', this.shutdown, this);
+            this.events.on('shutdown', () => {
+                try { if (this.load && this.load.reset) this.load.reset(); } catch(e) { /* ignore */ }
+                try { if (this.load && this.load.removeAllListeners) this.load.removeAllListeners(); } catch(e) { /* ignore */ }
+                this.shutdown();
+            }, this);
 
         } catch (error) {
             console.error(`Error creating ${this.mapConfig.mapTitle}:`, error);

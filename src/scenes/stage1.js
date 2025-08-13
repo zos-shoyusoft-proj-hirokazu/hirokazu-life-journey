@@ -175,6 +175,9 @@ export class Stage1 extends Phaser.Scene {
             this.audioManager.destroy();
             this.audioManager = null;
         }
+        // 進行中のローダーやリスナーを完全解除（破棄後の発火防止）
+        try { if (this.load && this.load.reset) this.load.reset(); } catch (e) { /* ignore */ }
+        try { if (this.load && this.load.removeAllListeners) this.load.removeAllListeners(); } catch (e) { /* ignore */ }
         
         // 他のマネージャーのクリーンアップ
         if (this.playerController) {

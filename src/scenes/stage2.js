@@ -124,16 +124,11 @@ export class Stage2 extends Phaser.Scene {
     }
 
     shutdown() {
-        if (this.audioManager && this.audioManager.stopAll) {
-            this.audioManager.stopAll();
-            if (this.audioManager.bgm && this.audioManager.bgm.destroy) {
-                this.audioManager.bgm.destroy();
-                this.audioManager.bgm = null;
-            }
-        }
-        if (this.sound) {
-            this.sound.stopAll();
-        }
+        try { if (this.audioManager && this.audioManager.stopAll) this.audioManager.stopAll(); } catch (_) { }
+        try { if (this.audioManager && this.audioManager.bgm && this.audioManager.bgm.destroy) { this.audioManager.bgm.destroy(); this.audioManager.bgm = null; } } catch (_) { }
+        try { if (this.load && this.load.reset) this.load.reset(); } catch (_) { }
+        try { if (this.load && this.load.removeAllListeners) this.load.removeAllListeners(); } catch (_) { }
+        try { if (this.sound) this.sound.stopAll(); } catch (_) { }
     }
 
 

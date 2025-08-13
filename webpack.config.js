@@ -36,7 +36,7 @@ module.exports = {
     client: {
       webSocketURL: {
         hostname: 'localhost',
-        port: 8080, // ←ホスト側のポートに合わせる
+        port: 8080,
         protocol: 'ws'
       }
     },

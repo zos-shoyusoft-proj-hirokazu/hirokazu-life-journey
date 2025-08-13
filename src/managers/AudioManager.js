@@ -17,6 +17,10 @@ export class AudioManager {
         this.loadedSounds = new Set();
     }
 
+    isSceneUsable() {
+        try { return !!(this.scene && this.scene.sys && this.scene.sys.isActive && this.scene.sys.isActive()); } catch (_) { return false; }
+    }
+
     /**
      * 音声ファイルを事前読み込み
      * @param {string} key - 音声のキー
@@ -36,6 +40,8 @@ export class AudioManager {
      * @param {boolean} fadeIn - フェードイン/アウト
      */
     playBgm(key, volume = this.bgmVolume, fadeIn = true) {
+        if (!this.isSceneUsable()) return;
+        // 念のため二重再生防止：既存BGMがあれば先に停止
         if (this.bgm) {
             if (this.bgm.key === key) {
                 // すでに同じBGMなら何もしない
@@ -43,9 +49,11 @@ export class AudioManager {
             }
             // stopBgmのonCompleteで新しいBGMを再生
             this.stopBgm(fadeIn, () => {
+                if (!this.isSceneUsable()) return;
                 this.startNewBgm(key, volume, fadeIn);
             });
         } else {
+            if (!this.isSceneUsable()) return;
             this.startNewBgm(key, volume, fadeIn);
         }
     }
@@ -58,6 +66,7 @@ export class AudioManager {
      */
     startNewBgm(key, volume, fadeIn) {
         if (!this.isBgmMuted) {
+            if (!this.isSceneUsable()) return;
             try {
                 // シーンとサウンドシステムの有効性をチェック
                 if (!this.scene || !this.scene.sound) {
@@ -92,6 +101,7 @@ export class AudioManager {
     stopBgm(fade = true, onComplete) {
         if (this.bgm) {
             try {
+                if (!this.isSceneUsable()) { this.bgm = null; if (onComplete) onComplete(); return; }
                 // シーンとサウンドシステムの有効性をチェック
                 if (!this.scene || !this.scene.sound) {
                     console.warn('[AudioManager] Scene or sound system is not available for stopping BGM');
@@ -156,7 +166,7 @@ export class AudioManager {
      * @param {number} volume - 音量（0-1）
      */
     playSe(key, volume = this.seVolume) {
-
+        if (!this.isSceneUsable()) return;
         if (this.isSeMuted) return;
         
         // シーンとサウンドシステムの有効性をチェック
@@ -186,6 +196,7 @@ export class AudioManager {
      * @param {number} volume - 音量（0-1）
      */
     playVoice(key, volume = this.voiceVolume) {
+        if (!this.isSceneUsable()) return;
         if (this.isVoiceMuted) return;
         
         // シーンとサウンドシステムの有効性をチェック
@@ -277,47 +288,52 @@ export class AudioManager {
      * 全ての音声を停止
      */
     stopAll() {
-        // BGMを停止
-        this.stopBgm(false);
-        
-        // シーンの全ての音声を停止
-        if (this.scene && this.scene.sound) {
-            this.scene.sound.stopAll();
-            
-            // 現在再生中の全ての音声を停止
-            this.scene.sound.getAllPlaying().forEach(sound => {
-                sound.stop();
-                sound.destroy();
-            });
-        }
+        try { this.stopBgm(false); } catch (e) { /* ignore */ }
+        try {
+            if (this.scene && this.scene.sound) {
+                try { this.scene.sound.stopAll(); } catch (e) { /* ignore */ }
+                try {
+                    const playing = this.scene.sound.getAllPlaying ? this.scene.sound.getAllPlaying() : [];
+                    (playing || []).forEach(sound => {
+                        try { if (sound && sound.stop) sound.stop(); } catch (err) { /* ignore */ }
+                        try { if (sound && sound.destroy) sound.destroy(); } catch (err) { /* ignore */ }
+                    });
+                } catch (err) { /* ignore */ }
+            }
+        } catch (err) { /* ignore */ }
     }
 
     /**
      * リソースを解放
      */
     destroy() {
-        this.stopAll();
-        
-        // BGMの完全なクリーンアップ
-        if (this.bgm) {
-            this.bgm.stop();
-            this.bgm.destroy();
+        try { this.stopAll(); } catch (e) { /* ignore */ }
+
+        // BGMの完全なクリーンアップ（存在チェック付き）
+        try {
+            if (this.bgm) {
+                try { if (this.bgm.stop) this.bgm.stop(); } catch (err) { /* ignore */ }
+                try { if (this.bgm.destroy) this.bgm.destroy(); } catch (err) { /* ignore */ }
+            }
+        } finally {
             this.bgm = null;
         }
-        
-        // 音声キャッシュから読み込んだ音声を削除
-        this.loadedSounds.forEach(key => {
-            try {
-                if (this.scene.cache.audio.exists(key)) {
-                    this.scene.cache.audio.remove(key);
-                }
-            } catch (error) {
-                console.warn(`Failed to remove audio cache for key: ${key}`, error);
+
+        // 音声キャッシュから読み込んだ音声を削除（シーンが有効な時のみ）
+        try {
+            const audioCache = this.scene && this.scene.cache && this.scene.cache.audio ? this.scene.cache.audio : null;
+            if (audioCache) {
+                this.loadedSounds.forEach(key => {
+                    try {
+                        if (audioCache.exists(key)) {
+                            audioCache.remove(key);
+                        }
+                    } catch (_) { /* ignore */ }
+                });
             }
-        });
-        
+        } catch (err) { /* ignore */ }
+
         this.loadedSounds.clear();
-        
         // シーンへの参照を削除
         this.scene = null;
     }

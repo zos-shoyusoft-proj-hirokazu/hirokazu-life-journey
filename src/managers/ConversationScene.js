@@ -676,17 +676,20 @@ export class ConversationScene extends Phaser.Scene {
                     this._eventHtmlBgm = new Audio(path);
                     this._eventHtmlBgm.loop = true;
                     this._eventHtmlBgm.volume = 0.3;
+                    // 自動再生がブロックされても例外を握りつぶし、次のユーザー操作で再試行
                     // 1) まず直ちに再生（ユーザー操作コンテキストを活かす）
-                    try {
-                        const immediate = this._eventHtmlBgm.play();
-                        if (immediate && typeof immediate.catch === 'function') {
-                            immediate.catch(() => {});
-                        }
-                    } catch (e) { /* ignore */ }
+                        try {
+                            if (this.sys && this.sys.isActive && this.sys.isActive()) {
+                                const immediate = this._eventHtmlBgm.play();
+                                if (immediate && typeof immediate.catch === 'function') {
+                                    immediate.catch(() => {});
+                                }
+                            }
+                        } catch (e) { /* ignore */ }
                     // 2) 失敗時の保険：短い遅延後に再トライ
                     this.time.delayedCall(80, () => {
                         try {
-                            if (this._eventHtmlBgm && (this._eventHtmlBgm.paused || this._eventHtmlBgm.ended)) {
+                            if (this.sys && this.sys.isActive && this.sys.isActive() && this._eventHtmlBgm && (this._eventHtmlBgm.paused || this._eventHtmlBgm.ended)) {
                                 const p2 = this._eventHtmlBgm.play();
                                 if (p2 && typeof p2.catch === 'function') p2.catch(() => {});
                             }
@@ -710,22 +713,28 @@ export class ConversationScene extends Phaser.Scene {
             // フォールバック: WebAudio（Phaser）で再生（パス不明時のみ）
             // 未ロードの場合は動的ロード（AreaConfigからパスを取得）
             try {
-                if (bgmKey && (!mainScene.cache.audio || !mainScene.cache.audio.exists(bgmKey))) {
+                if (bgmKey && mainScene.load && mainScene.cache && mainScene.cache.audio && !mainScene.cache.audio.exists(bgmKey)) {
                     const path = rawKey ? (mainScene.mapConfig && mainScene.mapConfig.bgm ? mainScene.mapConfig.bgm[rawKey] : undefined) : undefined;
                     if (path) {
-                        mainScene.load.audio(bgmKey, path);
-                        mainScene.load.once('complete', () => {
-                            try { mainScene.audioManager.playBgm(bgmKey, 0.3, true); } catch (e) { /* ignore */ }
-                        });
-                        mainScene.load.start();
+                        try {
+                            mainScene.load.audio(bgmKey, path);
+                            mainScene.load.once('complete', () => {
+                                try { mainScene.audioManager.playBgm(bgmKey, 0.3, true); } catch (e) { /* ignore */ }
+                            });
+                            mainScene.load.start();
+                        } catch (e) { /* ignore */ }
                         return;
                     }
                 }
             } catch (e) { /* ignore */ }
 
-            if (bgmKey) {
-                try { mainScene.audioManager.playBgm(bgmKey, 0.3, true); } catch (e) { /* ignore */ }
-            }
+                if (bgmKey) {
+                    try { 
+                        if (mainScene && mainScene.audioManager) {
+                            mainScene.audioManager.playBgm(bgmKey, 0.3, true);
+                        }
+                    } catch (e) { /* ignore */ }
+                }
         }
     }
 
