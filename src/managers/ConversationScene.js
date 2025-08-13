@@ -87,7 +87,7 @@ export class ConversationScene extends Phaser.Scene {
         const _boxW = this.textbox?.displayWidth || (width - 60);
         const _boxH = this.textbox?.displayHeight || (isPortrait ? 140 : 90);
         const textX0 = (this.textbox?.x || width / 2) - _boxW / 2 + leftPad;
-        const textY0 = (this.textbox?.y || (height - (isPortrait ? 70 : 60))) - _boxH / 2 + 12;
+        const textY0 = (this.textbox?.y || (height - (isPortrait ? 70 : 60))) - _boxH / 2 + 7;
         this.dialogText = this.add.text(textX0, textY0, '', {
             fontSize: fontSize,
             fill: '#ffffff',
@@ -545,7 +545,9 @@ export class ConversationScene extends Phaser.Scene {
         sprites.forEach((sprite, idx) => {
             const targetScale = scales[idx];
             const scaledHeight = sprite.height * targetScale;
-            const y = scaledHeight >= (height * 0.95) ? height * 0.5 : height * 0.4;
+            const yBase = scaledHeight >= (height * 0.95) ? height * 0.5 : height * 0.4;
+            // 横画面時はキャラクターを少しだけ上へ（約30px）
+            const y = Math.max(0, yBase - 30);
             sprite.setPosition(positions[idx], y);
             this.applyPortraitScale(sprite);
         });
@@ -1007,7 +1009,7 @@ export class ConversationScene extends Phaser.Scene {
             const _boxW = this.textbox?.displayWidth || (width - 60);
             const _boxH = this.textbox?.displayHeight || (isPortraitNow ? 140 : 90);
             const textX0 = (this.textbox?.x || width / 2) - _boxW / 2 + leftPad;
-            const textY0 = (this.textbox?.y || (height - (isPortraitNow ? 70 : 60))) - _boxH / 2 + 12;
+            const textY0 = (this.textbox?.y || (height - (isPortraitNow ? 70 : 60))) - _boxH / 2 + 2;
             this.dialogText.setPosition(textX0, textY0);
             this.dialogText.setWordWrapWidth(textWrapWidth);
             this.dialogText.setFontSize(fontSize);
