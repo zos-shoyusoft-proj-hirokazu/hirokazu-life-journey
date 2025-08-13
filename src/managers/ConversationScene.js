@@ -447,39 +447,91 @@ export class ConversationScene extends Phaser.Scene {
         return null;
     }
 
-    // 可視スプライトを人数に応じて中央基準で左右に均等配置（1〜5人以上対応）
+    // 可視スプライトを人数に応じて配置
+    // 横画面: 現行の等間隔1列配置（変更なし）
+    // 縦画面: 2段配置（上3 / 下3）。人数に応じて縮小率を強める
     layoutVisibleCharacters() {
         if (!this.characterSprites) return;
         const sprites = Object.values(this.characterSprites).filter(s => s && s.visible !== false);
         const count = sprites.length;
         if (count === 0) return;
+
         const width = this.sys?.game?.canvas?.width || this.sys?.game?.config?.width || 800;
         const height = this.sys?.game?.canvas?.height || this.sys?.game?.config?.height || 600;
+
+        const isPortrait = height > width;
+
+        // 縦画面: 2段レイアウト
+        if (isPortrait) {
+            // 表示位置（テキスト/名前ボックスは既存のままなので避ける）
+            const topY = Math.floor(height * 0.32);
+            const bottomY = Math.floor(height * 0.58);
+            const leftMargin = width * 0.10;
+            const rightMargin = width * 0.90;
+
+            // 人数に応じた縮小係数（小さめ）
+            const scaleFactor = count <= 2 ? 0.80 : (count <= 3 ? 0.75 : 0.65);
+
+            // 下段に最大3人、その後は上段（下から増やす）
+            const bottomCount = Math.min(3, count);
+            const topCount = Math.max(0, count - bottomCount);
+
+            const rowPositions = (n) => {
+                if (n <= 0) return [];
+                if (n === 1) return [width * 0.5];
+                if (n === 2) return [width * 0.35, width * 0.65];
+                // 3人は左右余白を取って均等配置
+                const span = rightMargin - leftMargin;
+                return [0, 1, 2].slice(0, n).map(i => leftMargin + (span * (i / (n - 1))));
+            };
+
+            const topXs = rowPositions(topCount);
+            const bottomXs = rowPositions(bottomCount);
+
+            const bottomRow = [];
+            const topRow = [];
+            sprites.forEach((sprite, idx) => {
+                const baseScale = this.getPortraitTargetScale(sprite.width, sprite.height);
+                const finalScale = baseScale * scaleFactor;
+                if (idx < bottomCount) {
+                    sprite.setPosition(bottomXs[idx], bottomY);
+                    bottomRow.push(sprite);
+                } else {
+                    const j = idx - bottomCount;
+                    sprite.setPosition(topXs[j], topY);
+                    topRow.push(sprite);
+                }
+                sprite.setScale(finalScale);
+            });
+            // コンテナ内の描画順は子インデックスで決まるため、下段キャラを前面に移動
+            try {
+                bottomRow.forEach(s => {
+                    try { this.characterContainer.bringToTop(s); } catch (_) { /* ignore */ }
+                });
+            } catch (_) { /* ignore */ }
+            return;
+        }
+
+        // 横画面: 既存ロジック（等間隔で中央基準の1列配置）
         const marginLeft = width * 0.08;
         const marginRight = width * 0.92;
         const centerX = width * 0.5;
 
-        // 各スプライトの見かけサイズ（スケール後）を見積もって最小間隔を決定
         const scales = sprites.map(s => this.getPortraitTargetScale(s.width, s.height));
         const scaledWidths = sprites.map((s, i) => s.width * scales[i]);
         const maxScaledWidth = Math.max.apply(null, scaledWidths);
-        // 最小間隔は最大幅の約1.05倍（わずかに余白）
         let spacing = maxScaledWidth * 1.05;
-        // 画面に収まるように上限を設定
         const available = (marginRight - marginLeft);
         if (count > 1) spacing = Math.min(spacing, available / (count - 1));
 
-        // 中央から左右に広げる配置
         const positions = new Array(count);
         const mid = (count - 1) / 2;
         for (let i = 0; i < count; i++) {
-            const offsetIndex = i - mid; // 負は左、正は右
+            const offsetIndex = i - mid;
             positions[i] = centerX + offsetIndex * spacing;
         }
-        // 余白に収めるためのクリップ
         const minX = marginLeft;
         const maxX = marginRight;
-        // 端がはみ出る場合は全体をシフト
         const first = positions[0];
         const last = positions[count - 1];
         let shift = 0;
