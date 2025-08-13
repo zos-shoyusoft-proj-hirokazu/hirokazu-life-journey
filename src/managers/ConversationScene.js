@@ -41,6 +41,7 @@ export class ConversationScene extends Phaser.Scene {
         const isPortrait = height > width;
         
         // 背景を設定（デフォルトは透明な背景）
+        try { this.cameras?.main?.setBackgroundColor('#000000'); } catch(_) { /* ignore */ }
         this.background = this.add.rectangle(width / 2, height / 2, width, height, 0x000000, 0.5);
         this.background.setOrigin(0.5, 0.5);
         
@@ -706,15 +707,32 @@ export class ConversationScene extends Phaser.Scene {
             this.background = this.add.image(width / 2, height / 2, backgroundKey);
             this.background.setOrigin(0.5, 0.5);
             
-            // スマホ画面に合わせて背景をスケール
-            const scaleX = width / this.background.width;
-            const scaleY = height / this.background.height;
-            const scale = Math.max(scaleX, scaleY);
-            this.background.setScale(scale);
+            // 画面全体を確実にカバー（縦画面優先で高さフィット、横は従来通りカバー）
+            this._fitConversationBackground();
             
             // 背景を最背面に移動
             this.background.setDepth(-1);
         }
+    }
+
+    // 背景画像を画面いっぱいにフィットさせる（歪みなし）
+    _fitConversationBackground() {
+        if (!this.background) return;
+        const canvasW = this.sys?.game?.canvas?.width || this.sys?.game?.config?.width || 800;
+        const canvasH = this.sys?.game?.canvas?.height || this.sys?.game?.config?.height || 600;
+        // 元画像サイズ（スケール適用前）を取得
+        const tex = this.background.texture;
+        const src = tex && tex.getSourceImage ? tex.getSourceImage() : null;
+        const imgW = (src && src.width) || this.background.width;
+        const imgH = (src && src.height) || this.background.height;
+        // まずスケールをリセットし、正しい比率で再計算
+        this.background.setScale(1);
+        const scaleY = canvasH / imgH;
+        const scaleX = canvasW / imgW;
+        // 常にカバー（はみ出してもOK）
+        const scale = Math.max(scaleX, scaleY);
+        this.background.setScale(scale);
+        this.background.setPosition(canvasW / 2, canvasH / 2);
     }
     
     // イベント用BGMに切り替え
@@ -929,11 +947,16 @@ export class ConversationScene extends Phaser.Scene {
         
         // 背景のリサイズ
         if (this.background) {
-            this.background.setPosition(width / 2, height / 2);
-            const scaleX = width / this.background.width;
-            const scaleY = height / this.background.height;
-            const scale = Math.max(scaleX, scaleY);
-            this.background.setScale(scale);
+            // 常に画面いっぱいをカバー
+            try {
+                this._fitConversationBackground();
+            } catch (_) {
+                this.background.setPosition(width / 2, height / 2);
+                const scaleX = width / this.background.width;
+                const scaleY = height / this.background.height;
+                const scale = Math.max(scaleX, scaleY);
+                this.background.setScale(scale);
+            }
         }
         
         // テキストボックスのリサイズ（createメソッドと同じロジック）
