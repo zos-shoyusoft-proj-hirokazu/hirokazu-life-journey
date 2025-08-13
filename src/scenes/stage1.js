@@ -147,8 +147,15 @@ export class Stage1 extends Phaser.Scene {
             // 新しい会話システムを初期化
             this.conversationTrigger = new ConversationTrigger(this);
             
-            // ConversationSceneを動的に追加
-            this.scene.add('ConversationScene', ConversationScene);
+            // ConversationSceneを重複登録しない
+            try {
+                const exists = this.scene.manager && this.scene.manager.keys && this.scene.manager.keys['ConversationScene'];
+                if (!exists) {
+                    this.scene.add('ConversationScene', ConversationScene);
+                }
+            } catch (e) {
+                // ignore
+            }
 
             // 会話イベントを設定
             this.setupConversationEvents();

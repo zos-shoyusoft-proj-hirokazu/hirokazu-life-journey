@@ -435,6 +435,17 @@ export class AreaSelectionManager {
         
         // ボタンイベント
         yesButton.on('pointerdown', () => {
+            // 会話開始前にマップBGMの自動再開を抑制し、HTMLAudioを停止（play/pause競合回避）
+            try {
+                if (this.scene) {
+                    this.scene._suppressMapBgm = true;
+                    if (this.scene._bgmRetry && this.scene._bgmRetry.remove) {
+                        try { this.scene._bgmRetry.remove(false); } catch (e) { /* ignore */ }
+                        this.scene._bgmRetry = null;
+                    }
+                    try { if (this.scene._htmlBgm && !this.scene._htmlBgm.paused) this.scene._htmlBgm.pause(); } catch (e) { /* ignore */ }
+                }
+            } catch (e) { /* ignore */ }
             closeDialog();
             this.handleAreaSelection(area);
         });

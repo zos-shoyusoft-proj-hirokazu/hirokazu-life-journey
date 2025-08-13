@@ -41,6 +41,9 @@ function getGameDimensions() {
 // 画面サイズを取得
 const gameDimensions = getGameDimensions();
 
+// iOS判定（WebKit系ブラウザ含む）
+const isIOS = /iPad|iPhone|iPod/i.test(navigator.userAgent);
+
 // ゲーム設定
 export const gameConfig = {
     type: Phaser.AUTO,
@@ -48,6 +51,11 @@ export const gameConfig = {
     height: gameDimensions.height,
     backgroundColor: '#87CEEB',
     parent: 'game-container',
+    audio: {
+        // iOSではHTMLAudioを使用して挙動をタイトル画面と揃える
+        disableWebAudio: isIOS,
+        noAudio: false
+    },
     scale: {
         mode: Phaser.Scale.RESIZE, // 画面全体を使用（黒い部分を無くす）
         autoCenter: Phaser.Scale.CENTER_BOTH,

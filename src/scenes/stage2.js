@@ -74,6 +74,15 @@ export class Stage2 extends Phaser.Scene {
     create() {
         this.audioManager = new AudioManager(this);
         this.audioManager.playBgm('bgm_pollyanna', 0.5);
+
+        // ConversationSceneの重複登録を避ける
+        try {
+            const exists = this.scene.manager && this.scene.manager.keys && this.scene.manager.keys['ConversationScene'];
+            if (!exists) {
+                // Stage系では通常使わないが、将来の会話起動に備えて一度だけ登録
+                // this.scene.add('ConversationScene', ConversationScene);
+            }
+        } catch (e) { /* ignore */ }
         
         // マップマネージャーを初期化
         // CollisionManagerを使った当たり判定

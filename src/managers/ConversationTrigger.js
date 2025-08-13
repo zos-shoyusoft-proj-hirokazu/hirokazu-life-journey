@@ -45,52 +45,44 @@ export class ConversationTrigger {
         this.isConversationActive = true;
         
         try {
-            // 少し待ってからConversationSceneを起動
-            this.scene.time.delayedCall(100, () => {
-                
-                // シーンの有効性を再チェック
-                if (!this.scene || !this.scene.scene) {
-                    console.warn('[ConversationTrigger] Scene became invalid during conversation start');
+            const scenePlugin = this.scene.scene;
+            const cs = scenePlugin.get('ConversationScene');
+            if (!cs) {
+                console.error('[ConversationTrigger] ConversationScene not found');
+                this.isConversationActive = false;
+                return;
+            }
+
+            if (!cs.scene.isActive()) {
+                // オーバーレイとして起動
+                scenePlugin.launch('ConversationScene');
+                // 起動直後（次フレーム）に会話開始
+                this.scene.time.delayedCall(0, () => {
+                    try {
+                        // 最前面に
+                        try { scenePlugin.bringToTop('ConversationScene'); } catch(e) { /* ignore */ }
+                        cs.scene.setVisible(true);
+                        cs.scene.setActive(true);
+                        cs.startConversation(conversationData);
+                    } catch(e) { console.error('[ConversationTrigger] start after launch error:', e); this.isConversationActive = false; }
+                });
+            } else {
+                // 既に動作中ならそのまま開始
+                try {
+                    try { scenePlugin.bringToTop('ConversationScene'); } catch(e) { /* ignore */ }
+                    cs.scene.setVisible(true);
+                    cs.scene.setActive(true);
+                    cs.startConversation(conversationData);
+                } catch(e) { console.error('[ConversationTrigger] start on active error:', e); this.isConversationActive = false; }
+            }
+
+            // 会話終了時の後片付け
+            try {
+                cs.events.once('conversationEnded', () => {
+                    try { scenePlugin.stop('ConversationScene'); } catch(e) { /* ignore */ }
                     this.isConversationActive = false;
-                    return;
-                }
-                
-                // ConversationSceneを起動（既にStage1で追加済み）
-                this.scene.scene.launch('ConversationScene');
-                
-                // シーンの準備完了を待つ
-                const conversationScene = this.scene.scene.get('ConversationScene');
-                
-                if (conversationScene) {
-                    
-                    // create()が完了するまで待つ
-                    this.scene.time.delayedCall(200, () => {
-                        try {
-                            // シーンの有効性を再チェック
-                            if (!this.scene || !this.scene.scene) {
-                                console.warn('[ConversationTrigger] Scene became invalid during conversation setup');
-                                this.isConversationActive = false;
-                                return;
-                            }
-                            
-                            conversationScene.startConversation(conversationData);
-                        } catch (error) {
-                            console.error('[ConversationTrigger] 会話開始エラー:', error);
-                            console.error('[ConversationTrigger] エラースタック:', error.stack);
-                            this.isConversationActive = false;
-                        }
-                    });
-                    
-                    // 会話終了時の処理
-                    conversationScene.events.once('conversationEnded', () => {
-                        this.scene.scene.stop('ConversationScene');
-                        this.isConversationActive = false;
-                    });
-                } else {
-                    console.error('[ConversationTrigger] ConversationSceneの取得に失敗');
-                    this.isConversationActive = false;
-                }
-            });
+                });
+            } catch(e) { /* ignore */ }
         } catch (error) {
             console.error('[ConversationTrigger] startVisualNovelConversation()でエラーが発生:', error);
             console.error('[ConversationTrigger] エラースタック:', error.stack);

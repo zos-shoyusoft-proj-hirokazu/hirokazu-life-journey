@@ -30,6 +30,13 @@ export class MapSelectionStage extends Phaser.Scene {
         // 拡大ボタンの参照を保持
         this.scaleToggleButton = null;
         this.scaleToggleButtonGraphics = null;
+
+        // BGM多重起動防止フラグ
+        this._bgmStarted = false;
+        // 会話中などでマップBGMを抑制するフラグ
+        this._suppressMapBgm = false;
+        // 自動リトライイベントのハンドル
+        this._bgmRetry = null;
     }
 
     preload() {
@@ -125,8 +132,10 @@ export class MapSelectionStage extends Phaser.Scene {
 
     create() {
         try {
+            const IS_IOS = /iPad|iPhone|iPod/i.test(navigator.userAgent);
             // モバイルデバイスの検出
             this.isMobile = this.sys.game.device.input.touch;
+            this._isShuttingDown = false;
             
             // カメラマネージャーを先に初期化
             this.cameraManager = new CameraManager(this);
@@ -150,8 +159,15 @@ export class MapSelectionStage extends Phaser.Scene {
             // 竹田ステージ、三重町ステージ、日本ステージの場合は会話システムを初期化
             if (this.mapConfig.mapKey === 'taketa_city' || this.mapConfig.mapKey === 'bunngo_mie_city' || this.mapConfig.mapKey === 'japan') {
                 this.conversationTrigger = new ConversationTrigger(this);
-                        // ConversationSceneを動的に追加
-        this.scene.add('ConversationScene', ConversationScene);
+                // ConversationSceneを重複登録しない
+                try {
+                    const exists = this.scene.manager && this.scene.manager.keys && this.scene.manager.keys['ConversationScene'];
+                    if (!exists) {
+                        this.scene.add('ConversationScene', ConversationScene);
+                    }
+                } catch (e) {
+                    // ignore
+                }
             }
             // 設定ファイルからエリア情報を取得し、マップエリアとマージ
             const mapAreas = this.mapManager.getAreas();
@@ -188,15 +204,139 @@ export class MapSelectionStage extends Phaser.Scene {
             // スケール切り替えボタンを追加
             this.createScaleToggleButton();
             
-            // AudioManagerを即時初期化（イベントBGM切替のレースを防ぐ）
+            // AudioManagerを初期化し、iOSのロックを考慮してBGMを開始
             try {
                 this.audioManager = new AudioManager(this);
-                this.audioManager.playBgm('bgm_map', 0.3);
+
+                const startMapBgm = () => {
+                    if (this._suppressMapBgm) return;
+                    try {
+                        // 既存のPhaserサウンドは停止しない（会話側で制御）
+
+                        if (IS_IOS && this.mapConfig?.bgm?.map) {
+                            // iOSではHTMLAudioで直接再生（タイトルと同方式）
+                            if (!this._htmlBgm) {
+                                this._htmlBgm = new Audio(this.mapConfig.bgm.map);
+                                this._htmlBgm.loop = true;
+                                this._htmlBgm.volume = 0.3;
+                            }
+                            // 既に再生中なら何もしない
+                            if (!this._htmlBgm.paused && !this._htmlBgm.ended) return;
+                            try { this._htmlBgm.currentTime = 0; } catch (ctError) { /* ignore */ }
+                            const p = this._htmlBgm.play();
+                            if (p && typeof p.then === 'function') {
+                                p.then(() => { this._bgmStarted = true; }).catch(() => { this._bgmStarted = false; });
+                            } else {
+                                this._bgmStarted = true;
+                            }
+                        } else {
+                            // Phaser WebAudio 側：既に同キーが再生中ならスキップ
+                            const playing = this.audioManager && this.audioManager.bgm && this.audioManager.bgm.isPlaying;
+                            if (!playing) {
+                                this.audioManager.playBgm('bgm_map', 0.3);
+                            }
+                            this._bgmStarted = true;
+                        }
+                    } catch (e) {
+                        // BGM開始に失敗してもフラグは立てない（後続の再試行を許可）
+                        this._bgmStarted = false;
+                    }
+                };
+
+                if (this.sound && this.sound.locked) {
+                    // iOSなどでロックされている場合：unlockedで自動再生
+                    this.sound.once('unlocked', () => {
+                        try {
+                            if (this.sound.context && this.sound.context.state !== 'running') {
+                                this.sound.context.resume();
+                            }
+                        } catch (resumeError) {
+                            // ignore
+                        }
+                        startMapBgm();
+                    });
+                    // 保険：最初のタップでも再生（unlockedが来ない場合を想定）
+                    this.input.once('pointerdown', () => {
+                        try {
+                            if (this.sound.context && this.sound.context.state !== 'running') {
+                                this.sound.context.resume();
+                            }
+                        } catch (resumeError) {
+                            // ignore
+                        }
+                        // 無音オシレータを短時間鳴らして確実にアンロック
+                        try {
+                            const ctx = this.sound.context;
+                            if (ctx && ctx.state !== 'running') ctx.resume();
+                            if (ctx && typeof ctx.createOscillator === 'function') {
+                                const osc = ctx.createOscillator();
+                                const gain = ctx.createGain();
+                                gain.gain.value = 0.0001; // 無音レベル
+                                osc.connect(gain).connect(ctx.destination);
+                                osc.start();
+                                osc.stop(ctx.currentTime + 0.05);
+                            }
+                        } catch (unlockError) {
+                            // ignore
+                        }
+                        startMapBgm();
+                    });
+                } else {
+                    // 既に解除済みなら即再生
+                    startMapBgm();
+                    // 念のため、最初のタップ時にも未再生なら開始
+                    this.input.once('pointerdown', () => {
+                        try {
+                            if (this.sound.context && this.sound.context.state !== 'running') {
+                                this.sound.context.resume();
+                            }
+                        } catch (unlockError) {
+                            // ignore
+                        }
+                        // 無音オシレータでアンロック保険
+                        try {
+                            const ctx = this.sound.context;
+                            if (ctx && ctx.state !== 'running') ctx.resume();
+                            if (ctx && typeof ctx.createOscillator === 'function') {
+                                const osc = ctx.createOscillator();
+                                const gain = ctx.createGain();
+                                gain.gain.value = 0.0001;
+                                osc.connect(gain).connect(ctx.destination);
+                                osc.start();
+                                osc.stop(ctx.currentTime + 0.05);
+                            }
+                        } catch (oscError) {
+                            // ignore
+                        }
+                        if (!this.audioManager?.bgm || !this.audioManager.bgm.isPlaying) {
+                            startMapBgm();
+                        }
+                    });
+                }
+
+                // 追加のフォールバック: 短時間のリトライ（最大3回）
+                this._bgmRetry = this.time.addEvent({
+                    delay: 400,
+                    repeat: 2,
+                    callback: () => {
+                        const htmlNotPlaying = IS_IOS && this._htmlBgm ? (this._htmlBgm.paused || this._htmlBgm.ended) : false;
+                        const phaserNotPlaying = !IS_IOS && (!this.audioManager?.bgm || !this.audioManager.bgm.isPlaying);
+                        if (!this._suppressMapBgm && (htmlNotPlaying || phaserNotPlaying)) {
+                            try {
+                                if (this.sound.context && this.sound.context.state !== 'running') {
+                                    this.sound.context.resume();
+                                }
+                            } catch (resumeError) { /* ignore */ }
+                            startMapBgm();
+                        }
+                    }
+                });
             } catch (error) {
                 // エラーは無視
             }
             // リサイズイベントを設定
             this.scale.on('resize', this.handleResize, this);
+            this._onResizeBound = true;
             // シーンシャットダウン時のクリーンアップ登録
             this.events.on('shutdown', this.shutdown, this);
 
@@ -219,6 +359,31 @@ export class MapSelectionStage extends Phaser.Scene {
 
     handleTouch(pointer) {
         try {
+            // iOS等で初回タップ時にオーディオを確実に解除
+            if (this.sound && this.sound.locked) {
+                try {
+                    if (this.sound.context && this.sound.context.state !== 'running') {
+                        this.sound.context.resume();
+                    }
+                } catch (resumeError) {
+                    // ignore
+                }
+                // 無音オシレータでアンロックをより確実に
+                try {
+                    const ctx = this.sound.context;
+                    if (ctx && ctx.state !== 'running') ctx.resume();
+                    if (ctx && typeof ctx.createOscillator === 'function') {
+                        const osc = ctx.createOscillator();
+                        const gain = ctx.createGain();
+                        gain.gain.value = 0.0001;
+                        osc.connect(gain).connect(ctx.destination);
+                        osc.start();
+                        osc.stop(ctx.currentTime + 0.05);
+                    }
+                } catch (oscError) {
+                    // ignore
+                }
+            }
             // カメラの存在確認
             if (!this.cameras || !this.cameras.main) {
                 console.error(`${this.mapConfig.mapTitle}: Camera not available`);
@@ -242,6 +407,7 @@ export class MapSelectionStage extends Phaser.Scene {
     }
 
     createScaleToggleButton() {
+        if (this._isShuttingDown || !this.sys || !this.sys.isActive || !this.add) return;
         // 既存のボタンを削除
         if (this.scaleToggleButton) {
             this.scaleToggleButton.destroy();
@@ -342,11 +508,16 @@ export class MapSelectionStage extends Phaser.Scene {
 
     handleResize(gameSize) {
         try {
+            if (this._isShuttingDown || !this.sys || !this.sys.isActive) return;
+            if (!this.cameras || !this.cameras.main) return;
+            if (!this.mapManager) return;
             // マップマネージャーでリサイズ処理
             this.mapManager?.handleResize(gameSize);
             
             // カメラの再設定
-            this.cameraManager?.setupCamera(this.mapManager.getMapSize());
+            if (this.cameraManager && this.mapManager) {
+                this.cameraManager.setupCamera(this.mapManager.getMapSize());
+            }
             
             // エリアマーカーを更新
             if (this.areaSelectionManager) {
@@ -390,12 +561,25 @@ export class MapSelectionStage extends Phaser.Scene {
     }
 
     shutdown() {
+        this._isShuttingDown = true;
         // AudioManagerの完全なクリーンアップ
         if (this.audioManager) {
             this.audioManager.stopAll();
             this.audioManager.destroy();
             this.audioManager = null;
         }
+        // iOS用HTMLAudioの停止
+        if (this._htmlBgm) {
+            try {
+                this._htmlBgm.pause();
+            } catch (pauseError) {
+                // ignore
+            }
+            this._htmlBgm = null;
+        }
+
+        // 多重起動フラグを解除
+        this._bgmStarted = false;
         
         // 他のマネージャーのクリーンアップ
         if (this.mapManager) {
@@ -438,10 +622,18 @@ export class MapSelectionStage extends Phaser.Scene {
             this.scaleToggleButtonGraphics = null;
         }
         
-        // グローバルな音声システムもクリーンアップ
-        if (this.sound) {
-            this.sound.stopAll();
-        }
+        // グローバルな音声システムもクリーンアップ（多重対策）
+        try {
+            if (this.sound && this.sound.stopAll) this.sound.stopAll();
+        } catch (stopAllError) { /* ignore */ }
+
+        // リサイズイベント解除
+        try {
+            if (this._onResizeBound && this.scale && this.scale.off) {
+                this.scale.off('resize', this.handleResize, this);
+            }
+        } catch (e) { /* ignore */ }
+        this._onResizeBound = false;
     }
 }
 

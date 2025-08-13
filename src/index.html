@@ -345,8 +345,12 @@
         
         // リサイズ処理（簡素化）
         function handleResize() {
-            if (window.gameInstance && window.gameInstance.scale) {
-                window.gameInstance.scale.resize(window.innerWidth, window.innerHeight);
+            try {
+                if (window.gameInstance && window.gameInstance.scale && !window.gameInstance.isDestroyed) {
+                    window.gameInstance.scale.resize(window.innerWidth, window.innerHeight);
+                }
+            } catch (e) {
+                // ignore
             }
         }
         
@@ -672,10 +676,22 @@
 
         // ステージ選択画面に戻る関数
         window.returnToStageSelect = function() {
-            if (window.game && window.game.destroy) {
-                window.game.destroy(true);
-                window.game = null;
-            }
+            // 先にゲーム内の全サウンドを停止（多重再生防止）
+            try {
+                if (window.game && window.game.sound) {
+                    window.game.sound.stopAll();
+                }
+                if (window.game && window.game.scene && window.game.scene.getScenes) {
+                    const scenes = window.game.scene.getScenes(true) || [];
+                    scenes.forEach(s => {
+                        try { s.sound && s.sound.stopAll && s.sound.stopAll(); } catch(e){}
+                        // iOS用の手動HTMLAudio（MapSelectionStage）も停止
+                        try { if (s._htmlBgm) { s._htmlBgm.pause(); s._htmlBgm = null; } } catch(e){}
+                    });
+                }
+            } catch(e){}
+
+            // ゲームインスタンスは保持（再利用）。破棄すると再初期化レースで読み込み漏れが出るため
             
             const stageSelect = document.getElementById('stage-select');
             if (stageSelect) {
@@ -686,6 +702,11 @@
             if (gameContainer) {
                 gameContainer.style.display = 'none';
             }
+
+            // ステージ選択画面のBGMを再開
+            try {
+                playBGM('assets/audio/bgm/zelda_menu_select.mp3');
+            } catch (e) { /* ignore */ }
             
             const allStageButtons = document.querySelectorAll('.stage-buttons button[id]');
             allStageButtons.forEach(btn => {

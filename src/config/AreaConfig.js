@@ -115,8 +115,7 @@ export const AreaConfig = {
             map: 'assets/audio/bgm/Spain.mp3', // 通常マップBGM
             Fantasy: 'assets/audio/bgm/Fantasy.mp3',
             Nagisa_Moderato: 'assets/audio/bgm/Nagisa_Moderato.mp3',
-            nightbarth: 'assets/audio/bgm/nightbarth.mp3',
-            The_Terminator: 'assets/audio/bgm/The_Terminator.mp3'
+            nightbarth: 'assets/audio/bgm/nightbarth.mp3'
         },
         se: {
             touch: 'assets/audio/se/touch_7.mp3', // ダイアログ用タッチSE

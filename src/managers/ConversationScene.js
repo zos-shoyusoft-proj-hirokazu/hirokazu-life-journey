@@ -10,6 +10,11 @@ export class ConversationScene extends Phaser.Scene {
         this.nameboxLeftMargin = 30; // 左の固定マージン
     }
 
+    init(data) {
+        // start() から渡された会話データを保持
+        this._pendingConversation = data && data.conversationData ? data.conversationData : null;
+    }
+
 
     create() {
         // シーンが正しく初期化されているかチェック
@@ -110,9 +115,14 @@ export class ConversationScene extends Phaser.Scene {
             this.nextDialog();
         });
         
-        // 会話データが設定されている場合は開始
-        if (this.currentConversation) {
-            // this.showDialog(); // startConversationで呼ばれるので削除
+        // start() からデータが渡されている場合はここで開始
+        if (this._pendingConversation) {
+            try {
+                this.startConversation(this._pendingConversation);
+            } catch (e) {
+                console.error('[ConversationScene] pending conversation start error:', e);
+            }
+            this._pendingConversation = null;
         }
     }
     
@@ -226,6 +236,20 @@ export class ConversationScene extends Phaser.Scene {
         if (conversationData.bgm) {
             this.switchToEventBgm(conversationData.bgm);
         }
+
+        // マップBGMの自動再開を抑制（MapSelectionStage側のリトライを止める）
+        try {
+            const mapScene = this.scene.get('MiemachiStage') || this.scene.get('TaketastageStage') || this.scene.get('JapanStage');
+            if (mapScene) {
+                mapScene._suppressMapBgm = true;
+                if (mapScene._bgmRetry && mapScene._bgmRetry.remove) {
+                    try { mapScene._bgmRetry.remove(false); } catch (e) { /* ignore */ }
+                    mapScene._bgmRetry = null;
+                }
+                // iOSのHTMLAudioも念のため一時停止
+                try { if (mapScene._htmlBgm && !mapScene._htmlBgm.paused) mapScene._htmlBgm.pause(); } catch (e) { /* ignore */ }
+            }
+        } catch (e) { /* ignore */ }
         
         // 最初のダイアログを表示
         this.showDialog();
@@ -611,16 +635,96 @@ export class ConversationScene extends Phaser.Scene {
     switchToEventBgm(eventBgmKey) {
         // MapSelectionStageも含めて検索
         const mainScene = this.scene.get('Stage1Scene') || this.scene.get('Stage2Scene') || this.scene.get('Stage3Scene') || this.scene.get('MiemachiStage') || this.scene.get('TaketastageStage') || this.scene.get('JapanStage');
-        
+
         if (mainScene && mainScene.audioManager) {
+            // iOSでMapSelectionStageがHTMLAudio（_htmlBgm）を使用している場合は一時停止
+            try {
+                if (mainScene._htmlBgm && !mainScene._htmlBgm.paused) {
+                    mainScene._htmlBgm.pause();
+                    try { mainScene._htmlBgm.currentTime = 0; } catch (e) { /* ignore */ }
+                    this._pausedHtmlMapBgm = true;
+                }
+            } catch (e) { /* ignore */ }
+
+            // 既存Phaser BGMもいったん停止
+            try { mainScene.audioManager.stopBgm(false); } catch (e) { /* ignore */ }
+
             this.originalBgm = mainScene.audioManager.bgm;
-            if (eventBgmKey) {
-                // AreaConfigで定義したBGMは 'bgm_' プレフィックス付きで読み込まれる
-                // ただし、eventBgmKeyが既に 'bgm_' で始まっている場合は二重に付けない
-                const bgmKey = eventBgmKey.startsWith('bgm_') ? eventBgmKey : `bgm_${eventBgmKey}`;
-                mainScene.audioManager.playBgm(bgmKey, 0.3, true);
-            } else {
-                mainScene.audioManager.playBgm('bgm_event', 0.3, true);
+            let rawKey = eventBgmKey ? (eventBgmKey.startsWith('bgm_') ? eventBgmKey.replace(/^bgm_/, '') : eventBgmKey) : null;
+
+            // Fallback: bgm未指定、またはキーがAreaConfigに存在しない場合は、そのマップのmap BGMまたは先頭キーにフォールバック
+            const bgmDict = (mainScene.mapConfig && typeof mainScene.mapConfig.bgm === 'object') ? mainScene.mapConfig.bgm : null;
+            const hasPathFor = (key) => !!(bgmDict && key && Object.prototype.hasOwnProperty.call(bgmDict, key) && bgmDict[key]);
+            if (!rawKey || !hasPathFor(rawKey)) {
+                if (hasPathFor('map')) {
+                    rawKey = 'map';
+                } else if (bgmDict) {
+                    const keys = Object.keys(bgmDict);
+                    if (keys.length > 0) rawKey = keys[0];
+                }
+            }
+            const bgmKey = rawKey ? `bgm_${rawKey}` : null;
+
+            // HTMLAudioでイベントを再生（全プラットフォーム、競合回避のため）
+            try {
+                if (this._eventHtmlBgm) {
+                    try { this._eventHtmlBgm.pause(); } catch (e) { /* ignore */ }
+                    this._eventHtmlBgm = null;
+                }
+                const path = rawKey ? (mainScene.mapConfig && mainScene.mapConfig.bgm ? (mainScene.mapConfig.bgm[rawKey] || '') : '') : '';
+                if (path) {
+                    this._eventHtmlBgm = new Audio(path);
+                    this._eventHtmlBgm.loop = true;
+                    this._eventHtmlBgm.volume = 0.3;
+                    // 1) まず直ちに再生（ユーザー操作コンテキストを活かす）
+                    try {
+                        const immediate = this._eventHtmlBgm.play();
+                        if (immediate && typeof immediate.catch === 'function') {
+                            immediate.catch(() => {});
+                        }
+                    } catch (e) { /* ignore */ }
+                    // 2) 失敗時の保険：短い遅延後に再トライ
+                    this.time.delayedCall(80, () => {
+                        try {
+                            if (this._eventHtmlBgm && (this._eventHtmlBgm.paused || this._eventHtmlBgm.ended)) {
+                                const p2 = this._eventHtmlBgm.play();
+                                if (p2 && typeof p2.catch === 'function') p2.catch(() => {});
+                            }
+                        } catch (e) { /* ignore */ }
+                    });
+                    // 3) 次のタップでもう一度試す（iOSの厳格なユーザーアクティベーション対策）
+                    try {
+                        this.input.once('pointerdown', () => {
+                            try {
+                                if (this._eventHtmlBgm && (this._eventHtmlBgm.paused || this._eventHtmlBgm.ended)) {
+                                    const p3 = this._eventHtmlBgm.play();
+                                    if (p3 && typeof p3.catch === 'function') p3.catch(() => {});
+                                }
+                            } catch (e) { /* ignore */ }
+                        });
+                    } catch (e) { /* ignore */ }
+                    return;
+                }
+            } catch (e) { /* ignore */ }
+
+            // フォールバック: WebAudio（Phaser）で再生（パス不明時のみ）
+            // 未ロードの場合は動的ロード（AreaConfigからパスを取得）
+            try {
+                if (bgmKey && (!mainScene.cache.audio || !mainScene.cache.audio.exists(bgmKey))) {
+                    const path = rawKey ? (mainScene.mapConfig && mainScene.mapConfig.bgm ? mainScene.mapConfig.bgm[rawKey] : undefined) : undefined;
+                    if (path) {
+                        mainScene.load.audio(bgmKey, path);
+                        mainScene.load.once('complete', () => {
+                            try { mainScene.audioManager.playBgm(bgmKey, 0.3, true); } catch (e) { /* ignore */ }
+                        });
+                        mainScene.load.start();
+                        return;
+                    }
+                }
+            } catch (e) { /* ignore */ }
+
+            if (bgmKey) {
+                try { mainScene.audioManager.playBgm(bgmKey, 0.3, true); } catch (e) { /* ignore */ }
             }
         }
     }
@@ -631,11 +735,24 @@ export class ConversationScene extends Phaser.Scene {
             // MapSelectionStageも含めて検索
             const mainScene = this.scene.get('Stage1Scene') || this.scene.get('Stage2Scene') || this.scene.get('Stage3Scene') || this.scene.get('MiemachiStage') || this.scene.get('TaketastageStage') || this.scene.get('JapanStage');
             if (mainScene && mainScene.audioManager) {
+                // iOS: イベント用HTMLAudioがあれば停止
+                try { if (this._eventHtmlBgm) { this._eventHtmlBgm.pause(); this._eventHtmlBgm = null; } } catch (e) { /* ignore */ }
                 mainScene.audioManager.stopBgm(false);
                 const originalBgmKey = this.getOriginalBgmKey();
                 if (originalBgmKey) {
                     mainScene.audioManager.playBgm(originalBgmKey, 0.3, true);
                 }
+                // iOSでHTMLAudioを使っていた場合は再開（会話終了でマップBGMに戻す）
+                try {
+                    if (this._pausedHtmlMapBgm && mainScene._htmlBgm) {
+                        try { mainScene._htmlBgm.currentTime = 0; } catch (e) { /* ignore */ }
+                        const p = mainScene._htmlBgm.play();
+                        if (p && typeof p.catch === 'function') p.catch(() => {});
+                        this._pausedHtmlMapBgm = false;
+                    }
+                } catch (e) { /* ignore */ }
+                // マップBGM抑制フラグを解除
+                try { mainScene._suppressMapBgm = false; } catch (e) { /* ignore */ }
             }
         } catch (error) {
             // エラーは無視
