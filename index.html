@@ -567,12 +567,7 @@
                 }
             } catch(e){}
 
-            if (window.game && window.game.destroy) {
-                window.game.destroy(true);
-                window.game = null;
-                // 破棄済みインスタンス参照を必ず外す（resize等のハンドラから参照されるのを防止）
-                window.gameInstance = null;
-            }
+            // ゲームインスタンスは保持（再利用）。破棄すると再初期化レースで読み込み漏れが出るため
             
             const stageSelect = document.getElementById('stage-select');
             if (stageSelect) {
@@ -583,6 +578,11 @@
             if (gameContainer) {
                 gameContainer.style.display = 'none';
             }
+
+            // ステージ選択画面のBGMを再開
+            try {
+                playBGM('assets/audio/bgm/zelda_menu_select.mp3');
+            } catch (e) { /* ignore */ }
             
             const allStageButtons = document.querySelectorAll('.stage-buttons button[id]');
             allStageButtons.forEach(btn => {
