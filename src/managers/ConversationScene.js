@@ -52,7 +52,7 @@ export class ConversationScene extends Phaser.Scene {
             this.textbox = this.add.image(width / 2, height - 80, 'textbox'); // Y座標を調整
         } else {
             // 代替：黒い四角形を作成（ギャルゲ風デザイン）
-            const textboxWidth = width - 60; // 画面幅から60px引いた幅を使用
+            const textboxWidth = isPortrait ? (width - 20) : (width - 60); // 縦: 両端10px, 横: 従来どおり30px
             const textboxHeight = isPortrait ? 140 : 90; // 縦向きは4行分の高さを確保
             this.textbox = this.add.rectangle(width / 2, height - (isPortrait ? 70 : 60), textboxWidth, textboxHeight, 0x000000, 0.9); // 透明度を上げて見やすく
             // ギャルゲ風の枠線を追加
@@ -78,12 +78,14 @@ export class ConversationScene extends Phaser.Scene {
         this.createDecorationsForConversationUI();
         
         // テキスト表示用（高さを動的に調整）
-        const textWrapWidth = Math.min((this.textbox?.displayWidth || (width - 60)) - 40, 600); // ボックス内幅基準
+        const leftPad = isPortrait ? 0 : 20; // 縦は左に20px寄せる → 左パディング0
+        const rightPad = 20;                 // 右側は従来どおり20px
+        const textWrapWidth = Math.min((this.textbox?.displayWidth || (width - 60)) - (leftPad + rightPad), 600); // ボックス内幅基準
         const fontSize = width < 600 ? '18px' : '24px'; // スマホでは小さいフォント
         // テキストはテキストボックスの左上から少し内側に配置
         const _boxW = this.textbox?.displayWidth || (width - 60);
         const _boxH = this.textbox?.displayHeight || (isPortrait ? 140 : 90);
-        const textX0 = (this.textbox?.x || width / 2) - _boxW / 2 + 20;
+        const textX0 = (this.textbox?.x || width / 2) - _boxW / 2 + leftPad;
         const textY0 = (this.textbox?.y || (height - (isPortrait ? 70 : 60))) - _boxH / 2 + 12;
         this.dialogText = this.add.text(textX0, textY0, '', {
             fontSize: fontSize,
@@ -99,9 +101,9 @@ export class ConversationScene extends Phaser.Scene {
         }
         // テキストがボックスから飛び出さないようマスクを設定
         try {
-            const maskLeft = textX0 - 10;
+            const maskLeft = (this.textbox?.x || width / 2) - _boxW / 2 + leftPad;
             const maskTop = textY0 - 10;
-            const maskW = Math.max(1, (this.textbox?.displayWidth || (width - 60)) - 20);
+            const maskW = Math.max(1, (this.textbox?.displayWidth || (width - 60)) - (leftPad + rightPad));
             const maskH = Math.max(1, (this.textbox?.displayHeight || (isPortrait ? 140 : 90)) - 20);
             this._textMaskGraphics = this.add.graphics();
             this._textMaskGraphics.fillStyle(0xffffff, 1);
@@ -890,7 +892,7 @@ export class ConversationScene extends Phaser.Scene {
                 this.textbox.setPosition(width / 2, height - (isPortraitNow ? 70 : 60));
             } else {
                 // 代替の四角形の場合はサイズと位置を調整
-                const textboxWidth = width - 60;
+                const textboxWidth = isPortraitNow ? (width - 20) : (width - 60); // 縦: 両端10px
                 const textboxHeight = isPortraitNow ? 140 : 90;
                 this.textbox.setDisplaySize(textboxWidth, textboxHeight);
                 this.textbox.setPosition(width / 2, height - (isPortraitNow ? 70 : 60));
@@ -923,11 +925,13 @@ export class ConversationScene extends Phaser.Scene {
         // テキストのリサイズ（createメソッドと同じロジック）
         if (this.dialogText) {
             const isPortraitNow = height > width;
-            const textWrapWidth = Math.min((this.textbox?.displayWidth || (width - 60)) - 40, 600);
+            const leftPad = isPortraitNow ? 0 : 20; // 縦は左に20px寄せる → 左パディング0
+            const rightPad = 20;
+            const textWrapWidth = Math.min((this.textbox?.displayWidth || (width - 60)) - (leftPad + rightPad), 600);
             const fontSize = width < 600 ? '18px' : '24px';
             const _boxW = this.textbox?.displayWidth || (width - 60);
             const _boxH = this.textbox?.displayHeight || (isPortraitNow ? 140 : 90);
-            const textX0 = (this.textbox?.x || width / 2) - _boxW / 2 + 20;
+            const textX0 = (this.textbox?.x || width / 2) - _boxW / 2 + leftPad;
             const textY0 = (this.textbox?.y || (height - (isPortraitNow ? 70 : 60))) - _boxH / 2 + 12;
             this.dialogText.setPosition(textX0, textY0);
             this.dialogText.setWordWrapWidth(textWrapWidth);
@@ -940,9 +944,9 @@ export class ConversationScene extends Phaser.Scene {
                 if (this._textMaskGraphics) this._textMaskGraphics.destroy();
                 this._textMaskGraphics = this.add.graphics();
                 this._textMaskGraphics.fillStyle(0xffffff, 1);
-                const maskLeft = textX0 - 10;
+                const maskLeft = (this.textbox?.x || width / 2) - _boxW / 2 + leftPad;
                 const maskTop = textY0 - 10;
-                const maskW = Math.max(1, (this.textbox?.displayWidth || (width - 60)) - 20);
+                const maskW = Math.max(1, (this.textbox?.displayWidth || (width - 60)) - (leftPad + rightPad));
                 const maskH = Math.max(1, (this.textbox?.displayHeight || (isPortraitNow ? 140 : 90)) - 20);
                 this._textMaskGraphics.fillRect(maskLeft, maskTop, maskW, maskH);
                 const geomMask = this._textMaskGraphics.createGeometryMask();
