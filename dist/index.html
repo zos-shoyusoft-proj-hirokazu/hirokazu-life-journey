@@ -1,4 +1,6 @@
-<!doctype html><html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover,minimal-ui,orientation=landscape,user-scalable=0,width=device-width,height=device-height"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="mobile-web-app-capable" content="yes"><meta name="theme-color" content="#000000"><meta name="description" content="Hirokazu Life Journey - ゲーム"><link rel="manifest" href="./manifest.json"><meta name="viewport-fit" content="cover"><meta name="format-detection" content="telephone=no"><meta name="mobile-web-app-capable" content="yes"><meta name="theme-color" content="#000000"><meta name="msapplication-TileColor" content="#000000"><title>Hirokazu Life Journey</title><link rel="stylesheet" href="./css/stageSelect.css"><link rel="stylesheet" href="./css/mainMenu.css"><link rel="stylesheet" href="./css/install-banner.css"><link rel="stylesheet" href="./css/opening-video.css"><style>/* 全体のリセットとブラウザUI対応 */
+<!doctype html><html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover,minimal-ui,orientation=landscape,user-scalable=0,width=device-width,height=device-height"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="mobile-web-app-capable" content="yes"><meta name="theme-color" content="#000000"><meta name="description" content="Hirokazu Life Journey - ゲーム"><link rel="manifest" href="./manifest.json"><meta name="viewport-fit" content="cover"><meta name="format-detection" content="telephone=no"><meta name="mobile-web-app-capable" content="yes"><meta name="theme-color" content="#000000"><meta name="msapplication-TileColor" content="#000000"><title>Hirokazu Life Journey</title><link rel="stylesheet" href="./css/stageSelect.css"><link rel="stylesheet" href="./css/mainMenu.css"><link rel="stylesheet" href="./css/install-banner.css"><link rel="stylesheet" href="./css/opening-video.css"><style>/* 開発時のエラーオーバーレイを隠す（実機動作には影響なし） */
+        #webpack-dev-server-client-overlay, .webpack-dev-server-overlay { display: none !important; visibility: hidden !important; }
+        /* 全体のリセットとブラウザUI対応 */
         * {
             margin: 0;
             padding: 0;
@@ -158,7 +160,8 @@
             (function installGlobalErrorLogging(){
                 if (window.__globalErrorLoggingInstalled) return;
                 window.__globalErrorLogs = [];
-                window.addEventListener('error', function(e){
+                // 先にキャプチャ段階でもフック（dev-server overlayより先に処理）
+                function handleWindowError(e){
                     try {
                         const details = {
                             type: 'error',
@@ -170,8 +173,16 @@
                         };
                         window.__globalErrorLogs.push(details);
                         console.error('[window.onerror]', details);
+                        const msg = String(e.message || '');
+                        // 既知の無害（既に再試行・停止で吸収している）エラーは抑制
+                        if (msg.includes("The play() request was interrupted") || msg.includes("reading 'cache'")) {
+                            try { e.preventDefault(); e.stopImmediatePropagation(); } catch(_){}
+                            return false;
+                        }
                     } catch(_) {}
-                });
+                }
+                window.addEventListener('error', handleWindowError, true);
+                window.addEventListener('error', handleWindowError, false);
                 window.addEventListener('unhandledrejection', function(e){
                     try {
                         const reason = e.reason;
@@ -182,9 +193,31 @@
                         };
                         window.__globalErrorLogs.push(details);
                         console.error('[unhandledrejection]', details);
+                        const msg = String(details.message || '');
+                        if (msg.includes('The play() request was interrupted')) {
+                            try { e.preventDefault(); e.stopImmediatePropagation && e.stopImmediatePropagation(); } catch(_){}
+                            return false;
+                        }
                     } catch(_) {}
                 });
                 window.__globalErrorLoggingInstalled = true;
+            })();
+
+            // dev-server overlay をDOMレベルで除去（開発時のみ）
+            (function suppressWDSOverlay(){
+                try {
+                    const hide = () => {
+                        try {
+                            const el = document.getElementById('webpack-dev-server-client-overlay');
+                            if (el && el.parentNode) el.parentNode.removeChild(el);
+                            const els = document.querySelectorAll('.webpack-dev-server-overlay');
+                            els.forEach(n => { try { n.remove(); } catch(_){} });
+                        } catch(_){}
+                    };
+                    hide();
+                    const mo = new MutationObserver(hide);
+                    mo.observe(document.documentElement, { childList: true, subtree: true });
+                } catch(_) {}
             })();
         
         // BGM再生関数（簡素化）

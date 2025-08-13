@@ -38,6 +38,7 @@ export class ConversationScene extends Phaser.Scene {
         // 画面サイズを取得（安全なアクセス）
         const width = this.sys?.game?.canvas?.width || this.sys?.game?.config?.width || 800;
         const height = this.sys?.game?.canvas?.height || this.sys?.game?.config?.height || 600;
+        const isPortrait = height > width;
         
         // 背景を設定（デフォルトは透明な背景）
         this.background = this.add.rectangle(width / 2, height / 2, width, height, 0x000000, 0.5);
@@ -52,8 +53,8 @@ export class ConversationScene extends Phaser.Scene {
         } else {
             // 代替：黒い四角形を作成（ギャルゲ風デザイン）
             const textboxWidth = width - 60; // 画面幅から60px引いた幅を使用
-            const textboxHeight = 90; // 固定の高さ
-            this.textbox = this.add.rectangle(width / 2, height - 60, textboxWidth, textboxHeight, 0x000000, 0.9); // 透明度を上げて見やすく
+            const textboxHeight = isPortrait ? 140 : 90; // 縦向きは4行分の高さを確保
+            this.textbox = this.add.rectangle(width / 2, height - (isPortrait ? 70 : 60), textboxWidth, textboxHeight, 0x000000, 0.9); // 透明度を上げて見やすく
             // ギャルゲ風の枠線を追加
             this.textbox.setStrokeStyle(2, 0xFFFFFF, 1.0);
         }
@@ -71,13 +72,20 @@ export class ConversationScene extends Phaser.Scene {
             this.namebox.setStrokeStyle(2, 0x888888, 0.8);
         }
         this.namebox.setOrigin(0, 0.5); // 左端基準
+        // 会話ボックスより前面に
+        try { if (this.textbox && this.textbox.depth !== undefined) this.namebox.setDepth(this.textbox.depth + 1); } catch (_) { /* ignore */ }
         // 見た目の装飾レイヤー（レイアウトは絶対に変更しない）
         this.createDecorationsForConversationUI();
         
         // テキスト表示用（高さを動的に調整）
-        const textWrapWidth = Math.min(width - 80, 600); // PCでは大きく、スマホでは小さく
+        const textWrapWidth = Math.min((this.textbox?.displayWidth || (width - 60)) - 40, 600); // ボックス内幅基準
         const fontSize = width < 600 ? '18px' : '24px'; // スマホでは小さいフォント
-        this.dialogText = this.add.text(width * 0.1 + 20, height - 95, '', { // Y座標を調整
+        // テキストはテキストボックスの左上から少し内側に配置
+        const _boxW = this.textbox?.displayWidth || (width - 60);
+        const _boxH = this.textbox?.displayHeight || (isPortrait ? 140 : 90);
+        const textX0 = (this.textbox?.x || width / 2) - _boxW / 2 + 20;
+        const textY0 = (this.textbox?.y || (height - (isPortrait ? 70 : 60))) - _boxH / 2 + 12;
+        this.dialogText = this.add.text(textX0, textY0, '', {
             fontSize: fontSize,
             fill: '#ffffff',
             lineSpacing: 8,
@@ -89,6 +97,20 @@ export class ConversationScene extends Phaser.Scene {
         if (this.dialogText && this.dialogText.setShadow) {
             this.dialogText.setShadow(2, 2, '#000000', 4, false, true);
         }
+        // テキストがボックスから飛び出さないようマスクを設定
+        try {
+            const maskLeft = textX0 - 10;
+            const maskTop = textY0 - 10;
+            const maskW = Math.max(1, (this.textbox?.displayWidth || (width - 60)) - 20);
+            const maskH = Math.max(1, (this.textbox?.displayHeight || (isPortrait ? 140 : 90)) - 20);
+            this._textMaskGraphics = this.add.graphics();
+            this._textMaskGraphics.fillStyle(0xffffff, 1);
+            this._textMaskGraphics.fillRect(maskLeft, maskTop, maskW, maskH);
+            const geomMask = this._textMaskGraphics.createGeometryMask();
+            this.dialogText.setMask(geomMask);
+            // マスク用Graphicsは描画しない（真っ白に見えるのを防止）
+            this._textMaskGraphics.setVisible(false);
+        } catch (e) { /* ignore */ }
         
         // 名前表示用
         const nameFontSize = width < 600 ? '16px' : '20px'; // スマホでは小さいフォント
@@ -99,10 +121,21 @@ export class ConversationScene extends Phaser.Scene {
             padding: { x: 10, y: 10 },
             fixedHeight: 50
         });
-        this.nameText.setOrigin(0.5, 0.2);
+        // 名前は名前ボックス内に確実に収める（縦/横で原点Yを分ける）
+        this.nameText.setOrigin(0.5, isPortrait ? 0.35 : 0.4);
+        try { if (this.namebox && this.namebox.depth !== undefined) this.nameText.setDepth(this.namebox.depth + 1); } catch (_) { /* ignore */ }
         if (this.nameText && this.nameText.setShadow) {
             this.nameText.setShadow(1, 1, '#000000', 3, false, true);
         }
+        // 初期表示で名前ボックス位置にテキストを追従
+        try {
+            const nbw = this.namebox?.displayWidth || 0;
+            this.nameText.setPosition(this.nameboxLeftMargin + nbw / 2, this.namebox.y);
+        } catch (_) { /* ignore */ }
+        // 会話ボックスの上辺に沿って配置（縦横で被らないように）
+        this._repositionNamebox(width, height);
+        // 位置変更後に装飾も追従させる
+        this.redrawNameboxDecorations && this.redrawNameboxDecorations();
         
         // クリックでテキスト進行（多重登録防止）
         this.input.removeAllListeners('pointerdown');
@@ -580,10 +613,9 @@ export class ConversationScene extends Phaser.Scene {
             this.namebox.setStrokeStyle(2, 0x888888, 0.8);
         }
         
-        // 名前テキストは名前ボックスの中心に置く
+        // 名前テキストは名前ボックスの中心に置く（nameboxの現在位置に追従）
         const nbWidth = this.namebox?.displayWidth || 0;
-        const height = this.sys?.game?.canvas?.height || this.sys?.game?.config?.height || 600;
-        this.nameText.setPosition(this.nameboxLeftMargin + nbWidth / 2, height - 130);
+        this.nameText.setPosition(this.nameboxLeftMargin + nbWidth / 2, this.namebox.y);
         // 見た目だけを再描画（レイアウトは不変）
         this.redrawNameboxDecorations && this.redrawNameboxDecorations();
     }
@@ -852,15 +884,16 @@ export class ConversationScene extends Phaser.Scene {
         
         // テキストボックスのリサイズ（createメソッドと同じロジック）
         if (this.textbox) {
+            const isPortraitNow = height > width;
             if (this.textures.exists('textbox')) {
                 // 画像がある場合は位置のみ調整
-                this.textbox.setPosition(width / 2, height - 60);
+                this.textbox.setPosition(width / 2, height - (isPortraitNow ? 70 : 60));
             } else {
                 // 代替の四角形の場合はサイズと位置を調整
                 const textboxWidth = width - 60;
-                const textboxHeight = 90;
+                const textboxHeight = isPortraitNow ? 140 : 90;
                 this.textbox.setDisplaySize(textboxWidth, textboxHeight);
-                this.textbox.setPosition(width / 2, height - 60);
+                this.textbox.setPosition(width / 2, height - (isPortraitNow ? 70 : 60));
                 
                 // ギャルゲ風の枠線を再設定
                 this.textbox.setStrokeStyle(2, 0xFFFFFF, 1.0);
@@ -869,18 +902,17 @@ export class ConversationScene extends Phaser.Scene {
             this.redrawTextboxDecorations && this.redrawTextboxDecorations();
         }
         
-        // 名前ボックスのリサイズ（createメソッドと同じロジック）
+        // 名前ボックスのリサイズ（テキストボックス上辺沿いに再配置）
         if (this.namebox) {
             if (this.textures.exists('namebox')) {
-                // 画像がある場合は左マージン固定
-                this.namebox.setPosition(this.nameboxLeftMargin, height - 123);
+                // 画像がある場合も上辺沿いに揃える
+                this._repositionNamebox(width, height);
             } else {
-                // 代替の四角形の場合は幅は計算し直すが高さは元の設定を保持、左は固定
+                // 代替の四角形の場合は幅は計算し直し、上辺沿いに揃える
                 const nameboxWidth = Math.min(200, width * 0.3);
                 const nameboxHeight = Math.min(30, height * 0.1);
                 this.namebox.setDisplaySize(nameboxWidth, nameboxHeight);
-                this.namebox.setPosition(this.nameboxLeftMargin, height - 123);
-                
+                this._repositionNamebox(width, height);
                 // ギャルゲ風の枠線を再設定
                 this.namebox.setStrokeStyle(2, 0x888888, 0.8);
             }
@@ -890,23 +922,43 @@ export class ConversationScene extends Phaser.Scene {
         
         // テキストのリサイズ（createメソッドと同じロジック）
         if (this.dialogText) {
-            const textWrapWidth = Math.min(width - 80, 600);
+            const isPortraitNow = height > width;
+            const textWrapWidth = Math.min((this.textbox?.displayWidth || (width - 60)) - 40, 600);
             const fontSize = width < 600 ? '18px' : '24px';
-            
-            this.dialogText.setPosition(width * 0.1 + 20, height - 80);
+            const _boxW = this.textbox?.displayWidth || (width - 60);
+            const _boxH = this.textbox?.displayHeight || (isPortraitNow ? 140 : 90);
+            const textX0 = (this.textbox?.x || width / 2) - _boxW / 2 + 20;
+            const textY0 = (this.textbox?.y || (height - (isPortraitNow ? 70 : 60))) - _boxH / 2 + 12;
+            this.dialogText.setPosition(textX0, textY0);
             this.dialogText.setWordWrapWidth(textWrapWidth);
             this.dialogText.setFontSize(fontSize);
             // テキストシャドウは一度設定すれば保持されるが、安全に再設定
             if (this.dialogText.setShadow) this.dialogText.setShadow(2, 2, '#000000', 4, false, true);
+
+            // マスクも追従
+            try {
+                if (this._textMaskGraphics) this._textMaskGraphics.destroy();
+                this._textMaskGraphics = this.add.graphics();
+                this._textMaskGraphics.fillStyle(0xffffff, 1);
+                const maskLeft = textX0 - 10;
+                const maskTop = textY0 - 10;
+                const maskW = Math.max(1, (this.textbox?.displayWidth || (width - 60)) - 20);
+                const maskH = Math.max(1, (this.textbox?.displayHeight || (isPortraitNow ? 140 : 90)) - 20);
+                this._textMaskGraphics.fillRect(maskLeft, maskTop, maskW, maskH);
+                const geomMask = this._textMaskGraphics.createGeometryMask();
+                // マスクは対象に適用し、Graphics自体は非表示にして真っ白化を防ぐ
+                this._textMaskGraphics.setVisible(false);
+                this.dialogText.setMask(geomMask);
+            } catch (e) { /* ignore */ }
         }
         
         // 名前テキストのリサイズ（createメソッドと同じロジック）
         if (this.nameText) {
             const nameFontSize = width < 600 ? '16px' : '20px';
             
-            // 名前テキストは名前ボックスの中心に置く
+            // 名前テキストは名前ボックスの中心に置く（現在のnamebox位置に追従）
             const nbWidth = this.namebox?.displayWidth || 0;
-            this.nameText.setPosition(this.nameboxLeftMargin + nbWidth / 2, height - 130);
+            this.nameText.setPosition(this.nameboxLeftMargin + nbWidth / 2, this.namebox.y);
             this.nameText.setFontSize(nameFontSize);
             if (this.nameText.setShadow) this.nameText.setShadow(1, 1, '#000000', 3, false, true);
             
@@ -922,4 +974,23 @@ export class ConversationScene extends Phaser.Scene {
     
     // キャラクタースプライトの位置調整
     repositionCharacterSprites() { this.layoutVisibleCharacters(); }
+
+    // 会話ボックス上辺に名前ボックスを揃える（縦横共通）
+    _repositionNamebox(width, height) {
+        try {
+            const tb = this.textbox;
+            if (!tb || !this.namebox) return;
+            const boxH = tb.displayHeight || 90;
+            const topY = (tb.y || (height - 60)) - boxH / 2;
+            // 縦横でオフセットを分ける（縦は近づける）
+            const isPortrait = height > width;
+            const offset = isPortrait ? 20 : 20;
+            const targetY = topY - offset;
+            this.namebox.setPosition(this.nameboxLeftMargin, targetY);
+            if (this.nameText) {
+                const nbWidth = this.namebox.displayWidth || 0;
+                this.nameText.setPosition(this.nameboxLeftMargin + nbWidth / 2, targetY);
+            }
+        } catch (_) { /* ignore */ }
+    }
 } 
