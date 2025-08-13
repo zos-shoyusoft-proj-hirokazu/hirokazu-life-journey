@@ -181,7 +181,8 @@
         inset 0 2px 4px rgba(255, 255, 255, 0.1),
         inset 0 -2px 4px rgba(0, 0, 0, 0.2),
         0 0 0 1px rgba(255, 255, 255, 0.05);
-    animation: buttonGlow 2s ease-in-out infinite; /* 追加：すべてのボタンを光らせる */
+    /* 初期の常時発光を無効化（選択時のみ強調する） */
+    /* animation: buttonGlow 2s ease-in-out infinite; */
 }
 
 
