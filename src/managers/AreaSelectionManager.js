@@ -286,6 +286,23 @@ export class AreaSelectionManager {
     setupInteractionEvents() {
         // 全体的なインタラクションイベントを設定
         this.scene.input.on('pointerdown', (pointer) => {
+            // 初回タップでオーディオコンテキストを確実に解錠（マップSE対策）
+            try {
+                if (this.scene.sound && this.scene.sound.locked) {
+                    try { if (this.scene.sound.context && this.scene.sound.context.state !== 'running') { this.scene.sound.context.resume(); } } catch(_) {}
+                    try {
+                        const ctx = this.scene.sound.context;
+                        if (ctx && typeof ctx.createOscillator === 'function') {
+                            const osc = ctx.createOscillator();
+                            const gain = ctx.createGain();
+                            gain.gain.value = 0.0001;
+                            osc.connect(gain).connect(ctx.destination);
+                            osc.start();
+                            osc.stop(ctx.currentTime + 0.05);
+                        }
+                    } catch(_) {}
+                }
+            } catch(_) {}
             // タップ位置の記録
             this.lastTapX = pointer.x;
             this.lastTapY = pointer.y;

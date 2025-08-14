@@ -104,8 +104,26 @@ export class Stage1 extends Phaser.Scene {
         try {
             // AudioManagerを初期化
             this.audioManager = new AudioManager(this);
-            // メニューBGMを開始
-            this.audioManager.playBgm('bgm_nightbarth', 0.3);
+            // ステージBGM再生（オートプレイ規制下でも初回操作で必ず開始）
+            const startStageBgm = () => {
+                try { this.audioManager.ensureAudioUnlocked && this.audioManager.ensureAudioUnlocked(); } catch(_) {}
+                try { this.audioManager.playBgm('bgm_nightbarth', 0.3); } catch(_) {}
+            };
+            try {
+                if (this.sound && this.sound.locked) {
+                    // ブラウザがロック中：解除イベント or 最初の操作で開始
+                    this.sound.once('unlocked', () => { startStageBgm(); });
+                    this.input && this.input.once && this.input.once('pointerdown', () => {
+                        try { if (this.sound.context && this.sound.context.state !== 'running') this.sound.context.resume(); } catch(_) {}
+                        startStageBgm();
+                    });
+                    // キーボード操作でも開始（PC対策）
+                    try { this.input && this.input.keyboard && this.input.keyboard.once('keydown', startStageBgm); } catch(_) {}
+                } else {
+                    // ロックされていなければ即時再生
+                    startStageBgm();
+                }
+            } catch(_) { startStageBgm(); }
 
             // CollisionManagerを初期化
             this.collisionManager = new CollisionManager(this);

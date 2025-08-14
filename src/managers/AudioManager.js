@@ -17,6 +17,27 @@ export class AudioManager {
         this.loadedSounds = new Set();
     }
 
+    // WebAudioがロックされている場合に解除を試みる
+    ensureAudioUnlocked() {
+        try {
+            const snd = this.scene && this.scene.sound;
+            const ctx = snd && snd.context;
+            if (snd && snd.locked) {
+                try { if (ctx && ctx.state !== 'running') ctx.resume(); } catch(_) {}
+                try {
+                    if (ctx && typeof ctx.createOscillator === 'function') {
+                        const osc = ctx.createOscillator();
+                        const gain = ctx.createGain();
+                        gain.gain.value = 0.0001;
+                        osc.connect(gain).connect(ctx.destination);
+                        osc.start();
+                        osc.stop(ctx.currentTime + 0.05);
+                    }
+                } catch(_) {}
+            }
+        } catch(_) {}
+    }
+
     isSceneUsable() {
         try { return !!(this.scene && this.scene.sys && this.scene.sys.isActive && this.scene.sys.isActive()); } catch (_) { return false; }
     }
@@ -41,6 +62,7 @@ export class AudioManager {
      */
     playBgm(key, volume = this.bgmVolume, fadeIn = true) {
         if (!this.isSceneUsable()) return;
+        this.ensureAudioUnlocked();
         // 念のため二重再生防止：既存BGMがあれば先に停止
         if (this.bgm) {
             if (this.bgm.key === key) {
@@ -167,6 +189,7 @@ export class AudioManager {
      */
     playSe(key, volume = this.seVolume) {
         if (!this.isSceneUsable()) return;
+        this.ensureAudioUnlocked();
         if (this.isSeMuted) return;
         
         // シーンとサウンドシステムの有効性をチェック
@@ -197,6 +220,7 @@ export class AudioManager {
      */
     playVoice(key, volume = this.voiceVolume) {
         if (!this.isSceneUsable()) return;
+        this.ensureAudioUnlocked();
         if (this.isVoiceMuted) return;
         
         // シーンとサウンドシステムの有効性をチェック

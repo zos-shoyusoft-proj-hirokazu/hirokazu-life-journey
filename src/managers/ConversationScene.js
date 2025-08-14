@@ -743,6 +743,10 @@ export class ConversationScene extends Phaser.Scene {
         const mainScene = this.scene.get('Stage1Scene') || this.scene.get('Stage2Scene') || this.scene.get('Stage3Scene') || this.scene.get('MiemachiStage') || this.scene.get('TaketastageStage') || this.scene.get('JapanStage');
 
         if (mainScene && mainScene.audioManager) {
+            // もともと鳴っていたBGMキーを覚えておき、ハードコーディングを排除
+            try {
+                this._originalBgmKey = (mainScene.audioManager.bgm && mainScene.audioManager.bgm.key) ? mainScene.audioManager.bgm.key : null;
+            } catch (_) { this._originalBgmKey = null; }
             // iOSでMapSelectionStageがHTMLAudio（_htmlBgm）を使用している場合は一時停止
             try {
                 if (mainScene._htmlBgm && !mainScene._htmlBgm.paused) {
@@ -844,7 +848,7 @@ export class ConversationScene extends Phaser.Scene {
         }
     }
 
-    // 元のBGMに戻す
+    // 元のBGMに戻す（ハードコードせず、会話開始前に覚えたキーで復帰）
     restoreOriginalBgm() {
         try {
             // MapSelectionStageも含めて検索
@@ -853,9 +857,23 @@ export class ConversationScene extends Phaser.Scene {
                 // iOS: イベント用HTMLAudioがあれば停止
                 try { if (this._eventHtmlBgm) { this._eventHtmlBgm.pause(); this._eventHtmlBgm = null; } } catch (e) { /* ignore */ }
                 mainScene.audioManager.stopBgm(false);
-                const originalBgmKey = this.getOriginalBgmKey();
-                if (originalBgmKey) {
-                    mainScene.audioManager.playBgm(originalBgmKey, 0.3, true);
+                let keyToPlay = this._originalBgmKey;
+                // もし覚えていなければ、MapやSceneの設定から推測
+                if (!keyToPlay) {
+                    try {
+                        const bgmDict = (mainScene.mapConfig && typeof mainScene.mapConfig.bgm === 'object') ? mainScene.mapConfig.bgm : null;
+                        if (bgmDict) {
+                            if (Object.prototype.hasOwnProperty.call(bgmDict, 'map')) {
+                                keyToPlay = 'bgm_map';
+                            } else {
+                                const first = Object.keys(bgmDict)[0];
+                                if (first) keyToPlay = `bgm_${first}`;
+                            }
+                        }
+                    } catch (_) { /* ignore */ }
+                }
+                if (keyToPlay) {
+                    try { mainScene.audioManager.playBgm(keyToPlay, 0.3, true); } catch (_) { /* ignore */ }
                 }
                 // iOSでHTMLAudioを使っていた場合は再開（会話終了でマップBGMに戻す）
                 try {
@@ -872,24 +890,6 @@ export class ConversationScene extends Phaser.Scene {
         } catch (error) {
             // エラーは無視
         }
-    }
-
-    // 元のBGMのキーを取得
-    getOriginalBgmKey() {
-        // MapSelectionStageも含めて検索
-        const mainScene = this.scene.get('Stage1Scene') || this.scene.get('Stage2Scene') || this.scene.get('Stage3Scene') || this.scene.get('MiemachiStage') || this.scene.get('TaketastageStage') || this.scene.get('JapanStage');
-        if (mainScene) {
-            if (mainScene.scene.key === 'Stage1Scene') {
-                return 'bgm_map'; // Stage1Sceneの場合はmap BGMに戻す
-            } else if (mainScene.scene.key === 'Stage2Scene') {
-                return 'bgm_stage2';
-            } else if (mainScene.scene.key === 'Stage3Scene') {
-                return 'bgm_stage3';
-            } else if (mainScene.scene.key === 'MiemachiStage' || mainScene.scene.key === 'TaketastageStage' || mainScene.scene.key === 'JapanStage') {
-                return 'bgm_map'; // MapSelectionStageの場合はmap BGMに戻す
-            }
-        }
-        return 'bgm_map'; // デフォルト
     }
     
     // 会話終了

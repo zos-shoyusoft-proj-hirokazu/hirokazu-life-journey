@@ -73,7 +73,24 @@ export class Stage2 extends Phaser.Scene {
 
     create() {
         this.audioManager = new AudioManager(this);
-        this.audioManager.playBgm('bgm_pollyanna', 0.5);
+        // Stage1 と同じBGM起動ロジック（ロック時は解除イベント/最初の操作で開始）
+        const startStageBgm = () => {
+            try { this.audioManager.ensureAudioUnlocked && this.audioManager.ensureAudioUnlocked(); } catch(_) {}
+            try { this.audioManager.playBgm('bgm_pollyanna', 0.5); } catch(_) {}
+        };
+        try {
+            if (this.sound && this.sound.locked) {
+                this.sound.once('unlocked', () => { startStageBgm(); });
+                this.input && this.input.once && this.input.once('pointerdown', () => {
+                    try { if (this.sound.context && this.sound.context.state !== 'running') this.sound.context.resume(); } catch(_) {}
+                    startStageBgm();
+                });
+                // PC環境でも最初のキー操作で開始
+                try { this.input && this.input.keyboard && this.input.keyboard.once('keydown', startStageBgm); } catch(_) {}
+            } else {
+                startStageBgm();
+            }
+        } catch(_) { startStageBgm(); }
 
         // ConversationSceneの重複登録を避ける
         try {

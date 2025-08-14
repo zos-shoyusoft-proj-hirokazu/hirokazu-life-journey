@@ -60,6 +60,7 @@ export class Stage3 extends Phaser.Scene {
     create() {
         // AudioManagerを初期化
         this.audioManager = new AudioManager(this);
+        try { this.audioManager.ensureAudioUnlocked && this.audioManager.ensureAudioUnlocked(); } catch(_) {}
         this.audioManager.playBgm('bgm_stage3', 0.3);
         
         // マップマネージャーを初期化

@@ -22,6 +22,27 @@ export class TouchControlManager {
 
         // グローバルなタッチイベントを設定
         this.scene.input.on('pointerdown', (pointer) => {
+            // 初回タップでオーディオを確実に解除（ステージ系のSE/BGMが鳴らない問題対策）
+            try {
+                if (this.scene.sound && this.scene.sound.locked) {
+                    try {
+                        if (this.scene.sound.context && this.scene.sound.context.state !== 'running') {
+                            this.scene.sound.context.resume();
+                        }
+                    } catch (resumeError) { /* ignore */ }
+                    try {
+                        const ctx = this.scene.sound.context;
+                        if (ctx && typeof ctx.createOscillator === 'function') {
+                            const osc = ctx.createOscillator();
+                            const gain = ctx.createGain();
+                            gain.gain.value = 0.0001;
+                            osc.connect(gain).connect(ctx.destination);
+                            osc.start();
+                            osc.stop(ctx.currentTime + 0.05);
+                        }
+                    } catch (oscError) { /* ignore */ }
+                }
+            } catch (e) { /* ignore */ }
             this.showTouchFeedback(pointer.x, pointer.y);
         });
     }
