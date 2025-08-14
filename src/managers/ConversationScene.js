@@ -151,6 +151,19 @@ export class ConversationScene extends Phaser.Scene {
             this.nextDialog();
         });
         
+        // 画面リサイズ/向き変更に対応（イベント会話中のUIずれ防止）
+        try {
+            if (!this._onResizeBound && this.scale && this.scale.on) {
+                this.scale.on('resize', this.resize, this);
+                this._onResizeBound = true;
+            }
+            // シーン終了時にリスナーを解除
+            this.events.once('shutdown', () => {
+                try { if (this._onResizeBound && this.scale && this.scale.off) this.scale.off('resize', this.resize, this); } catch(_) { /* ignore */ }
+                this._onResizeBound = false;
+            });
+        } catch (_) { /* ignore */ }
+
         // start() からデータが渡されている場合はここで開始
         if (this._pendingConversation) {
             try {
@@ -1049,8 +1062,8 @@ export class ConversationScene extends Phaser.Scene {
             }
         }
         
-        // 人数に応じた等間隔レイアウト
-        this.layoutVisibleCharacters();
+        // キャラクター位置は現状のままで問題ないため、リサイズ時に再レイアウトしない
+        // this.layoutVisibleCharacters();
     }
     
     // キャラクタースプライトの位置調整
