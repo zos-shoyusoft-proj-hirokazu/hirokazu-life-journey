@@ -23,7 +23,11 @@ export class AudioManager {
             const snd = this.scene && this.scene.sound;
             const ctx = snd && snd.context;
             if (snd && snd.locked) {
-                try { if (ctx && ctx.state !== 'running') ctx.resume(); } catch(_) {}
+                try { 
+                    if (ctx && ctx.state !== 'running') ctx.resume(); 
+                } catch(error) {
+                    console.warn('[AudioManager] Audio context resume error:', error);
+                }
                 try {
                     if (ctx && typeof ctx.createOscillator === 'function') {
                         const osc = ctx.createOscillator();
@@ -33,13 +37,22 @@ export class AudioManager {
                         osc.start();
                         osc.stop(ctx.currentTime + 0.05);
                     }
-                } catch(_) {}
+                } catch(error) {
+                    console.warn('[AudioManager] Oscillator creation error:', error);
+                }
             }
-        } catch(_) {}
+        } catch(error) {
+            console.warn('[AudioManager] Audio unlock error:', error);
+        }
     }
 
     isSceneUsable() {
-        try { return !!(this.scene && this.scene.sys && this.scene.sys.isActive && this.scene.sys.isActive()); } catch (_) { return false; }
+        try { 
+            return !!(this.scene && this.scene.sys && this.scene.sys.isActive && this.scene.sys.isActive()); 
+        } catch (error) { 
+            console.warn('[AudioManager] Scene usability check error:', error);
+            return false; 
+        }
     }
 
     /**
@@ -100,6 +113,10 @@ export class AudioManager {
                     loop: true,
                     volume: fadeIn ? 0 : volume
                 });
+                
+                // keyプロパティを明示的に設定（ConversationSceneで元のBGMキーを取得するため）
+                this.bgm.key = key;
+                
                 this.bgm.play();
                 if (fadeIn) {
                     this.scene.tweens.add({
@@ -360,5 +377,104 @@ export class AudioManager {
         this.loadedSounds.clear();
         // シーンへの参照を削除
         this.scene = null;
+    }
+
+    /**
+     * デフォルトBGMキーを取得
+     * @returns {string} デフォルトBGMキー
+     */
+    async getDefaultBgmKey() {
+        try {
+            // 1. まず、現在再生中のBGMキーを確認
+            if (this.bgm && this.bgm.key) {
+                return this.bgm.key;
+            }
+            
+            // 2. ステージ固有の設定から取得（AreaConfigから動的に）
+            if (this.scene && this.scene.scene && this.scene.scene.key) {
+                const sceneKey = this.scene.scene.key;
+                
+                // AreaConfigからステージ設定を取得
+                try {
+                    const { AreaConfig } = await import('../config/AreaConfig.js');
+                    
+                    // ステージシーンの場合
+                    if (sceneKey.includes('Stage') && sceneKey !== 'MapSelectionStage') {
+                        const stageNumber = sceneKey.replace('Stage', '').replace('Scene', '');
+                        const stageKey = `stage${stageNumber}`;
+                        
+                        if (AreaConfig.stages && AreaConfig.stages[stageKey] && AreaConfig.stages[stageKey].bgm) {
+                            const bgmPath = AreaConfig.stages[stageKey].bgm.map;
+                            if (bgmPath) {
+                                // パスからBGMキーを生成
+                                const bgmKey = this.pathToBgmKey(bgmPath);
+                                if (bgmKey) {
+                                    return bgmKey;
+                                }
+                            }
+                        }
+                    }
+                    
+                    // MapSelectionStageの場合
+                    if (sceneKey === 'MapSelectionStage' && this.scene.mapConfig) {
+                        const bgmDict = this.scene.mapConfig.bgm;
+                        if (bgmDict) {
+                            if (Object.prototype.hasOwnProperty.call(bgmDict, 'map')) {
+                                return 'bgm_map';
+                            } else {
+                                const first = Object.keys(bgmDict)[0];
+                                if (first) return `bgm_${first}`;
+                            }
+                        }
+                    }
+                    
+                } catch (importError) {
+                    console.warn('[AudioManager] AreaConfig import error:', importError);
+                }
+            }
+            
+            // 3. mapConfigから取得（MapSelectionStage用）
+            if (this.scene && this.scene.mapConfig && typeof this.scene.mapConfig.bgm === 'object') {
+                const bgmDict = this.scene.mapConfig.bgm;
+                if (Object.prototype.hasOwnProperty.call(bgmDict, 'map')) {
+                    return 'bgm_map';
+                } else {
+                    const first = Object.keys(bgmDict)[0];
+                    if (first) return `bgm_${first}`;
+                }
+            }
+            
+            // 4. フォールバック: 汎用的なBGMキー
+            return 'bgm_default';
+            
+        } catch (error) {
+            console.warn('[AudioManager] getDefaultBgmKey エラー:', error);
+            return 'bgm_default';
+        }
+    }
+    
+    /**
+     * パスからBGMキーを生成
+     * @param {string} path - BGMファイルのパス
+     * @returns {string} BGMキー
+     */
+    pathToBgmKey(path) {
+        try {
+            if (!path) return null;
+            
+            // パスからファイル名を抽出
+            const fileName = path.split('/').pop();
+            if (!fileName) return null;
+            
+            // 拡張子を除去
+            const nameWithoutExt = fileName.replace(/\.[^/.]+$/, '');
+            
+            // BGMキーを生成
+            return `bgm_${nameWithoutExt}`;
+            
+        } catch (error) {
+            console.warn('[AudioManager] pathToBgmKey エラー:', error);
+            return null;
+        }
     }
 } 

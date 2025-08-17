@@ -6,18 +6,28 @@ export class ConversationTrigger {
         this.conversationManager = new ConversationManager();
         this.isConversationActive = false;
         this.triggeredEvents = new Set(); // 発動済みイベントを記録
+        
+        // デバッグ: 利用可能な会話データを確認
+        console.log('[ConversationTrigger] 初期化完了');
+        console.log('[ConversationTrigger] 利用可能な会話データ:', this.conversationManager.getAvailableEvents());
     }
 
     // 既存のCollisionManagerのstartConversationメソッドを拡張
     startConversation(npcId) {
+        console.log(`[ConversationTrigger] 会話開始試行: ${npcId}`);
+        
         // 新しいギャルゲ風システムの会話データがあるかチェック
         const conversationData = this.conversationManager.getConversation(npcId);
         
+        console.log(`[ConversationTrigger] 会話データ取得結果:`, conversationData);
+        
         if (conversationData) {
             // 新しいギャルゲ風会話システムを使用
+            console.log(`[ConversationTrigger] ギャルゲ風会話開始: ${npcId}`);
             this.startVisualNovelConversation(conversationData);
         } else {
             // 既存のシンプルな会話システムを使用
+            console.log(`[ConversationTrigger] シンプル会話開始: ${npcId}`);
             this.startSimpleDialog(npcId);
         }
     }
@@ -32,6 +42,7 @@ export class ConversationTrigger {
         
         // 既に会話が起動中の場合は停止
         if (this.isConversationActive) {
+            console.log('[ConversationTrigger] 既存の会話を停止して新しい会話を開始');
             this.scene.scene.stop('ConversationScene');
             this.isConversationActive = false;
         }
@@ -81,6 +92,14 @@ export class ConversationTrigger {
                 cs.events.once('conversationEnded', () => {
                     try { scenePlugin.stop('ConversationScene'); } catch(e) { /* ignore */ }
                     this.isConversationActive = false;
+                    console.log('[ConversationTrigger] 会話終了: isConversationActive = false');
+                });
+                
+                // 会話中断時の後片付けも追加
+                cs.events.once('conversationInterrupted', () => {
+                    try { scenePlugin.stop('ConversationScene'); } catch(e) { /* ignore */ }
+                    this.isConversationActive = false;
+                    console.log('[ConversationTrigger] 会話中断: isConversationActive = false');
                 });
             } catch(e) { /* ignore */ }
         } catch (error) {
@@ -99,10 +118,16 @@ export class ConversationTrigger {
 
     // NPCクリック時の処理（エリアマーカー「はい」クリック時と同じ会話システムを使用）
     setupNpcClickHandler(sprite, npcId) {
+        console.log(`[ConversationTrigger] setupNpcClickHandler: sprite=${sprite.name || 'unnamed'}, npcId=${npcId}`);
+        
         sprite.setInteractive();
         sprite.on('pointerdown', () => {
+            console.log(`[ConversationTrigger] NPCクリック: ${sprite.name || 'unnamed'} -> ${npcId}`);
+            
             if (!this.isConversationActive) {
                 this.startConversation(npcId);
+            } else {
+                console.log('[ConversationTrigger] 会話中、新しい会話を開始しません');
             }
         });
     }

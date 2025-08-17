@@ -104,21 +104,51 @@ export class Stage1 extends Phaser.Scene {
         try {
             // AudioManagerを初期化
             this.audioManager = new AudioManager(this);
-            // ステージBGM再生（オートプレイ規制下でも初回操作で必ず開始）
+            // Stage1 BGM起動ロジック（エラーハンドリング強化）
             const startStageBgm = () => {
-                try { this.audioManager.ensureAudioUnlocked && this.audioManager.ensureAudioUnlocked(); } catch(_) {}
-                try { this.audioManager.playBgm('bgm_nightbarth', 0.3); } catch(_) {}
+                // 会話中はBGM再開をスキップ（イベントBGMが切れるのを防ぐ）
+                if (this.scene && this.scene.manager && this.scene.manager.isActive('ConversationScene')) {
+                    console.log('Stage 1: 会話中、BGM再開をスキップ');
+                    return;
+                }
+                
+                try {
+                    console.log('Stage 1: BGM再生開始');
+                    this.audioManager.playBgm('bgm_nightbarth', 0.5);
+                    console.log('Stage 1: BGM再生成功');
+                } catch (error) {
+                    console.error('Stage 1: BGM再生エラー:', error);
+                    // フォールバック: 少し遅延して再試行
+                    this.time.delayedCall(1000, () => {
+                        try {
+                            console.log('Stage 1: BGM再試行');
+                            this.audioManager.playBgm('bgm_nightbarth', 0.5);
+                        } catch (retryError) {
+                            console.error('Stage 1: BGM再試行失敗:', retryError);
+                        }
+                    });
+                }
             };
             try {
                 if (this.sound && this.sound.locked) {
                     // ブラウザがロック中：解除イベント or 最初の操作で開始
                     this.sound.once('unlocked', () => { startStageBgm(); });
                     this.input && this.input.once && this.input.once('pointerdown', () => {
-                        try { if (this.sound.context && this.sound.context.state !== 'running') this.sound.context.resume(); } catch(_) {}
+                        try { 
+                            if (this.sound.context && this.sound.context.state !== 'running') {
+                                this.sound.context.resume(); 
+                            }
+                        } catch(error) {
+                            console.warn('Stage 1: 音声コンテキスト復帰エラー:', error);
+                        }
                         startStageBgm();
                     });
-                    // キーボード操作でも開始（PC対策）
-                    try { this.input && this.input.keyboard && this.input.keyboard.once('keydown', startStageBgm); } catch(_) {}
+                    // PC環境でも最初のキー操作で開始
+                    try { 
+                        this.input && this.input.keyboard && this.input.keyboard.once('keydown', startStageBgm); 
+                    } catch(error) {
+                        console.warn('Stage 1: キーボードイベント設定エラー:', error);
+                    }
                 } else {
                     // ロックされていなければ即時再生
                     startStageBgm();
@@ -139,7 +169,7 @@ export class Stage1 extends Phaser.Scene {
             // マップマネージャーを初期化
             this.mapManager = new MapManager(this);
             this.mapManager.createMap();
-
+            
             // プレイヤーコントローラーを初期化
             this.playerController = new PlayerController(this);
             this.playerController.createPlayer(100, 100);
@@ -256,6 +286,24 @@ export class Stage1 extends Phaser.Scene {
         this.shutdown();
         super.destroy();
     }
+
+    // NPCスプライトを手動で作成
+    // createNpcSprites() {
+    //     // MapManagerにNPCスプライトを追加
+    //     if (this.mapManager && this.mapManager.npcSprites) {
+    //         // hanniスプライトを作成
+    //         const hanniSprite = this.add.sprite(200, 150, 'hanni');
+    //         hanniSprite.setInteractive();
+    //         this.mapManager.npcSprites.set('hanni', hanniSprite);
+            
+    //         // kuccoroスプライトを作成
+    //         const kuccoroSprite = this.add.sprite(300, 200, 'kuccoro');
+    //         kuccoroSprite.setInteractive();
+    //         this.mapManager.npcSprites.set('kuccoro', kuccoroSprite);
+            
+    //         console.log('Stage 1: NPCスプライトを作成しました');
+    //     }
+    // }
 
     // 会話イベントの設定
     setupConversationEvents() {

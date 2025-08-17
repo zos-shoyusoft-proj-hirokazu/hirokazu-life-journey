@@ -33,8 +33,13 @@ export class Stage2 extends Phaser.Scene {
         // マップファイルを読み込み
         this.load.tilemapTiledJSON('map', 'assets/maps/test_map5.tmj');
 
-        // BGM読み込み
-        this.load.audio('bgm_pollyanna', 'assets/audio/bgm/Pollyanna.mp3');
+        // BGM読み込み（ファイル名を小文字に統一）
+        this.load.audio('bgm_pollyanna', 'assets/audio/bgm/pollyanna.mp3');
+        
+        // ファイル読み込みエラーの詳細ログ
+        this.load.on('fileerror', (file) => {
+            console.error(`Stage 2: ファイル読み込みエラー - ${file.key}: ${file.url}`);
+        });
 
         // マップ用のタイル
         this.load.image('GK_A2_C_autotile', 'assets/maps/tilesets/stage2/GK_A2_JC_autotile.png');
@@ -67,30 +72,64 @@ export class Stage2 extends Phaser.Scene {
 
         // デバッグ用：読み込み完了を確認
         this.load.on('complete', () => {
-            // アセット読み込み完了
+            console.log('Stage 2: アセット読み込み完了');
         });
     }
 
     create() {
         this.audioManager = new AudioManager(this);
-        // Stage1 と同じBGM起動ロジック（ロック時は解除イベント/最初の操作で開始）
+        
+        // Stage2 BGM起動ロジック（エラーハンドリング強化）
         const startStageBgm = () => {
-            try { this.audioManager.ensureAudioUnlocked && this.audioManager.ensureAudioUnlocked(); } catch(_) {}
-            try { this.audioManager.playBgm('bgm_pollyanna', 0.5); } catch(_) {}
+            try {
+                console.log('Stage 2: BGM再生開始');
+                this.audioManager.playBgm('bgm_pollyanna', 0.5);
+                console.log('Stage 2: BGM再生成功');
+            } catch (error) {
+                console.error('Stage 2: BGM再生エラー:', error);
+                // フォールバック: 少し遅延して再試行
+                this.time.delayedCall(1000, () => {
+                    try {
+                        console.log('Stage 2: BGM再試行');
+                        this.audioManager.playBgm('bgm_pollyanna', 0.5);
+                    } catch (retryError) {
+                        console.error('Stage 2: BGM再試行失敗:', retryError);
+                    }
+                });
+            }
         };
+        
         try {
             if (this.sound && this.sound.locked) {
-                this.sound.once('unlocked', () => { startStageBgm(); });
+                console.log('Stage 2: 音声ロック中、解除待機');
+                this.sound.once('unlocked', () => { 
+                    console.log('Stage 2: 音声ロック解除');
+                    startStageBgm(); 
+                });
                 this.input && this.input.once && this.input.once('pointerdown', () => {
-                    try { if (this.sound.context && this.sound.context.state !== 'running') this.sound.context.resume(); } catch(_) {}
+                    try { 
+                        if (this.sound.context && this.sound.context.state !== 'running') {
+                            this.sound.context.resume(); 
+                        }
+                    } catch(error) {
+                        console.warn('Stage 2: 音声コンテキスト復帰エラー:', error);
+                    }
                     startStageBgm();
                 });
                 // PC環境でも最初のキー操作で開始
-                try { this.input && this.input.keyboard && this.input.keyboard.once('keydown', startStageBgm); } catch(_) {}
+                try { 
+                    this.input && this.input.keyboard && this.input.keyboard.once('keydown', startStageBgm); 
+                } catch(error) {
+                    console.warn('Stage 2: キーボードイベント設定エラー:', error);
+                }
             } else {
+                console.log('Stage 2: 音声ロックなし、即座にBGM開始');
                 startStageBgm();
             }
-        } catch(_) { startStageBgm(); }
+        } catch(error) { 
+            console.error('Stage 2: 音声初期化エラー:', error);
+            startStageBgm(); 
+        }
 
         // ConversationSceneの重複登録を避ける
         try {
@@ -141,11 +180,34 @@ export class Stage2 extends Phaser.Scene {
     }
 
     shutdown() {
-        try { if (this.audioManager && this.audioManager.stopAll) this.audioManager.stopAll(); } catch (_) { }
-        try { if (this.audioManager && this.audioManager.bgm && this.audioManager.bgm.destroy) { this.audioManager.bgm.destroy(); this.audioManager.bgm = null; } } catch (_) { }
-        try { if (this.load && this.load.reset) this.load.reset(); } catch (_) { }
-        try { if (this.load && this.load.removeAllListeners) this.load.removeAllListeners(); } catch (_) { }
-        try { if (this.sound) this.sound.stopAll(); } catch (_) { }
+        try { 
+            if (this.audioManager && this.audioManager.stopAll) this.audioManager.stopAll(); 
+        } catch (error) { 
+            console.warn('Stage 2: AudioManager停止エラー:', error);
+        }
+        try { 
+            if (this.audioManager && this.audioManager.bgm && this.audioManager.bgm.destroy) { 
+                this.audioManager.bgm.destroy(); 
+                this.audioManager.bgm = null; 
+            } 
+        } catch (error) { 
+            console.warn('Stage 2: BGM破棄エラー:', error);
+        }
+        try { 
+            if (this.load && this.load.reset) this.load.reset(); 
+        } catch (error) { 
+            console.warn('Stage 2: Loadリセットエラー:', error);
+        }
+        try { 
+            if (this.load && this.load.removeAllListeners) this.load.removeAllListeners(); 
+        } catch (error) { 
+            console.warn('Stage 2: Loadリスナー削除エラー:', error);
+        }
+        try { 
+            if (this.sound) this.sound.stopAll(); 
+        } catch (error) { 
+            console.warn('Stage 2: Sound停止エラー:', error);
+        }
     }
 
 

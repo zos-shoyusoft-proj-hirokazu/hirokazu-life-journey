@@ -320,6 +320,109 @@ ${areaDescription}`);
         }
     }
     
+    // 会話シーン用の戻るボタンを作成
+    createConversationBackButton(scene) {
+        // === 戻るボタンの背景（現代風ゲームポップ） ===
+        this.conversationBackButtonGraphics = scene.add.graphics();
+        
+        // 影を描画
+        this.conversationBackButtonGraphics.fillStyle(0x000000, 0.3);
+        this.conversationBackButtonGraphics.fillRoundedRect(4.5, 4.5, 155, 30, 8);
+        
+        // メイン背景を描画
+        this.conversationBackButtonGraphics.fillStyle(0x2a2a2a, 0.95);
+        this.conversationBackButtonGraphics.fillRoundedRect(2.5, 2.5, 155, 30, 8);
+        
+        // 光沢効果（上部）
+        this.conversationBackButtonGraphics.fillStyle(0xffffff, 0.1);
+        this.conversationBackButtonGraphics.fillRoundedRect(2.5, 2.5, 155, 15, 8);
+        
+        this.conversationBackButtonGraphics.setDepth(1000);  // 表示順序
+        this.conversationBackButtonGraphics.setScrollFactor(0);  // カメラに固定
+        
+        // === クリック可能エリアの設定 ===
+        this.conversationBackButtonGraphics.setInteractive(new Phaser.Geom.Rectangle(5, 5, 150, 40), Phaser.Geom.Rectangle.Contains);
+        
+        // === ボタンテキストの内容を動的に設定 ===
+        let buttonText = '会話を中断';  // イベント会話用のテキスト
+        
+        // === ボタンクリック時の処理 ===
+        this.conversationBackButtonGraphics.on('pointerdown', () => {
+            // 会話を中断して元のシーンに戻る
+            if (scene.interruptConversation) {
+                scene.interruptConversation();
+            }
+        });
+        
+        // === ホバー効果（マウスオーバー時の色変更） ===
+        this.conversationBackButtonGraphics.on('pointerover', () => {
+            this.conversationBackButtonGraphics.clear();
+            
+            // ホバー時の影
+            this.conversationBackButtonGraphics.fillStyle(0x000000, 0.4);
+            this.conversationBackButtonGraphics.fillRoundedRect(4.5, 4.5, 155, 30, 8);
+            
+            // ホバー時のメイン背景（明るく）
+            this.conversationBackButtonGraphics.fillStyle(0x3a3a3a, 0.98);
+            this.conversationBackButtonGraphics.fillRoundedRect(2.5, 2.5, 155, 30, 8);
+            
+            // ホバー時の光沢効果（より明るく）
+            this.conversationBackButtonGraphics.fillStyle(0xffffff, 0.15);
+            this.conversationBackButtonGraphics.fillRoundedRect(2.5, 2.5, 155, 15, 8);
+        });
+        
+        // === マウスアウト時の色戻し ===
+        this.conversationBackButtonGraphics.on('pointerout', () => {
+            this.conversationBackButtonGraphics.clear();
+            
+            // 通常時の影
+            this.conversationBackButtonGraphics.fillStyle(0x000000, 0.3);
+            this.conversationBackButtonGraphics.fillRoundedRect(4.5, 4.5, 155, 30, 8);
+            
+            // 通常時のメイン背景
+            this.conversationBackButtonGraphics.fillStyle(0x2a2a2a, 0.95);
+            this.conversationBackButtonGraphics.fillRoundedRect(2.5, 2.5, 155, 30, 8);
+            
+            // 通常時の光沢効果
+            this.conversationBackButtonGraphics.fillStyle(0xffffff, 0.1);
+            this.conversationBackButtonGraphics.fillRoundedRect(2.5, 2.5, 155, 15, 8);
+        });
+        
+        // === 戻るボタンのテキスト表示 ===
+        this.conversationBackButtonText = scene.add.text(80, 25, buttonText, {  // 位置(80,25)にテキスト配置
+            fontSize: '18px',  // フォントサイズ
+            fill: '#ffffff',  // 白色
+            fontWeight: 'bold',  // 太字
+            fixedHeight: 50,  // 高さ固定
+            wordWrap: { width: 150 },  // 文字の折り返し
+            align: 'center',  // 文字の中央揃え
+            padding: { x: 10, y: 10 }  // パディング
+        });
+        this.conversationBackButtonText.setOrigin(0.5, 0.5);  // テキストの中心を基準に配置（上寄り）
+        this.conversationBackButtonText.setScrollFactor(0);  // カメラに固定
+        this.conversationBackButtonText.setDepth(1001);  // ボタンより手前に表示
+        
+        // 画面リサイズ時の位置調整
+        scene.scale.on('resize', () => {
+            if (this.conversationBackButtonGraphics) {
+                // 左上の位置は固定なので調整不要
+            }
+        });
+    }
+    
+    // 会話用戻るボタンのクリーンアップ
+    cleanupConversationBackButton() {
+        if (this.conversationBackButtonGraphics) {
+            this.conversationBackButtonGraphics.destroy();
+            this.conversationBackButtonGraphics = null;
+        }
+        
+        if (this.conversationBackButtonText) {
+            this.conversationBackButtonText.destroy();
+            this.conversationBackButtonText = null;
+        }
+    }
+    
     destroy() {
         if (this._destroyed) return;
         this._destroyed = true;
@@ -336,6 +439,9 @@ ${areaDescription}`);
             destroyIfExists('titleText');
             destroyIfExists('instructionText');
             destroyIfExists('selectedAreaText');
+            
+            // 会話用戻るボタンのクリーンアップ
+            this.cleanupConversationBackButton();
         } catch (error) {
             console.error('Error during UIManager cleanup:', error);
         }

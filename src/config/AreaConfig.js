@@ -20,6 +20,25 @@ export const AreaConfig = {
         }
     },
     
+    // 通常ステージ設定
+    stages: {
+        stage1: {
+            bgm: {
+                map: 'assets/audio/bgm/nightbarth.mp3'
+            }
+        },
+        stage2: {
+            bgm: {
+                map: 'assets/audio/bgm/pollyanna.mp3'
+            }
+        },
+        stage3: {
+            bgm: {
+                map: 'assets/audio/bgm/stage3.mp3' // 必要に応じて設定
+            }
+        }
+    },
+    
     // 三重町マップ
     miemachi: {
         mapKey: 'bunngo_mie_city',
