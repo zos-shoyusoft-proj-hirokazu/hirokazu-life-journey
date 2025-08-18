@@ -83,8 +83,14 @@ export class AreaSelectionManager {
     }
 
     setupAreas(areas) {
-        // 既存のマーカーを完全に削除
+        console.log('[AreaSelectionManager] setupAreas開始、既存マーカー数:', this.areaSprites ? this.areaSprites.length : 0);
+        
+        // 強制的にクリーンアップ（既存マーカーの有無に関係なく）
+        console.log('[AreaSelectionManager] 強制クリーンアップ実行');
         this.destroy();
+        
+        // 配列を確実にクリア
+        this.areaSprites = [];
         
         // スケール済みのエリアデータを直接使用
         if (areas && Array.isArray(areas)) {
@@ -92,8 +98,10 @@ export class AreaSelectionManager {
                 ...area,
                 description: this.getAreaDescription(area.name)
             }));
+            console.log('[AreaSelectionManager] エリアデータ設定完了、エリア数:', this.areas.length);
         } else {
             this.areas = [];
+            console.log('[AreaSelectionManager] エリアデータなし');
         }
         
         // エリアマーカーを作成
@@ -106,10 +114,10 @@ export class AreaSelectionManager {
             }
         });
         
+        console.log('[AreaSelectionManager] マーカー作成完了、作成されたマーカー数:', this.areaSprites.length);
+        
         // インタラクションイベントを設定
         this.setupInteractionEvents();
-        
-
     }
 
 
@@ -176,6 +184,9 @@ export class AreaSelectionManager {
         // マーカーに一意のIDを設定
         marker.setData('markerType', 'areaMarker');
         marker.setData('areaName', area.name);
+        marker.setData('markerId', `marker_${area.name}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`);
+        
+        console.log(`[AreaSelectionManager] マーカー作成: ${area.name}, ID: ${marker.getData('markerId')}`);
         
         // 現在のスケールを取得
         const currentScale = this.scene.mapManager?.mapScaleX || 1;
@@ -1242,6 +1253,71 @@ export class AreaSelectionManager {
         this.createAreaMarkers();
     }
 
+    // 既存マーカーの位置のみ更新（新規作成しない）
+    updateExistingMarkers(areas) {
+        if (!areas || !Array.isArray(areas)) {
+            console.warn('[AreaSelectionManager] updateExistingMarkers: 無効なエリアデータ');
+            return;
+        }
+        
+        // エリアデータを更新
+        this.areas = areas.map(area => ({
+            ...area,
+            description: this.getAreaDescription(area.name)
+        }));
+        
+        console.log('[AreaSelectionManager] 既存マーカーの位置を更新中...');
+        
+        // 既存のマーカーの位置を更新
+        this.areaSprites.forEach((marker, index) => {
+            if (marker && this.areas[index]) {
+                const area = this.areas[index];
+                this.updateMarkerPosition(marker, area);
+            }
+        });
+        
+        console.log('[AreaSelectionManager] 既存マーカーの位置更新完了');
+    }
+
+    // 個別マーカーの位置を更新
+    updateMarkerPosition(marker, area) {
+        if (!marker || !area) return;
+        
+        const currentScale = this.scene.mapManager?.mapScaleX || 1;
+        const labelOffset = Math.max(15, 15 * currentScale);
+        
+        // マーカー内の各要素の位置を更新
+        if (marker.children && marker.children.entries) {
+            marker.children.entries.forEach(child => {
+                if (child && child.getData && child.getData('markerType') === 'areaMarker') {
+                    if (child.type === 'Ellipse' || child.type === 'Rectangle') {
+                        // 背景形状の位置を更新
+                        const centerX = area.x + (area.width || 100) / 2;
+                        const centerY = area.y + (area.height || 100) / 2;
+                        child.setPosition(centerX, centerY);
+                        
+                        // サイズも更新
+                        if (child.type === 'Ellipse') {
+                            child.setRadius((area.width || 100) / 2, (area.height || 100) / 2);
+                        } else {
+                            child.setSize(area.width || 100, area.height || 100);
+                        }
+                    } else if (child.type === 'Text') {
+                        // テキストラベルの位置を更新
+                        const textX = area.x + (area.width || 100) / 2;
+                        const textY = area.y - labelOffset;
+                        child.setPosition(textX, textY);
+                        
+                        // フォントサイズも調整
+                        const minFontSize = 10;
+                        const fontSize = Math.max(minFontSize, Math.floor(10 * currentScale)) + 'px';
+                        child.setStyle({ fontSize: fontSize });
+                    }
+                }
+            });
+        }
+    }
+
     repositionMarkers() {
         const currentScale = this.scene.mapManager?.mapScaleX || 1;
         const labelOffset = 15 * currentScale;
@@ -1268,6 +1344,8 @@ export class AreaSelectionManager {
     }
     
     destroy() {
+        console.log('[AreaSelectionManager] destroy開始、既存マーカー数:', this.areaSprites ? this.areaSprites.length : 0);
+        
         // 確認ダイアログを閉じる
         if (this.currentDialog && this.currentDialog.active) {
             this.currentDialog.destroy();
@@ -1275,54 +1353,130 @@ export class AreaSelectionManager {
         this.isConfirmDialogActive = false;
         this.currentDialog = null;
         
-        // クリーンアップ
+        // 緑色のマーカーを強制削除（最初に実行）
+        console.log('[AreaSelectionManager] 緑色マーカーの強制削除を開始');
+        this.forceRemoveGreenMarkers();
+        
+        // 既存のマーカー配列をクリア
         if (this.areaSprites && Array.isArray(this.areaSprites)) {
-            this.areaSprites.forEach(sprite => {
+            console.log(`[AreaSelectionManager] ${this.areaSprites.length}個のマーカー配列要素をクリア`);
+            this.areaSprites.forEach((sprite, index) => {
                 if (sprite) {
-                    // グループ内の各オブジェクトを個別に削除
-                    if (sprite.children && sprite.children.entries) {
-                        sprite.children.entries.forEach(child => {
-                            if (child && child.destroy) {
-                                child.destroy();
+                    try {
+                        if (sprite.destroy) {
+                            sprite.destroy();
+                        }
+                    } catch (e) {
+                        console.warn(`[AreaSelectionManager] マーカー ${index} 削除エラー:`, e);
+                    }
+                }
+            });
+        }
+        
+        // シーンから直接マーカー関連オブジェクトを削除
+        this.removeAllMarkerObjects();
+        
+        // 配列を確実にクリア
+        this.areaSprites = [];
+        this.selectedArea = null;
+        
+        console.log('[AreaSelectionManager] destroy完了、マーカー配列クリア済み');
+    }
+
+    // シーンからすべてのマーカーオブジェクトを削除
+    removeAllMarkerObjects() {
+        if (!this.scene || !this.scene.children || !this.scene.children.list) return;
+        
+        const objectsToDestroy = [];
+        // シーンの表示リスト内のすべての子要素を反復処理
+        const sceneChildrenCopy = [...this.scene.children.list]; // 反復中にリストが変更されないようにコピーを使用
+
+        sceneChildrenCopy.forEach(child => {
+            // 子要素自体がエリアマーカーコンテナであるかを確認
+            if (child && child.getData && child.getData('markerType') === 'areaMarker') {
+                objectsToDestroy.push(child);
+            } else if (child instanceof Phaser.GameObjects.Container) {
+                // コンテナの場合、その子要素にエリアマーカーがあるかを確認
+                child.each((grandchild) => {
+                    if (grandchild && grandchild.getData && grandchild.getData('markerType') === 'areaMarker') {
+                        // 子要素がエリアマーカーの場合、その親コンテナ（child）を削除リストに追加
+                        // これにより、マーカー全体が削除されることを保証
+                        if (!objectsToDestroy.includes(child)) { // 重複して追加しないようにチェック
+                            objectsToDestroy.push(child);
+                        }
+                    }
+                });
+            }
+        });
+
+        console.log('[AreaSelectionManager] 削除対象オブジェクト数:', objectsToDestroy.length);
+        objectsToDestroy.forEach(obj => {
+            try {
+                if (obj.destroy) {
+                    obj.destroy();
+                }
+            } catch (e) {
+                console.warn('[AreaSelectionManager] オブジェクト削除エラー:', e);
+            }
+        });
+        console.log('[AreaSelectionManager] ' + objectsToDestroy.length + '個のオブジェクトを削除完了');
+    }
+
+    // 緑色のマーカーを強制削除
+    forceRemoveGreenMarkers() {
+        console.log('[AreaSelectionManager] 緑色マーカーの強制削除を開始');
+        if (!this.scene || !this.scene.children || !this.scene.children.list) return;
+        
+        const greenMarkersToDestroy = [];
+        const sceneChildrenCopy = [...this.scene.children.list]; // シーンの子要素のコピーを作成
+
+        sceneChildrenCopy.forEach(child => {
+            // 子要素がエリアマーカーコンテナであるかを確認
+            if (child && child.getData && child.getData('markerType') === 'areaMarker') {
+                let isGreenMarker = false;
+                // コンテナの子要素を反復処理して緑色の要素を探す
+                if (child instanceof Phaser.GameObjects.Container) {
+                    child.each((grandchild) => {
+                        // 緑色の背景形状をチェック
+                        if (grandchild && grandchild.fillColor !== undefined) {
+                            if (grandchild.fillColor === 0x00FF00 || grandchild.fillColor === 0x90EE90) {
+                                isGreenMarker = true;
                             }
-                        });
-                    }
-                    // グループ自体も削除
-                    if (sprite.destroy) {
-                        sprite.destroy();
-                    }
-                }
-            });
-        }
-        
-        // シーンからマーカー関連のオブジェクトを確実に削除
-        if (this.scene && this.scene.children && this.scene.children.entries) {
-            this.scene.children.entries.forEach(child => {
-                if (child && child.getData && child.getData('markerType') === 'areaMarker') {
-                    if (child.destroy) {
-                        child.destroy();
-                    }
-                }
-            });
-        }
-        
-        // 追加のクリーンアップ：コンテナ内のオブジェクトも削除
-        if (this.scene && this.scene.children && this.scene.children.entries) {
-            this.scene.children.entries.forEach(child => {
-                if (child && child.type === 'Container') {
-                    child.each((member) => {
-                        if (member && member.getData && member.getData('markerType') === 'areaMarker') {
-                            if (member.destroy) {
-                                member.destroy();
+                        }
+                        // 緑色のテキストをチェック
+                        if (grandchild && grandchild.style && grandchild.style.color) {
+                            const color = grandchild.style.color.toLowerCase();
+                            if (color === '#00ff00' || color === '#90ee90' || color === '#00aa00') {
+                                isGreenMarker = true;
+                            }
+                        }
+                        // 緑色背景のテキストをチェック
+                        if (grandchild && grandchild.style && grandchild.style.backgroundColor) {
+                            const bgColor = grandchild.style.backgroundColor.toLowerCase();
+                            if (bgColor === '#00ff00' || bgColor === '#90ee90' || bgColor === '#00aa00') {
+                                isGreenMarker = true;
                             }
                         }
                     });
                 }
-            });
-        }
+                if (isGreenMarker) {
+                    console.log('[AreaSelectionManager] 緑色エリアマーカーコンテナを検出:', child);
+                    greenMarkersToDestroy.push(child);
+                }
+            }
+        });
         
-        this.areaSprites = [];
-        this.selectedArea = null;
+        // 検出された緑色マーカーコンテナを削除
+        greenMarkersToDestroy.forEach(obj => {
+            try {
+                if (obj.destroy) {
+                    obj.destroy();
+                }
+            } catch (e) {
+                console.warn('[AreaSelectionManager] 緑色マーカーコンテナ削除エラー:', e);
+            }
+        });
         
+        console.log(`[AreaSelectionManager] ${greenMarkersToDestroy.length}個の緑色エリアマーカーコンテナを削除`);
     }
 }

@@ -92,19 +92,46 @@ export class Stage2 extends Phaser.Scene {
 
     create() {
         try {
-            // 音声ファイルの読み込み完了を待ってからAudioManagerを初期化
-            console.log('Stage 2: create開始、音声ファイル読み込み状態:', this.load.isLoading());
+            // 音声システムの競合を防ぐため、既存の音声コンテキストをクリーンアップ
+            if (this.sound && this.sound.context) {
+                try {
+                    console.log('Stage 2: 既存の音声コンテキストをクリーンアップ中...');
+                    if (typeof this.sound.context.close === 'function') {
+                        this.sound.context.close();
+                    }
+                    this.sound.context = null;
+                    console.log('Stage 2: 既存の音声コンテキストをクリーンアップ完了');
+                } catch (cleanupError) {
+                    console.warn('Stage 2: 音声コンテキストクリーンアップエラー:', cleanupError);
+                }
+            }
             
-            // 音声ファイルの読み込み完了を待つ
+            // 音声システムを完全にリセット
+            if (this.sound) {
+                try {
+                    console.log('Stage 2: 音声システムを完全にリセット中...');
+                    this.sound.stopAll();
+                    this.sound.context = null;
+                    console.log('Stage 2: 音声システムを完全にリセット完了');
+                } catch (resetError) {
+                    console.warn('Stage 2: 音声システムリセットエラー:', resetError);
+                }
+            }
+            
+            // 音声ファイルの読み込み完了を待ってからAudioManagerを初期化（重複実行防止）
+            let audioManagerInitialized = false;
             if (this.load.isLoading()) {
-                console.log('Stage 2: 音声ファイル読み込み中、完了を待機');
                 this.load.once('complete', () => {
-                    console.log('Stage 2: 音声ファイル読み込み完了、AudioManager初期化');
-                    this.initializeAudioManager();
+                    if (!audioManagerInitialized) {
+                        audioManagerInitialized = true;
+                        this.initializeAudioManager();
+                    }
                 });
             } else {
-                console.log('Stage 2: 音声ファイル読み込み完了済み、AudioManager初期化');
-                this.initializeAudioManager();
+                if (!audioManagerInitialized) {
+                    audioManagerInitialized = true;
+                    this.initializeAudioManager();
+                }
             }
 
             // CollisionManagerを初期化
@@ -193,7 +220,7 @@ export class Stage2 extends Phaser.Scene {
             // AudioManagerを初期化
             this.audioManager = new AudioManager(this);
             
-            // Stage2 BGM起動ロジック（stage1と同じ処理）
+            // Stage2 BGM起動ロジック（stage1と完全に同じ処理、BGMキーのみ変更）
             const startStageBgm = () => {
                 // 会話中はBGM再開をスキップ（イベントBGMが切れるのを防ぐ）
                 if (this.scene && this.scene.manager && this.scene.manager.isActive('ConversationScene')) {
@@ -203,48 +230,71 @@ export class Stage2 extends Phaser.Scene {
                 
                 try {
                     console.log('Stage 2: BGM再生開始');
-                    // 正しいキーでBGMを再生
-                    this.audioManager.playBgm('bgm_Pollyanna', 0.5);
-                    console.log('Stage 2: BGM再生成功');
+                    // 正しいキーでBGMを再生（stage1と異なる唯一の部分）
+                    const result = this.audioManager.playBgm('bgm_Pollyanna', 0.5);
+                    if (result) {
+                        console.log('Stage 2: BGM再生成功');
+                    } else {
+                        console.warn('Stage 2: BGM再生失敗');
+                        // エラーが発生してもゲームを続行
+                        console.log('Stage 2: BGM再生失敗しましたが、ゲームは続行します');
+                    }
                 } catch (error) {
                     console.error('Stage 2: BGM再生エラー:', error);
-                    // フォールバック: 少し遅延して再試行
-                    this.time.delayedCall(1000, () => {
-                        try {
-                            console.log('Stage 2: BGM再試行');
-                            this.audioManager.playBgm('bgm_Pollyanna', 0.5);
-                        } catch (retryError) {
-                            console.error('Stage 2: BGM再試行失敗:', retryError);
-                        }
-                    });
+                    // エラーが発生してもゲームを続行
+                    console.log('Stage 2: BGM再生エラーが発生しましたが、ゲームは続行します');
                 }
             };
 
-            // 音声システムのロック状態をチェック（stage1と同じ処理）
+            // 音声システムのロック状態をチェック（stage1と完全に同じ処理）
             if (this.sound && this.sound.locked) {
+                console.log('Stage 2: 音声システムがロックされています、ユーザー操作を待機中...');
+                
                 // ブラウザがロック中：解除イベント or 最初の操作で開始
                 this.sound.once('unlocked', () => { 
                     console.log('Stage 2: 音声システムアンロック');
                     startStageBgm(); 
                 });
                 
+                // マウスクリックでロック解除
                 this.input && this.input.once && this.input.once('pointerdown', () => {
+                    console.log('Stage 2: マウスクリック検出、音声ロック解除を試行');
                     try { 
                         if (this.sound.context && this.sound.context.state !== 'running') {
                             this.sound.context.resume(); 
                         }
+                        
+                        // 強制的に音声コンテキストを再開
+                        if (this.sound.context && this.sound.context.state === 'suspended') {
+                            this.sound.context.resume();
+                        }
+                        
+                        // 少し待機してからBGM再生を試行
+                        setTimeout(() => {
+                            if (!this.sound.locked) {
+                                console.log('Stage 2: 音声ロック解除成功、BGM再生開始');
+                                startStageBgm();
+                            } else {
+                                console.log('Stage 2: 音声ロック解除失敗、ユーザー操作を待機中...');
+                            }
+                        }, 200);
                     } catch(error) {
                         console.warn('Stage 2: 音声コンテキスト復帰エラー:', error);
                     }
-                    startStageBgm();
                 });
                 
                 // PC環境でも最初のキー操作で開始
                 try { 
-                    this.input && this.input.keyboard && this.input.keyboard.once('keydown', startStageBgm); 
+                    this.input && this.input.keyboard && this.input.keyboard.once('keydown', () => {
+                        console.log('Stage 2: キー入力検出、音声ロック解除を試行');
+                        startStageBgm();
+                    }); 
                 } catch(error) {
                     console.warn('Stage 2: キーボードイベント設定エラー:', error);
                 }
+                
+                // シンプルな処理：ユーザー操作を待機
+                
             } else {
                 // ロックされていなければ即時再生
                 console.log('Stage 2: 音声システムは既にアンロック済み');
@@ -254,6 +304,11 @@ export class Stage2 extends Phaser.Scene {
             console.error('Stage 2: AudioManager初期化エラー:', error);
         }
     }
+
+    /**
+     * 会話終了時のBGM再開を設定
+     */
+
 
     /**
      * 会話イベントを設定します。
@@ -289,41 +344,83 @@ export class Stage2 extends Phaser.Scene {
     }
 
     shutdown() {
-        try { 
-            if (this.audioManager && this.audioManager.stopAll) this.audioManager.stopAll(); 
-        } catch (error) { 
-            console.warn('Stage 2: AudioManager停止エラー:', error);
+        // AudioManagerの完全なクリーンアップ（stage1と完全に同じ）
+        if (this.audioManager) {
+            this.audioManager.stopAll();
+            this.audioManager.destroy();
+            this.audioManager = null;
         }
-        try { 
-            if (this.audioManager && this.audioManager.bgm && this.audioManager.bgm.destroy) { 
-                this.audioManager.bgm.destroy(); 
-                this.audioManager.bgm = null; 
-            } 
-        } catch (error) { 
-            console.warn('Stage 2: BGM破棄エラー:', error);
+        // 進行中のローダーやリスナーを完全解除（破棄後の発火防止）
+        try { if (this.load && this.load.reset) this.load.reset(); } catch (e) { /* ignore */ }
+        try { if (this.load && this.load.removeAllListeners) this.load.removeAllListeners(); } catch (e) { /* ignore */ }
+        
+        // 他のマネージャーのクリーンアップ
+        if (this.playerController) {
+            this.playerController.destroy();
+            this.playerController = null;
         }
-        try { 
-            if (this.conversationTrigger && this.conversationTrigger.cleanup) {
-                this.conversationTrigger.cleanup();
+        
+        if (this.touchControlManager) {
+            this.touchControlManager.destroy();
+            this.touchControlManager = null;
+        }
+        
+        if (this.uiManager) {
+            this.uiManager.destroy();
+            this.uiManager = null;
+        }
+        
+        if (this.cameraManager) {
+            this.cameraManager.destroy();
+            this.cameraManager = null;
+        }
+        
+        if (this.inputManager) {
+            this.inputManager.destroy();
+            this.inputManager = null;
+        }
+        
+        if (this.collisionManager) {
+            this.collisionManager.destroy();
+            this.collisionManager = null;
+        }
+        
+        if (this.behaviorManager) {
+            this.behaviorManager.destroy();
+            this.behaviorManager = null;
+        }
+        
+        if (this.dialogSystem) {
+            this.dialogSystem.destroy();
+            this.dialogSystem = null;
+        }
+        
+        if (this.conversationTrigger) {
+            this.conversationTrigger.destroy();
+            this.conversationTrigger = null;
+        }
+        
+        // グローバルな音声システムもクリーンアップ
+        if (this.sound) {
+            try {
+                console.log('Stage 2: 音声システムを停止中...');
+                this.sound.stopAll();
+                
+                // 音声コンテキストの状態をリセット
+                if (this.sound.context) {
+                    this.sound.context.state = 'suspended';
+                }
+                
+                // 音声システム自体をリセット
+                this.sound.context = null;
+                console.log('Stage 2: 音声システムをリセットしました');
+            } catch (e) {
+                console.warn('Stage 2: 音声システムクリーンアップエラー:', e);
             }
-        } catch (error) { 
-            console.warn('Stage 2: ConversationTriggerクリーンアップエラー:', error);
         }
-        try { 
-            if (this.load && this.load.reset) this.load.reset(); 
-        } catch (error) { 
-            console.warn('Stage 2: Loadリセットエラー:', error);
-        }
-        try { 
-            if (this.load && this.load.removeAllListeners) this.load.removeAllListeners(); 
-        } catch (error) { 
-            console.warn('Stage 2: Loadリスナー削除エラー:', error);
-        }
-        try { 
-            if (this.sound) this.sound.stopAll(); 
-        } catch (error) { 
-            console.warn('Stage 2: Sound停止エラー:', error);
-        }
+        
+        // シーンシャットダウン時のクリーンアップ登録を削除
+        this.events.off('shutdown', this.shutdown, this);
     }
 
 

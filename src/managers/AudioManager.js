@@ -20,52 +20,92 @@ export class AudioManager {
     // WebAudioがロックされている場合に解除を試みる
     ensureAudioUnlocked() {
         try {
-            const snd = this.scene && this.scene.sound;
-            if (!snd) {
-                console.debug('[AudioManager] サウンドシステムが利用できません');
-                return;
+            // シーンとサウンドシステムの存在を厳密にチェック
+            if (!this.scene) {
+                console.warn('[AudioManager] シーンが存在しません');
+                return false;
             }
             
+            if (!this.scene.sound) {
+                console.warn('[AudioManager] シーンのサウンドシステムが存在しません');
+                return false;
+            }
+            
+            const snd = this.scene.sound;
+            
+            // サウンドシステムの状態をチェック（stage系のマップ対応）
+            if (typeof snd.locked === 'undefined') {
+                console.log('[AudioManager] サウンドシステムのlockedプロパティが存在しません（stage系のマップ）');
+                // stage系のマップではlockedプロパティが存在しない場合がある
+                // 音声コンテキストが利用可能なら続行
+                if (snd.context && snd.context.state === 'running') {
+                    console.log('[AudioManager] 音声コンテキストは利用可能、続行');
+                    return true;
+                }
+            }
+
             const ctx = snd.context;
-            console.log('[AudioManager] 音声コンテキスト状態:', ctx ? ctx.state : 'undefined');
-            
-            // 音声コンテキストが存在しない場合は待機
             if (!ctx) {
-                console.log('[AudioManager] 音声コンテキストが初期化されていません、待機中...');
-                return;
-            }
-            
-            // 音声がロックされている場合
-            if (snd.locked) {
-                console.log('[AudioManager] 音声がロックされています、解除を試行');
-                try { 
-                    if (ctx.state !== 'running') {
-                        console.log('[AudioManager] 音声コンテキストを再開中...');
-                        ctx.resume(); 
+                console.log('[AudioManager] 音声コンテキストが初期化されていません、強制再初期化を試行...');
+                
+                // 音声コンテキストの強制再初期化を試行
+                try {
+                    if (this.scene && this.scene.sound) {
+                        // 既存の音声コンテキストを破棄
+                        if (this.scene.sound.context) {
+                            try {
+                                this.scene.sound.context.close();
+                            } catch (e) { /* ignore */ }
+                        }
+                        
+                        // 新しい音声コンテキストを作成
+                        try {
+                            const newContext = new (window.AudioContext || window.webkitAudioContext)();
+                            this.scene.sound.context = newContext;
+                            console.log('[AudioManager] 新しい音声コンテキストを作成しました');
+                            
+                            // ユーザーインタラクションで音声コンテキストを開始
+                            if (newContext.state === 'suspended') {
+                                newContext.resume();
+                                console.log('[AudioManager] 新しい音声コンテキストを開始しました');
+                            }
+                            
+                            // 音声コンテキストが動作開始するまで待機
+                            if (newContext.state !== 'running') {
+                                newContext.onstatechange = () => {
+                                    if (newContext.state === 'running') {
+                                        console.log('[AudioManager] 新しい音声コンテキストが動作開始しました');
+                                    }
+                                };
+                            }
+                        } catch (e) {
+                            console.warn('[AudioManager] 新しい音声コンテキスト作成エラー:', e);
+                        }
                     }
-                } catch(error) {
-                    console.warn('[AudioManager] Audio context resume error:', error);
+                } catch (e) {
+                    console.warn('[AudioManager] 音声コンテキスト強制再初期化エラー:', e);
                 }
                 
-                // 無音のオシレーターで音声コンテキストを起動
-                try {
-                    if (typeof ctx.createOscillator === 'function') {
-                        console.log('[AudioManager] 無音オシレーターで音声コンテキスト起動');
-                        const osc = ctx.createOscillator();
-                        const gain = ctx.createGain();
-                        gain.gain.value = 0.0001;
-                        osc.connect(gain).connect(ctx.destination);
-                        osc.start();
-                        osc.stop(ctx.currentTime + 0.05);
-                    }
-                } catch(error) {
-                    console.warn('[AudioManager] Oscillator creation error:', error);
-                }
+                return false;
+            }
+            
+            console.log('[AudioManager] 音声コンテキスト状態:', ctx.state);
+            
+            // 音声がロックされている場合（シンプルな処理）
+            if (snd.locked) {
+                console.log('[AudioManager] 音声がロックされています、ユーザー操作を待機中...');
+                
+                // ロック状態の場合はfalseを返す（BGM再生を延期）
+                // 複雑なリトライ処理は削除し、ユーザー操作に任せる
+                return false;
             } else {
                 console.log('[AudioManager] 音声はロックされていません');
             }
+            
+            return true;
         } catch(error) {
             console.warn('[AudioManager] Audio unlock error:', error);
+            return false;
         }
     }
 
@@ -98,27 +138,66 @@ export class AudioManager {
      * @param {boolean} fadeIn - フェードイン/アウト
      */
     playBgm(key, volume = this.bgmVolume, fadeIn = true) {
+        console.log(`[AudioManager] playBgm開始: ${key}, 音量: ${volume}`);
+        
         if (!this.isSceneUsable()) {
             console.warn('[AudioManager] シーンが使用できません');
-            return;
+            return false;
         }
         
-        this.ensureAudioUnlocked();
+        // 音声コンテキストの詳細状態をログ出力
+        try {
+            const snd = this.scene && this.scene.sound;
+            const ctx = snd && snd.context;
+            console.log('[AudioManager] 音声システム状態:', {
+                scene: !!this.scene,
+                sound: !!snd,
+                context: !!ctx,
+                contextState: ctx ? ctx.state : 'undefined',
+                locked: snd ? snd.locked : 'unknown'
+            });
+        } catch (e) {
+            console.warn('[AudioManager] 音声システム状態確認エラー:', e);
+        }
+        
+        // 音声コンテキストの初期化を確認
+        if (!this.ensureAudioUnlocked()) {
+            console.warn('[AudioManager] 音声コンテキストが初期化されていません、少し待機してから再試行...');
+            
+            // 音声コンテキストの再初期化を待機
+            setTimeout(() => {
+                if (this.ensureAudioUnlocked()) {
+                    console.log('[AudioManager] 音声コンテキスト再初期化完了、BGM再生を再試行');
+                    this.playBgm(key, volume, fadeIn);
+                } else {
+                    console.warn('[AudioManager] 音声コンテキスト再初期化失敗、BGM再生をスキップ');
+                }
+            }, 1000); // 待機時間を1秒に延長
+            
+            return false;
+        }
         
         // 念のため二重再生防止：既存BGMがあれば先に停止
         if (this.bgm) {
-            if (this.bgm.key === key) {
-                // すでに同じBGMなら何もしない
-                return;
+            // 既存BGMの状態を厳密にチェック
+            const isActuallyPlaying = this.bgm.isPlaying && this.bgm.key === key;
+            
+            if (isActuallyPlaying) {
+                // すでに同じBGMが実際に再生中なら何もしない
+                console.log(`[AudioManager] 同じBGM ${key} は実際に再生中、スキップ`);
+                return true;
+            } else {
+                // 既存BGMが停止しているか、異なるBGMの場合は停止してから再生
+                console.log(`[AudioManager] 既存BGM ${this.bgm.key} の状態: isPlaying=${this.bgm.isPlaying}, 停止してから ${key} を再生`);
+                this.stopBgm(fadeIn, () => {
+                    if (!this.isSceneUsable()) return;
+                    this.startNewBgm(key, volume, fadeIn);
+                });
+                return true;
             }
-            // stopBgmのonCompleteで新しいBGMを再生
-            this.stopBgm(fadeIn, () => {
-                if (!this.isSceneUsable()) return;
-                this.startNewBgm(key, volume, fadeIn);
-            });
         } else {
-            if (!this.isSceneUsable()) return;
-            this.startNewBgm(key, volume, fadeIn);
+            if (!this.isSceneUsable()) return false;
+            return this.startNewBgm(key, volume, fadeIn);
         }
     }
 
@@ -154,7 +233,52 @@ export class AudioManager {
                 this.bgm.key = key;
                 
                 console.log(`[AudioManager] BGM再生開始: ${key}`);
-                this.bgm.play();
+                
+                // BGM再生の詳細ログ
+                try {
+                    const playResult = this.bgm.play();
+                    console.log('[AudioManager] BGM再生結果:', playResult);
+                    
+                    // 再生状態を即座にチェック
+                    if (this.bgm && this.bgm.isPlaying) {
+                        console.log('[AudioManager] BGM再生状態確認: isPlaying = true');
+                    } else {
+                        console.warn('[AudioManager] BGM再生状態確認: isPlaying = false');
+                        
+                        // BGM再生が失敗した場合、オブジェクトをリセット
+                        if (this.bgm && !this.bgm.isPlaying) {
+                            console.warn('[AudioManager] BGM再生失敗、オブジェクトをリセット');
+                            try {
+                                this.bgm.destroy();
+                            } catch (destroyError) {
+                                console.warn('[AudioManager] BGMオブジェクト破棄エラー:', destroyError);
+                            }
+                            this.bgm = null;
+                            // 再生失敗フラグを設定
+                            this._bgmPlayFailed = true;
+                            // 失敗を明確に報告
+                            return false;
+                        }
+                    }
+                    
+                } catch (playError) {
+                    console.error(`[AudioManager] BGM再生エラー: ${key}`, playError);
+                    
+                    // エラーが発生した場合もオブジェクトをリセット
+                    if (this.bgm) {
+                        try {
+                            this.bgm.destroy();
+                        } catch (destroyError) {
+                            console.warn('[AudioManager] BGMオブジェクト破棄エラー:', destroyError);
+                        }
+                        this.bgm = null;
+                    }
+                    
+                    // 再生失敗フラグを設定
+                    this._bgmPlayFailed = true;
+                    
+                    throw playError;
+                }
                 
                 if (fadeIn) {
                     console.log('[AudioManager] フェードイン開始');
@@ -169,11 +293,31 @@ export class AudioManager {
                 }
                 
                 console.log(`[AudioManager] BGM再生完了: ${key}`);
+                
+                // 再生後の状態を定期的に監視
+                if (this.scene && this.scene.time) {
+                    this.scene.time.delayedCall(1000, () => {
+                        if (this.bgm && this.bgm.isPlaying) {
+                            console.log(`[AudioManager] BGM再生状態確認（1秒後）: ${key} は再生中`);
+                        } else if (this.bgm) {
+                            console.warn(`[AudioManager] BGM再生状態確認（1秒後）: ${key} は停止中`);
+                        } else {
+                            console.warn('[AudioManager] BGM再生状態確認（1秒後）: BGMオブジェクトが存在しません');
+                        }
+                    });
+                } else {
+                    console.warn('[AudioManager] シーンのタイムマネージャーが利用できません、状態監視をスキップ');
+                }
+                
+                return true; // BGM再生成功
+                
             } catch (error) {
                 console.error(`[AudioManager] BGM ${key} の再生に失敗しました:`, error);
+                return false; // BGM再生失敗
             }
         } else {
             console.log('[AudioManager] BGMがミュートされています');
+            return false; // BGM再生失敗
         }
     }
 
@@ -218,6 +362,8 @@ export class AudioManager {
                         onComplete: () => {
                             try {
                                 if (this.bgm && this.bgm.isPlaying) {
+                                    // 安全に停止：pause()してからstop()
+                                    this.bgm.pause();
                                     this.bgm.stop();
                                 }
                                 this.bgm = null;
@@ -232,6 +378,8 @@ export class AudioManager {
                 } else {
                     try {
                         if (this.bgm && this.bgm.isPlaying) {
+                            // 安全に停止：pause()してからstop()
+                            this.bgm.pause();
                             this.bgm.stop();
                         }
                         this.bgm = null;

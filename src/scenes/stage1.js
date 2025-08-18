@@ -96,13 +96,20 @@ export class Stage1 extends Phaser.Scene {
 
     create() {
         try {
-            // 音声ファイルの読み込み完了を待ってからAudioManagerを初期化
+            // 音声ファイルの読み込み完了を待ってからAudioManagerを初期化（重複実行防止）
+            let audioManagerInitialized = false;
             if (this.load.isLoading()) {
                 this.load.once('complete', () => {
-                    this.initializeAudioManager();
+                    if (!audioManagerInitialized) {
+                        audioManagerInitialized = true;
+                        this.initializeAudioManager();
+                    }
                 });
             } else {
-                this.initializeAudioManager();
+                if (!audioManagerInitialized) {
+                    audioManagerInitialized = true;
+                    this.initializeAudioManager();
+                }
             }
 
             // CollisionManagerを初期化
@@ -183,7 +190,7 @@ export class Stage1 extends Phaser.Scene {
             // AudioManagerを初期化
             this.audioManager = new AudioManager(this);
             
-            // Stage1 BGM起動ロジック（エラーハンドリング強化）
+            // Stage1 BGM起動ロジック
             const startStageBgm = () => {
                 // 会話中はBGM再開をスキップ（イベントBGMが切れるのを防ぐ）
                 if (this.scene && this.scene.manager && this.scene.manager.isActive('ConversationScene')) {
@@ -194,19 +201,18 @@ export class Stage1 extends Phaser.Scene {
                 try {
                     console.log('Stage 1: BGM再生開始');
                     // 正しいキーでBGMを再生
-                    this.audioManager.playBgm('bgm_nightbarth', 0.5);
-                    console.log('Stage 1: BGM再生成功');
+                    const result = this.audioManager.playBgm('bgm_nightbarth', 0.5);
+                    if (result) {
+                        console.log('Stage 1: BGM再生成功');
+                    } else {
+                        console.warn('Stage 1: BGM再生失敗');
+                        // エラーが発生してもゲームを続行
+                        console.log('Stage 1: BGM再生失敗しましたが、ゲームは続行します');
+                    }
                 } catch (error) {
                     console.error('Stage 1: BGM再生エラー:', error);
-                    // フォールバック: 少し遅延して再試行
-                    this.time.delayedCall(1000, () => {
-                        try {
-                            console.log('Stage 1: BGM再試行');
-                            this.audioManager.playBgm('bgm_nightbarth', 0.5);
-                        } catch (retryError) {
-                            console.error('Stage 1: BGM再試行失敗:', retryError);
-                        }
-                    });
+                    // エラーが発生してもゲームを続行
+                    console.log('Stage 1: BGM再生エラーが発生しましたが、ゲームは続行します');
                 }
             };
 
@@ -246,12 +252,41 @@ export class Stage1 extends Phaser.Scene {
     }
 
     shutdown() {
-        // AudioManagerの完全なクリーンアップ
+        // AudioManagerの完全なクリーンアップ（強化版）
         if (this.audioManager) {
-            this.audioManager.stopAll();
-            this.audioManager.destroy();
-            this.audioManager = null;
+            try {
+                this.audioManager.stopAll();
+                this.audioManager.destroy();
+            } catch (e) {
+                console.warn('Stage 1: AudioManager破棄エラー:', e);
+            } finally {
+                this.audioManager = null;
+            }
         }
+        
+        // 音声コンテキストの完全なリセット
+        try {
+            if (this.sound && this.sound.context) {
+                this.sound.context.close();
+                this.sound.context = null;
+            }
+        } catch (e) {
+            console.warn('Stage 1: 音声コンテキストリセットエラー:', e);
+        }
+        
+        // グローバルな音声システムもクリーンアップ
+        if (this.sound) {
+            try {
+                this.sound.stopAll();
+                // 音声コンテキストの状態をリセット
+                if (this.sound.context) {
+                    this.sound.context.state = 'suspended';
+                }
+            } catch (e) {
+                console.warn('Stage 1: 音声システムクリーンアップエラー:', e);
+            }
+        }
+        
         // 進行中のローダーやリスナーを完全解除（破棄後の発火防止）
         try { if (this.load && this.load.reset) this.load.reset(); } catch (e) { /* ignore */ }
         try { if (this.load && this.load.removeAllListeners) this.load.removeAllListeners(); } catch (e) { /* ignore */ }
@@ -300,11 +335,6 @@ export class Stage1 extends Phaser.Scene {
         if (this.conversationTrigger) {
             this.conversationTrigger.destroy();
             this.conversationTrigger = null;
-        }
-        
-        // グローバルな音声システムもクリーンアップ
-        if (this.sound) {
-            this.sound.stopAll();
         }
         
         // シーンシャットダウン時のクリーンアップ登録を削除

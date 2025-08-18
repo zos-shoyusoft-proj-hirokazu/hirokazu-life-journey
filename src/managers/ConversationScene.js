@@ -352,6 +352,17 @@ export class ConversationScene extends Phaser.Scene {
         // 会話開始イベントを発火
         this.events.emit('conversationStarted');
         
+        // 現在再生中のBGMキーを覚える（会話終了後に復元するため）
+        try {
+            const mainScene = this.scene.get('Stage1Scene') || this.scene.get('Stage2Scene') || this.scene.get('Stage3Scene') || this.scene.get('MiemachiStage') || this.scene.get('TaketastageStage') || this.scene.get('JapanStage');
+            if (mainScene && mainScene.audioManager && mainScene.audioManager.bgm) {
+                this._originalBgmKey = mainScene.audioManager.bgm.key;
+                console.log(`[ConversationScene] 元のBGMキーを記憶: ${this._originalBgmKey}`);
+            }
+        } catch (e) {
+            console.warn('[ConversationScene] 元のBGMキー取得エラー:', e);
+        }
+        
         // 背景とBGMの設定
         if (conversationData.background) {
             this.updateBackground(conversationData.background);
@@ -1034,9 +1045,35 @@ export class ConversationScene extends Phaser.Scene {
                 if (keyToPlay) {
                     try { 
                         console.log(`[ConversationScene] 元のBGMを復元: ${keyToPlay}`);
-                        mainScene.audioManager.playBgm(keyToPlay, 0.3, true); 
-                    } catch (_) { 
-                        console.warn(`[ConversationScene] BGM復元失敗: ${keyToPlay}`);
+                        
+                        // 音声コンテキストを確実に復活させる
+                        if (mainScene.sound && mainScene.sound.context) {
+                            if (mainScene.sound.context.state === 'suspended') {
+                                console.log('[ConversationScene] 音声コンテキストを再開中...');
+                                mainScene.sound.context.resume();
+                            }
+                            
+                            // 音声コンテキストが確実に動作するまで待機
+                            if (mainScene.sound.context.state !== 'running') {
+                                console.log('[ConversationScene] 音声コンテキストの状態を待機中...');
+                                mainScene.sound.context.onstatechange = () => {
+                                    if (mainScene.sound.context.state === 'running') {
+                                        console.log('[ConversationScene] 音声コンテキストが動作開始、BGM再生を実行');
+                                        mainScene.audioManager.playBgm(keyToPlay, 0.3, true);
+                                    }
+                                };
+                            } else {
+                                // 音声コンテキストが既に動作中なら即座にBGM再生
+                                mainScene.audioManager.playBgm(keyToPlay, 0.3, true);
+                            }
+                        } else {
+                            // 音声コンテキストが存在しない場合は直接BGM再生を試行
+                            console.warn('[ConversationScene] 音声コンテキストが存在しません、直接BGM再生を試行');
+                            mainScene.audioManager.playBgm(keyToPlay, 0.3, true);
+                        }
+                        
+                    } catch (error) { 
+                        console.warn(`[ConversationScene] BGM復元失敗: ${keyToPlay}`, error);
                     }
                 }
                 
