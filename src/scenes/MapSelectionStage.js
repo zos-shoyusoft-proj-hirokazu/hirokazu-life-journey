@@ -86,9 +86,15 @@ export class MapSelectionStage extends Phaser.Scene {
     loadSeFiles() {
         // AreaConfigからSEを動的に読み込み
         if (this.mapConfig.se) {
+            console.log('[MapSelectionStage] SE読み込み開始:', this.mapConfig.se);
             Object.keys(this.mapConfig.se).forEach(seKey => {
-                this.load.audio(`se_${seKey}`, this.mapConfig.se[seKey]);
+                const sePath = this.mapConfig.se[seKey];
+                const seKeyWithPrefix = `se_${seKey}`;
+                console.log('[MapSelectionStage] SE読み込み:', seKeyWithPrefix, '->', sePath);
+                this.load.audio(seKeyWithPrefix, sePath);
             });
+        } else {
+            console.warn('[MapSelectionStage] mapConfig.se が定義されていません');
         }
     }
 

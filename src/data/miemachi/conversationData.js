@@ -941,7 +941,7 @@ export const miemachiConversationData = {
             },
             {
                 'character': 'dutu',
-                'se':'donn'
+                'se': 'taiko_2ren',
             },
             {
                 'speaker': 'ひろかず',

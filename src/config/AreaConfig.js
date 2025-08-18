@@ -59,6 +59,8 @@ export const AreaConfig = {
         se: {
             touch: 'assets/audio/se/touch_7.mp3', // ダイアログ用タッチSE
             map_touch: 'assets/audio/se/touch_2.mp3', // マップ専用タッチSE
+            // 会話用SE
+            taiko_2ren: 'assets/audio/se/太鼓2連打.mp3'
         },
         characters: {
             // hirokazu: miemachi の会話データで使用している表情のみ

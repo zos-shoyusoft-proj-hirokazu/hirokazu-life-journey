@@ -441,6 +441,11 @@ export class ConversationScene extends Phaser.Scene {
         }
         // テキストのアニメーション表示
         this.animateText(dialog.text);
+        
+        // SE再生処理を追加
+        if (dialog.se) {
+            this.playDialogSE(dialog.se);
+        }
     }
 
     // 立ち絵の更新
@@ -1245,5 +1250,20 @@ export class ConversationScene extends Phaser.Scene {
                 this.nameText.setPosition(this.nameboxLeftMargin + nbWidth / 2, targetY);
             }
         } catch (_) { /* ignore */ }
+    }
+    
+    // SE再生用のメソッド
+    playDialogSE(seKey) {
+        console.log(`[ConversationScene] SE再生を試行: ${seKey}`);
+        
+        // MapSelectionStageのaudioManagerを取得
+        const mapStage = this.scene.get('MiemachiStage') || this.scene.get('TaketastageStage') || this.scene.get('JapanStage');
+        
+        if (mapStage && mapStage.audioManager) {
+            console.log(`[ConversationScene] AudioManager発見、SE再生: se_${seKey}`);
+            mapStage.audioManager.playSe(`se_${seKey}`);
+        } else {
+            console.warn(`[ConversationScene] AudioManagerが見つかりません:`, mapStage);
+        }
     }
 } 
