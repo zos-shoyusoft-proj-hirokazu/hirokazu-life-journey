@@ -19,7 +19,7 @@ export class ConversationTrigger {
         // 新しいギャルゲ風システムの会話データがあるかチェック
         const conversationData = this.conversationManager.getConversation(npcId);
         
-        console.log(`[ConversationTrigger] 会話データ取得結果:`, conversationData);
+        console.log('[ConversationTrigger] 会話データ取得結果:', conversationData);
         
         if (conversationData) {
             // 新しいギャルゲ風会話システムを使用
