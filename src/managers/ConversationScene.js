@@ -349,6 +349,9 @@ export class ConversationScene extends Phaser.Scene {
         this.currentConversation = conversationData;
         this.currentConversationIndex = 0;
         
+        // 会話開始イベントを発火
+        this.events.emit('conversationStarted');
+        
         // 背景とBGMの設定
         if (conversationData.background) {
             this.updateBackground(conversationData.background);
@@ -1061,6 +1064,9 @@ export class ConversationScene extends Phaser.Scene {
     // 会話終了
     endConversation() {
         try {
+            // 会話終了イベントを発火
+            this.events.emit('conversationEnded');
+            
             // BGMを元に戻す
             this.restoreOriginalBgm();
             
@@ -1078,9 +1084,6 @@ export class ConversationScene extends Phaser.Scene {
             
             // UI要素をリセット（削除はしない）
             this.resetUI();
-            
-            // 会話終了イベントを発火
-            this.events.emit('conversationEnded');
             
             // 元のシーンに戻る
             this.scene.stop();
@@ -1254,16 +1257,16 @@ export class ConversationScene extends Phaser.Scene {
     
     // SE再生用のメソッド
     playDialogSE(seKey) {
-        console.log(`[ConversationScene] SE再生を試行: ${seKey}`);
+        console.log('[ConversationScene] SE再生を試行:', seKey);
         
         // MapSelectionStageのaudioManagerを取得
         const mapStage = this.scene.get('MiemachiStage') || this.scene.get('TaketastageStage') || this.scene.get('JapanStage');
         
         if (mapStage && mapStage.audioManager) {
-            console.log(`[ConversationScene] AudioManager発見、SE再生: se_${seKey}`);
+            console.log('[ConversationScene] AudioManager発見、SE再生:', `se_${seKey}`);
             mapStage.audioManager.playSe(`se_${seKey}`);
         } else {
-            console.warn(`[ConversationScene] AudioManagerが見つかりません:`, mapStage);
+            console.warn('[ConversationScene] AudioManagerが見つかりません:', mapStage);
         }
     }
 } 

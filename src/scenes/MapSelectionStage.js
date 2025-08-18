@@ -37,6 +37,8 @@ export class MapSelectionStage extends Phaser.Scene {
         this._suppressMapBgm = false;
         // 自動リトライイベントのハンドル
         this._bgmRetry = null;
+        // 会話中フラグ
+        this._isInConversation = false;
     }
 
     preload() {
@@ -96,6 +98,25 @@ export class MapSelectionStage extends Phaser.Scene {
         } else {
             console.warn('[MapSelectionStage] mapConfig.se が定義されていません');
         }
+    }
+    
+    // 会話開始・終了のイベントリスナーを設定
+    setupConversationEventListeners() {
+        // ConversationSceneの会話開始・終了イベントを監視
+        this.events.on('conversationStarted', () => {
+            this._isInConversation = true;
+            console.log('[MapSelectionStage] 会話開始: 他のエリアをタップできません');
+        });
+        
+        this.events.on('conversationEnded', () => {
+            this._isInConversation = false;
+            console.log('[MapSelectionStage] 会話終了: 他のエリアをタップできます');
+        });
+        
+        this.events.on('conversationInterrupted', () => {
+            this._isInConversation = false;
+            console.log('[MapSelectionStage] 会話中断: 他のエリアをタップできます');
+        });
     }
 
     // BGMファイルを動的に読み込む
@@ -174,6 +195,9 @@ export class MapSelectionStage extends Phaser.Scene {
                 } catch (e) {
                     // ignore
                 }
+                
+                // 会話開始・終了のイベントリスナーを設定
+                this.setupConversationEventListeners();
             }
             // 設定ファイルからエリア情報を取得し、マップエリアとマージ
             const mapAreas = this.mapManager.getAreas();
@@ -370,6 +394,12 @@ export class MapSelectionStage extends Phaser.Scene {
 
     handleTouch(pointer) {
         try {
+            // 会話中は他のエリアをタップできない
+            if (this._isInConversation) {
+                console.log('[MapSelectionStage] 会話中は他のエリアをタップできません');
+                return;
+            }
+            
             // iOS等で初回タップ時にオーディオを確実に解除
             if (this.sound && this.sound.locked) {
                 try {
