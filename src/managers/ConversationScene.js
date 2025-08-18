@@ -1067,6 +1067,9 @@ export class ConversationScene extends Phaser.Scene {
             // 会話終了イベントを発火
             this.events.emit('conversationEnded');
             
+            // エリアを完了済みに設定
+            this.markAreaAsCompleted();
+            
             // BGMを元に戻す
             this.restoreOriginalBgm();
             
@@ -1096,6 +1099,69 @@ export class ConversationScene extends Phaser.Scene {
             } catch (stopError) {
                 console.error('[ConversationScene] Error stopping scene:', stopError);
             }
+        }
+    }
+
+    // エリアを完了済みに設定
+    markAreaAsCompleted() {
+        try {
+            // 現在の会話データからエリア名を取得
+            if (this.currentConversation && this.currentConversation.areaName) {
+                const areaName = this.currentConversation.areaName;
+                
+                // より安全なシーン取得方法
+                const sceneManager = this.scene.manager;
+                if (!sceneManager) {
+                    console.warn('[ConversationScene] シーンマネージャーが利用できません');
+                    return;
+                }
+                
+                // 利用可能なシーンを確認
+                const availableScenes = ['MiemachiStage', 'TaketastageStage', 'JapanStage'];
+                let originalScene = null;
+                
+                for (const sceneKey of availableScenes) {
+                    try {
+                        const scene = sceneManager.getScene(sceneKey);
+                        if (scene && scene.areaSelectionManager) {
+                            originalScene = scene;
+                            break;
+                        }
+                    } catch (e) {
+                        // シーンが存在しない場合はスキップ
+                    }
+                }
+                
+                if (originalScene && originalScene.areaSelectionManager) {
+                    // エリアを完了済みに設定
+                    originalScene.areaSelectionManager.markAreaAsCompleted(areaName);
+                    console.log(`[ConversationScene] エリア ${areaName} を完了済みに設定しました`);
+                    
+                    // 現在アクティブなシーンも更新（即座に緑色に光らせるため）
+                    try {
+                        // Phaser 3.60以降の方法
+                        if (this.scene.manager.getActiveScene) {
+                            const activeScene = this.scene.manager.getScene(this.scene.manager.getActiveScene());
+                            if (activeScene && activeScene.areaSelectionManager) {
+                                activeScene.areaSelectionManager.markAreaAsCompleted(areaName);
+                                console.log(`[ConversationScene] アクティブシーンのエリア ${areaName} も更新しました`);
+                            }
+                        }
+                    } catch (e) {
+                        console.log('[ConversationScene] アクティブシーンの取得に失敗（無視）:', e.message);
+                    }
+                    
+                    // さらに、現在のシーンがMapSelectionStageの場合、直接更新（単一実行に簡素化）
+                    if (this.scene && this.scene.areaSelectionManager) {
+                        this.scene.areaSelectionManager.markAreaAsCompleted(areaName);
+                        console.log(`[ConversationScene] 現在シーンのエリア ${areaName} も更新しました`);
+                    }
+                } else {
+                    console.warn(`[ConversationScene] エリア完了設定に必要なシーンが見つかりません: ${areaName}`);
+                }
+            }
+        } catch (error) {
+            console.error('[ConversationScene] エリア完了設定エラー:', error);
         }
     }
     

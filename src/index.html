@@ -98,8 +98,98 @@
             border: none;
             outline: none;
             position: absolute;
-            top: 0;
-            left: 0;
+        }
+        
+        /* ゲームリセットボタンのスタイル */
+        .game-reset-button {
+            position: fixed; /* absoluteからfixedに変更して確実に右下に配置 */
+            bottom: 20px;
+            right: 20px;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: #FF0000;
+            border: 1px solid #FFFFFF;
+            padding: 12px 8px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            z-index: 9999; /* 最前面に表示 */
+            transition: background-color 0.3s ease;
+            min-width: 80px;
+            text-align: center;
+            white-space: nowrap;
+        }
+        
+        .game-reset-button:hover {
+            background-color: rgba(255, 0, 0, 0.9);
+        }
+        
+        /* レスポンシブ対応 */
+        @media (max-width: 768px) {
+            .game-reset-button {
+                bottom: 15px;
+                right: 15px;
+                font-size: 11px;
+                padding: 10px 6px;
+                min-width: 70px;
+            }
+        }
+        
+        @media (min-width: 1200px) {
+            .game-reset-button {
+                bottom: 25px;
+                right: 25px;
+                font-size: 13px;
+                padding: 14px 10px;
+                min-width: 90px;
+            }
+        }
+        
+        /* ステージ選択画面の説明エリア（画面内に収まるように調整） */
+        #stage-select .content-area {
+            height: 68vh;            /* 画面高の68%（横向きで余裕を持たせる） */
+            max-height: 68vh;
+            min-height: 0;
+            overflow-y: auto;
+            width: 100%;
+            margin: 8px 0;        /* 余白（オレンジ）を詰める */
+            display: flex;         /* 子要素（説明枠）を中央寄せ */
+            justify-content: center;/* 縦方向（columnのメイン軸）中央 */
+        }
+        
+        #stage-select .description-area {
+            padding: 20px;
+            line-height: 1.7;
+            font-size: 16px;
+            height: auto;
+            min-height: 0;
+        }
+        
+        #stage-select .description-area p {
+            margin-bottom: 18px;
+            text-align: justify;
+            word-wrap: break-word;
+            text-indent: 1.2em;
+            white-space: pre-line; /* 改行を保持 */
+        }
+        
+        /* レスポンシブ対応 */
+        @media (max-width: 768px) {
+            #stage-select .content-area { height: 60vh; max-height: 60vh; margin: 6px 0; }
+            #stage-select .description-area { padding: 16px; font-size: 15px; line-height: 1.6; }
+        }
+        
+        @media (min-width: 1200px) {
+            #stage-select .content-area { height: 72vh; max-height: 72vh; }
+            #stage-select .description-area { padding: 24px; font-size: 18px; line-height: 1.8; }
+        }
+
+        /* 端末が横向きの時の最適化 */
+        @media (orientation: landscape) {
+            #stage-select .content-area { height: 70vh; max-height: 70vh; }
+            /* 横向き時の説明枠オフセットを0に */
+            #stage-select .description-area { transform: translateY(-20px); }
+            /* リセットボタンは常に右下固定 */
+            .game-reset-button { bottom: 20px; }
         }
         /* オープニング動画関連のスタイル - 外部CSSに移動済み */
         /* #opening-video, #video-container, #youtube-video, .skip-button, .play-button, .watch-again-button のスタイルは opening-video.css に移動 */
@@ -210,6 +300,9 @@
         </div>
     </div>
     
+    <!-- ゲームリセット（常に画面の右下に固定。初期は非表示） -->
+    <button id="game-reset-btn" class="game-reset-button" style="display: none;">ゲームリセット</button>
+    
     <!-- メインメニュー画面 -->
     <div id="main-menu" style="display: flex;">
         <div class="main-menu-container">
@@ -272,6 +365,7 @@
                         <p>ステージを選択してください</p>
                     </div>
                 </div>
+                <!-- リセットボタンはbody直下に配置するため、ここには置かない -->
             </div>
         </div>
     </div>
@@ -454,6 +548,8 @@
             if (openingVideo) {
                 openingVideo.style.display = 'flex';
             }
+            // リセットボタンは非表示
+            try { const rb = document.getElementById('game-reset-btn'); if (rb) rb.style.display = 'none'; } catch(_) {}
             
             const videoContainer = document.getElementById('video-container');
             if (videoContainer) {
@@ -501,6 +597,8 @@
             iframe.src = '';
             openingVideo.style.display = 'none';
             mainMenu.style.display = 'flex';
+            // リセットボタンは非表示
+            try { const rb = document.getElementById('game-reset-btn'); if (rb) rb.style.display = 'none'; } catch(_) {}
             
             // インストールバナーを再表示
             if (window.pwaManager) {
@@ -524,6 +622,25 @@
             }
             
             // 古いPWAインストール処理は削除 - 新しい処理に統一済み
+            // ゲームリセットボタンのクリック処理（1回だけ設定）
+            const resetButton = document.getElementById('game-reset-btn');
+            if (resetButton && !resetButton.__handlerAttached) {
+                resetButton.addEventListener('click', function() {
+                    playSE('assets/audio/se/touch_1.mp3');
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => { this.style.transform = ''; }, 150);
+                    // 完了状態をリセット
+                    if (window.resetAllCompletions) {
+                        window.resetAllCompletions();
+                    } else {
+                        Object.keys(localStorage).forEach(key => { if (key.startsWith('event_completed_')) localStorage.removeItem(key); });
+                        console.log('完了状態をリセットしました');
+                    }
+                    // ステージ選択を再表示
+                    showStageSelect();
+                });
+                resetButton.__handlerAttached = true;
+            }
         });
         
         // ステージ選択画面のボタン設定
@@ -635,6 +752,8 @@
             
             // ステージボタンのイベントリスナーを設定
             setupStageSelectButtons();
+            // リセットボタンを表示
+            try { const rb = document.getElementById('game-reset-btn'); if (rb) rb.style.display = 'block'; } catch(_) {}
             
             // 初期状態を確実に設定
             if (descriptionArea) {
@@ -734,6 +853,8 @@
             if (gameContainer) {
                 gameContainer.style.display = 'block';
             }
+            // ゲーム中はリセットボタンを非表示
+            try { const rb = document.getElementById('game-reset-btn'); if (rb) rb.style.display = 'none'; } catch(_) {}
             
                 if (window.startPhaserGame) {
                     window.startPhaserGame(stageNumber);
@@ -800,6 +921,8 @@
             if (stageSelect) stageSelect.style.display = 'flex';
             const gameContainer = document.getElementById('game-container');
             if (gameContainer) gameContainer.style.display = 'none';
+            // ステージ選択画面ではリセットボタンを表示
+            try { const rb = document.getElementById('game-reset-btn'); if (rb) rb.style.display = 'block'; } catch(_) {}
 
             // 安全化：ゲーム全体のサウンド・ローダー・シーンを最後にもう一度クリーンにする
             try {

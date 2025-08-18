@@ -33,7 +33,7 @@ export class ConversationTrigger {
     }
 
     // ギャルゲ風会話システムの開始（NPCクリック時とエリアマーカー「はい」クリック時の両方で使用）
-    startVisualNovelConversation(conversationData) {
+    startVisualNovelConversation(conversationData, areaName = null) {
         // シーンの有効性をチェック
         if (!this.scene || !this.scene.scene) {
             console.warn('[ConversationTrigger] Scene is not available for conversation');
@@ -55,6 +55,12 @@ export class ConversationTrigger {
         
         this.isConversationActive = true;
         
+        // 会話データにエリア名を追加
+        const enhancedConversationData = {
+            ...conversationData,
+            areaName: areaName
+        };
+        
         try {
             const scenePlugin = this.scene.scene;
             const cs = scenePlugin.get('ConversationScene');
@@ -74,7 +80,7 @@ export class ConversationTrigger {
                         try { scenePlugin.bringToTop('ConversationScene'); } catch(e) { /* ignore */ }
                         cs.scene.setVisible(true);
                         cs.scene.setActive(true);
-                        cs.startConversation(conversationData);
+                        cs.startConversation(enhancedConversationData);
                     } catch(e) { console.error('[ConversationTrigger] start after launch error:', e); this.isConversationActive = false; }
                 });
             } else {
@@ -83,7 +89,7 @@ export class ConversationTrigger {
                     try { scenePlugin.bringToTop('ConversationScene'); } catch(e) { /* ignore */ }
                     cs.scene.setVisible(true);
                     cs.scene.setActive(true);
-                    cs.startConversation(conversationData);
+                    cs.startConversation(enhancedConversationData);
                 } catch(e) { console.error('[ConversationTrigger] start on active error:', e); this.isConversationActive = false; }
             }
 

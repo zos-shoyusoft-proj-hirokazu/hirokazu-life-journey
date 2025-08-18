@@ -261,7 +261,7 @@ export class UIManager {
         }).setOrigin(0, 1);
         
         // 説明テキスト（左下に配置）
-        this.instructionText = scene.add.text(5, scene.cameras.main.height, '場所をタップして移動！', {
+        this.instructionText = scene.add.text(5, scene.cameras.main.height - 15, '場所をタップして移動！', {
             fontSize: '14px',
             fill: '#FF6B35',
             backgroundColor: 'rgba(0, 0, 0, 0.3)',
@@ -278,6 +278,14 @@ export class UIManager {
             }
         }).setOrigin(0, 1);
         
+        // 初期表示時の位置をリサイズ時と同じに調整
+        this.updateMapUI({ width: scene.cameras.main.width, height: scene.cameras.main.height });
+        
+        // 完了状態リセットボタン（ステージ選択画面のみに表示）
+        if (title === 'ステージ選択画面') {
+            this.createResetButton(scene);
+        }
+        
         // 戻るボタンは削除 - 右上の戻るボタンのみを使用
         
         // 選択された場所の情報表示用
@@ -291,6 +299,49 @@ export class UIManager {
         
         // MapUI created successfully
     }
+
+    // ゲームリセットボタンを作成
+    createResetButton(scene) {
+        // ゲームリセットボタン（左上に配置）
+        this.resetButton = scene.add.text(10, 10, 'ゲームリセット', {
+            fontSize: '14px',
+            fill: '#FF0000',
+            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+            padding: { x: 10, y: 6 },
+            borderRadius: 6,
+            stroke: '#FFFFFF',
+            strokeThickness: 1
+        }).setOrigin(0, 0);
+        
+        this.resetButton.setInteractive();
+        this.resetButton.on('pointerdown', () => {
+            // 完了状態をリセット
+            if (scene.areaSelectionManager) {
+                scene.areaSelectionManager.resetAllCompletions();
+                console.log('完了状態をリセットしました');
+            }
+            
+            // ステージ選択画面に戻る
+            if (window.returnToStageSelect) {
+                window.returnToStageSelect();
+            } else {
+                // フォールバック：直接ステージ選択画面を表示
+                const stageSelect = document.getElementById('stage-select');
+                const gameContainer = document.getElementById('game-container');
+                if (stageSelect) stageSelect.style.display = 'flex';
+                if (gameContainer) gameContainer.style.display = 'none';
+            }
+        });
+        
+        // ホバー効果
+        this.resetButton.on('pointerover', () => {
+            this.resetButton.setStyle({ backgroundColor: 'rgba(255, 0, 0, 0.9)' });
+        });
+        
+        this.resetButton.on('pointerout', () => {
+            this.resetButton.setStyle({ backgroundColor: 'rgba(0, 0, 0, 0.8)' });
+        });
+    }
     
     // MapUI専用の更新メソッド
     updateMapUI(gameSize) {
@@ -302,7 +353,9 @@ export class UIManager {
         }
         
         if (this.instructionText) {
+            // 説明テキストの位置を確実に左下に配置
             this.instructionText.setPosition(10, gameSize.height - 15);
+            console.log(`[UIManager] 説明テキストの位置を更新: (10, ${gameSize.height - 15})`);
         }
         
         if (this.selectedAreaText) {
@@ -439,6 +492,7 @@ ${areaDescription}`);
             destroyIfExists('titleText');
             destroyIfExists('instructionText');
             destroyIfExists('selectedAreaText');
+            destroyIfExists('resetButton');
             
             // 会話用戻るボタンのクリーンアップ
             this.cleanupConversationBackButton();
