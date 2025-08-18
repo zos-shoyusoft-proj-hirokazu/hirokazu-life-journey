@@ -348,7 +348,9 @@
 
 
 .description-area {
-    height: 280px;
+    height: auto;
+    max-height: 100%;
+    overflow-y: auto;
     border-radius: 15px;
     padding: 35px;
     display: flex;
@@ -396,7 +398,9 @@
     }
     
     .description-area {
-        height: 250px;
+        height: auto;
+        max-height: 100%;
+        overflow-y: auto;
         font-size: 16px;
         padding: 30px;
     }
