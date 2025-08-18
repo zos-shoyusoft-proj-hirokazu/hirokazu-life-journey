@@ -29,7 +29,7 @@ export const AreaConfig = {
         },
         stage2: {
             bgm: {
-                map: 'assets/audio/bgm/pollyanna.mp3'
+                map: 'assets/audio/bgm/stage2/Pollyanna.mp3'
             }
         },
         stage3: {

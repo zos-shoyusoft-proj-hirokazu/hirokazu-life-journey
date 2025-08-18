@@ -7,11 +7,11 @@ import { CameraManager } from '../managers/CameraManager.js';
 import { InputManager } from '../managers/InputManager.js';
 import { CollisionManager } from '../managers/CollisionManager.js';
 import { BehaviorManager_Stage2 } from '../data/stage2/BehaviorManager_Stage2.js';
-import { DialogSystem } from '../managers/DialogSystem.js';  // 追加
-import { Stage2DialogData } from '../data/stage2/dialogs.js';  // 追加
-import { AudioManager } from '../managers/AudioManager.js';  // 追加
-
-
+import { DialogSystem } from '../managers/DialogSystem.js';
+import { Stage2DialogData } from '../data/stage2/dialogs.js';
+import { ConversationTrigger } from '../managers/ConversationTrigger.js';
+import { ConversationScene } from '../managers/ConversationScene.js';
+import { AudioManager } from '../managers/AudioManager.js';
 
 export class Stage2 extends Phaser.Scene {
     constructor() {
@@ -25,8 +25,15 @@ export class Stage2 extends Phaser.Scene {
         this.cameraManager = null;
         this.inputManager = null;
         this.collisionManager = null;
-        this.dialogSystem = null;  // 追加
-        // グローバルAudioManagerを使用するため、個別のaudioManagerは不要
+        this.behaviorManager = null;
+        this.dialogSystem = null;
+        this.audioManager = null;
+        
+        // 新しい会話システム
+        this.conversationTrigger = null;
+        
+        // パフォーマンス最適化用のフレームカウンター
+        this.updateCounter = 0;
     }
 
     preload() {
@@ -34,7 +41,7 @@ export class Stage2 extends Phaser.Scene {
         this.load.tilemapTiledJSON('map', 'assets/maps/test_map5.tmj');
 
         // BGM読み込み（ファイル名を正しく修正）
-        this.load.audio('bgm_pollyanna', 'assets/audio/bgm/stage2/Pollyanna.mp3');
+        this.load.audio('bgm_Pollyanna', 'assets/audio/bgm/stage2/Pollyanna.mp3');
         
         // ファイル読み込みエラーの詳細ログ
         this.load.on('fileerror', (file) => {
@@ -43,7 +50,7 @@ export class Stage2 extends Phaser.Scene {
         
         // ファイル読み込み成功のログ
         this.load.on('filecomplete', (key, type) => {
-            if (key === 'bgm_pollyanna') {
+            if (key === 'bgm_Pollyanna') {
                 console.log(`Stage 2: BGMファイル読み込み成功 - ${key}: ${type}`);
             }
         });
@@ -134,7 +141,35 @@ export class Stage2 extends Phaser.Scene {
             this.cameraManager = new CameraManager(this);
             this.cameraManager.setupCamera(this, this.mapManager.map, this.playerController.player);
 
+            // デバッグ: 画面サイズとマップサイズを確認
+            console.log('Stage 2: 画面サイズ - 幅:', this.scale.width, '高さ:', this.scale.height);
+            console.log('Stage 2: マップサイズ - 幅:', this.mapManager.map.widthInPixels, '高さ:', this.mapManager.map.heightInPixels);
+            console.log('Stage 2: プレイヤー位置:', this.playerController.getPosition());
+            console.log('Stage 2: カメラ位置 - X:', this.cameras.main.scrollX, 'Y:', this.cameras.main.scrollY);
+            console.log('Stage 2: カメラズーム:', this.cameras.main.zoom);
+
             this.collisionManager.setupAllCollisions(this.playerController.player, this.mapManager);
+            
+            // デバッグ: 初期化完了を確認
+            console.log('Stage 2: 初期化完了 - プレイヤー位置:', this.playerController.getPosition());
+            console.log('Stage 2: 物理システム状態:', !!this.physics);
+            console.log('Stage 2: 入力システム状態:', !!this.input);
+
+            // 新しい会話システムを初期化
+            this.conversationTrigger = new ConversationTrigger(this);
+            
+            // ConversationSceneを重複登録しない
+            try {
+                const exists = this.scene.manager && this.scene.manager.keys && this.scene.manager.keys['ConversationScene'];
+                if (!exists) {
+                    this.scene.add('ConversationScene', ConversationScene);
+                }
+            } catch (e) {
+                // ignore
+            }
+
+            // 会話イベントを設定
+            this.setupConversationEvents();
             
             // シーンシャットダウン時のクリーンアップ登録
             this.events.on('shutdown', this.shutdown, this);
@@ -155,7 +190,7 @@ export class Stage2 extends Phaser.Scene {
             const startStageBgm = () => {
                 try {
                     console.log('Stage 2: BGM再生開始');
-                    this.audioManager.playBgm('bgm_pollyanna', 0.5);
+                    this.audioManager.playBgm('bgm_Pollyanna', 0.5);
                     console.log('Stage 2: BGM再生成功');
                 } catch (error) {
                     console.error('Stage 2: BGM再生エラー:', error);
@@ -163,7 +198,7 @@ export class Stage2 extends Phaser.Scene {
                     this.time.delayedCall(1000, () => {
                         try {
                             console.log('Stage 2: BGM再試行');
-                            this.audioManager.playBgm('bgm_pollyanna', 0.5);
+                            this.audioManager.playBgm('bgm_Pollyanna', 0.5);
                         } catch (retryError) {
                             console.error('Stage 2: BGM再試行失敗:', retryError);
                         }
@@ -208,6 +243,39 @@ export class Stage2 extends Phaser.Scene {
         }
     }
 
+    /**
+     * 会話イベントを設定します。
+     */
+    setupConversationEvents() {
+        // 1. 特定のNPCをクリックした時にギャルゲ風会話を開始
+        this.setupNpcConversations();
+        
+        // 2. 特定のエリアに入った時にイベント発動
+        this.setupAreaTriggers();
+        
+        // 3. 特定の座標に近づいた時にイベント発動
+        this.setupProximityTriggers();
+    }
+
+    // NPCとの会話設定
+    setupNpcConversations() {
+        // Stage2用のNPC会話設定
+        // 必要に応じてNPCスプライトを取得して会話を設定
+        console.log('Stage 2: NPC会話設定完了');
+    }
+
+    // エリアトリガーの設定
+    setupAreaTriggers() {
+        // Stage2用のエリアトリガー設定
+        console.log('Stage 2: エリアトリガー設定完了');
+    }
+
+    // 近接トリガーの設定
+    setupProximityTriggers() {
+        // Stage2用の近接トリガー設定
+        console.log('Stage 2: 近接トリガー設定完了');
+    }
+
     shutdown() {
         try { 
             if (this.audioManager && this.audioManager.stopAll) this.audioManager.stopAll(); 
@@ -221,6 +289,13 @@ export class Stage2 extends Phaser.Scene {
             } 
         } catch (error) { 
             console.warn('Stage 2: BGM破棄エラー:', error);
+        }
+        try { 
+            if (this.conversationTrigger && this.conversationTrigger.cleanup) {
+                this.conversationTrigger.cleanup();
+            }
+        } catch (error) { 
+            console.warn('Stage 2: ConversationTriggerクリーンアップエラー:', error);
         }
         try { 
             if (this.load && this.load.reset) this.load.reset(); 
