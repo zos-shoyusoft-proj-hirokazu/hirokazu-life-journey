@@ -400,7 +400,9 @@ export class AreaSelectionManager {
             // 初回タップでオーディオコンテキストを確実に解錠（マップSE対策）
             try {
                 if (this.scene.sound && this.scene.sound.locked) {
-                    try { if (this.scene.sound.context && this.scene.sound.context.state !== 'running') { this.scene.sound.context.resume(); } } catch(_) {}
+                    try { if (this.scene.sound.context && this.scene.sound.context.state !== 'running') { this.scene.sound.context.resume(); } } catch(e) {
+                        console.warn('[AreaSelectionManager] 音声コンテキスト復帰エラー:', e);
+                    }
                     try {
                         const ctx = this.scene.sound.context;
                         if (ctx && typeof ctx.createOscillator === 'function') {
@@ -411,9 +413,13 @@ export class AreaSelectionManager {
                             osc.start();
                             osc.stop(ctx.currentTime + 0.05);
                         }
-                    } catch(_) {}
+                    } catch(e) {
+                        console.warn('[AreaSelectionManager] 無音オシレーター作成エラー:', e);
+                    }
                 }
-            } catch(_) {}
+            } catch(e) {
+                console.warn('[AreaSelectionManager] 音声コンテキスト処理エラー:', e);
+            }
             // タップ位置の記録
             this.lastTapX = pointer.x;
             this.lastTapY = pointer.y;

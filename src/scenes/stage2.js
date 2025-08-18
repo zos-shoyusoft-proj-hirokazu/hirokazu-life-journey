@@ -93,11 +93,17 @@ export class Stage2 extends Phaser.Scene {
     create() {
         try {
             // 音声ファイルの読み込み完了を待ってからAudioManagerを初期化
+            console.log('Stage 2: create開始、音声ファイル読み込み状態:', this.load.isLoading());
+            
+            // 音声ファイルの読み込み完了を待つ
             if (this.load.isLoading()) {
+                console.log('Stage 2: 音声ファイル読み込み中、完了を待機');
                 this.load.once('complete', () => {
+                    console.log('Stage 2: 音声ファイル読み込み完了、AudioManager初期化');
                     this.initializeAudioManager();
                 });
             } else {
+                console.log('Stage 2: 音声ファイル読み込み完了済み、AudioManager初期化');
                 this.initializeAudioManager();
             }
 
@@ -184,12 +190,20 @@ export class Stage2 extends Phaser.Scene {
      */
     initializeAudioManager() {
         try {
+            // AudioManagerを初期化
             this.audioManager = new AudioManager(this);
             
-            // Stage2 BGM起動ロジック（エラーハンドリング強化）
+            // Stage2 BGM起動ロジック（stage1と同じ処理）
             const startStageBgm = () => {
+                // 会話中はBGM再開をスキップ（イベントBGMが切れるのを防ぐ）
+                if (this.scene && this.scene.manager && this.scene.manager.isActive('ConversationScene')) {
+                    console.log('Stage 2: 会話中、BGM再開をスキップ');
+                    return;
+                }
+                
                 try {
                     console.log('Stage 2: BGM再生開始');
+                    // 正しいキーでBGMを再生
                     this.audioManager.playBgm('bgm_Pollyanna', 0.5);
                     console.log('Stage 2: BGM再生成功');
                 } catch (error) {
@@ -205,39 +219,37 @@ export class Stage2 extends Phaser.Scene {
                     });
                 }
             };
-            
-            try {
-                if (this.sound && this.sound.locked) {
-                    console.log('Stage 2: 音声ロック中、解除待機');
-                    this.sound.once('unlocked', () => { 
-                        console.log('Stage 2: 音声ロック解除');
-                        startStageBgm(); 
-                    });
-                    this.input && this.input.once && this.input.once('pointerdown', () => {
-                        try { 
-                            if (this.sound.context && this.sound.context.state !== 'running') {
-                                this.sound.context.resume(); 
-                            }
-                        } catch(error) {
-                            console.warn('Stage 2: 音声コンテキスト復帰エラー:', error);
-                        }
-                        startStageBgm();
-                    });
-                    // PC環境でも最初のキー操作で開始
+
+            // 音声システムのロック状態をチェック（stage1と同じ処理）
+            if (this.sound && this.sound.locked) {
+                // ブラウザがロック中：解除イベント or 最初の操作で開始
+                this.sound.once('unlocked', () => { 
+                    console.log('Stage 2: 音声システムアンロック');
+                    startStageBgm(); 
+                });
+                
+                this.input && this.input.once && this.input.once('pointerdown', () => {
                     try { 
-                        this.input && this.input.keyboard && this.input.keyboard.once('keydown', startStageBgm); 
+                        if (this.sound.context && this.sound.context.state !== 'running') {
+                            this.sound.context.resume(); 
+                        }
                     } catch(error) {
-                        console.warn('Stage 2: キーボードイベント設定エラー:', error);
+                        console.warn('Stage 2: 音声コンテキスト復帰エラー:', error);
                     }
-                } else {
-                    console.log('Stage 2: 音声ロックなし、即座にBGM開始');
                     startStageBgm();
+                });
+                
+                // PC環境でも最初のキー操作で開始
+                try { 
+                    this.input && this.input.keyboard && this.input.keyboard.once('keydown', startStageBgm); 
+                } catch(error) {
+                    console.warn('Stage 2: キーボードイベント設定エラー:', error);
                 }
-            } catch(error) { 
-                console.error('Stage 2: 音声初期化エラー:', error);
-                startStageBgm(); 
+            } else {
+                // ロックされていなければ即時再生
+                console.log('Stage 2: 音声システムは既にアンロック済み');
+                startStageBgm();
             }
-            
         } catch (error) {
             console.error('Stage 2: AudioManager初期化エラー:', error);
         }

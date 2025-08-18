@@ -21,15 +21,36 @@ export class AudioManager {
     ensureAudioUnlocked() {
         try {
             const snd = this.scene && this.scene.sound;
-            const ctx = snd && snd.context;
-            if (snd && snd.locked) {
+            if (!snd) {
+                console.debug('[AudioManager] サウンドシステムが利用できません');
+                return;
+            }
+            
+            const ctx = snd.context;
+            console.log('[AudioManager] 音声コンテキスト状態:', ctx ? ctx.state : 'undefined');
+            
+            // 音声コンテキストが存在しない場合は待機
+            if (!ctx) {
+                console.log('[AudioManager] 音声コンテキストが初期化されていません、待機中...');
+                return;
+            }
+            
+            // 音声がロックされている場合
+            if (snd.locked) {
+                console.log('[AudioManager] 音声がロックされています、解除を試行');
                 try { 
-                    if (ctx && ctx.state !== 'running') ctx.resume(); 
+                    if (ctx.state !== 'running') {
+                        console.log('[AudioManager] 音声コンテキストを再開中...');
+                        ctx.resume(); 
+                    }
                 } catch(error) {
                     console.warn('[AudioManager] Audio context resume error:', error);
                 }
+                
+                // 無音のオシレーターで音声コンテキストを起動
                 try {
-                    if (ctx && typeof ctx.createOscillator === 'function') {
+                    if (typeof ctx.createOscillator === 'function') {
+                        console.log('[AudioManager] 無音オシレーターで音声コンテキスト起動');
                         const osc = ctx.createOscillator();
                         const gain = ctx.createGain();
                         gain.gain.value = 0.0001;
@@ -40,6 +61,8 @@ export class AudioManager {
                 } catch(error) {
                     console.warn('[AudioManager] Oscillator creation error:', error);
                 }
+            } else {
+                console.log('[AudioManager] 音声はロックされていません');
             }
         } catch(error) {
             console.warn('[AudioManager] Audio unlock error:', error);
@@ -48,7 +71,8 @@ export class AudioManager {
 
     isSceneUsable() {
         try { 
-            return !!(this.scene && this.scene.sys && this.scene.sys.isActive && this.scene.sys.isActive()); 
+            // シンプルなチェック：シーンとサウンドシステムが存在するか
+            return !!(this.scene && this.scene.sound);
         } catch (error) { 
             console.warn('[AudioManager] Scene usability check error:', error);
             return false; 
@@ -74,8 +98,13 @@ export class AudioManager {
      * @param {boolean} fadeIn - フェードイン/アウト
      */
     playBgm(key, volume = this.bgmVolume, fadeIn = true) {
-        if (!this.isSceneUsable()) return;
+        if (!this.isSceneUsable()) {
+            console.warn('[AudioManager] シーンが使用できません');
+            return;
+        }
+        
         this.ensureAudioUnlocked();
+        
         // 念のため二重再生防止：既存BGMがあれば先に停止
         if (this.bgm) {
             if (this.bgm.key === key) {
@@ -100,8 +129,14 @@ export class AudioManager {
      * @param {boolean} fade - フェードイン
      */
     startNewBgm(key, volume, fadeIn) {
+        console.log(`[AudioManager] startNewBgm開始: ${key}, 音量: ${volume}, フェードイン: ${fadeIn}`);
+        
         if (!this.isBgmMuted) {
-            if (!this.isSceneUsable()) return;
+            if (!this.isSceneUsable()) {
+                console.warn('[AudioManager] シーンが使用できません');
+                return;
+            }
+            
             try {
                 // シーンとサウンドシステムの有効性をチェック
                 if (!this.scene || !this.scene.sound) {
@@ -109,6 +144,7 @@ export class AudioManager {
                     return;
                 }
                 
+                console.log(`[AudioManager] 音声ファイル追加: ${key}`);
                 this.bgm = this.scene.sound.add(key, {
                     loop: true,
                     volume: fadeIn ? 0 : volume
@@ -117,19 +153,27 @@ export class AudioManager {
                 // keyプロパティを明示的に設定（ConversationSceneで元のBGMキーを取得するため）
                 this.bgm.key = key;
                 
+                console.log(`[AudioManager] BGM再生開始: ${key}`);
                 this.bgm.play();
+                
                 if (fadeIn) {
+                    console.log('[AudioManager] フェードイン開始');
                     this.scene.tweens.add({
                         targets: this.bgm,
                         volume: volume,
                         duration: 500
                     });
                 } else {
+                    console.log(`[AudioManager] 音量設定: ${volume}`);
                     this.bgm.setVolume(volume);
                 }
+                
+                console.log(`[AudioManager] BGM再生完了: ${key}`);
             } catch (error) {
                 console.error(`[AudioManager] BGM ${key} の再生に失敗しました:`, error);
             }
+        } else {
+            console.log('[AudioManager] BGMがミュートされています');
         }
     }
 
