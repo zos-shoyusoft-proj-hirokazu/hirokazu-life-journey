@@ -43,7 +43,14 @@ export class TouchControlManager {
                     } catch (oscError) { /* ignore */ }
                 }
             } catch (e) { /* ignore */ }
-            this.showTouchFeedback(pointer.x, pointer.y);
+            
+            // カメラ追従に対応した座標でタッチフィードバックを表示
+            if (this.scene.cameras && this.scene.cameras.main) {
+                const worldPoint = this.scene.cameras.main.getWorldPoint(pointer.x, pointer.y);
+                this.showTouchFeedback(worldPoint.x, worldPoint.y);
+            } else {
+                this.showTouchFeedback(pointer.x, pointer.y);
+            }
         });
     }
 
@@ -277,7 +284,7 @@ export class TouchControlManager {
                 return;
             }
             
-            // ワールド座標に変換
+            // カメラ追従に対応したワールド座標変換
             const worldPoint = this.scene.cameras.main.getWorldPoint(pointer.x, pointer.y);
             const worldX = worldPoint.x;
             const worldY = worldPoint.y;
@@ -297,9 +304,16 @@ export class TouchControlManager {
     
     // mapをタッチした時のSEとリップルエフェクトを表示
     showTouchFeedback(worldX, worldY) {
-        this.visualFeedback.showTouchRipple(worldX, worldY);
-        if (this.scene.audioManager && this.scene.audioManager.playSe) {
-            this.scene.audioManager.playSe(this.seKey, 0.3);
+        try {
+            // カメラ追従に対応した座標でリップルエフェクトを表示
+            this.visualFeedback.showTouchRipple(worldX, worldY);
+            
+            // SE再生
+            if (this.scene.audioManager && this.scene.audioManager.playSe) {
+                this.scene.audioManager.playSe(this.seKey, 0.3);
+            }
+        } catch (error) {
+            console.warn('TouchControlManager: Error in showTouchFeedback:', error);
         }
     }
     
