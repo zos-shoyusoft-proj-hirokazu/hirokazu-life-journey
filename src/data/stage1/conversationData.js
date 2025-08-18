@@ -103,11 +103,11 @@ export class ConversationManager {
     
     // 会話データを取得
     getConversation(eventId) {
-        console.log(`[ConversationManager] 会話データ取得要求: ${eventId}`);
-        console.log(`[ConversationManager] 利用可能なイベント:`, Object.keys(this.conversations));
+        console.log('[ConversationManager] 会話データ取得要求: ' + eventId);
+        console.log('[ConversationManager] 利用可能なイベント:', Object.keys(this.conversations));
         
         const result = this.conversations[eventId] || null;
-        console.log(`[ConversationManager] 取得結果:`, result ? '成功' : '失敗');
+        console.log('[ConversationManager] 取得結果:', result ? '成功' : '失敗');
         
         return result;
     }
