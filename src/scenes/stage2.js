@@ -33,12 +33,19 @@ export class Stage2 extends Phaser.Scene {
         // マップファイルを読み込み
         this.load.tilemapTiledJSON('map', 'assets/maps/test_map5.tmj');
 
-        // BGM読み込み（ファイル名を小文字に統一）
-        this.load.audio('bgm_pollyanna', 'assets/audio/bgm/pollyanna.mp3');
+        // BGM読み込み（ファイル名を正しく修正）
+        this.load.audio('bgm_pollyanna', 'assets/audio/bgm/stage2/Pollyanna.mp3');
         
         // ファイル読み込みエラーの詳細ログ
         this.load.on('fileerror', (file) => {
             console.error(`Stage 2: ファイル読み込みエラー - ${file.key}: ${file.url}`);
+        });
+        
+        // ファイル読み込み成功のログ
+        this.load.on('filecomplete', (key, type) => {
+            if (key === 'bgm_pollyanna') {
+                console.log(`Stage 2: BGMファイル読み込み成功 - ${key}: ${type}`);
+            }
         });
 
         // マップ用のタイル
@@ -77,106 +84,128 @@ export class Stage2 extends Phaser.Scene {
     }
 
     create() {
-        this.audioManager = new AudioManager(this);
-        
-        // Stage2 BGM起動ロジック（エラーハンドリング強化）
-        const startStageBgm = () => {
-            try {
-                console.log('Stage 2: BGM再生開始');
-                this.audioManager.playBgm('bgm_pollyanna', 0.5);
-                console.log('Stage 2: BGM再生成功');
-            } catch (error) {
-                console.error('Stage 2: BGM再生エラー:', error);
-                // フォールバック: 少し遅延して再試行
-                this.time.delayedCall(1000, () => {
-                    try {
-                        console.log('Stage 2: BGM再試行');
-                        this.audioManager.playBgm('bgm_pollyanna', 0.5);
-                    } catch (retryError) {
-                        console.error('Stage 2: BGM再試行失敗:', retryError);
-                    }
-                });
-            }
-        };
-        
         try {
-            if (this.sound && this.sound.locked) {
-                console.log('Stage 2: 音声ロック中、解除待機');
-                this.sound.once('unlocked', () => { 
-                    console.log('Stage 2: 音声ロック解除');
-                    startStageBgm(); 
+            // 音声ファイルの読み込み完了を待ってからAudioManagerを初期化
+            if (this.load.isLoading()) {
+                this.load.once('complete', () => {
+                    this.initializeAudioManager();
                 });
-                this.input && this.input.once && this.input.once('pointerdown', () => {
-                    try { 
-                        if (this.sound.context && this.sound.context.state !== 'running') {
-                            this.sound.context.resume(); 
-                        }
-                    } catch(error) {
-                        console.warn('Stage 2: 音声コンテキスト復帰エラー:', error);
-                    }
-                    startStageBgm();
-                });
-                // PC環境でも最初のキー操作で開始
-                try { 
-                    this.input && this.input.keyboard && this.input.keyboard.once('keydown', startStageBgm); 
-                } catch(error) {
-                    console.warn('Stage 2: キーボードイベント設定エラー:', error);
-                }
             } else {
-                console.log('Stage 2: 音声ロックなし、即座にBGM開始');
-                startStageBgm();
+                this.initializeAudioManager();
             }
-        } catch(error) { 
-            console.error('Stage 2: 音声初期化エラー:', error);
-            startStageBgm(); 
+
+            // CollisionManagerを初期化
+            this.collisionManager = new CollisionManager(this);
+            this.collisionManager.setupCollisionGroups();
+
+            // DialogSystemを初期化（Stage2専用データを渡す）
+            this.dialogSystem = new DialogSystem(this, Stage2DialogData);
+            this.collisionManager.setDialogSystem(this.dialogSystem); 
+
+            // BehaviorManager_Stage2を初期化
+            this.behaviorManager = new BehaviorManager_Stage2(this);
+
+            // マップマネージャーを初期化
+            this.mapManager = new MapManager(this);
+            this.mapManager.createMap();
+
+            // プレイヤーコントローラーを初期化
+            this.playerController = new PlayerController(this);
+            this.playerController.createPlayer(100, 100);
+
+            // 物理システムの初期化確認
+            if (!this.physics) {
+                console.error('Stage 2: 物理システムが初期化されていません');
+                return;
+            }
+
+            // キーボード入力設定
+            this.inputManager = new InputManager();
+            this.inputManager.setupKeyboard(this, this.playerController);
+
+            // タッチコントロールマネージャーを初期化
+            this.touchControlManager = new TouchControlManager(this, this.playerController.player, 'se_touch_stage2');
+
+            // UI要素を作成
+            this.uiManager = new UIManager();
+            this.uiManager.createUI(this);
+
+            // カメラ設定
+            this.cameraManager = new CameraManager(this);
+            this.cameraManager.setupCamera(this, this.mapManager.map, this.playerController.player);
+
+            this.collisionManager.setupAllCollisions(this.playerController.player, this.mapManager);
+            
+            // シーンシャットダウン時のクリーンアップ登録
+            this.events.on('shutdown', this.shutdown, this);
+            
+        } catch (error) {
+            console.error('Stage 2: 初期化エラー:', error);
         }
+    }
 
-        // ConversationSceneの重複登録を避ける
+    /**
+     * AudioManagerを初期化してBGMを再生
+     */
+    initializeAudioManager() {
         try {
-            const exists = this.scene.manager && this.scene.manager.keys && this.scene.manager.keys['ConversationScene'];
-            if (!exists) {
-                // Stage系では通常使わないが、将来の会話起動に備えて一度だけ登録
-                // this.scene.add('ConversationScene', ConversationScene);
+            this.audioManager = new AudioManager(this);
+            
+            // Stage2 BGM起動ロジック（エラーハンドリング強化）
+            const startStageBgm = () => {
+                try {
+                    console.log('Stage 2: BGM再生開始');
+                    this.audioManager.playBgm('bgm_pollyanna', 0.5);
+                    console.log('Stage 2: BGM再生成功');
+                } catch (error) {
+                    console.error('Stage 2: BGM再生エラー:', error);
+                    // フォールバック: 少し遅延して再試行
+                    this.time.delayedCall(1000, () => {
+                        try {
+                            console.log('Stage 2: BGM再試行');
+                            this.audioManager.playBgm('bgm_pollyanna', 0.5);
+                        } catch (retryError) {
+                            console.error('Stage 2: BGM再試行失敗:', retryError);
+                        }
+                    });
+                }
+            };
+            
+            try {
+                if (this.sound && this.sound.locked) {
+                    console.log('Stage 2: 音声ロック中、解除待機');
+                    this.sound.once('unlocked', () => { 
+                        console.log('Stage 2: 音声ロック解除');
+                        startStageBgm(); 
+                    });
+                    this.input && this.input.once && this.input.once('pointerdown', () => {
+                        try { 
+                            if (this.sound.context && this.sound.context.state !== 'running') {
+                                this.sound.context.resume(); 
+                            }
+                        } catch(error) {
+                            console.warn('Stage 2: 音声コンテキスト復帰エラー:', error);
+                        }
+                        startStageBgm();
+                    });
+                    // PC環境でも最初のキー操作で開始
+                    try { 
+                        this.input && this.input.keyboard && this.input.keyboard.once('keydown', startStageBgm); 
+                    } catch(error) {
+                        console.warn('Stage 2: キーボードイベント設定エラー:', error);
+                    }
+                } else {
+                    console.log('Stage 2: 音声ロックなし、即座にBGM開始');
+                    startStageBgm();
+                }
+            } catch(error) { 
+                console.error('Stage 2: 音声初期化エラー:', error);
+                startStageBgm(); 
             }
-        } catch (e) { /* ignore */ }
-        
-        // マップマネージャーを初期化
-        // CollisionManagerを使った当たり判定
-        this.collisionManager = new CollisionManager(this);
-        this.collisionManager.setupCollisionGroups();
-
-        // DialogSystemを初期化（Stage2専用データを渡す）
-        this.dialogSystem = new DialogSystem(this, Stage2DialogData);
-        this.collisionManager.setDialogSystem(this.dialogSystem); 
-
-        // BehaviorManager_Stage2を初期化
-        this.behaviorManager = new BehaviorManager_Stage2(this);
-
-        this.mapManager = new MapManager(this);
-        this.mapManager.createMap();
-
-        // プレイヤーコントローラーを初期化
-        this.playerController = new PlayerController(this);
-        this.playerController.createPlayer(100, 100);
-
-        // キーボード入力設定
-        this.inputManager = new InputManager();
-        this.inputManager.setupKeyboard(this, this.playerController);
-
-        // タッチコントロールマネージャーを初期化
-        this.touchControlManager = new TouchControlManager(this, this.playerController.player, 'se_touch_stage2');
-
-        // UI要素を作成
-        this.uiManager = new UIManager();
-        this.uiManager.createUI(this);
-
-        // カメラ設定
-        this.cameraManager = new CameraManager(this);
-        this.cameraManager.setupCamera(this, this.mapManager.map, this.playerController.player);
-
-        this.collisionManager.setupAllCollisions(this.playerController.player, this.mapManager);
-        // シーンシャットダウン時のクリーンアップ登録
-        this.events.on('shutdown', this.shutdown, this);
+            
+        } catch (error) {
+            console.error('Stage 2: AudioManager初期化エラー:', error);
+        }
     }
 
     shutdown() {
@@ -212,25 +241,34 @@ export class Stage2 extends Phaser.Scene {
 
 
     update() {
-        // ダイアログが表示中はプレイヤーの動きを止める
-        if (this.dialogSystem && this.dialogSystem.isDialogActive()) {
-            // 統一された方法で停止
-            this.playerController.player.setVelocityX(0);
-            this.playerController.player.setVelocityY(0);
-            return;
-        }
-    
-        // プレイヤーの更新
-        if (this.playerController) {
-            this.playerController.update();
-        }
-    
-        // スマホ最適化：UI更新を60FPSから30FPSに制限
-        if (!this.updateCounter) this.updateCounter = 0;
+        // フレームごとに更新が必要な要素のみを更新
         this.updateCounter++;
         
-        if (this.updateCounter % 2 === 0) {  // 2フレームに1回実行
-            if (this.uiManager && this.playerController) {
+        // 30FPSに制限（60FPSの半分）
+        if (this.updateCounter % 2 === 0) {
+            // ダイアログが表示中はプレイヤーの動きを止める
+            if (this.dialogSystem && this.dialogSystem.isDialogActive()) {
+                // 統一された方法で停止
+                this.playerController.player.setVelocityX(0);
+                this.playerController.player.setVelocityY(0);
+                return;
+            }
+        
+            // プレイヤーの更新処理
+            if (this.playerController && this.playerController.player) {
+                this.playerController.update();
+                
+                // デバッグ: プレイヤーの状態を確認（120フレームごと）
+                if (this.updateCounter % 120 === 0) {
+                    const pos = this.playerController.getPosition();
+                    console.log('Stage 2: プレイヤー位置更新 - X:', pos.x, 'Y:', pos.y);
+                }
+            } else {
+                console.warn('Stage 2: プレイヤーコントローラーが初期化されていません');
+            }
+        
+            // UI更新
+            if (this.uiManager && this.playerController && this.playerController.player) {
                 this.uiManager.updatePlayerPosition(this.playerController.player);
             }
         }

@@ -42,15 +42,9 @@ export class Stage1 extends Phaser.Scene {
         this.load.image('[A]Grass1_pipo', 'assets/maps/tilesets/stage1/[A]Grass1_pipo.png');
         this.load.image('Tilemap', 'assets/maps/tilesets/stage1/Tilemap.png');
         
-        //BGM読み込み
+        //BGM読み込み - キーを統一
         this.load.audio('bgm_nightbarth', 'assets/audio/bgm/nightbarth.mp3');
-
         this.load.audio('bgm_demo_chinpo', 'assets/audio/bgm/stage1/megarovania.mp3');
-        
-        // BGM読み込み完了をチェック
-        this.load.on('filecomplete-audio-bgm_menu', () => {
-            // BGM読み込み完了
-        });
         
         // スプライトシート用の共通設定
         const SPRITE_CONFIG = { frameWidth: 32, frameHeight: 32 };
@@ -78,7 +72,7 @@ export class Stage1 extends Phaser.Scene {
                 
         // デバッグ用：読み込み完了を確認
         this.load.on('complete', () => {
-            // アセット読み込み完了
+            console.log('Stage 1: アセット読み込み完了');
         });
         
         // 新しい会話システム用の画像
@@ -102,58 +96,14 @@ export class Stage1 extends Phaser.Scene {
 
     create() {
         try {
-            // AudioManagerを初期化
-            this.audioManager = new AudioManager(this);
-            // Stage1 BGM起動ロジック（エラーハンドリング強化）
-            const startStageBgm = () => {
-                // 会話中はBGM再開をスキップ（イベントBGMが切れるのを防ぐ）
-                if (this.scene && this.scene.manager && this.scene.manager.isActive('ConversationScene')) {
-                    console.log('Stage 1: 会話中、BGM再開をスキップ');
-                    return;
-                }
-                
-                try {
-                    console.log('Stage 1: BGM再生開始');
-                    this.audioManager.playBgm('bgm_nightbarth', 0.5);
-                    console.log('Stage 1: BGM再生成功');
-                } catch (error) {
-                    console.error('Stage 1: BGM再生エラー:', error);
-                    // フォールバック: 少し遅延して再試行
-                    this.time.delayedCall(1000, () => {
-                        try {
-                            console.log('Stage 1: BGM再試行');
-                            this.audioManager.playBgm('bgm_nightbarth', 0.5);
-                        } catch (retryError) {
-                            console.error('Stage 1: BGM再試行失敗:', retryError);
-                        }
-                    });
-                }
-            };
-            try {
-                if (this.sound && this.sound.locked) {
-                    // ブラウザがロック中：解除イベント or 最初の操作で開始
-                    this.sound.once('unlocked', () => { startStageBgm(); });
-                    this.input && this.input.once && this.input.once('pointerdown', () => {
-                        try { 
-                            if (this.sound.context && this.sound.context.state !== 'running') {
-                                this.sound.context.resume(); 
-                            }
-                        } catch(error) {
-                            console.warn('Stage 1: 音声コンテキスト復帰エラー:', error);
-                        }
-                        startStageBgm();
-                    });
-                    // PC環境でも最初のキー操作で開始
-                    try { 
-                        this.input && this.input.keyboard && this.input.keyboard.once('keydown', startStageBgm); 
-                    } catch(error) {
-                        console.warn('Stage 1: キーボードイベント設定エラー:', error);
-                    }
-                } else {
-                    // ロックされていなければ即時再生
-                    startStageBgm();
-                }
-            } catch(_) { startStageBgm(); }
+            // 音声ファイルの読み込み完了を待ってからAudioManagerを初期化
+            if (this.load.isLoading()) {
+                this.load.once('complete', () => {
+                    this.initializeAudioManager();
+                });
+            } else {
+                this.initializeAudioManager();
+            }
 
             // CollisionManagerを初期化
             this.collisionManager = new CollisionManager(this);
@@ -174,6 +124,12 @@ export class Stage1 extends Phaser.Scene {
             this.playerController = new PlayerController(this);
             this.playerController.createPlayer(100, 100);
 
+            // 物理システムの初期化確認
+            if (!this.physics) {
+                console.error('Stage 1: 物理システムが初期化されていません');
+                return;
+            }
+
             // キーボード入力設定
             this.inputManager = new InputManager();
             this.inputManager.setupKeyboard(this, this.playerController);
@@ -186,11 +142,16 @@ export class Stage1 extends Phaser.Scene {
             this.uiManager.createUI(this);
 
             // カメラ設定
-                    this.cameraManager = new CameraManager(this);
-        this.cameraManager.setupCamera(this, this.mapManager.map, this.playerController.player);
+            this.cameraManager = new CameraManager(this);
+            this.cameraManager.setupCamera(this, this.mapManager.map, this.playerController.player);
 
             // 当たり判定設定
             this.collisionManager.setupAllCollisions(this.playerController.player, this.mapManager);
+
+            // デバッグ: 初期化完了を確認
+            console.log('Stage 1: 初期化完了 - プレイヤー位置:', this.playerController.getPosition());
+            console.log('Stage 1: 物理システム状態:', !!this.physics);
+            console.log('Stage 1: 入力システム状態:', !!this.input);
 
             // 新しい会話システムを初期化
             this.conversationTrigger = new ConversationTrigger(this);
@@ -211,8 +172,76 @@ export class Stage1 extends Phaser.Scene {
             // シーンシャットダウン時のクリーンアップ登録
             this.events.on('shutdown', this.shutdown, this);
 
-        } catch {
-            // エラーハンドリング
+        } catch (error) {
+            console.error('Stage 1: create() エラー:', error);
+        }
+    }
+
+    // AudioManagerの初期化とBGM再生を分離
+    initializeAudioManager() {
+        try {
+            // AudioManagerを初期化
+            this.audioManager = new AudioManager(this);
+            
+            // Stage1 BGM起動ロジック（エラーハンドリング強化）
+            const startStageBgm = () => {
+                // 会話中はBGM再開をスキップ（イベントBGMが切れるのを防ぐ）
+                if (this.scene && this.scene.manager && this.scene.manager.isActive('ConversationScene')) {
+                    console.log('Stage 1: 会話中、BGM再開をスキップ');
+                    return;
+                }
+                
+                try {
+                    console.log('Stage 1: BGM再生開始');
+                    // 正しいキーでBGMを再生
+                    this.audioManager.playBgm('bgm_nightbarth', 0.5);
+                    console.log('Stage 1: BGM再生成功');
+                } catch (error) {
+                    console.error('Stage 1: BGM再生エラー:', error);
+                    // フォールバック: 少し遅延して再試行
+                    this.time.delayedCall(1000, () => {
+                        try {
+                            console.log('Stage 1: BGM再試行');
+                            this.audioManager.playBgm('bgm_nightbarth', 0.5);
+                        } catch (retryError) {
+                            console.error('Stage 1: BGM再試行失敗:', retryError);
+                        }
+                    });
+                }
+            };
+
+            // 音声システムのロック状態をチェック
+            if (this.sound && this.sound.locked) {
+                // ブラウザがロック中：解除イベント or 最初の操作で開始
+                this.sound.once('unlocked', () => { 
+                    console.log('Stage 1: 音声システムアンロック');
+                    startStageBgm(); 
+                });
+                
+                this.input && this.input.once && this.input.once('pointerdown', () => {
+                    try { 
+                        if (this.sound.context && this.sound.context.state !== 'running') {
+                            this.sound.context.resume(); 
+                        }
+                    } catch(error) {
+                        console.warn('Stage 1: 音声コンテキスト復帰エラー:', error);
+                    }
+                    startStageBgm();
+                });
+                
+                // PC環境でも最初のキー操作で開始
+                try { 
+                    this.input && this.input.keyboard && this.input.keyboard.once('keydown', startStageBgm); 
+                } catch(error) {
+                    console.warn('Stage 1: キーボードイベント設定エラー:', error);
+                }
+            } else {
+                // ロックされていなければ即時再生
+                console.log('Stage 1: 音声システムは既にアンロック済み');
+                startStageBgm();
+            }
+        } catch (error) {
+            console.error('Stage 1: AudioManager初期化エラー:', error);
         }
     }
 
@@ -360,10 +389,22 @@ export class Stage1 extends Phaser.Scene {
         // 30FPSに制限（60FPSの半分）
         if (this.updateCounter % 2 === 0) {
             // プレイヤー移動処理
-            this.playerController.update();
+            if (this.playerController && this.playerController.player) {
+                this.playerController.update();
+                
+                // デバッグ: プレイヤーの状態を確認（60フレームごと）
+                if (this.updateCounter % 120 === 0) {
+                    const pos = this.playerController.getPosition();
+                    console.log('Stage 1: プレイヤー位置更新 - X:', pos.x, 'Y:', pos.y);
+                }
+            } else {
+                console.warn('Stage 1: プレイヤーコントローラーが初期化されていません');
+            }
             
             // UI更新
-            this.uiManager.updatePlayerPosition(this.playerController.player);
+            if (this.uiManager && this.playerController && this.playerController.player) {
+                this.uiManager.updatePlayerPosition(this.playerController.player);
+            }
         }
     }
 

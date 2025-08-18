@@ -149,9 +149,18 @@ export class AudioManager {
                     return;
                 }
                 
-                // BGMオブジェクトの有効性をチェック
-                if (!this.bgm.isPlaying && !this.bgm.isPaused) {
-                    console.warn('[AudioManager] BGM is not playing or paused');
+                // BGMオブジェクトの有効性をチェック（より柔軟に）
+                // Phaserの音声オブジェクトは状態チェックが不安定な場合があるため
+                const isValidBgm = this.bgm && (
+                    this.bgm.isPlaying || 
+                    this.bgm.isPaused || 
+                    this.bgm.key || // キーが設定されている
+                    this.bgm.context // 音声コンテキストが存在する
+                );
+                
+                if (!isValidBgm) {
+                    // 警告ではなく、デバッグレベルのログに変更
+                    console.debug('[AudioManager] BGM object may not be in expected state, proceeding with cleanup');
                     this.bgm = null;
                     if (onComplete) onComplete();
                     return;
