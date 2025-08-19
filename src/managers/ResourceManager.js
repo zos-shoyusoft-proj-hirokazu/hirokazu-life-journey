@@ -42,58 +42,80 @@ export class ResourceManager {
     
     // イベントに必要なリソースを特定
     getRequiredResources(eventId, conversationData) {
-        console.log(`[ResourceManager] 🔍 イベント「${eventId}」の必要リソースを解析中...`);
+        const event = conversationData[eventId];
+        if (!event) return null;
         
-        const eventData = conversationData[eventId];
-        if (!eventData) {
-            console.warn(`[ResourceManager] ⚠️ イベント「${eventId}」のデータが見つかりません`);
-            return { backgrounds: [], bgmFiles: [], characters: [], soundEffects: [] };
+        const resources = {
+            backgrounds: new Set(),
+            bgm: new Set(),
+            characters: new Set(),
+            soundEffects: new Set()
+        };
+        
+        // 背景
+        if (event.background) {
+            resources.backgrounds.add(event.background);
         }
-
-        const backgrounds = new Set();
-        const bgmFiles = new Set();
-        const characters = new Set();
-        const soundEffects = new Set();
-
-        // 会話データからリソースを抽出
-        if (eventData.conversations) {
-            eventData.conversations.forEach(conv => {
-                if (conv.background) backgrounds.add(conv.background);
-                if (conv.bgm) bgmFiles.add(conv.bgm);
-                if (conv.character) characters.add(conv.character);
-                if (conv.se) soundEffects.add(conv.se);
+        
+        // BGM
+        if (event.bgm) {
+            resources.bgm.add(event.bgm);
+        }
+        
+        // 会話から必要なリソースを抽出
+        if (event.conversations) {
+            event.conversations.forEach(conversation => {
+                // キャラクター
+                if (conversation.character) {
+                    resources.characters.add(conversation.character);
+                }
+                
+                // 効果音
+                if (conversation.se) {
+                    resources.soundEffects.add(conversation.se);
+                }
+                
+                // 背景変更
+                if (conversation.background) {
+                    resources.backgrounds.add(conversation.background);
+                }
             });
         }
-
-        const result = {
-            backgrounds: Array.from(backgrounds),
-            bgmFiles: Array.from(bgmFiles),
-            characters: Array.from(characters),
-            soundEffects: Array.from(soundEffects)
+        
+        // Setを配列に変換
+        return {
+            backgrounds: Array.from(resources.backgrounds),
+            bgm: Array.from(resources.bgm),
+            characters: Array.from(resources.characters),
+            soundEffects: Array.from(resources.soundEffects)
         };
-
-        console.log(`[ResourceManager] 📊 解析結果:`, result);
-        return result;
     }
     
     // 必要なリソースを読み込み
     async loadEventResources(eventId, conversationData) {
-        console.log(`[ResourceManager] 🎭 イベント「${eventId}」のリソース読み込み開始`);
+        const resources = this.getRequiredResources(eventId, conversationData);
+        if (!resources) {
+            throw new Error(`Event ${eventId} not found`);
+        }
+        
+        this.loadingStatus = 'loading';
+        
         try {
-            const requiredResources = this.getRequiredResources(eventId, conversationData);
-            console.log(`[ResourceManager] 📋 必要なリソース:`, requiredResources);
-            
+            // 並行して読み込み
             const loadPromises = [
-                this.loadBackgrounds(requiredResources.backgrounds),
-                this.loadBGMFiles(requiredResources.bgmFiles),
-                this.loadCharacters(requiredResources.characters),
-                this.loadSoundEffects(requiredResources.soundEffects)
+                this.loadBackgrounds(resources.backgrounds),
+                this.loadBGMFiles(resources.bgm),
+                this.loadCharacters(resources.characters),
+                this.loadSoundEffects(resources.soundEffects)
             ];
+            
             await Promise.all(loadPromises);
-            console.log(`[ResourceManager] ✅ イベント「${eventId}」のリソース読み込み完了`);
+            this.loadingStatus = 'completed';
+            
             return true;
         } catch (error) {
-            console.error(`[ResourceManager] ❌ イベント「${eventId}」のリソース読み込みエラー:`, error);
+            this.loadingStatus = 'error';
+            console.error('Resource loading failed:', error);
             throw error;
         }
     }
@@ -101,15 +123,12 @@ export class ResourceManager {
     // 背景画像を読み込み
     async loadBackgrounds(backgroundKeys) {
         if (!backgroundKeys || backgroundKeys.length === 0) {
-            console.log(`[ResourceManager] ℹ️ 背景画像の読み込みは不要です`);
             return;
         }
         
-        console.log(`[ResourceManager] 🖼️ 背景画像読み込み開始: ${backgroundKeys.join(', ')}`);
         try {
             const loadPromises = backgroundKeys.map(key => this.loadBackground(key));
             await Promise.all(loadPromises);
-            console.log(`[ResourceManager] ✅ 背景画像読み込み完了: ${backgroundKeys.join(', ')}`);
         } catch (error) {
             console.error(`[ResourceManager] ❌ 背景画像読み込みエラー:`, error);
             throw error;
@@ -118,23 +137,14 @@ export class ResourceManager {
     
     // 個別の背景画像を読み込み
     async loadBackground(backgroundKey) {
-        console.log(`[ResourceManager] 🖼️ 背景画像「${backgroundKey}」を読み込み中...`);
         
-        // 既に読み込まれているかチェック
-        if (this.loadedResources.has(`bg_${backgroundKey}`)) {
-            console.log(`[ResourceManager] ℹ️ 背景画像「${backgroundKey}」は既に読み込まれています`);
-            return;
-        }
-
         // 背景画像の読み込み処理
         const imagePath = `assets/backgrounds/${backgroundKey}.jpg`;
-        console.log(`[ResourceManager] 📁 背景画像パス: ${imagePath}`);
         
         return new Promise((resolve, reject) => {
             const img = new Image();
             img.onload = () => {
                 this.loadedResources.set(`bg_${backgroundKey}`, img);
-                console.log(`[ResourceManager] ✅ 背景画像「${backgroundKey}」読み込み完了`);
                 resolve(img);
             };
             img.onerror = () => {
@@ -149,15 +159,12 @@ export class ResourceManager {
     // BGMファイルを読み込み
     async loadBGMFiles(bgmKeys) {
         if (!bgmKeys || bgmKeys.length === 0) {
-            console.log(`[ResourceManager] ℹ️ BGMファイルの読み込みは不要です`);
             return;
         }
         
-        console.log(`[ResourceManager] 🎵 BGMファイル読み込み開始: ${bgmKeys.join(', ')}`);
         try {
             const loadPromises = bgmKeys.map(key => this.loadBGMFile(key));
             await Promise.all(loadPromises);
-            console.log(`[ResourceManager] ✅ BGMファイル読み込み完了: ${bgmKeys.join(', ')}`);
         } catch (error) {
             console.error(`[ResourceManager] ❌ BGMファイル読み込みエラー:`, error);
             throw error;
@@ -166,23 +173,14 @@ export class ResourceManager {
     
     // 個別のBGMファイルを読み込み
     async loadBGMFile(bgmKey) {
-        console.log(`[ResourceManager] 🎵 BGMファイル「${bgmKey}」を読み込み中...`);
         
-        // 既に読み込まれているかチェック
-        if (this.loadedResources.has(`bgm_${bgmKey}`)) {
-            console.log(`[ResourceManager] ℹ️ BGMファイル「${bgmKey}」は既に読み込まれています`);
-            return;
-        }
-
         // BGMファイルの読み込み処理
         const audioPath = `assets/bgm/${bgmKey}.mp3`;
-        console.log(`[ResourceManager] 📁 BGMファイルパス: ${audioPath}`);
         
         return new Promise((resolve, reject) => {
             const audio = new Audio();
             audio.oncanplaythrough = () => {
                 this.loadedResources.set(`bgm_${bgmKey}`, audio);
-                console.log(`[ResourceManager] ✅ BGMファイル「${bgmKey}」読み込み完了`);
                 resolve(audio);
             };
             audio.onerror = () => {
@@ -197,15 +195,12 @@ export class ResourceManager {
     // キャラクター画像を読み込み
     async loadCharacters(characterKeys) {
         if (!characterKeys || characterKeys.length === 0) {
-            console.log(`[ResourceManager] ℹ️ キャラクター画像の読み込みは不要です`);
             return;
         }
         
-        console.log(`[ResourceManager] 👤 キャラクター画像読み込み開始: ${characterKeys.join(', ')}`);
         try {
             const loadPromises = characterKeys.map(key => this.loadCharacter(key));
             await Promise.all(loadPromises);
-            console.log(`[ResourceManager] ✅ キャラクター画像読み込み完了: ${characterKeys.join(', ')}`);
         } catch (error) {
             console.error(`[ResourceManager] ❌ キャラクター画像読み込みエラー:`, error);
             throw error;
@@ -214,23 +209,14 @@ export class ResourceManager {
     
     // 個別のキャラクター画像を読み込み
     async loadCharacter(characterKey) {
-        console.log(`[ResourceManager] 👤 キャラクター画像「${characterKey}」を読み込み中...`);
         
-        // 既に読み込まれているかチェック
-        if (this.loadedResources.has(`char_${characterKey}`)) {
-            console.log(`[ResourceManager] ℹ️ キャラクター画像「${characterKey}」は既に読み込まれています`);
-            return;
-        }
-
         // キャラクター画像の読み込み処理
         const imagePath = `assets/characters/${characterKey}.png`;
-        console.log(`[ResourceManager] 📁 キャラクター画像パス: ${imagePath}`);
         
         return new Promise((resolve, reject) => {
             const img = new Image();
             img.onload = () => {
                 this.loadedResources.set(`char_${characterKey}`, img);
-                console.log(`[ResourceManager] ✅ キャラクター画像「${characterKey}」読み込み完了`);
                 resolve(img);
             };
             img.onerror = () => {
@@ -245,15 +231,12 @@ export class ResourceManager {
     // 効果音を読み込み
     async loadSoundEffects(seKeys) {
         if (!seKeys || seKeys.length === 0) {
-            console.log(`[ResourceManager] ℹ️ 効果音の読み込みは不要です`);
             return;
         }
         
-        console.log(`[ResourceManager] 🔊 効果音読み込み開始: ${seKeys.join(', ')}`);
         try {
             const loadPromises = seKeys.map(key => this.loadSoundEffect(key));
             await Promise.all(loadPromises);
-            console.log(`[ResourceManager] ✅ 効果音読み込み完了: ${seKeys.join(', ')}`);
         } catch (error) {
             console.error(`[ResourceManager] ❌ 効果音読み込みエラー:`, error);
             throw error;
@@ -262,23 +245,14 @@ export class ResourceManager {
     
     // 個別の効果音を読み込み
     async loadSoundEffect(seKey) {
-        console.log(`[ResourceManager] 🔊 効果音「${seKey}」を読み込み中...`);
         
-        // 既に読み込まれているかチェック
-        if (this.loadedResources.has(`se_${seKey}`)) {
-            console.log(`[ResourceManager] ℹ️ 効果音「${seKey}」は既に読み込まれています`);
-            return;
-        }
-
         // 効果音の読み込み処理
         const audioPath = `assets/se/${seKey}.mp3`;
-        console.log(`[ResourceManager] 📁 効果音パス: ${audioPath}`);
         
         return new Promise((resolve, reject) => {
             const audio = new Audio();
             audio.oncanplaythrough = () => {
                 this.loadedResources.set(`se_${seKey}`, audio);
-                console.log(`[ResourceManager] ✅ 効果音「${seKey}」読み込み完了`);
                 resolve(audio);
             };
             audio.onerror = () => {
@@ -308,109 +282,87 @@ export class ResourceManager {
     
     // マップ読み込み時の処理（基本データのみ、重いリソースは除外）
     async loadMapResources(mapName) {
-        console.log(`[ResourceManager] 🗺️ マップ「${mapName}」の基本データを読み込み開始`);
-        
+        console.log(`マップ「${mapName}」の基本データを読み込み中...`);
         try {
-            // 並行して基本データを読み込み
             const loadPromises = [
                 this.loadMapImage(mapName),           // マップ画像
                 this.loadEventMarkers(mapName),       // イベントマーカー
                 this.loadMapObjects(mapName),         // オブジェクト配置
                 this.loadConversationText(mapName)    // 会話テキスト（画像・音声なし）
             ];
-            
             await Promise.all(loadPromises);
-            console.log(`[ResourceManager] ✅ マップ「${mapName}」の基本データ読み込み完了`);
-            
+            console.log(`マップ「${mapName}」の基本データ読み込み完了`);
             return true;
         } catch (error) {
-            console.error(`[ResourceManager] ❌ マップ「${mapName}」の基本データ読み込みエラー:`, error);
+            console.error(`マップ「${mapName}」の基本データ読み込みエラー:`, error);
             throw error;
         }
     }
     
     // マップ画像を読み込み
     async loadMapImage(mapName) {
-        console.log(`[ResourceManager] 🗺️ マップ画像「${mapName}」を読み込み中...`);
-        try {
-            const imagePath = `assets/maps/${mapName}.jpg`;
-            console.log(`[ResourceManager] 📁 マップ画像パス: ${imagePath}`);
-            
-            // ここで実際のマップ画像読み込み処理を行う
-            // 仮の処理として、ログのみ出力
+        const imageUrl = `/assets/maps/${mapName}.jpg`;
+        
+        return new Promise((resolve, reject) => {
             const img = new Image();
             img.onload = () => {
                 this.loadedResources.set(`map_${mapName}`, img);
-                console.log(`[ResourceManager] ✅ マップ画像「${mapName}」読み込み完了`);
+                resolve(img);
             };
-            img.onerror = () => {
-                console.error(`[ResourceManager] ❌ マップ画像「${mapName}」読み込みエラー:`, error);
-                throw error;
-            };
-            img.src = imagePath;
-        } catch (error) {
-            console.error(`[ResourceManager] ❌ マップ画像「${mapName}」読み込みエラー:`, error);
-            throw error;
-        }
+            img.onerror = () => reject(new Error(`マップ画像読み込み失敗: ${mapName}`));
+            img.src = imageUrl;
+        });
     }
 
     // イベントマーカーを読み込み
     async loadEventMarkers(mapName) {
-        console.log(`[ResourceManager] 📍 イベントマーカー「${mapName}」を読み込み中...`);
+        // イベントマーカーの位置情報（JSONファイル）
+        const markersUrl = `/assets/maps/${mapName}_markers.json`;
+        
         try {
-            const markerPath = `assets/maps/${mapName}_markers.json`;
-            console.log(`[ResourceManager] 📁 イベントマーカーパス: ${markerPath}`);
-            
-            // ここで実際のマーカーデータ読み込み処理を行う
-            // 仮の処理として、ログのみ出力
-            const response = await fetch(markerPath);
+            const response = await fetch(markersUrl);
             const markers = await response.json();
             this.loadedResources.set(`markers_${mapName}`, markers);
-            console.log(`[ResourceManager] ✅ イベントマーカー「${mapName}」読み込み完了`);
             return markers;
         } catch (error) {
-            console.error(`[ResourceManager] ❌ イベントマーカー「${mapName}」読み込みエラー:`, error);
-            throw error;
+            console.warn(`イベントマーカー読み込み失敗: ${mapName}`, error);
+            // マーカーがなくても動作は継続
+            return [];
         }
     }
 
-    // マップオブジェクトを読み込み
+    // オブジェクト配置読み込み（軽量）
     async loadMapObjects(mapName) {
-        console.log(`[ResourceManager] 🎯 マップオブジェクト「${mapName}」を読み込み中...`);
+        // オブジェクトの配置情報（JSONファイル）
+        const objectsUrl = `/assets/maps/${mapName}_objects.json`;
+        
         try {
-            const objectPath = `assets/maps/${mapName}_objects.json`;
-            console.log(`[ResourceManager] 📁 マップオブジェクトパス: ${objectPath}`);
-            
-            // ここで実際のオブジェクトデータ読み込み処理を行う
-            // 仮の処理として、ログのみ出力
-            const response = await fetch(objectPath);
+            const response = await fetch(objectsUrl);
             const objects = await response.json();
             this.loadedResources.set(`objects_${mapName}`, objects);
-            console.log(`[ResourceManager] ✅ マップオブジェクト「${mapName}」読み込み完了`);
             return objects;
         } catch (error) {
-            console.error(`[ResourceManager] ❌ マップオブジェクト「${mapName}」読み込みエラー:`, error);
-            throw error;
+            console.warn(`オブジェクト配置読み込み失敗: ${mapName}`, error);
+            // オブジェクトがなくても動作は継続
+            return [];
         }
     }
-
-    // 会話テキストを読み込み
+    
+    // 会話テキスト読み込み（軽量、画像・音声なし）
     async loadConversationText(mapName) {
-        console.log(`[ResourceManager] 💬 会話テキスト「${mapName}」を読み込み中...`);
+        // 会話データは既にJavaScriptファイルで読み込まれているので、
+        // ここでは軽量なメタデータのみ読み込み
+        const textUrl = `/assets/maps/${mapName}_conversations.json`;
+        
         try {
-            const textPath = `assets/maps/${mapName}_conversations.json`;
-            console.log(`[ResourceManager] 📁 会話テキストパス: ${textPath}`);
-            
-            // ここで実際の会話テキスト読み込み処理を行う
-            // 仮の処理として、ログのみ出力
-            const response = await fetch(textPath);
+            const response = await fetch(textUrl);
             const conversations = await response.json();
             this.loadedResources.set(`conversations_${mapName}`, conversations);
-            console.log(`[ResourceManager] ✅ 会話テキスト「${mapName}」読み込み完了`);
             return conversations;
         } catch (error) {
-            console.error(`[ResourceManager] ❌ 会話テキスト「${mapName}」読み込みエラー:`, error);
-            throw error;
+            console.warn(`会話テキスト読み込み失敗: ${mapName}`, error);
+            // 会話データがなくても動作は継続
+            return {};
         }
     }
     
