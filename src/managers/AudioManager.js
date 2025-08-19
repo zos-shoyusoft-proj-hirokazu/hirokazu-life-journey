@@ -6,7 +6,7 @@ export class AudioManager {
     constructor(scene) {
         this.scene = scene;
         this.bgm = null;
-        this.bgmVolume = 0.3;
+        this.bgmVolume = 0.15;
         this.seVolume = 0.7;
         this.voiceVolume = 0.8;
         this.isBgmMuted = false;

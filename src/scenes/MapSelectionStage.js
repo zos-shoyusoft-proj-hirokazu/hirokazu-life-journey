@@ -251,7 +251,7 @@ export class MapSelectionStage extends Phaser.Scene {
                             if (!this._htmlBgm) {
                                 this._htmlBgm = new Audio(this.mapConfig.bgm.map);
                                 this._htmlBgm.loop = true;
-                                this._htmlBgm.volume = 0.3;
+                                this._htmlBgm.volume = this.audioManager.bgmVolume;
                                 this._htmlBgm.onended = () => { try { this._htmlBgm.currentTime = 0; const p = this._htmlBgm.play(); if (p && p.catch) p.catch(()=>{}); } catch(e) { /* ignore */ } };
                             }
                             // 既に再生中なら何もしない
@@ -265,7 +265,7 @@ export class MapSelectionStage extends Phaser.Scene {
                             }
                         } else {
                             // Phaser WebAudio 側：フレーム分離後に開始（他処理と競合させない）
-                            const play = () => { try { this.audioManager.playBgm('bgm_map', 0.3); this._bgmStarted = true; } catch(err) { /* ignore */ } };
+                            const play = () => { try { this.audioManager.playBgm('bgm_map'); this._bgmStarted = true; } catch(err) { /* ignore */ } };
                             try { this.time.delayedCall(0, play); } catch(err) { play(); }
                         }
                     } catch (e) {

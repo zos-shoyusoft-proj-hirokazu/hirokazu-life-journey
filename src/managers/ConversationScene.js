@@ -909,7 +909,7 @@ export class ConversationScene extends Phaser.Scene {
                 if (path) {
                     this._eventHtmlBgm = new Audio(path);
                     this._eventHtmlBgm.loop = true;
-                    this._eventHtmlBgm.volume = 0.3;
+                    this._eventHtmlBgm.volume = this.audioManager.bgmVolume;
                     
                     // イベントBGM再生開始
                     this._eventBgmStarted = true;
@@ -959,7 +959,7 @@ export class ConversationScene extends Phaser.Scene {
                             mainScene.load.audio(bgmKey, path);
                             mainScene.load.once('complete', () => {
                                 try { 
-                                    mainScene.audioManager.playBgm(bgmKey, 0.3, true); 
+                                    mainScene.audioManager.playBgm(bgmKey, undefined, true); 
                                     this._eventBgmStarted = true;
                                     console.log(`[ConversationScene] イベントBGM開始 (Phaser): ${bgmKey}`);
                                 } catch (e) { /* ignore */ }
@@ -974,7 +974,7 @@ export class ConversationScene extends Phaser.Scene {
                 if (bgmKey) {
                     try { 
                         if (mainScene && mainScene.audioManager) {
-                            mainScene.audioManager.playBgm(bgmKey, 0.3, true);
+                            mainScene.audioManager.playBgm(bgmKey, undefined, true);
                             this._eventBgmStarted = true;
                             console.log(`[ConversationScene] イベントBGM開始 (Phaser): ${bgmKey}`);
                         }
@@ -1064,17 +1064,17 @@ export class ConversationScene extends Phaser.Scene {
                                 mainScene.sound.context.onstatechange = () => {
                                     if (mainScene.sound.context.state === 'running') {
                                         console.log('[ConversationScene] 音声コンテキストが動作開始、BGM再生を実行');
-                                        mainScene.audioManager.playBgm(keyToPlay, 0.3, true);
+                                        mainScene.audioManager.playBgm(keyToPlay, undefined, true);
                                     }
                                 };
                             } else {
                                 // 音声コンテキストが既に動作中なら即座にBGM再生
-                                mainScene.audioManager.playBgm(keyToPlay, 0.3, true);
+                                mainScene.audioManager.playBgm(keyToPlay, undefined, true);
                             }
                         } else {
                             // 音声コンテキストが存在しない場合は直接BGM再生を試行
                             console.warn('[ConversationScene] 音声コンテキストが存在しません、直接BGM再生を試行');
-                            mainScene.audioManager.playBgm(keyToPlay, 0.3, true);
+                            mainScene.audioManager.playBgm(keyToPlay, undefined, true);
                         }
                         
                     } catch (error) { 

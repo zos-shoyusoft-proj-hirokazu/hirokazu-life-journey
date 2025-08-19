@@ -714,8 +714,8 @@ export const miemachiConversationData = {
                 'speaker': 'ダイチ少年、ひろかず少年',
                 'character': 'daichi_young',
                 'text': 'あっっっ！！！！！！！！！！！！！！！！',
-                'se': 'wind2',
-                'background': 'takibi_tan',
+                'se': 'takibi_tan',
+                'background': 'moeru',
                 'expression': 'g,g'
             },
             {
@@ -1194,7 +1194,7 @@ export const miemachiConversationData = {
                 'character': 'narrator',
                 'text': 'まずはここ！！',
                 'expression': 'a',
-                'se': 'don'
+                'se': 'taiko_2ren'
             },
             {
                 'speaker': 'ナレーター',
@@ -1220,7 +1220,7 @@ export const miemachiConversationData = {
                 'text': '次に、『ジュエリー』',
                 'expression': 'a',
                 'background': 'jewelry',
-                'se': 'don'
+                'se': 'taiko_2ren'
             },
             {
                 'speaker': 'ナレーター',
@@ -1234,7 +1234,7 @@ export const miemachiConversationData = {
                 'text': '更に『ドール』',
                 'expression': 'a',
                 'background': 'doll',
-                'se': 'don'
+                'se': 'taiko_2ren'
             },
             {
                 'speaker': 'ナレーター',
@@ -1260,7 +1260,7 @@ export const miemachiConversationData = {
                 'text': '『シークレット』カラオケが盛り上がりすぎて会話できない！',
                 'expression': 'a',
                 'background': 'secret',
-                'se': 'don'
+                'se': 'taiko_2ren'
             },
             {
                 'speaker': 'ナレーター',
@@ -1310,7 +1310,7 @@ export const miemachiConversationData = {
                 'text': '『クール』！！！',
                 'expression': 'a',
                 'background': 'cool',
-                'se': 'don'
+                'se': 'taiko_2ren'
             },
             {
                 'speaker': 'ナレーター',

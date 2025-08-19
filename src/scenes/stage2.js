@@ -203,7 +203,7 @@ export class Stage2 extends Phaser.Scene {
                 try {
                     console.log('Stage 2: BGM再生開始');
                     // 正しいキーでBGMを再生
-                    const result = this.audioManager.playBgm('bgm_Pollyanna', 0.5);
+                    const result = this.audioManager.playBgm('bgm_Pollyanna');
                     if (result) {
                         console.log('Stage 2: BGM再生成功');
                     } else {
