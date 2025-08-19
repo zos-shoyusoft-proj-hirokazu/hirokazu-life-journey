@@ -60,7 +60,11 @@ export const AreaConfig = {
             touch: 'assets/audio/se/touch_7.mp3', // ダイアログ用タッチSE
             map_touch: 'assets/audio/se/touch_2.mp3', // マップ専用タッチSE
             // 会話用SE
-            taiko_2ren: 'assets/audio/se/太鼓2連打.mp3'
+            taiko_2ren: 'assets/audio/se/太鼓2連打.mp3',
+            don: 'assets/audio/se/don.mp3',
+            sei_ge_matti_tukeru01: 'assets/audio/se/sei_ge_matti_tukeru01.mp3',
+            takibi_tan: 'assets/audio/se/焚き火短.mp3',
+            wind2: 'assets/audio/se/wind2.mp3'
         },
         characters: {
             // hirokazu: miemachi の会話データで使用している表情のみ
@@ -91,28 +95,31 @@ export const AreaConfig = {
             'koutarou_a': 'assets/characters/portraits/koutarou_a.png',
             'koutarou_b': 'assets/characters/portraits/koutarou_b.png',
             'koutarou_c': 'assets/characters/portraits/koutarou_c.png',
-            'yabajin_c': 'assets/characters/portraits/yabajin_a.png'
+            'yabajinn_a': 'assets/characters/portraits/yabajinn_a.png'
         },
         backgrounds: {
-
-            'test_1': 'assets/backgrounds/background_test.png'
+            'raizu': 'assets/backgrounds/miemachi_bk/raizu.png',
+            'koutaroupoteto': 'assets/backgrounds/miemachi_bk/koutaroupoteto.png',
+            'jewelry': 'assets/backgrounds/miemachi_bk/jewelry.png',
+            'cool': 'assets/backgrounds/miemachi_bk/cool.png',
+            'doll': 'assets/backgrounds/miemachi_bk/doll.png',
+            'Fire': 'assets/backgrounds/miemachi_bk/Fire.png',
+            'hanaichiba': 'assets/backgrounds/miemachi_bk/hanaichiba.png',
+            'joelyn': 'assets/backgrounds/miemachi_bk/joelyn.png',
+            'kobushi': 'assets/backgrounds/miemachi_bk/kobushi.png',
+            'momoiro': 'assets/backgrounds/miemachi_bk/momoiro.png',
+            'ookami': 'assets/backgrounds/miemachi_bk/ookami.png',
+            'orenokoto': 'assets/backgrounds/miemachi_bk/orenokoto.png',
+            'secret': 'assets/backgrounds/miemachi_bk/secret.png',
+            'seven': 'assets/backgrounds/miemachi_bk/seven.png',
+            'souce': 'assets/backgrounds/miemachi_bk/souce.png',
+            'dutu': 'assets/backgrounds/miemachi_bk/dutu.png',
+            'miemachimae': 'assets/backgrounds/miemachi_bk/miemachimae.png',
+            'sunakku_sa': 'assets/backgrounds/miemachi_bk/sunakku_sa.png',
+            'yuuhiload': 'assets/backgrounds/miemachi_bk/yuuhiload.png',
+            'moeato': 'assets/backgrounds/miemachi_bk/moeato.png',
+            'moeru': 'assets/backgrounds/miemachi_bk/moeru.png'
         },
-        // eventBgm: {
-        //     // エリア固有のイベントBGM
-        //     'mie_high_school': 'assets/audio/bgm/events/school_event.mp3',
-        //     'sumiwataru': 'assets/audio/bgm/events/romantic_event.mp3',
-        //     'shigaku': 'assets/audio/bgm/events/school_event.mp3',
-        //     'Banned_kiku': 'assets/audio/bgm/events/default_event.mp3',
-        //     'drinking_hope': 'assets/audio/bgm/events/default_event.mp3',
-        //     'Weeds_burn': 'assets/audio/bgm/events/default_event.mp3',
-        //     'katou_poteto': 'assets/audio/bgm/events/default_event.mp3',
-        //     'Tanabata_bamboo': 'assets/audio/bgm/events/romantic_event.mp3',
-        //     'bookmarket': 'assets/audio/bgm/events/default_event.mp3',
-        //     'drink_zutu': 'assets/audio/bgm/events/default_event.mp3',
-        //     'ドール': 'assets/audio/bgm/events/default_event.mp3',
-        //     'momoiro': 'assets/audio/bgm/events/romantic_event.mp3',
-        //     'profile': 'assets/audio/bgm/events/default_event.mp3'
-        // },
         areas: [
             { name: 'oreno_koto', scene: null, conversationId: 'oreno_koto' },
             { name: 'momoiro_jyogakuenn', scene: null, conversationId: 'annex_momo' },

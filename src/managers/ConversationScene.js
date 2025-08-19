@@ -456,6 +456,11 @@ export class ConversationScene extends Phaser.Scene {
         // テキストのアニメーション表示
         this.animateText(dialog.text);
         
+        // 背景変更処理を追加
+        if (dialog.background) {
+            this.updateBackground(dialog.background);
+        }
+        
         // SE再生処理を追加
         if (dialog.se) {
             this.playDialogSE(dialog.se);

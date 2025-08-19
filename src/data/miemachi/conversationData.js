@@ -2,68 +2,68 @@
 export const miemachiConversationData = {
     // 出生エピソード
     'oreno_koto': {
-        'background': 'test_1',
+        'background': 'orenokoto',
         'bgm': 'Fantasy',
         'conversations': [
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': '俺のことについてはなすぜ☆',
-                'expression': 'l'
+                'expression': 'g'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': '生まれた時間は１９９６年９月２９年日曜日で晴れの日だぜ☆',
-                'expression': 'l'
+                'expression': 'g'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': '生まれた病院は佐藤産婦人科でうまれたぜ',
-                'expression': 'l'
+                'expression': 'g'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': '名前の由来は「寛」の字は父親が気に入ってた字で、和は母さんから取ったぜ',
-                'expression': 'l'
+                'expression': 'g'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': '出産は予定日から１９日前に２６４８gで生まれたぜ☆',
-                'expression': 'l'
+                'expression': 'g'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': '血液型はAB型だぜ☆',
-                'expression': 'l'
+                'expression': 'g'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': '安産だったらしいぜ',
-                'expression': 'l'
+                'expression': 'g'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': '生まれた時髪の毛は比較的多かったぜ',
-                'expression': 'l'
+                'expression': 'g'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': '生まれたときの第一声が「オギャー」だぜ',
-                'expression': 'l'
+                'expression': 'g'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': '最後に俺の自信作の漫画を紹介するぜ',
-                'expression': 'l'
+                'expression': 'g'
             },
             {
                 'speaker': '自信作の漫画',
@@ -100,50 +100,50 @@ export const miemachiConversationData = {
     
     // 志学エピソード
     'shigaku': {
-        'background': 'test_1',
+        'background': 'raizu',
         'bgm': 'metoroido',
         'conversations': [
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
-                'text': '昔さ、ライズっていうやば人の塾あったじゃん、今どんな感じ？',
-                'expression': 'l'
+                'text': '昔さぁ、、、ライズっていうやば人がいた塾あったじゃん、今どんな感じ？',
+                'expression': 'e'
             },
             {
                 'speaker': 'かなと',
                 'character': 'kanato',
                 'text': 'どうもこうも、まだやってるよね？',
-                'expression': 'b'
+                'expression': 'c'
             },
             {
                 'speaker': 'だいち',
                 'character': 'daichi',
-                'text': 'そうだね、その塾はまだやってる、今はライズ１とかいう名前でやってるけど',
-                'expression': 'a'
+                'text': 'やってるな、その塾はまだやってる、今はライズ１とかいう名前でやってるけど',
+                'expression': 'e'
             },
             {
                 'speaker': 'こうたろう',
                 'character': 'koutarou',
                 'text': 'なついな、、、元気かな？',
-                'expression': 'b'
+                'expression': 'a'
             },
             {
                 'speaker': 'かなと',
                 'character': 'koutarou',
-                'text': 'ああー、一日２箱のヘビースモーカーか',
-                'expression': 'b'
+                'text': 'ああ、一日２箱キメてる、ヘビースモーカーのやば人な',
+                'expression': 'c'
             },
             {
                 'speaker': 'なおき',
                 'character': 'naoki',
-                'text': 'いま、どうなってんだろね',
+                'text': 'まだ、元気なんだろか',
                 'expression': 'c'
             },
             {
                 'speaker': 'かなと',
                 'character': 'kanato',
                 'text': 'ちょっと、今度確認してくるわ',
-                'expression': 'a'
+                'expression': 'c'
             },
             {
                 'character': 'narrator',
@@ -152,65 +152,59 @@ export const miemachiConversationData = {
             },
             {
                 'speaker': 'やばじん',
-                'character': 'yabajin',
+                'character': 'yabajinn',
                 'text': 'おらぁぁぁ！！！！！',
-                'expression': 'c'
-            },
-            {
-                'speaker': 'やばじん',
-                'character': 'yabajin',
-                'text': 'おらぁぁぁ！！！！！',
-                'expression': 'c'
+                'expression': 'a'
             },
             {
                 'speaker': 'なおき',
                 'character': 'naoki',
                 'text': 'でたな',
-                'expression': 'b'
+                'expression': 'c'
             },
             {
                 'speaker': 'かなと',
                 'character': 'kanato',
                 'text': 'でたな',
-                'expression': 'b'
+                'expression': 'c'
             },
             {
                 'speaker': 'かなと',
                 'character': 'kanato',
                 'text': 'なんか、安心したわ',
-                'expression': 'b'
+                'expression': 'c'
             },
             {
                 'speaker': 'かなと',
                 'character': 'kanato',
                 'text': 'かわらない、良さというものがあるな',
-                'expression': 'b'
+                'expression': 'c'
             },
             {
                 'speaker': 'なおき',
                 'character': 'naoki',
                 'text': 'ライズだなー',
-                'expression': 'b'
+                'expression': 'c'
             },
         ]
     },
     
     // チーム醤油飲み会
     'team_shoyu_drinking': {
-        'background': 'test_1',
+        'background': 'souce',
         'bgm': 'nightbarth',
         'conversations': [
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'お盆で暇だな、喜久でちょっと飲もうか',
-                'expression': 'l'
+                'expression': 'e'
             },
             {
                 'speaker': 'こうたろう',
                 'character': 'koutarou',
                 'text': 'まぁ、ええよ、せっかくそろったしな',
-                'expression': 'b'
+                'expression': 'a'
             },
             {
                 'speaker': 'かなと',
@@ -222,73 +216,73 @@ export const miemachiConversationData = {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'どした？？',
-                'expression': 'l'
+                'expression': 'e'
             },
             {
                 'speaker': 'こうたろう',
                 'character': 'koutarou',
                 'text': '？？',
-                'expression': 'b'
+                'expression': 'a'
             },
             {
                 'speaker': 'かなと',
                 'character': 'kanato',
                 'text': 'おれら、実は喜久、出禁になったんよね、、',
-                'expression': 'd'
+                'expression': 'c'
             },
             {
                 'speaker': 'ひろかず、こうたろう',
                 'character': 'hirokazu',
                 'text': '！？',
-                'expression': 'l'
+                'expression': 'e'
             },
             {
                 'speaker': 'こうたろう',
                 'character': 'koutarou',
                 'text': 'ん？どういうこと？',
-                'expression': 'c'
+                'expression': 'a'
             },
             {
                 'speaker': 'ひろかず、こうたろう',
                 'character': 'hirokazu',
                 'text': 'まったく、おれら心当たりはないんだが？',
-                'expression': 'l'
+                'expression': 'e'
             },
             {
                 'speaker': 'だいち',
                 'character': 'daichi',
                 'text': 'いや、説明すると、この前、「かなと、俺、なおき」その他のメンバーで飲みに行ったんやけど、',
-                'expression': 'a'
+                'expression': 'e'
             },
             {
                 'speaker': 'だいち',
                 'character': 'daichi',
                 'text': 'その時に来た、日本酒のお酒の中になぜか日本酒と醤油が混ざってたんよ',
-                'expression': 'b'
+                'expression': 'e'
             },
             {
                 'speaker': 'かなと',
                 'character': 'kanato',
                 'text': 'もちろん、俺らがいれたわけではないよ',
-                'expression': 'b'
-            },
-            {
-                'speaker': 'だいち',
-                'character': 'daichi',
-                'text': 'で、俺らもさすがに飲めないから、何もいわずにテーブルの上において帰ったんだけど',
                 'expression': 'c'
             },
             {
                 'speaker': 'だいち',
                 'character': 'daichi',
+                'text': 'で、俺らもさすがに飲めないから、何もいわずにテーブルの上において帰ったんだけど',
+                'expression': 'e'
+            },
+            {
+                'speaker': 'だいち',
+                'character': 'daichi',
                 'text': 'それを、俺らがいたずらで入れたって話になって冤罪で出禁になりました。',
-                'expression': 'd'
+                'expression': 'e'
             },            
             {
                 'speaker': 'かなと',
                 'character': 'kanato',
                 'text': '一応、次の日に謝りにいったけど門前払いを食らいました。',
-                'expression': 'b'
+                'expression': 'c'
             },            
             {
                 'speaker': 'かなと',
@@ -420,84 +414,87 @@ export const miemachiConversationData = {
     
     // セブンエピソード
     'seven': {
-        'background': 'test_1',
+        'background': 'seven',
         'bgm': 'Last_Summer_In_Rio',
         'conversations': [
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': '帰るか、、、',
-                'expression': 'd'
+                'expression': 'e'
             },
             {
                 'speaker': 'だいち',
                 'character': 'daichi',
                 'text': 'どうやって帰ります？',
-                'expression': 'b'
+                'expression': 'e'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'ん？？そりゃ、タクシーで、、',
-                'expression': 'd'
+                'expression': 'e'
             },
             {
                 'speaker': 'かなと',
                 'character': 'kanato',
                 'text': 'タクシー？',
-                'expression': 'd'
+                'expression': 'c'
             },
             {
                 'speaker': 'なおき',
                 'character': 'naoki',
                 'text': '三重町にそんな便利な物ないぞ',
-                'expression': 'e'
+                'expression': 'c'
             },
             {
                 'speaker': 'だいち',
                 'character': 'daichi',
                 'se': 'dededon',
                 'text': 'あっ！！！',
-                'expression': 'f'
+                'expression': 'e'
             },
             {
                 'speaker': 'こうたろう',
                 'character': 'koutarou',
                 'text': '三重町にはそんなものないぞ、こんな時間は',
-                'expression': 'g'
+                'expression': 'a'
             },
             {
                 'speaker': 'なおき',
                 'character': 'naoki',
                 'text': '残念だったなｗ',
-                'expression': 'h'
+                'expression': 'c'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': '歩いて帰るのか、、、',
-                'expression': 'd'
+                'expression': 'e'
             },
             {
                 'speaker': 'だいち',
                 'character': 'daichi',
                 'text': '三重町だからな、、、',
-                'expression': 'J'
+                'expression': 'e'
             },
             {
                 'speaker': 'こうたろう',
                 'character': 'koutarou',
                 'text': '仕方ないつきあってやるか',
-                'expression': 'K'
+                'expression': 'a'
             },
             {
                 'speaker': 'かなと,なおき',
                 'character': 'kanato',
                 'text': 'はじまった、、反対方向なのに、、、',
-                'expression': 'l'
+                'expression': 'c'
             },
             {
+                'speaker': 'ナレーション',
+                'character': 'narrator',
                 'text': '移動中',
+                'expression': 'a'
             },
             {
                 'speaker': 'こうたろう',
@@ -515,73 +512,73 @@ export const miemachiConversationData = {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'ん？？',
-                'expression': 'd'
+                'expression': 'e'
             },
             {
                 'speaker': 'だいち',
                 'character': 'daichi',
                 'text': 'おっと、、、なんか言った？',
-                'expression': 'P'
+                'expression': 'e'
             },
             {
                 'speaker': 'かなと',
                 'character': 'kanato',
                 'text': 'なんか、聞こえたな',
-                'expression': 'd'
+                'expression': 'c'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'おい、やっぱりおっぱいか、おっぱいなんだな、嫁さんおっぱい大きいって言ってたもんな！',
-                'expression': 'd'
+                'expression': 'e'
             },
             {
                 'speaker': 'こうたろう',
                 'character': 'koutarou',
                 'text': 'ん、、、、、？',
-                'expression': 'R'
+                'expression': 'a'
             },
             {
                 'speaker': 'こうたろう',
                 'character': 'koutarou',
                 'text': 'そう',
-                'expression': 'S'
+                'expression': 'a'
             },
             {
                 'speaker': 'なおき',
                 'character': 'naoki',
                 'text': 'おらぁぁぁ！！！！！！！！！！！！！！！！！！！！！！！！！！！！！',
-                'expression': 'T'
+                'expression': 'c'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'えっと、どうする？処すか？',
-                'expression': 'd'
+                'expression': 'e'
             },
             {
                 'speaker': 'だいち',
                 'character': 'daichi',
                 'text': '処します',
-                'expression': 'V'
+                'expression': 'e'
             },
             {
                 'speaker': 'かなと',
                 'character': 'kanato',
                 'text': '拷問して、、、、死刑！！！！！！！！',
-                'expression': 'W'
+                'expression': 'c'
             },
             {
                 'speaker': 'なおき',
                 'character': 'naoki',
                 'text': '賛成です',
-                'expression': 'X'
+                'expression': 'c'
             },
             {
                 'speaker': 'だいち',
                 'character': 'daichi',
                 'text': 'ゆるさんぞ！！！',
-                'expression': 'Y'
+                'expression': 'e'
             },
             {
                 'speaker': 'ナレーション',
@@ -593,20 +590,20 @@ export const miemachiConversationData = {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'おれ、結婚するんだよな、、、',
-                'expression': 'd'
+                'expression': 'e'
             },
             {
                 'speaker': 'かなと、なおき',
                 'character': 'kanato',
                 'text': 'はい、死刑',
-                'expression': 'AA'
+                'expression': 'c,c'
             },
         ]
     },
     
     // 川で火をつけたエピソード
     'river_fire': {
-        'background': 'test_1',
+        'background': 'Fire',
         'bgm': 'metoroido',
         'conversations': [
             {
@@ -664,8 +661,17 @@ export const miemachiConversationData = {
                 'expression': 'c'
             },
             {
-                'se': 'bo',
-                'text': 'ボッ！！',
+                'speaker': 'ナレーター',
+                'character': 'narrator',
+                'se': 'sei_ge_matti_tukeru01',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'ナレーター',
+                'character': 'narrator',
+                'text': 'パチパチっ、、、',
+                'se': 'takibi_tan',
+                'expression': 'a'
             },
             {
                 'speaker': 'ダイチ少年',
@@ -686,8 +692,11 @@ export const miemachiConversationData = {
                 'expression': 'e'
             },
             {
-                'se': 'byubyu',
-                'text': 'びゅぅぅぅぅ、、、、',
+                'speaker': 'ナレーター',
+                'character': 'narrator',
+                'text': 'びゅぅぅぅぅ、、。',
+                'se': 'wind2',
+                'expression': 'a'
             },
             {
                 'speaker': 'ダイチ少年',
@@ -702,14 +711,12 @@ export const miemachiConversationData = {
                 'expression': 'e'
             },
             {
-                'se': 'bo',
-                'text': 'ボッ！！',
-            },
-            {
                 'speaker': 'ダイチ少年、ひろかず少年',
                 'character': 'daichi_young',
                 'text': 'あっっっ！！！！！！！！！！！！！！！！',
-                'expression': 'g'
+                'se': 'wind2',
+                'background': 'takibi_tan',
+                'expression': 'g,g'
             },
             {
                 'speaker': 'ダイチ少年',
@@ -750,7 +757,13 @@ export const miemachiConversationData = {
             {
                 'speaker': 'ひろかず少年',
                 'character': 'daichi_young',
-                'text': 'つっっつち！！！！土をなげろぉーーーーーーーーーー！！！！！',
+                'text': 'つっっつち！！！！',
+                'expression': 'g'
+            },
+            {
+                'speaker': 'ひろかず少年',
+                'character': 'daichi_young',
+                'text': '土をなげろぉーーーーーーーーーー！！！！！',
                 'expression': 'g'
             },
             {
@@ -762,7 +775,7 @@ export const miemachiConversationData = {
             {
                 'speaker': 'ダイチ少年',
                 'character': 'daichi_young',
-                'text': 'いいから、なげろぉぉおぉ！！！',
+                'text': 'なんでもいいから、なげろぉぉおぉ！！！',
                 'expression': 'K'
             },
             {
@@ -788,8 +801,10 @@ export const miemachiConversationData = {
                 'expression': 'M'
             },
             {
-                'se': 'bo',
-                'text': 'ボッ！！',
+                'speaker': 'ナレーター',
+                'character': 'narrator',
+                'se': 'sei_ge_matti_tukeru01',
+                'expression': 'a'
             },
             {
                 'speaker': 'ひろかず少年',
@@ -798,13 +813,29 @@ export const miemachiConversationData = {
                 'expression': 'g'
             },
             {
-                'text': '３０分後',
+                'speaker': 'ナレーター',
+                'character': 'narrator',
+                'text': '、、、',
+                'se': 'sei_ge_matti_tukeru01',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'ナレーター',
+                'character': 'narrator',
+                'text': '、、、、、',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'ナレーター',
+                'character': 'narrator',
+                'text': '、、、、、、、、、、、、',
                 'expression': 'a'
             },
             {
                 'speaker': 'ダイチ少年',
                 'character': 'daichi_young',
                 'text': 'なっ、、、何とかきえたぞ、、、、',
+                'background': 'moeato',
                 'expression': 'M'
             },
             {
@@ -818,7 +849,7 @@ export const miemachiConversationData = {
     
     // こうたろうポテト
     'koutarou_potato': {
-        'background': 'test_1',
+        'background': 'koutaroupoteto',
         'bgm': 'Nagisa_Moderato',
         'conversations': [
             {
@@ -831,31 +862,31 @@ export const miemachiConversationData = {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'ここは三重町で有名なポテト屋ですよ',
-                'expression': 'c'
+                'expression': 'a'
             },
             {
                 'speaker': 'だいち',
                 'character': 'daichi',
                 'text': '１００円で、この量はお得でうまいな',
-                'expression': 'c'
+                'expression': 'a'
             },
             {
                 'speaker': 'だいち',
                 'character': 'daichi',
                 'text': 'まぁ、いいけど、一週間ずっと、来てるやん、、、',
-                'expression': 'c'
+                'expression': 'a'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'うまいからいいんだよ',
-                'expression': 'c'
+                'expression': 'a'
             },
             {
                 'speaker': 'だいち',
                 'character': 'daichi',
                 'text': 'あっ、、、はい',
-                'expression': 'c'
+                'expression': 'a'
             },
         ]
     },
@@ -918,7 +949,7 @@ export const miemachiConversationData = {
     
     // ドンキの謎酒"ずつ"
     'drink_zutsu': {
-        'background': 'test_1',
+        'background': 'dutu',
         'bgm': 'nightbarth',
         'conversations': [
             {
@@ -1034,7 +1065,7 @@ export const miemachiConversationData = {
                 'speaker': 'こうたろう',
                 'character': 'koutarou',
                 'text': 'もういいや！いくぞお！',
-                'expression': 'a'
+                'expression': 'c'
             },
             {
                 'speaker': 'ひろかず・だいち・こうたろう',
@@ -1107,20 +1138,20 @@ export const miemachiConversationData = {
     
     // スナック街の夜
     'snack_street_night': {
-        'background': 'test_1',
+        'background': 'miemachimae',
         'bgm': 'nightbarth',
         'conversations': [
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'あー飲んだなー',
-                'expression': 'a'
+                'expression': 'd'
             },
             {
                 'speaker': 'かなと',
                 'character': 'kanato',
                 'text': 'まだ21時か……',
-                'expression': 'b'
+                'expression': 'c'
             },
             {
                 'speaker': 'こうたろう',
@@ -1132,19 +1163,19 @@ export const miemachiConversationData = {
                 'speaker': 'なおき',
                 'character': 'naoki',
                 'text': '空いてるのスナックしかないよなー',
-                'expression': 'b'
+                'expression': 'c'
             },
             {
                 'speaker': 'だいち',
                 'character': 'daichi',
                 'text': '三重町はこの時間もう眠ってるからな',
-                'expression': 'c'
+                'expression': 'e'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'よし、じゃあスナック行くぞ！',
-                'expression': 'a'
+                'expression': 'e'
             },
             {
                 'speaker': 'ナレーター',
@@ -1161,38 +1192,75 @@ export const miemachiConversationData = {
             {
                 'speaker': 'ナレーター',
                 'character': 'narrator',
-                'text': 'まずはここ！！『シリウス』クセの強い「よいしょ⤴あそれ⤴」のカラオケ合いの手が名物！',
+                'text': 'まずはここ！！',
+                'expression': 'a',
+                'se': 'don'
+            },
+            {
+                'speaker': 'ナレーター',
+                'character': 'narrator',
+                'text': '『シリウス』',
                 'expression': 'a'
             },
             {
                 'speaker': 'ナレーター',
                 'character': 'narrator',
-                'text': '文字では伝わらないニュアンス！あともう店は潰れてるぞ！',
+                'text': 'クセの強い「よいしょ⤴あそれ⤴」のカラオケ合いの手が名物！',
                 'expression': 'a'
             },
             {
                 'speaker': 'ナレーター',
                 'character': 'narrator',
-                'text': '次に、『ジュエリー』鳴物入りでやってきたルーキー！原液9割のレモンサワーで飛べるぞ！',
+                'text': '文字では伝わらないニュアンスだぞ！あともう店は潰れてるぞ！',
                 'expression': 'a'
             },
             {
                 'speaker': 'ナレーター',
                 'character': 'narrator',
-                'text': '更に『ドール』唯一の同世代・アイドルまゆちゃん！三重町最後の希望だ！でももう引退したぞ！',
+                'text': '次に、『ジュエリー』',
+                'expression': 'a',
+                'background': 'jewelry',
+                'se': 'don'
+            },
+            {
+                'speaker': 'ナレーター',
+                'character': 'narrator',
+                'text': '鳴物入りでやってきたルーキー！原液9割のレモンサワーで飛べるぞ！',
                 'expression': 'a'
             },
             {
                 'speaker': 'ナレーター',
                 'character': 'narrator',
-                'text': 'あと同級生の親とかも通ってる！',
+                'text': '更に『ドール』',
+                'expression': 'a',
+                'background': 'doll',
+                'se': 'don'
+            },
+            {
+                'speaker': 'ナレーター',
+                'character': 'narrator',
+                'text': '唯一の同世代・アイドルまゆちゃん！三重町最後の希望だ！でももう引退したぞ！',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'ナレーター',
+                'character': 'narrator',
+                'text': 'でももう引退したぞ！',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'ナレーター',
+                'character': 'narrator',
+                'text': 'あと普通に同級生の親とかも通ってる！',
                 'expression': 'a'
             },
             {
                 'speaker': 'ナレーター',
                 'character': 'narrator',
                 'text': '『シークレット』カラオケが盛り上がりすぎて会話できない！',
-                'expression': 'a'
+                'expression': 'a',
+                'background': 'secret',
+                'se': 'don'
             },
             {
                 'speaker': 'ナレーター',
@@ -1209,7 +1277,45 @@ export const miemachiConversationData = {
             {
                 'speaker': 'ナレーター',
                 'character': 'narrator',
-                'text': '『花市場』『ジョエリン』『さくら』『クール』他にも愉快なスナックが勢揃いだ！',
+                'text': 'その他にも',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'ナレーター',
+                'character': 'narrator',
+                'text': '『花市場』',
+                'expression': 'a',
+                'background': 'hanaichiba',
+                'se': 'don'
+            },
+            {
+                'speaker': 'ナレーター',
+                'character': 'narrator',
+                'text': '『じょいりん』！',
+                'expression': 'a',
+                'background': 'joelyn',
+                'se': 'don'
+            },
+            {
+                'speaker': 'ナレーター',
+                'character': 'narrator',
+                'text': '『さくら』！！',
+                'expression': 'a',
+                'background': 'sunakku_sa',
+                'se': 'don'
+            },
+            {
+                'speaker': 'ナレーター',
+                'character': 'narrator',
+                'text': '『クール』！！！',
+                'expression': 'a',
+                'background': 'cool',
+                'se': 'don'
+            },
+            {
+                'speaker': 'ナレーター',
+                'character': 'narrator',
+                'text': '他にも愉快なスナックが勢揃いだ！',
                 'expression': 'a'
             },
             {
@@ -1222,6 +1328,7 @@ export const miemachiConversationData = {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'やっぱスナックのあとに、コンビニで3次会するのが最高なんだよな〜',
+                'background': 'seven',
                 'expression': 'a'
             },
             {
@@ -1235,7 +1342,7 @@ export const miemachiConversationData = {
     
     // アネックス（ももいろ女学園）
     'annex_momo': {
-        'background': 'test_1',
+        'background': 'momoiro',
         'bgm': 'togetogetarumeiro',
         'conversations': [
             {
@@ -1266,6 +1373,7 @@ export const miemachiConversationData = {
             {
                 'character': 'narrator',
                 'text': '気のいい狼は二つ返事でうなずいた。だが、二匹には待ち伏せに適した場所の心当たりがなかった。',
+                'background': 'ookami',
                 'expression': 'a'
             },
             {
@@ -1310,7 +1418,7 @@ export const miemachiConversationData = {
             },
             {
                 'character': 'narrator',
-                'text': '「ただし、そこから帰るには“対価”が必要だ。その対価はわしにも分からん」',
+                'text': '「ただし、そこから帰るには"対価"が必要だ。その対価はわしにも分からん」',
                 'expression': 'a'
             },
             {
@@ -1361,6 +1469,7 @@ export const miemachiConversationData = {
             {
                 'character': 'narrator',
                 'text': '——狩りは終わった。昇る朝日を背に、肩を落とした帰り道に、ぽつりと気のいい狼が言葉をこぼした。',
+                'background': 'yuuhiload',
                 'expression': 'a'
             },
             {
