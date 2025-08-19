@@ -42,6 +42,9 @@ export class MapSelectionStage extends Phaser.Scene {
     }
 
     preload() {
+        console.log('[MapSelectionStage] 🗺️ マップ「' + this.mapConfig.mapTitle + '」のpreload開始');
+        console.log('[MapSelectionStage] 📋 マップID: ' + this.mapId + ', マップキー: ' + this.mapConfig.mapKey);
+        
         // 設定ファイルから動的にアセットを読み込み
         // taketastageの場合はtaketaフォルダを使用
         const folderName = this.mapId === 'taketastage' ? 'taketa' : this.mapId;
@@ -52,36 +55,48 @@ export class MapSelectionStage extends Phaser.Scene {
         // japanステージの場合はzennkoku.pngを使用
         const tilesetFileName = this.mapId === 'japan' ? 'zennkoku' : this.mapConfig.tilesetKey;
         
-        this.load.tilemapTiledJSON(this.mapConfig.mapKey, `assets/maps/${folderName}/${mapFileName}.tmj`);
-        this.load.image(this.mapConfig.tilesetKey, `assets/maps/${folderName}/${tilesetFileName}.png`);
+        console.log('[MapSelectionStage] 📁 フォルダ名: ' + folderName + ', マップファイル: ' + mapFileName + ', タイルセット: ' + tilesetFileName);
+        
+        // マップファイルの読み込み
+        console.log('[MapSelectionStage] 🗺️ マップファイル読み込み: ' + this.mapConfig.mapKey + ' -> assets/maps/' + folderName + '/' + mapFileName + '.tmj');
+        this.load.tilemapTiledJSON(this.mapConfig.mapKey, 'assets/maps/' + folderName + '/' + mapFileName + '.tmj');
+        
+        // タイルセット画像の読み込み
+        console.log('[MapSelectionStage] 🖼️ タイルセット画像読み込み: ' + this.mapConfig.tilesetKey + ' -> assets/maps/' + folderName + '/' + tilesetFileName + '.png');
+        this.load.image(this.mapConfig.tilesetKey, 'assets/maps/' + folderName + '/' + tilesetFileName + '.png');
         
         // デバッグ用：読み込みエラーを詳細にログ出力
         this.load.on('fileerror', (file) => {
-            console.error(`File not found: ${file.key}, path: ${file.url}`);
+            console.error('[MapSelectionStage] ❌ ファイル読み込みエラー: ' + file.key + ', パス: ' + file.url);
         });
         
         // UI要素とアイコン
         
         // BGMの読み込み（設定に基づいて動的に）
+        console.log('[MapSelectionStage] 🎵 BGMファイル読み込み開始');
         this.loadBgmFiles();
 
         // SEの読み込み（設定に基づいて動的に）
+        console.log('[MapSelectionStage] 🔊 SEファイル読み込み開始');
         this.loadSeFiles();
         
         // キャラクター画像の読み込み（設定に基づいて動的に）
+        console.log('[MapSelectionStage] 👤 キャラクター画像読み込み開始');
         this.loadCharacterFiles();
         
         // 背景画像の読み込み
+        console.log('[MapSelectionStage] 🖼️ 背景画像読み込み開始');
         this.loadBackgroundFiles();
         
         // エラーハンドリング
         this.load.on('fileerror', (file) => {
-            console.warn(`File not found: ${file.key}, using fallback`);
+            console.warn('[MapSelectionStage] ⚠️ ファイルが見つかりません: ' + file.key + ', フォールバックを使用');
             this.mapManager?.createFallbackImage(file.key);
         });
         
         // デバッグ用
         this.load.on('complete', () => {
+            console.log('[MapSelectionStage] ✅ マップ「' + this.mapConfig.mapTitle + '」のpreload完了');
         });
     }
 
@@ -159,37 +174,56 @@ export class MapSelectionStage extends Phaser.Scene {
 
     create() {
         try {
+            console.log('[MapSelectionStage] 🚀 マップ「' + this.mapConfig.mapTitle + '」のcreate開始');
+            console.log('[MapSelectionStage] 📊 マップ設定:', this.mapConfig);
+            
             const IS_IOS = /iPad|iPhone|iPod/i.test(navigator.userAgent);
             // モバイルデバイスの検出
             this.isMobile = this.sys.game.device.input.touch;
             this._isShuttingDown = false;
             
             // カメラマネージャーを先に初期化
+            console.log('[MapSelectionStage] 📷 カメラマネージャー初期化開始');
             this.cameraManager = new CameraManager(this);
             this.cameraManager.setBackgroundColor('#87CEEB');
+            console.log('[MapSelectionStage] ✅ カメラマネージャー初期化完了');
             
             // マップマネージャーを初期化
+            console.log('[MapSelectionStage] 🗺️ マップマネージャー初期化開始');
             this.mapManager = new MapManager(this);
+            console.log('[MapSelectionStage] 🗺️ マップ作成開始:', this.mapConfig.mapKey, this.mapConfig.tilesetKey);
             this.mapManager.createMap(this.mapConfig.mapKey, this.mapConfig.tilesetKey);
+            console.log('[MapSelectionStage] ✅ マップ作成完了');
             
             // 初期スケールを全体表示に設定（カメラ設定より先に実行）
+            console.log('[MapSelectionStage] 📏 マップスケール設定開始');
             this.mapManager.scaleMapToScreen();
+            console.log('[MapSelectionStage] ✅ マップスケール設定完了');
             
             // カメラ設定
+            console.log('[MapSelectionStage] 📷 カメラ設定開始');
             this.cameraManager.setupCamera(this.mapManager.getMapSize());
+            console.log('[MapSelectionStage] ✅ カメラ設定完了');
             
             // エリア選択システムを初期化
+            console.log('[MapSelectionStage] 🎯 エリア選択システム初期化開始');
             this.areaSelectionManager = new AreaSelectionManager(this);
+            console.log('[MapSelectionStage] ✅ エリア選択システム初期化完了');
+            
             // 視覚的フィードバックマネージャーを初期化
+            console.log('[MapSelectionStage] ✨ 視覚的フィードバックマネージャー初期化開始');
             this.visualFeedbackManager = new VisualFeedbackManager(this);
+            console.log('[MapSelectionStage] ✅ 視覚的フィードバックマネージャー初期化完了');
             
             // 竹田ステージ、三重町ステージ、日本ステージの場合は会話システムを初期化
             if (this.mapConfig.mapKey === 'taketa_city' || this.mapConfig.mapKey === 'bunngo_mie_city' || this.mapConfig.mapKey === 'japan') {
+                console.log('[MapSelectionStage] 💬 会話システム初期化開始');
                 this.conversationTrigger = new ConversationTrigger(this);
                 // ConversationSceneを重複登録しない
                 try {
                     const exists = this.scene.manager && this.scene.manager.keys && this.scene.manager.keys['ConversationScene'];
                     if (!exists) {
+                        console.log('[MapSelectionStage] 💬 ConversationScene追加');
                         this.scene.add('ConversationScene', ConversationScene);
                     }
                 } catch (e) {
@@ -197,11 +231,16 @@ export class MapSelectionStage extends Phaser.Scene {
                 }
                 
                 // 会話開始・終了のイベントリスナーを設定
+                console.log('[MapSelectionStage] 💬 会話イベントリスナー設定');
                 this.setupConversationEventListeners();
+                console.log('[MapSelectionStage] ✅ 会話システム初期化完了');
             }
             // 設定ファイルからエリア情報を取得し、マップエリアとマージ
+            console.log('[MapSelectionStage] 🎯 エリア情報設定開始');
             const mapAreas = this.mapManager.getAreas();
             const configAreas = this.mapConfig.areas;
+            console.log('[MapSelectionStage] 📊 マップエリア数:', mapAreas.length, '設定エリア数:', configAreas?.length || 0);
+            
             // エリア情報をマージ（座標はマップから、シーン情報は設定から）
             const mergedAreas = mapAreas.map(mapArea => {
                 const configArea = configAreas.find(config => config.name === mapArea.name);
@@ -213,40 +252,52 @@ export class MapSelectionStage extends Phaser.Scene {
                 };
             });
             this.areaSelectionManager.setupAreas(mergedAreas);
+            console.log('[MapSelectionStage] ✅ エリア情報設定完了');
             
             // UI要素を作成
+            console.log('[MapSelectionStage] 🎨 UI要素作成開始');
             this.uiManager = new UIManager();
             this.uiManager.createMapUI(this, this.mapConfig.mapTitle);
+            console.log('[MapSelectionStage] ✅ UI要素作成完了');
             
             // 少し遅延を入れてから戻るボタンを作成（シーンの初期化完了を待つ）
             this.time.delayedCall(100, () => {
                 try {
+                    console.log('[MapSelectionStage] 🔙 戻るボタン作成開始');
                     this.uiManager.createBackButton(this); // 右上の戻るボタンを追加
-                    console.log('[MapSelectionStage] 戻るボタンを作成しました');
+                    console.log('[MapSelectionStage] ✅ 戻るボタンを作成しました');
                 } catch (error) {
-                    console.error('[MapSelectionStage] 戻るボタンの作成に失敗:', error);
+                    console.error('[MapSelectionStage] ❌ 戻るボタンの作成に失敗:', error);
                 }
             });
             
             // タッチイベントを設定
+            console.log('[MapSelectionStage] 👆 タッチイベント設定開始');
             this.setupTouchEvents();
+            console.log('[MapSelectionStage] ✅ タッチイベント設定完了');
             
             // スケール切り替えボタンを追加
+            console.log('[MapSelectionStage] 🔍 スケール切り替えボタン作成開始');
             this.createScaleToggleButton();
+            console.log('[MapSelectionStage] ✅ スケール切り替えボタン作成完了');
             
             // AudioManagerを初期化し、iOSのロックを考慮してBGMを開始
             try {
+                console.log('[MapSelectionStage] 🎵 AudioManager初期化開始');
                 this.audioManager = new AudioManager(this);
+                console.log('[MapSelectionStage] ✅ AudioManager初期化完了');
 
                 const startMapBgm = () => {
                     try { if (!this.sys || !this.sys.isActive || !this.sys.isActive()) return; } catch (_) { /* ignore */ }
                     if (this._suppressMapBgm) return;
                     try {
+                        console.log('[MapSelectionStage] 🎵 マップBGM開始処理');
                         // 既存のサウンドを念のため停止（二重回避）
                         try { if (this.sound && this.sound.stopAll) this.sound.stopAll(); } catch(e) { /* ignore */ }
                         try { if (this.audioManager && this.audioManager.stopAll) this.audioManager.stopAll(); } catch(e) { /* ignore */ }
 
                         if (IS_IOS && this.mapConfig?.bgm?.map) {
+                            console.log('[MapSelectionStage] 🎵 iOS用HTMLAudio BGM開始');
                             // iOSではHTMLAudioで直接再生（タイトルと同方式）
                             if (!this._htmlBgm) {
                                 this._htmlBgm = new Audio(this.mapConfig.bgm.map);
@@ -264,6 +315,7 @@ export class MapSelectionStage extends Phaser.Scene {
                                 this._bgmStarted = true;
                             }
                         } else {
+                            console.log('[MapSelectionStage] 🎵 Phaser WebAudio BGM開始');
                             // Phaser WebAudio 側：フレーム分離後に開始（他処理と競合させない）
                             const play = () => { try { this.audioManager.playBgm('bgm_map'); this._bgmStarted = true; } catch(err) { /* ignore */ } };
                             try { this.time.delayedCall(0, play); } catch(err) { play(); }
@@ -275,6 +327,7 @@ export class MapSelectionStage extends Phaser.Scene {
                 };
 
                 if (this.sound && this.sound.locked) {
+                    console.log('[MapSelectionStage] 🔒 音声システムロック中、unlocked待機');
                     // iOSなどでロックされている場合：unlockedで自動再生
                     this.sound.once('unlocked', () => {
                         try {
@@ -313,6 +366,7 @@ export class MapSelectionStage extends Phaser.Scene {
                         startMapBgm();
                     });
                 } else {
+                    console.log('[MapSelectionStage] 🎵 音声システム既に解除済み、BGM開始');
                     // 既に解除済みなら即再生
                     startMapBgm();
                     // 念のため、最初のタップ時にも未再生なら開始
@@ -364,10 +418,14 @@ export class MapSelectionStage extends Phaser.Scene {
                 });
             } catch (error) {
                 // エラーは無視
+                console.error('[MapSelectionStage] ❌ AudioManager初期化エラー:', error);
             }
             // リサイズイベントを設定
+            console.log('[MapSelectionStage] 📏 リサイズイベント設定開始');
             this.scale.on('resize', this.handleResize, this);
             this._onResizeBound = true;
+            console.log('[MapSelectionStage] ✅ リサイズイベント設定完了');
+            
             // シーンシャットダウン時のクリーンアップ登録
             this.events.on('shutdown', () => {
                 try { if (this.load && this.load.reset) this.load.reset(); } catch(e) { /* ignore */ }
@@ -375,9 +433,11 @@ export class MapSelectionStage extends Phaser.Scene {
                 this.shutdown();
             }, this);
 
+            console.log('[MapSelectionStage] ✅ マップ「' + this.mapConfig.mapTitle + '」のcreate完了');
+
         } catch (error) {
-            console.error(`Error creating ${this.mapConfig.mapTitle}:`, error);
-            console.error('Stack trace:', error.stack);
+            console.error('[MapSelectionStage] ❌ Error creating ' + this.mapConfig.mapTitle + ':', error);
+            console.error('[MapSelectionStage] ❌ Stack trace:', error.stack);
         }
     }
 

@@ -6,7 +6,7 @@ export class AudioManager {
     constructor(scene) {
         this.scene = scene;
         this.bgm = null;
-        this.bgmVolume = 0.15;
+        this.bgmVolume = 0.3;
         this.seVolume = 0.7;
         this.voiceVolume = 0.8;
         this.isBgmMuted = false;
@@ -91,12 +91,97 @@ export class AudioManager {
             
             console.log('[AudioManager] 音声コンテキスト状態:', ctx.state);
             
-            // 音声がロックされている場合（シンプルな処理）
+            // 音声がロックされている場合（無限ループ防止）
             if (snd.locked) {
-                console.log('[AudioManager] 音声がロックされています、ユーザー操作を待機中...');
+                console.log('[AudioManager] 音声がロックされています、解除を試行');
+                
+                // 音声コンテキストの状態を強制的にrunningに設定
+                try { 
+                    if (ctx.state !== 'running') {
+                        console.log('[AudioManager] 音声コンテキストを再開中...');
+                        ctx.resume(); 
+                    }
+                    
+                    // 音声コンテキストがrunning状態になるまで待機
+                    if (ctx.state === 'suspended') {
+                        console.log('[AudioManager] 音声コンテキストが停止中、強制再開を試行');
+                        ctx.resume();
+                    }
+                } catch(error) {
+                    console.warn('[AudioManager] Audio context resume error:', error);
+                }
+                
+                // 無音のオシレーターで音声コンテキストを起動（1回のみ）
+                try {
+                    if (typeof ctx.createOscillator === 'function' && !this._oscillatorCreated) {
+                        console.log('[AudioManager] 無音オシレーターで音声コンテキスト起動');
+                        const osc = ctx.createOscillator();
+                        const gain = ctx.createGain();
+                        gain.gain.value = 0.0001;
+                        osc.connect(gain).connect(ctx.destination);
+                        osc.start();
+                        osc.stop(ctx.currentTime + 0.05);
+                        this._oscillatorCreated = true; // フラグを設定して重複実行を防止
+                        
+                        // オシレーター停止後にロック状態を再チェック
+                        setTimeout(() => {
+                            if (snd.locked) {
+                                console.log('[AudioManager] オシレーター後もロック状態、ユーザー操作を待機中...');
+                            } else {
+                                console.log('[AudioManager] 音声ロックが解除されました');
+                            }
+                        }, 100);
+                    }
+                } catch(error) {
+                    console.warn('[AudioManager] Oscillator creation error:', error);
+                }
+                
+                // 強制的にロック解除を試行
+                try {
+                    console.log('[AudioManager] 強制ロック解除を試行...');
+                    
+                    // 現在の音声コンテキストを完全にクリーンアップ
+                    if (ctx && typeof ctx.close === 'function') {
+                        ctx.close();
+                    }
+                    
+                    // シーンの音声システムをリセット
+                    if (this.scene && this.scene.sound) {
+                        // 既存の音声コンテキストを削除
+                        this.scene.sound.context = null;
+                        
+                        // 少し待機してから新しい音声コンテキストを作成
+                        setTimeout(() => {
+                            try {
+                                // 新しい音声コンテキストを作成
+                                const newContext = new (window.AudioContext || window.webkitAudioContext)();
+                                this.scene.sound.context = newContext;
+                                
+                                // 音声コンテキストを強制的にrunning状態に設定
+                                if (newContext.state === 'suspended') {
+                                    newContext.resume();
+                                }
+                                
+                                console.log('[AudioManager] 新しい音声コンテキストを作成しました');
+                                
+                                // ロック状態を再チェック
+                                setTimeout(() => {
+                                    if (!this.scene.sound.locked) {
+                                        console.log('[AudioManager] 強制ロック解除成功');
+                                    } else {
+                                        console.log('[AudioManager] 強制ロック解除失敗、ユーザー操作が必要');
+                                    }
+                                }, 300);
+                            } catch (contextError) {
+                                console.warn('[AudioManager] 新しい音声コンテキスト作成エラー:', contextError);
+                            }
+                        }, 100);
+                    }
+                } catch (forceError) {
+                    console.warn('[AudioManager] 強制ロック解除エラー:', forceError);
+                }
                 
                 // ロック状態の場合はfalseを返す（BGM再生を延期）
-                // 複雑なリトライ処理は削除し、ユーザー操作に任せる
                 return false;
             } else {
                 console.log('[AudioManager] 音声はロックされていません');

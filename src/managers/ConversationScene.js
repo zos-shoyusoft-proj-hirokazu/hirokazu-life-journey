@@ -346,6 +346,9 @@ export class ConversationScene extends Phaser.Scene {
 
     // 会話開始
     startConversation(conversationData) {
+        console.log('[ConversationScene] 💬 会話開始');
+        console.log('[ConversationScene] 📋 会話データ:', conversationData);
+        
         this.currentConversation = conversationData;
         this.currentConversationIndex = 0;
         
@@ -357,19 +360,23 @@ export class ConversationScene extends Phaser.Scene {
             const mainScene = this.scene.get('Stage1Scene') || this.scene.get('Stage2Scene') || this.scene.get('Stage3Scene') || this.scene.get('MiemachiStage') || this.scene.get('TaketastageStage') || this.scene.get('JapanStage');
             if (mainScene && mainScene.audioManager && mainScene.audioManager.bgm) {
                 this._originalBgmKey = mainScene.audioManager.bgm.key;
-                console.log(`[ConversationScene] 元のBGMキーを記憶: ${this._originalBgmKey}`);
+                console.log('[ConversationScene] 🎵 元のBGMキーを記憶: ' + this._originalBgmKey);
             }
         } catch (e) {
-            console.warn('[ConversationScene] 元のBGMキー取得エラー:', e);
+            console.warn('[ConversationScene] ⚠️ 元のBGMキー取得エラー:', e);
         }
         
         // 背景とBGMの設定
         if (conversationData.background) {
+            console.log('[ConversationScene] 🖼️ 背景画像設定開始:', conversationData.background);
             this.updateBackground(conversationData.background);
+            console.log('[ConversationScene] ✅ 背景画像設定完了');
         }
         
         if (conversationData.bgm) {
+            console.log('[ConversationScene] 🎵 イベントBGM設定開始:', conversationData.bgm);
             this.switchToEventBgm(conversationData.bgm);
+            console.log('[ConversationScene] ✅ イベントBGM設定完了');
         }
 
         // マップBGMの自動再開を抑制（MapSelectionStage側のリトライを止める）
@@ -387,7 +394,9 @@ export class ConversationScene extends Phaser.Scene {
         } catch (e) { /* ignore */ }
         
         // 最初のダイアログを表示
+        console.log('[ConversationScene] 💬 最初のダイアログ表示開始');
         this.showDialog();
+        console.log('[ConversationScene] ✅ 会話開始完了');
     }
 
     // 次の会話に進む
@@ -407,11 +416,16 @@ export class ConversationScene extends Phaser.Scene {
     // 会話表示
     showDialog() {
         const dialog = this.currentConversation.conversations[this.currentConversationIndex];
+        console.log('[ConversationScene] 💬 ダイアログ表示開始:', this.currentConversationIndex + 1, '/', this.currentConversation.conversations.length);
+        console.log('[ConversationScene] 📝 ダイアログ内容:', dialog);
+        
         // ナレーション判定：speaker未指定 or characterがnarrator
         const isNarration = !dialog.speaker || dialog.character === 'narrator';
+        console.log('[ConversationScene] 📢 ナレーション判定:', isNarration);
 
         // 立ち絵の表示/非表示制御
         if (isNarration) {
+            console.log('[ConversationScene] 👤 ナレーション時: 全立ち絵を非表示');
             // ナレーション時は全立ち絵を一時的に隠す
             if (this.characterSprites) {
                 Object.values(this.characterSprites).forEach(sprite => {
@@ -421,6 +435,7 @@ export class ConversationScene extends Phaser.Scene {
                 });
             }
         } else {
+            console.log('[ConversationScene] 👤 通常発話時: 立ち絵表示処理開始');
             // 通常発話時は全立ち絵を表示状態に戻す（以降のdim処理は既存ロジックに委譲）
             if (this.characterSprites) {
                 Object.values(this.characterSprites).forEach(sprite => {
@@ -429,25 +444,32 @@ export class ConversationScene extends Phaser.Scene {
                     }
                 });
             }
+            console.log('[ConversationScene] 👤 キャラクター立ち絵更新:', dialog.character, '表情:', dialog.expression);
             this.updateCharacterSprite(dialog.character, dialog.expression);
             // 人数に応じた等間隔レイアウト
+            console.log('[ConversationScene] 👤 立ち絵レイアウト調整開始');
             this.layoutVisibleCharacters();
+            console.log('[ConversationScene] ✅ 立ち絵レイアウト調整完了');
         }
 
         // 名前の表示（ナレーション時は非表示）
         if (isNarration) {
+            console.log('[ConversationScene] 📛 ナレーション時: 名前ボックス非表示');
             this.nameText.setText('');
             if (this.namebox) this.namebox.setVisible(false);
             if (this.nameText) this.nameText.setVisible(false);
             if (this.nameboxDecoFrame) this.nameboxDecoFrame.setVisible(false);
             if (this.nameboxDecoShine) this.nameboxDecoShine.setVisible(false);
         } else {
+            console.log('[ConversationScene] 📛 通常発話時: 名前ボックス表示:', dialog.speaker);
             if (this.namebox) this.namebox.setVisible(true);
             if (this.nameText) this.nameText.setVisible(true);
             this.nameText.setText(dialog.speaker || '');
             // 名前の長さに応じて名前ボックスの幅だけを調整（高さ・位置は固定）
             if (dialog.speaker) {
+                console.log('[ConversationScene] 📛 名前ボックス幅調整開始:', dialog.speaker);
                 this.adjustNameboxWidth(dialog.speaker);
+                console.log('[ConversationScene] ✅ 名前ボックス幅調整完了');
             }
             // 装飾の可視性も同期
             if (this.nameboxDecoFrame) this.nameboxDecoFrame.setVisible(true);
@@ -469,54 +491,78 @@ export class ConversationScene extends Phaser.Scene {
 
     // 立ち絵の更新
     updateCharacterSprite(character, expression) {
+        console.log('[ConversationScene] 👤 立ち絵更新開始:', character, '表情:', expression);
+        
         if (!this.characterSprites) {
             this.characterSprites = {};
+            console.log('[ConversationScene] 👤 立ち絵スプライト配列初期化');
         }
         
         // characterContainerが初期化されていない場合は何もしない
         if (!this.characterContainer) {
-            console.warn('characterContainer is not initialized yet');
+            console.warn('[ConversationScene] ⚠️ characterContainer is not initialized yet');
             return;
         }
         
         if (character && expression) {
+            console.log('[ConversationScene] 👤 テクスチャキー解決開始:', character, expression);
             const spriteKey = this.resolveExistingSpriteKey(character, expression);
+            console.log('[ConversationScene] 👤 解決されたテクスチャキー:', spriteKey);
+            
             if (!spriteKey) {
+                console.warn('[ConversationScene] ⚠️ 利用可能なテクスチャがないため表示しません:', character, expression);
                 return; // 利用可能なテクスチャがない場合は表示しない
             }
+            
             const width = this.sys?.game?.canvas?.width || this.sys?.game?.config?.width || 800;
             const height = this.sys?.game?.canvas?.height || this.sys?.game?.config?.height || 600;
+            console.log('[ConversationScene] 📏 画面サイズ:', width, 'x', height);
             
             // 位置は layoutVisibleCharacters で一括調整するため一旦中央付近
             let position = { x: width * 0.5, y: height * 0.4 };
+            console.log('[ConversationScene] 📍 初期位置:', position);
             
             // 既存のキャラクターがいる場合は、テクスチャのみ変更
             if (this.characterSprites[character]) {
+                console.log('[ConversationScene] 👤 既存キャラクター更新:', character);
                 const existingSprite = this.characterSprites[character];
                 // テクスチャが変更されている場合のみ更新
                 if (existingSprite.texture.key !== spriteKey) {
+                    console.log('[ConversationScene] 👤 テクスチャ変更:', existingSprite.texture.key, '→', spriteKey);
                     existingSprite.setTexture(spriteKey);
                     // テクスチャ変更時にもスケールを再計算
                     this.applyPortraitScale(existingSprite);
+                    console.log('[ConversationScene] ✅ 既存キャラクター更新完了');
+                } else {
+                    console.log('[ConversationScene] ℹ️ テクスチャ変更なし、既存のまま');
                 }
             } else {
+                console.log('[ConversationScene] 👤 新規キャラクター作成:', character);
                 // 新しいスプライトを作成（最初から正しい位置で作成）
                 const sprite = this.add.image(position.x, position.y, spriteKey);
                 sprite.setOrigin(0.5, 0.5);
+                console.log('[ConversationScene] 👤 スプライト作成完了:', spriteKey);
+                
                 // 立ち絵を画面サイズに合わせて自然に収まるスケールへ
                 const targetScale = this.getPortraitTargetScale(sprite.width, sprite.height);
+                console.log('[ConversationScene] 📏 目標スケール:', targetScale, '元サイズ:', sprite.width, 'x', sprite.height);
+                
                 // フルサイズに近い場合はY位置を中央に補正（上が欠けないように）
                 const scaledHeight = sprite.height * targetScale;
                 if (scaledHeight >= (height * 0.95)) {
                     position = { ...position, y: height * 0.5 };
                     sprite.setPosition(position.x, position.y);
+                    console.log('[ConversationScene] 📍 位置補正完了:', position);
                 }
+                
                 sprite.setAlpha(0);
                 sprite.setScale(Math.max(0.1, targetScale * 0.9));
                 this.characterContainer.add(sprite);
                 this.characterSprites[character] = sprite;
+                console.log('[ConversationScene] 👤 キャラクターコンテナに追加完了');
                 
                 // 立ち絵の登場アニメーション
+                console.log('[ConversationScene] 🎬 立ち絵登場アニメーション開始');
                 this.tweens.add({
                     targets: sprite,
                     alpha: 1,
@@ -525,11 +571,15 @@ export class ConversationScene extends Phaser.Scene {
                     duration: 500,
                     ease: 'Power2'
                 });
-                //aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                console.log('[ConversationScene] ✅ 新規キャラクター作成完了');
             }
             
             // 話していないキャラクターを少し暗くする
+            console.log('[ConversationScene] 👤 他キャラクター暗転処理開始');
             this.dimOtherCharacters(character);
+            console.log('[ConversationScene] ✅ 立ち絵更新完了');
+        } else {
+            console.log('[ConversationScene] ℹ️ キャラクターまたは表情が指定されていません');
         }
     }
 

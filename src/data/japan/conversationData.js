@@ -831,6 +831,33 @@ export const japanConversationData = {
 export class JapanConversationManager {
     constructor() {
         this.conversationData = japanConversationData;
+        this.currentEvent = null;
+        this.resourceManager = null; // リソース管理クラスの参照
+    }
+    
+    // リソース管理クラスを設定
+    setResourceManager(resourceManager) {
+        this.resourceManager = resourceManager;
+    }
+    
+    // マップ読み込み時の処理（基本データのみ、重いリソースは除外）
+    async loadMap(mapName = 'japan') {
+        if (!this.resourceManager) {
+            throw new Error('ResourceManager not set');
+        }
+        
+        try {
+            console.log(`日本マップ「${mapName}」を読み込み中...`);
+            
+            // 基本データのみ読み込み（重いリソースは除外）
+            await this.resourceManager.loadMapResources(mapName);
+            
+            console.log(`日本マップ「${mapName}」の読み込み完了`);
+            return true;
+        } catch (error) {
+            console.error('マップ読み込みエラー:', error);
+            throw error;
+        }
     }
 
     getConversation(eventId) {
@@ -839,6 +866,33 @@ export class JapanConversationManager {
 
     getAvailableEvents() {
         return Object.keys(this.conversationData);
+    }
+    
+    // イベント開始（リソース読み込み付き）
+    async startEvent(eventId) {
+        if (!this.resourceManager) {
+            throw new Error('ResourceManager not set');
+        }
+        
+        try {
+            // 必要なリソースを読み込み
+            await this.resourceManager.loadEventResources(eventId, this.conversationData);
+            
+            // イベントを開始
+            this.currentEvent = eventId;
+            return true;
+        } catch (error) {
+            console.error('Failed to start event:', error);
+            throw error;
+        }
+    }
+    
+    // イベント終了
+    endEvent() {
+        if (this.resourceManager) {
+            this.resourceManager.unloadResources();
+        }
+        this.currentEvent = null;
     }
 
     addConversation(eventId, conversationData) {

@@ -31,28 +31,44 @@ export class MapManager {
     }
 
     createNewMap(mapKey, tilesetKey, layerName = 'タイルレイヤー1') {
+        console.log('[MapManager] 🗺️ 新規マップ作成開始');
+        console.log('[MapManager] 📋 マップキー:', mapKey, 'タイルセットキー:', tilesetKey, 'レイヤー名:', layerName);
+        
         // Tiledマップを作成
+        console.log('[MapManager] 🗺️ Tiledマップ作成開始:', mapKey);
         this.tilemap = this.scene.make.tilemap({ key: mapKey });
         this.map = this.tilemap; // 後方互換性
+        console.log('[MapManager] ✅ Tiledマップ作成完了');
         
         // タイルセットを追加
+        console.log('[MapManager] 🖼️ タイルセット追加開始:', tilesetKey);
         const tileset = this.tilemap.addTilesetImage(tilesetKey, tilesetKey);
+        console.log('[MapManager] ✅ タイルセット追加完了');
         
         // レイヤーを作成
+        console.log('[MapManager] 📑 マップレイヤー作成開始:', layerName);
         this.mapLayer = this.tilemap.createLayer(layerName, tileset);
         this.layers = [this.mapLayer]; // 後方互換性
+        console.log('[MapManager] ✅ マップレイヤー作成完了');
         
         // マップサイズを取得
         this.mapWidth = this.tilemap.widthInPixels;
         this.mapHeight = this.tilemap.heightInPixels;
+        console.log('[MapManager] 📏 マップサイズ:', this.mapWidth, 'x', this.mapHeight);
         
         // スマホ画面に合わせてマップレイヤーをスケール
+        console.log('[MapManager] 📏 マップスケール調整開始');
         this.scaleMapToScreen();
+        console.log('[MapManager] ✅ マップスケール調整完了');
         
         // オブジェクトレイヤーから場所データを取得（マップごとに適切なレイヤー名を指定）
+        console.log('[MapManager] 🎯 エリアデータ抽出開始');
         const objectLayerName = this.getObjectLayerName(mapKey);
+        console.log('[MapManager] 📍 オブジェクトレイヤー名:', objectLayerName);
         this.extractAreaData(objectLayerName);
+        console.log('[MapManager] ✅ エリアデータ抽出完了');
         
+        console.log('[MapManager] ✅ 新規マップ作成完了');
         return this.tilemap;
     }
 
