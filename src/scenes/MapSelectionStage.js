@@ -62,17 +62,8 @@ export class MapSelectionStage extends Phaser.Scene {
         
         // UI要素とアイコン
         
-        // BGMの読み込み（設定に基づいて動的に）
-        this.loadBgmFiles();
-
-        // SEの読み込み（設定に基づいて動的に）
-        this.loadSeFiles();
-        
-        // キャラクター画像の読み込み（設定に基づいて動的に）
-        this.loadCharacterFiles();
-        
-        // 背景画像の読み込み
-        this.loadBackgroundFiles();
+        // 最小限のリソースのみ読み込み（会話イベント用は後で動的読み込み）
+        this.loadMinimalResources();
         
         // エラーハンドリング
         this.load.on('fileerror', (file) => {
@@ -84,25 +75,14 @@ export class MapSelectionStage extends Phaser.Scene {
         this.load.on('complete', () => {
         });
     }
-
-    loadSeFiles() {
-        // AreaConfigからSEを動的に読み込み
-        if (this.mapConfig.se) {
-            console.log('[MapSelectionStage] SE読み込み開始:', this.mapConfig.se);
-            Object.keys(this.mapConfig.se).forEach(seKey => {
-                const sePath = this.mapConfig.se[seKey];
-                const seKeyWithPrefix = `se_${seKey}`;
-                console.log('[MapSelectionStage] SE読み込み:', seKeyWithPrefix, '->', sePath);
-                this.load.audio(seKeyWithPrefix, sePath);
-            });
-        } else {
-            console.warn('[MapSelectionStage] mapConfig.se が定義されていません');
-        }
-    }
     
     // 会話開始・終了のイベントリスナーを設定
+    // TODO: 個別シーン（DynamicConversationScene）で動作するため、
+    // このイベントリスナーは動作しない可能性がある
+    // 修正が必要：DynamicConversationScene.jsで会話状態管理を行うべき
     setupConversationEventListeners() {
         // ConversationSceneの会話開始・終了イベントを監視
+        // 注意：個別シーン内で動作するため、このイベントは受信されない可能性
         this.events.on('conversationStarted', () => {
             this._isInConversation = true;
             console.log('[MapSelectionStage] 会話開始: 他のエリアをタップできません');
@@ -119,41 +99,69 @@ export class MapSelectionStage extends Phaser.Scene {
         });
     }
 
-    // BGMファイルを動的に読み込む
-    loadBgmFiles() {
+    // 削除済み：BGMファイルを動的に読み込む（不要）
+    // loadBgmFiles() {
+    //     
+    //     // bgmがオブジェクト形式なら各用途ごとにロード
+    //     if (this.mapConfig.bgm && typeof this.mapConfig.bgm === 'object') {
+    //         Object.keys(this.mapConfig.bgm).forEach(bgmKey => {
+    //         this.load.audio(`bgm_${bgmKey}`, this.mapConfig.bgm[bgmKey]);
+    //     });
+    //     }
+    //     
+    //     // マップ固有のイベントBGMがあれば読み込み
+    //     if (this.mapConfig.eventBgm) {
+    //         Object.keys(this.mapConfig.eventBgm).forEach(eventKey => {
+    //         this.load.audio(`bgm_event_${eventKey}`, this.mapConfig.eventBgm[eventKey]);
+    //     });
+    //     }
+    // }
+
+    // 削除済み：キャラクター画像ファイルを動的に読み込む（不要）
+    // loadCharacterFiles() {
+    //     // AreaConfigからキャラクター画像を動的に読み込み
+    //     if (this.mapConfig.characters) {
+    //         Object.keys(this.mapConfig.characters).forEach(charKey => {
+    //         this.load.image(charKey, this.mapConfig.characters[charKey]);
+    //     });
+    //     }
+    // }
+
+    // 最小限のリソースのみ読み込み（会話イベント用は後で動的読み込み）
+    loadMinimalResources() {
+        // マップ表示に必要な最小限のリソースのみ
+        console.log('[MapSelectionStage] 最小限リソース読み込み開始');
         
-        // bgmがオブジェクト形式なら各用途ごとにロード
+        // 基本的なSE（マップ操作用のみ）
+        this.loadMapSeFiles();
+        
+        // マップBGM（基本の1つだけ）
         if (this.mapConfig.bgm && typeof this.mapConfig.bgm === 'object') {
-            Object.keys(this.mapConfig.bgm).forEach(bgmKey => {
-                this.load.audio(`bgm_${bgmKey}`, this.mapConfig.bgm[bgmKey]);
-            });
+            const mainBgm = Object.keys(this.mapConfig.bgm)[0]; // 最初のBGMのみ
+            if (mainBgm) {
+                this.load.audio(`bgm_${mainBgm}`, this.mapConfig.bgm[mainBgm]);
+                console.log(`[MapSelectionStage] 基本BGM読み込み: ${mainBgm}`);
+            }
         }
         
-        // マップ固有のイベントBGMがあれば読み込み
-        if (this.mapConfig.eventBgm) {
-            Object.keys(this.mapConfig.eventBgm).forEach(eventKey => {
-                this.load.audio(`bgm_event_${eventKey}`, this.mapConfig.eventBgm[eventKey]);
-            });
-        }
+        console.log('[MapSelectionStage] 最小限リソース読み込み完了');
     }
-
-    // キャラクター画像ファイルを動的に読み込む
-    loadCharacterFiles() {
-        // AreaConfigからキャラクター画像を動的に読み込み
-        if (this.mapConfig.characters) {
-            Object.keys(this.mapConfig.characters).forEach(charKey => {
-                this.load.image(charKey, this.mapConfig.characters[charKey]);
+    
+    // マップ操作用のSEのみ読み込み
+    loadMapSeFiles() {
+        if (this.mapConfig.se) {
+            // マップ操作用のSEのみ読み込み（会話イベント用は除外）
+            const mapSeKeys = ['touch', 'map_touch'];
+            mapSeKeys.forEach(seKey => {
+                if (this.mapConfig.se[seKey]) {
+                    const sePath = this.mapConfig.se[seKey];
+                    const seKeyWithPrefix = `se_${seKey}`;
+                    console.log(`[MapSelectionStage] マップSE読み込み: ${seKeyWithPrefix} -> ${sePath}`);
+                    this.load.audio(seKeyWithPrefix, sePath);
+                }
             });
-        }
-    }
-
-    // 背景画像ファイルを動的に読み込む
-    loadBackgroundFiles() {
-        // AreaConfigから背景画像を動的に読み込み
-        if (this.mapConfig.backgrounds) {
-            Object.keys(this.mapConfig.backgrounds).forEach(bgKey => {
-                this.load.image(bgKey, this.mapConfig.backgrounds[bgKey]);
-            });
+        } else {
+            console.warn('[MapSelectionStage] mapConfig.se が定義されていません');
         }
     }
 

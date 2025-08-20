@@ -20,7 +20,9 @@ export class ConversationScene extends Phaser.Scene {
 
     init(data) {
         // start() から渡された会話データを保持
-        this._pendingConversation = data && data.conversationData ? data.conversationData : null;
+        this._pendingConversation = data && data.conversations ? data.conversations : null;
+        console.log('[ConversationScene] init called with data:', data);
+        console.log('[ConversationScene] _pendingConversation set to:', this._pendingConversation);
     }
 
 
@@ -48,10 +50,7 @@ export class ConversationScene extends Phaser.Scene {
         const height = this.sys?.game?.canvas?.height || this.sys?.game?.config?.height || 600;
         const isPortrait = height > width;
         
-        // 背景を設定（デフォルトは透明な背景）
-        try { this.cameras?.main?.setBackgroundColor('#000000'); } catch(_) { /* ignore */ }
-        this.background = this.add.rectangle(width / 2, height / 2, width, height, 0x000000, 0.5);
-        this.background.setOrigin(0.5, 0.5);
+        // 背景は後でstartConversationで設定されるため、ここでは設定しない
         
         // 立ち絵用のコンテナ
         this.characterContainer = this.add.container(0, 0);
@@ -177,13 +176,17 @@ export class ConversationScene extends Phaser.Scene {
         } catch (_) { /* ignore */ }
 
         // start() からデータが渡されている場合はここで開始
+        console.log('[ConversationScene] _pendingConversation check:', this._pendingConversation);
         if (this._pendingConversation) {
             try {
+                console.log('[ConversationScene] startConversation called with:', this._pendingConversation);
                 this.startConversation(this._pendingConversation);
             } catch (e) {
                 console.error('[ConversationScene] pending conversation start error:', e);
             }
             this._pendingConversation = null;
+        } else {
+            console.log('[ConversationScene] _pendingConversation is null or undefined');
         }
     }
     
@@ -364,10 +367,12 @@ export class ConversationScene extends Phaser.Scene {
         }
         
         // 背景とBGMの設定
+        console.log('[ConversationScene] 背景設定開始:', conversationData.background);
         if (conversationData.background) {
             this.updateBackground(conversationData.background);
         }
         
+        console.log('[ConversationScene] BGM設定開始:', conversationData.bgm);
         if (conversationData.bgm) {
             this.switchToEventBgm(conversationData.bgm);
         }
@@ -801,6 +806,8 @@ export class ConversationScene extends Phaser.Scene {
 
     // 背景を更新
     updateBackground(backgroundKey) {
+        console.log('[ConversationScene] updateBackground called with:', backgroundKey);
+        console.log('[ConversationScene] texture exists check:', this.textures.exists(backgroundKey));
         if (backgroundKey && this.textures.exists(backgroundKey)) {
             // 既存の背景を削除
             if (this.background) {
@@ -844,6 +851,7 @@ export class ConversationScene extends Phaser.Scene {
     
     // イベント用BGMに切り替え
     switchToEventBgm(eventBgmKey) {
+        console.log('[ConversationScene] switchToEventBgm called with:', eventBgmKey);
         // MapSelectionStageも含めて検索
         const mainScene = this.scene.get('Stage1Scene') || this.scene.get('Stage2Scene') || this.scene.get('Stage3Scene') || this.scene.get('MiemachiStage') || this.scene.get('TaketastageStage') || this.scene.get('JapanStage');
 
@@ -901,8 +909,9 @@ export class ConversationScene extends Phaser.Scene {
                     try { this._eventHtmlBgm.pause(); } catch (e) { /* ignore */ }
                     this._eventHtmlBgm = null;
                 }
-                const path = rawKey ? (mainScene.mapConfig && mainScene.mapConfig.bgm ? (mainScene.mapConfig.bgm[rawKey] || '') : '') : '';
-                if (path) {
+                            const path = rawKey ? (mainScene.mapConfig && mainScene.mapConfig.bgm ? (mainScene.mapConfig.bgm[rawKey] || '') : '') : '';
+            console.log('[ConversationScene] BGMパス取得:', { rawKey, mapConfig: mainScene.mapConfig, bgm: mainScene.mapConfig?.bgm, path });
+            if (path) {
                     this._eventHtmlBgm = new Audio(path);
                     this._eventHtmlBgm.loop = true;
                     this._eventHtmlBgm.volume = this.audioManager.bgmVolume;
