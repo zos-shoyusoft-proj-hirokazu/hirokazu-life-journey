@@ -58,14 +58,14 @@ export const AreaConfig = {
         },
         areas: [
             { name: 'oreno_koto', scene: null, conversationId: 'oreno_koto' },
-            { name: 'momoiro_jyogakuenn', scene: null, conversationId: 'annex_momo' },
-            { name: 'drinking_dutu', scene: null, conversationId: 'drink_zutsu' },
-            { name: 'Weeds_burn', scene: null, conversationId: 'river_fire' },
+            { name: 'momoiro_jyogakuenn', scene: null, conversationId: 'momoiro_jyogakuenn' },
+            { name: 'drinking_dutu', scene: null, conversationId: 'drinking_dutu' },
+            { name: 'Weeds_burn', scene: null, conversationId: 'Weeds_burn' },
             { name: 'mie_high_school', scene: 'startPhaserGame', sceneParam: 1, conversationId: null },
-            { name: 'raizu', scene: null, conversationId: 'shigaku' },
+            { name: 'raizu', scene: null, conversationId: 'raizu' },
             { name: 'snack_street_night', scene: null, conversationId: 'snack_street_night' },
-            { name: 'souce', scene: null, conversationId: 'team_shoyu_drinking' },
-            { name: 'koutaroupoteto', scene: null, conversationId: 'koutarou_potato' },
+            { name: 'souce', scene: null, conversationId: 'souce' },
+            { name: 'koutaroupoteto', scene: null, conversationId: 'koutaroupoteto' },
             { name: 'seven', scene: null, conversationId: 'seven' }
         ]
     },

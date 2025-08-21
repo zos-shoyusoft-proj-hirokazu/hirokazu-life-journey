@@ -30,26 +30,26 @@ export const EventConfig = {
         },
         
         // 志学
-        'shigaku': {
-            id: 'shigaku',                       // 必要：イベントを識別するためのID
+        'raizu': {
+            id: 'raizu',                         // 必要：イベントを識別するためのID
             title: '志学',                        // 必要：イベントのタイトル表示用
             type: 'conversation',                // 必要：イベントの種類を指定
             areaType: 'miemachi',                // 必要：エリアタイプを指定
             background: 'raizu',                 // 必要：conversationDataのbackgroundと一致
-            bgm: 'metoroido',                    // 必要：conversationDataのbgmと一致
+            bgm: 'metoroido',                    // 必要：BGMファイルの読み込みに必要
             required: {
                 backgrounds: ['raizu'],          // 必要：背景画像の読み込みに必要
                 characters: ['hirokazu_e', 'kanato_c', 'daichi_e', 'koutarou_a', 'koutarou_c', 'naoki_c', 'narrator_a', 'yabajinn_a'],  // 必要：character+expressionの組み合わせ（重複除く）
                 bgm: ['metoroido']               // 必要：BGMファイルの読み込みに必要
                 // seセクションは不要：conversationDataにSEの指定がないため
             },
-            conversationDataKey: 'shigaku',      // 必要：conversationDataのキーと一致
+            conversationDataKey: 'raizu',        // 必要：conversationDataのキーと一致
             areaName: 'raizu'                   // 必要：エリア名の指定
         },
         
         // アネックス（ももいろ女学園）
-        'annex_momo': {
-            id: 'annex_momo',                    // 必要：イベントを識別するためのID
+        'momoiro_jyogakuenn': {
+            id: 'momoiro_jyogakuenn',            // 必要：イベントを識別するためのID
             title: 'アネックス（ももいろ女学園）',  // 必要：イベントのタイトル表示用
             type: 'conversation',                // 必要：イベントの種類を指定
             areaType: 'miemachi',                // 必要：エリアタイプを指定
@@ -61,7 +61,7 @@ export const EventConfig = {
                 bgm: ['togetogetarumeiro']      // 必要：BGMファイルの読み込みに必要
                 // seセクションは不要：conversationDataにSEの指定がないため
             },
-            conversationDataKey: 'annex_momo',   // 必要：conversationDataのキーと一致
+            conversationDataKey: 'momoiro_jyogakuenn',   // 必要：conversationDataのキーと一致
             areaName: 'momoiro'                 // 必要：エリア名の指定
         },
         
@@ -84,8 +84,8 @@ export const EventConfig = {
         },
         
         // ドンキの謎酒"ずつ"
-        'drink_zutsu': {
-            id: 'drink_zutsu',                   // 必要：イベントを識別するためのID
+        'drinking_dutu': {
+            id: 'drinking_dutu',                 // 必要：イベントを識別するためのID
             title: 'ドンキの謎酒"ずつ"',           // 必要：イベントのタイトル表示用
             type: 'conversation',                // 必要：イベントの種類を指定
             areaType: 'miemachi',                // 必要：エリアタイプを指定
@@ -97,11 +97,11 @@ export const EventConfig = {
                 bgm: ['nightbarth']              // 必要：BGMファイルの読み込みに必要
                 // seセクションは不要：conversationDataにSEの指定がないため（taiko_2renは1箇所のみ）
             },
-            conversationDataKey: 'drink_zutsu',   // 必要：conversationDataのキーと一致
+            conversationDataKey: 'drinking_dutu',   // 必要：conversationDataのキーと一致
             areaName: 'dutu'                     // 必要：エリア名の指定
         },
         
-        // 川の火事
+        // 川で火事
         'Weeds_burn': {
             id: 'Weeds_burn',                    // 必要：イベントを識別するためのID
             title: '川の火事',                     // 必要：イベントのタイトル表示用
@@ -115,9 +115,11 @@ export const EventConfig = {
                 bgm: ['metoroido'],              // 必要：BGMファイルの読み込みに必要
                 se: ['sei_ge_matti_tukeru01', 'takibi_tan', 'wind2']  // 必要：conversationDataで使用されるSE
             },
-            conversationDataKey: 'river_fire',    // 必要：conversationDataのキーと一致
+            conversationDataKey: 'Weeds_burn',    // 必要：conversationDataのキーと一致
             areaName: 'Fire'                     // 必要：エリア名の指定
         },
+        
+
         
         // スナック街の夜
         'snack_street_night': {
@@ -138,8 +140,8 @@ export const EventConfig = {
         },
         
         // チーム醤油飲み会
-        'team_shoyu_drinking': {
-            id: 'team_shoyu_drinking',           // 必要：イベントを識別するためのID
+        'souce': {
+            id: 'souce',                         // 必要：イベントを識別するためのID
             title: 'チーム醤油飲み会',              // 必要：イベントのタイトル表示用
             type: 'conversation',                // 必要：イベントの種類を指定
             areaType: 'miemachi',                // 必要：エリアタイプを指定
@@ -151,13 +153,13 @@ export const EventConfig = {
                 bgm: ['nightbarth']              // 必要：BGMファイルの読み込みに必要
                 // seセクションは不要：conversationDataにSEの指定がないため
             },
-            conversationDataKey: 'team_shoyu_drinking',  // 必要：conversationDataのキーと一致
-            areaName: 'souce'                    // 必要：エリア名の指定
+            conversationDataKey: 'souce',        // 必要：conversationDataのキーと一致
+            areaName: 'souce'                   // 必要：エリア名の指定
         },
         
         // コータローとポテト
-        'koutarou_potato': {
-            id: 'koutarou_potato',               // 必要：イベントを識別するためのID
+        'koutaroupoteto': {
+            id: 'koutaroupoteto',                // 必要：イベントを識別するためのID
             title: 'コータローとポテト',             // 必要：イベントのタイトル表示用
             type: 'conversation',                // 必要：イベントの種類を指定
             areaType: 'miemachi',                // 必要：エリアタイプを指定
@@ -169,7 +171,7 @@ export const EventConfig = {
                 bgm: ['Nagisa_Moderato']         // 必要：BGMファイルの読み込みに必要
                 // seセクションは不要：conversationDataにSEの指定がないため
             },
-            conversationDataKey: 'koutarou_potato',  // 必要：conversationDataのキーと一致
+            conversationDataKey: 'koutaroupoteto',  // 必要：conversationDataのキーと一致
             areaName: 'koutaroupoteto'           // 必要：エリア名の指定
         },
         

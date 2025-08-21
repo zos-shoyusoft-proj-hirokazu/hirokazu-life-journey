@@ -240,9 +240,11 @@ export class MapSelectionStage extends Phaser.Scene {
             // 設定ファイルからエリア情報を取得し、マップエリアとマージ
             const mapAreas = this.mapManager.getAreas();
             const configAreas = this.mapConfig.areas;
+            
             // エリア情報をマージ（座標はマップから、シーン情報は設定から）
             const mergedAreas = mapAreas.map(mapArea => {
                 const configArea = configAreas.find(config => config.name === mapArea.name);
+                
                 return {
                     ...mapArea,
                     scene: configArea?.scene || null,
@@ -250,6 +252,7 @@ export class MapSelectionStage extends Phaser.Scene {
                     conversationId: configArea?.conversationId || null
                 };
             });
+            
             this.areaSelectionManager.setupAreas(mergedAreas);
             
             // UI要素を作成

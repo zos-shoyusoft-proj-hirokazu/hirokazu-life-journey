@@ -108,7 +108,7 @@ export const miemachiConversationData = {
     },
     
     // 志学エピソード
-    'shigaku': {
+    'raizu': {
         'background': 'raizu',
         'bgm': 'metoroido',
         'conversations': [
@@ -199,7 +199,7 @@ export const miemachiConversationData = {
     },
     
     // チーム醤油飲み会
-    'team_shoyu_drinking': {
+    'souce': {
         'background': 'souce',
         'bgm': 'nightbarth',
         'conversations': [
@@ -611,7 +611,7 @@ export const miemachiConversationData = {
     },
     
     // 川で火をつけたエピソード
-    'river_fire': {
+    'Weeds_burn': {
         'background': 'Fire',
         'bgm': 'metoroido',
         'conversations': [
@@ -857,7 +857,7 @@ export const miemachiConversationData = {
     },
     
     // こうたろうポテト
-    'koutarou_potato': {
+    'koutaroupoteto': {
         'background': 'koutaroupoteto',
         'bgm': 'Nagisa_Moderato',
         'conversations': [
@@ -957,7 +957,7 @@ export const miemachiConversationData = {
     },
     
     // ドンキの謎酒"ずつ"
-    'drink_zutsu': {
+    'drinking_dutu': {
         'background': 'dutu',
         'bgm': 'nightbarth',
         'conversations': [
@@ -1350,7 +1350,7 @@ export const miemachiConversationData = {
     },
     
     // アネックス（ももいろ女学園）
-    'annex_momo': {
+    'momoiro_jyogakuenn': {
         'background': 'momoiro',
         'bgm': 'togetogetarumeiro',
         'conversations': [

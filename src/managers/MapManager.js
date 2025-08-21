@@ -272,7 +272,6 @@ export class MapManager {
             }));
             
             console.log(`[MapManager] Extracted ${this.areas.length} areas from object layer '${objectLayerName}'`);
-            console.log('[MapManager] Areas:', this.areas);
         } else {
             console.warn(`[MapManager] Object layer '${objectLayerName}' not found or has no objects`);
             console.log('[MapManager] Available layers:', this.tilemap.layers);

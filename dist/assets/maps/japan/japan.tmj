@@ -32,7 +32,7 @@
         {
          "draworder":"topdown",
          "id":2,
-         "name":"zennkoku",
+         "name":"japan",
          "objects":[
                 {
                  "ellipse":true,
@@ -134,11 +134,11 @@
         {
          "columns":30,
          "firstgid":1,
-         "image":"..\/taild\/\u3082\u3068\/\u5168\u56fd\/zennkoku.png",
+         "image":"..\/taild\/\u3082\u3068\/\u5168\u56fd\/japan.png",
          "imageheight":1080,
          "imagewidth":1924,
          "margin":0,
-         "name":"zennkoku",
+         "name":"japan",
          "spacing":0,
          "tilecount":480,
          "tileheight":64,

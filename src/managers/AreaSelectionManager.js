@@ -596,9 +596,9 @@ export class AreaSelectionManager {
         // エリア選択後の処理
         
         // 竹田ステージと三重町ステージの会話イベントをチェック（NPCクリック時と同じ会話システムを使用）
-        if (this.scene.mapConfig && this.scene.mapConfig.mapKey === 'taketa_city') {
+        if (this.scene.mapConfig && this.scene.mapConfig.mapKey === 'taketa') {
             this.handleTaketaConversation(area);
-        } else if (this.scene.mapConfig && this.scene.mapConfig.mapKey === 'bunngo_mie_city') {
+        } else if (this.scene.mapConfig && this.scene.mapConfig.mapKey === 'miemachi') {
             this.handleMiemachiConversation(area);
         } else if (this.scene.mapConfig && this.scene.mapConfig.mapKey === 'japan') {
             this.handleJapanConversation(area);
@@ -725,25 +725,25 @@ export class AreaSelectionManager {
                     eventId = 'oreno_koto';
                     break;
                 case 'raizu':
-                    eventId = 'shigaku';
+                    eventId = 'raizu';
                     break;
                 case 'souce':
-                    eventId = 'team_shoyu_drinking';
+                    eventId = 'souce';
                     break;
                 case 'Weeds_burn':
-                    eventId = 'river_fire';
+                    eventId = 'Weeds_burn';
                     break;
                 case 'koutaroupoteto':
-                    eventId = 'koutarou_potato';
+                    eventId = 'koutaroupoteto';
                     break;
                 case 'drinking_dutu':
-                    eventId = 'drink_zutsu';
+                    eventId = 'drinking_dutu';
                     break;
                 case 'snack_street_night':
                     eventId = 'snack_street_night';
                     break;
                 case 'momoiro_jyogakuenn':
-                    eventId = 'annex_momo';
+                    eventId = 'momoiro_jyogakuenn';
                     break;
                 case 'Flash_land_mie':
                     eventId = 'flash_land_mie';
@@ -819,10 +819,10 @@ export class AreaSelectionManager {
         // マップIDに基づいて適切な会話データを取得
         let result;
         switch (mapId) {
-            case 'bunngo_mie_city':
+            case 'miemachi':
                 result = miemachiConversationData[eventId];
                 break;
-            case 'taketa_city':
+            case 'taketa':
                 result = taketaConversationData[eventId];
                 break;
             case 'japan':
