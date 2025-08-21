@@ -241,6 +241,12 @@ export class MapSelectionStage extends Phaser.Scene {
             const mapAreas = this.mapManager.getAreas();
             const configAreas = this.mapConfig.areas;
             
+            console.log(`[MapSelectionStage] エリアデータ処理開始: mapAreas=${mapAreas ? mapAreas.length : 'undefined'}, configAreas=${configAreas ? configAreas.length : 'undefined'}`);
+            console.log(`[MapSelectionStage] mapAreas:`, mapAreas);
+            console.log(`[MapSelectionStage] configAreas:`, configAreas);
+            
+
+            
             // エリア情報をマージ（座標はマップから、シーン情報は設定から）
             const mergedAreas = mapAreas.map(mapArea => {
                 const configArea = configAreas.find(config => config.name === mapArea.name);
@@ -252,6 +258,9 @@ export class MapSelectionStage extends Phaser.Scene {
                     conversationId: configArea?.conversationId || null
                 };
             });
+            
+            console.log(`[MapSelectionStage] mergedAreas:`, mergedAreas);
+            console.log(`[MapSelectionStage] マージ後のエリア数: ${mergedAreas.length}`);
             
             this.areaSelectionManager.setupAreas(mergedAreas);
             

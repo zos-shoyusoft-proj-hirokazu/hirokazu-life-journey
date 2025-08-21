@@ -98,6 +98,8 @@ export class MapManager {
         this.extractAreaData(objectLayerName);
         console.log('[MapManager] オブジェクトレイヤー処理完了');
         
+
+        
         return this.tilemap;
     }
 
@@ -214,6 +216,7 @@ export class MapManager {
         if (!objectLayerName) {
             const mapKey = this.scene.mapConfig?.mapKey || 'taketa';
             objectLayerName = this.getObjectLayerName(mapKey);
+            console.log(`[MapManager] extractAreaData: mapKey='${mapKey}', objectLayerName='${objectLayerName}'`);
         }
         
         // objectLayerNameがundefinedの場合は処理をスキップ

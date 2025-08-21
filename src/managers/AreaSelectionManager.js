@@ -9,8 +9,8 @@ class EventCompletionManager {
         this.storageKey = 'event_completed_';
         this.excludedAreas = [
             'mie_high_school',    // 三重中学校 - Stage1へ移動
-            'taketa_high_school', // 竹田高校 - Stage2へ移動
-            'taketa_station'      // 竹田駅 - 移動系
+            'taketa_high_school'  // 竹田高校 - Stage2へ移動
+            // 'taketa_station' を除外リストから削除（会話イベントを持つエリアのため）
         ];
     }
 
@@ -83,6 +83,8 @@ export class AreaSelectionManager {
     }
 
     setupAreas(areas) {
+        console.log('[AreaSelectionManager] setupAreas開始: areas=' + (areas ? areas.length : 'undefined'));
+        
         // 強制的にクリーンアップ（既存マーカーの有無に関係なく）
         this.destroy();
         
@@ -95,20 +97,30 @@ export class AreaSelectionManager {
                 ...area,
                 description: this.getAreaDescription(area.name)
             }));
+            console.log('[AreaSelectionManager] エリアデータ設定完了: ' + this.areas.length + '個');
         } else {
             this.areas = [];
+            console.warn('[AreaSelectionManager] 無効なエリアデータ:', areas);
         }
         
         // エリアマーカーを作成
-        this.areas.forEach((area) => {
+        console.log('[AreaSelectionManager] マーカー作成開始: ' + this.areas.length + '個のエリア');
+        this.areas.forEach((area, index) => {
             if (area) {
+                console.log('[AreaSelectionManager] エリア' + index + 'のマーカー作成: ' + area.name + ' (x:' + area.x + ', y:' + area.y + ', w:' + area.width + ', h:' + area.height + ')');
                 const marker = this.createAreaMarker(area);
                 if (marker) {
                     this.areaSprites.push(marker);
-            
+                    console.log('[AreaSelectionManager] マーカー作成成功: ' + area.name);
+                } else {
+                    console.warn('[AreaSelectionManager] マーカー作成失敗: ' + area.name);
                 }
+            } else {
+                console.warn('[AreaSelectionManager] 無効なエリアデータ: index=' + index);
             }
         });
+        
+        console.log('[AreaSelectionManager] マーカー作成完了: ' + this.areaSprites.length + '個のマーカー');
         
         // インタラクションイベントを設定
         this.setupInteractionEvents();
@@ -152,16 +164,20 @@ export class AreaSelectionManager {
     }
 
     createAreaMarkers() {
+        console.log(`[AreaSelectionManager] createAreaMarkers開始: areas=${this.areas ? this.areas.length : 'undefined'}`);
         // 既存のマーカーをクリア
         this.areaSprites = [];
         
         if (!this.areas || this.areas.length === 0) {
+            console.warn('[AreaSelectionManager] エリアデータがありません: areas=', this.areas);
             return;
         }
         
+        console.log(`[AreaSelectionManager] エリア数: ${this.areas.length}`);
         // エリアマーカーを作成
-                this.areas.forEach((area) => {
+        this.areas.forEach((area, index) => {
             if (area) {
+                console.log(`[AreaSelectionManager] エリア${index}: ${area.name}`);
                 const marker = this.createAreaMarker(area);
                 if (marker) {
                     this.areaSprites.push(marker);
@@ -169,6 +185,7 @@ export class AreaSelectionManager {
             }
         });
         
+        console.log(`[AreaSelectionManager] createAreaMarkers完了: 作成されたマーカー数=${this.areaSprites.length}`);
     }
 
     createAreaMarker(area) {
