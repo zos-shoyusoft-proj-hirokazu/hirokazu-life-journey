@@ -1084,6 +1084,8 @@ export class ConversationScene extends Phaser.Scene {
                 this.scene.start(this.originalSceneKey);
                 console.log('[ConversationScene] シーン', this.originalSceneKey, 'を開始しました');
                 
+
+                
             } else {
                 console.warn('[ConversationScene] 元のシーンのキーが設定されていません');
                 this.scene.stop();

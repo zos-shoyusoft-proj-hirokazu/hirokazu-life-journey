@@ -26,7 +26,7 @@ export const EventConfig = {
                 // seセクションは不要：conversationDataにSEの指定がないため
             },
             conversationDataKey: 'oreno_koto',   // 必要：conversationDataのキーと一致
-            areaName: 'orenokoto'               // 必要：エリア名の指定
+            areaName: 'oreno_koto'               // 必要：エリア名の指定
         },
         
         // 志学
@@ -269,8 +269,8 @@ export const EventConfig = {
         },
         
         // 銀河の水
-        'ginnga_water': {
-            id: 'ginnga_water',                  // 必要：イベントを識別するためのID
+        'galaxy_water': {
+            id: 'galaxy_water',                  // 必要：イベントを識別するためのID
             title: '銀河の水',                     // 必要：イベントのタイトル表示用
             type: 'conversation',                // 必要：イベントの種類を指定
             areaType: 'taketa',                  // 必要：エリアタイプを指定
@@ -282,13 +282,13 @@ export const EventConfig = {
                 bgm: ['nightbarth']               // 必要：BGMファイルの読み込みに必要
                 // seセクションは不要：conversationDataにSEの指定がないため
             },
-            conversationDataKey: 'ginnga_water',  // 必要：conversationDataのキーと一致
-            areaName: 'galaxy'                   // 必要：エリア名の指定
+            conversationDataKey: 'galaxy_water',  // 必要：conversationDataのキーと一致
+            areaName: 'galaxy_water'             // 必要：エリア名の指定（マップ上のエリア名と一致）
         },
         
         // 腕振りおじさん
-        'arm_swinging_person': {
-            id: 'arm_swinging_person',           // 必要：イベントを識別するためのID
+        'udefuriojisann': {
+            id: 'udefuriojisann',                // 必要：イベントを識別するためのID
             title: '腕振りおじさん',               // 必要：イベントのタイトル表示用
             type: 'conversation',                // 必要：イベントの種類を指定
             areaType: 'taketa',                  // 必要：エリアタイプを指定
@@ -300,8 +300,8 @@ export const EventConfig = {
                 bgm: ['Fantasy']                  // 必要：BGMファイルの読み込みに必要
                 // seセクションは不要：conversationDataにSEの指定がないため
             },
-            conversationDataKey: 'arm_swinging_person',  // 必要：conversationDataのキーと一致
-            areaName: 'street'                   // 必要：エリア名の指定
+            conversationDataKey: 'udefuriojisann',  // 必要：conversationDataのキーと一致
+            areaName: 'udefuriojisann'           // 必要：エリア名の指定（マップ上のエリア名と一致）
         },
         
         // 仕事帰り
@@ -319,7 +319,7 @@ export const EventConfig = {
                 // seセクションは不要：conversationDataにSEの指定がないため
             },
             conversationDataKey: 'working_go_to_home_miemachi',  // 必要：conversationDataのキーと一致
-            areaName: 'street'                   // 必要：エリア名の指定
+            areaName: 'working_go_to_home_miemachi'  // 必要：エリア名の指定（マップ上のエリア名と一致）
         },
         
         // ゴスペラーズの歌

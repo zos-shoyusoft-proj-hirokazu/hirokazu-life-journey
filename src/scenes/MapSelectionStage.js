@@ -241,9 +241,9 @@ export class MapSelectionStage extends Phaser.Scene {
             const mapAreas = this.mapManager.getAreas();
             const configAreas = this.mapConfig.areas;
             
-            console.log(`[MapSelectionStage] エリアデータ処理開始: mapAreas=${mapAreas ? mapAreas.length : 'undefined'}, configAreas=${configAreas ? configAreas.length : 'undefined'}`);
-            console.log(`[MapSelectionStage] mapAreas:`, mapAreas);
-            console.log(`[MapSelectionStage] configAreas:`, configAreas);
+            console.log('[MapSelectionStage] エリアデータ処理開始: mapAreas=' + (mapAreas ? mapAreas.length : 'undefined') + ', configAreas=' + (configAreas ? configAreas.length : 'undefined'));
+            console.log('[MapSelectionStage] mapAreas:', mapAreas);
+            console.log('[MapSelectionStage] configAreas:', configAreas);
             
 
             
@@ -259,8 +259,8 @@ export class MapSelectionStage extends Phaser.Scene {
                 };
             });
             
-            console.log(`[MapSelectionStage] mergedAreas:`, mergedAreas);
-            console.log(`[MapSelectionStage] マージ後のエリア数: ${mergedAreas.length}`);
+            console.log('[MapSelectionStage] mergedAreas:', mergedAreas);
+            console.log('[MapSelectionStage] マージ後のエリア数: ' + mergedAreas.length);
             
             this.areaSelectionManager.setupAreas(mergedAreas);
             

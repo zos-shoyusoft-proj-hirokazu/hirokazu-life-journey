@@ -11,17 +11,14 @@ export class DynamicConversationScene extends Phaser.Scene {
 
     init(data) {
         this.eventId = data.eventId;
-        console.log(`[DynamicConversationScene] init called with eventId: ${this.eventId}`);
     }
 
     async preload() {
         // 読み込み処理
-        console.log(`[DynamicConversationScene] preload started for event: ${this.eventId}`);
         
         // リソース読み込み完了イベントを設定
         this.load.on('complete', () => {
-            console.log(`[DynamicConversationScene] リソース読み込み完了: ${this.eventId}`);
-            console.log('[DynamicConversationScene] 読み込まれたリソース:', this.cache.texture?.entries || 'texture cache not available');
+            // リソース読み込み完了
         });
         
         this.load.on('error', (file) => {
@@ -92,52 +89,36 @@ export class DynamicConversationScene extends Phaser.Scene {
     // 既存のconversationDataを取得
     loadConversationData() {
         return new Promise((resolve) => {
-            console.log(`[DynamicConversationScene] loadConversationData開始: eventId=${this.eventId}`);
-            console.log('[DynamicConversationScene] eventConfig:', this.eventConfig);
-            
             // エリアタイプに基づいて適切なconversationDataを取得
             const areaType = this.eventConfig?.areaType;
-            console.log(`[DynamicConversationScene] areaType: ${areaType}`);
             
             if (areaType) {
                 switch (areaType) {
                     case 'miemachi':
-                        console.log('[DynamicConversationScene] miemachiのconversationDataを読み込み中...');
                         import('../data/miemachi/conversationData.js').then(({ miemachiConversationData }) => {
                             const conversationKey = this.eventConfig.conversationDataKey;
-                            console.log(`[DynamicConversationScene] conversationKey: ${conversationKey}`);
-                            console.log('[DynamicConversationScene] miemachiConversationData:', miemachiConversationData);
                             this.conversationData = miemachiConversationData[conversationKey];
-                            console.log('[DynamicConversationScene] 設定されたconversationData:', this.conversationData);
                             resolve();
                         });
                         break;
                     case 'taketa':
-                        console.log('[DynamicConversationScene] taketaのconversationDataを読み込み中...');
                         import('../data/taketa/conversationData.js').then(({ taketaConversationData }) => {
                             const conversationKey = this.eventConfig.conversationDataKey;
-                            console.log(`[DynamicConversationScene] conversationKey: ${conversationKey}`);
                             this.conversationData = taketaConversationData[conversationKey];
-                            console.log('[DynamicConversationScene] 設定されたconversationData:', this.conversationData);
                             resolve();
                         });
                         break;
                     case 'japan':
-                        console.log('[DynamicConversationScene] japanのconversationDataを読み込み中...');
                         import('../data/japan/conversationData.js').then(({ japanConversationData }) => {
-                            const conversationKey = this.eventConfig.conversationDataKey;
-                            console.log(`[DynamicConversationScene] conversationKey: ${conversationKey}`);
+                            const conversationKey = this.eventConfig.eventConfig.conversationDataKey;
                             this.conversationData = japanConversationData[conversationKey];
-                            console.log('[DynamicConversationScene] 設定されたconversationData:', this.conversationData);
                             resolve();
                         });
                         break;
                     default:
-                        console.log(`[DynamicConversationScene] 不明なareaType: ${areaType}`);
                         resolve();
                 }
             } else {
-                console.log('[DynamicConversationScene] areaTypeが設定されていません');
                 resolve();
             }
         });
@@ -182,9 +163,9 @@ export class DynamicConversationScene extends Phaser.Scene {
         
         console.log(`[DynamicConversationScene] 元のシーンキー: ${originalSceneKey}`);
         
-        // エリア名を取得（eventIdから推測）
-        const areaName = this.eventId;
-        console.log(`[DynamicConversationScene] エリア名: ${areaName}`);
+        // エリア名を取得（EventConfigのareaNameを優先、フォールバックでeventId）
+        const areaName = this.eventConfig?.areaName || this.eventId;
+        console.log('[DynamicConversationScene] エリア名: ' + areaName);
         
         this.scene.launch('ConversationScene', { 
             conversationId: this.eventId,

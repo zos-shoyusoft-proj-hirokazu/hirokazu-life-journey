@@ -687,10 +687,10 @@ export class AreaSelectionManager {
                     eventId = 'taketa_station';
                     break;
                 case 'galaxy_water':
-                    eventId = 'ginnga_water';
+                    eventId = 'galaxy_water';
                     break;
                 case 'udefuriojisann':
-                    eventId = 'arm_swinging_person';
+                    eventId = 'udefuriojisann';
                     break;
                 case 'working_go_to_home_miemachi':
                     eventId = 'working_go_to_home_miemachi';

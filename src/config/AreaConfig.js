@@ -89,8 +89,8 @@ export const AreaConfig = {
         areas: [
             { name: 'taketa_station', scene: null, conversationId: 'taketa_station' },
             { name: 'taketa_high_school', scene: 'startPhaserGame', sceneParam: 2, conversationId: null },
-            { name: 'galaxy_water', scene: null, conversationId: 'ginnga_water' },
-            { name: 'udefuriojisann', scene: null, conversationId: 'arm_swinging_person' },
+            { name: 'galaxy_water', scene: null, conversationId: 'galaxy_water' },
+            { name: 'udefuriojisann', scene: null, conversationId: 'udefuriojisann' },
             { name: 'working_go_to_home_miemachi', scene: null, conversationId: 'working_go_to_home_miemachi' }
         ]
     },
