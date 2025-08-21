@@ -19,9 +19,13 @@ export class ConversationScene extends Phaser.Scene {
     }
 
     init(data) {
+        // audioManagerを受け取る
+        this.audioManager = data.audioManager;
+        
         // start() から渡された会話データを保持
         this._pendingConversation = data && data.conversations ? data.conversations : null;
         console.log('[ConversationScene] init called with data:', data);
+        console.log('[ConversationScene] audioManager:', this.audioManager);
         console.log('[ConversationScene] _pendingConversation set to:', this._pendingConversation);
     }
 
@@ -849,144 +853,47 @@ export class ConversationScene extends Phaser.Scene {
         this.background.setPosition(canvasW / 2, canvasH / 2);
     }
     
-    // イベント用BGMに切り替え
-    switchToEventBgm(eventBgmKey) {
+    // イベントBGMに切り替え
+    async switchToEventBgm(eventBgmKey) {
         console.log('[ConversationScene] switchToEventBgm called with:', eventBgmKey);
-        // MapSelectionStageも含めて検索
-        const mainScene = this.scene.get('Stage1Scene') || this.scene.get('Stage2Scene') || this.scene.get('Stage3Scene') || this.scene.get('MiemachiStage') || this.scene.get('TaketastageStage') || this.scene.get('JapanStage');
 
-        if (mainScene && mainScene.audioManager) {
-            // もともと鳴っていたBGMキーを覚えておき、ハードコーディングを排除
-            try {
-                this._originalBgmKey = (mainScene.audioManager.bgm && mainScene.audioManager.bgm.key) ? mainScene.audioManager.bgm.key : null;
-                
-                // 元のBGMキーが取得できない場合は、ステージの設定から動的に取得
-                if (!this._originalBgmKey) {
-                    this.getOriginalBgmKeyAsync(mainScene);
-                } else {
-                    console.log(`[ConversationScene] 元のBGMキーを保存: ${this._originalBgmKey}`);
-                }
-            } catch (_) { 
-                this._originalBgmKey = null; 
-                // エラー時もフォールバック
-                this.getOriginalBgmKeyAsync(mainScene);
+        // 元のBGMを停止
+        this.stopOriginalBgm();
+
+        // イベントBGMを再生（AudioManager経由）
+        if (eventBgmKey && this.audioManager) {
+            const result = await this.audioManager.playConversationBgm(eventBgmKey, undefined, true);
+            if (result) {
+                this._eventBgmStarted = true;
+                console.log(`[ConversationScene] イベントBGM開始: ${eventBgmKey}`);
+            } else {
+                console.warn(`[ConversationScene] イベントBGM開始失敗: ${eventBgmKey}`);
             }
-            
-            // イベントBGM再生開始フラグを設定
-            this._eventBgmStarted = false;
-            
-            // iOSでMapSelectionStageがHTMLAudio（_htmlBgm）を使用している場合は一時停止
-            try {
-                if (mainScene._htmlBgm && !mainScene._htmlBgm.paused) {
-                    mainScene._htmlBgm.pause();
-                    try { mainScene._htmlBgm.currentTime = 0; } catch (e) { /* ignore */ }
-                    this._pausedHtmlMapBgm = true;
-                }
-            } catch (e) { /* ignore */ }
-
-            // 既存Phaser BGMもいったん停止
-            try { mainScene.audioManager.stopBgm(false); } catch (e) { /* ignore */ }
-
-            this.originalBgm = mainScene.audioManager.bgm;
-            let rawKey = eventBgmKey ? (eventBgmKey.startsWith('bgm_') ? eventBgmKey.replace(/^bgm_/, '') : eventBgmKey) : null;
-
-            // Fallback: bgm未指定、またはキーがAreaConfigに存在しない場合は、そのマップのmap BGMまたは先頭キーにフォールバック
-            const bgmDict = (mainScene.mapConfig && typeof mainScene.mapConfig.bgm === 'object') ? mainScene.mapConfig.bgm : null;
-            const hasPathFor = (key) => !!(bgmDict && key && Object.prototype.hasOwnProperty.call(bgmDict, key) && bgmDict[key]);
-            if (!rawKey || !hasPathFor(rawKey)) {
-                if (hasPathFor('map')) {
-                    rawKey = 'map';
-                } else if (bgmDict) {
-                    const keys = Object.keys(bgmDict);
-                    if (keys.length > 0) rawKey = keys[0];
-                }
-            }
-            const bgmKey = rawKey ? `bgm_${rawKey}` : null;
-
-            // HTMLAudioでイベントを再生（全プラットフォーム、競合回避のため）
-            try {
-                if (this._eventHtmlBgm) {
-                    try { this._eventHtmlBgm.pause(); } catch (e) { /* ignore */ }
-                    this._eventHtmlBgm = null;
-                }
-                            const path = rawKey ? (mainScene.mapConfig && mainScene.mapConfig.bgm ? (mainScene.mapConfig.bgm[rawKey] || '') : '') : '';
-            console.log('[ConversationScene] BGMパス取得:', { rawKey, mapConfig: mainScene.mapConfig, bgm: mainScene.mapConfig?.bgm, path });
-            if (path) {
-                    this._eventHtmlBgm = new Audio(path);
-                    this._eventHtmlBgm.loop = true;
-                    this._eventHtmlBgm.volume = this.audioManager.bgmVolume;
-                    
-                    // イベントBGM再生開始
-                    this._eventBgmStarted = true;
-                    console.log(`[ConversationScene] イベントBGM開始: ${path}`);
-                    
-                    // 自動再生がブロックされても例外を握りつぶし、次のユーザー操作で再試行
-                    // 1) まず直ちに再生（ユーザー操作コンテキストを活かす）
-                        try {
-                            if (this.sys && this.sys.isActive && this.sys.isActive()) {
-                                const immediate = this._eventHtmlBgm.play();
-                                if (immediate && typeof immediate.catch === 'function') {
-                                    immediate.catch(() => {});
-                                }
-                            }
-                        } catch (e) { /* ignore */ }
-                    // 2) 失敗時の保険：短い遅延後に再トライ
-                    this.time.delayedCall(80, () => {
-                        try {
-                            if (this.sys && this.sys.isActive && this.sys.isActive() && this._eventHtmlBgm && (this._eventHtmlBgm.paused || this._eventHtmlBgm.ended)) {
-                                const p2 = this._eventHtmlBgm.play();
-                                if (p2 && typeof p2.catch === 'function') p2.catch(() => {});
-                            }
-                        } catch (e) { /* ignore */ }
-                    });
-                    // 3) 次のタップでもう一度試す（iOSの厳格なユーザーアクティベーション対策）
-                    try {
-                        this.input.once('pointerdown', () => {
-                            try {
-                                if (this._eventHtmlBgm && (this._eventHtmlBgm.paused || this._eventHtmlBgm.ended)) {
-                                    const p3 = this._eventHtmlBgm.play();
-                                    if (p3 && typeof p3.catch === 'function') p3.catch(() => {});
-                                }
-                            } catch (e) { /* ignore */ }
-                        });
-                    } catch (e) { /* ignore */ }
-                    return;
-                }
-            } catch (e) { /* ignore */ }
-
-            // フォールバック: WebAudio（Phaser）で再生（パス不明時のみ）
-            // 未ロードの場合は動的ロード（AreaConfigからパスを取得）
-            try {
-                if (bgmKey && mainScene.load && mainScene.cache && mainScene.cache.audio && !mainScene.cache.audio.exists(bgmKey)) {
-                    const path = rawKey ? (mainScene.mapConfig && mainScene.mapConfig.bgm ? mainScene.mapConfig.bgm[rawKey] : undefined) : undefined;
-                    if (path) {
-                        try {
-                            mainScene.load.audio(bgmKey, path);
-                            mainScene.load.once('complete', () => {
-                                try { 
-                                    mainScene.audioManager.playBgm(bgmKey, undefined, true); 
-                                    this._eventBgmStarted = true;
-                                    console.log(`[ConversationScene] イベントBGM開始 (Phaser): ${bgmKey}`);
-                                } catch (e) { /* ignore */ }
-                            });
-                            mainScene.load.start();
-                        } catch (e) { /* ignore */ }
-                        return;
-                    }
-                }
-            } catch (e) { /* ignore */ }
-
-                if (bgmKey) {
-                    try { 
-                        if (mainScene && mainScene.audioManager) {
-                            mainScene.audioManager.playBgm(bgmKey, undefined, true);
-                            this._eventBgmStarted = true;
-                            console.log(`[ConversationScene] イベントBGM開始 (Phaser): ${bgmKey}`);
-                        }
-                    } catch (e) { /* ignore */ }
-                }
         }
     }
+
+    // 元のBGMを停止するヘルパーメソッド
+    stopOriginalBgm() {
+        try {
+            const mainScene = this.scene.get('Stage1Scene') || this.scene.get('Stage2Scene') ||
+                             this.scene.get('Stage3Scene') || this.scene.get('MiemachiStage') ||
+                             this.scene.get('TaketastageStage') || this.scene.get('JapanStage');
+
+            if (mainScene && mainScene.audioManager) {
+                mainScene.audioManager.stopBgm(false);
+            }
+
+            // iOS用HTMLAudioの停止
+            if (mainScene && mainScene._htmlBgm) {
+                mainScene._htmlBgm.pause();
+                this._pausedHtmlMapBgm = true;
+            }
+        } catch (error) {
+            console.warn('[ConversationScene] stopOriginalBgm error:', error);
+        }
+    }
+
+
 
     // 非同期で元のBGMキーを取得
     async getOriginalBgmKeyAsync(mainScene) {

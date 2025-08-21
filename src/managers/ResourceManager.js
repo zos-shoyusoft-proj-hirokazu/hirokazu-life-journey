@@ -130,7 +130,7 @@ export class ResourceManager {
             const loadPromises = backgroundKeys.map(key => this.loadBackground(key));
             await Promise.all(loadPromises);
         } catch (error) {
-            console.error(`[ResourceManager] ❌ 背景画像読み込みエラー:`, error);
+            console.error('[ResourceManager] ❌ 背景画像読み込みエラー:', error);
             throw error;
         }
     }
@@ -166,7 +166,7 @@ export class ResourceManager {
             const loadPromises = bgmKeys.map(key => this.loadBGMFile(key));
             await Promise.all(loadPromises);
         } catch (error) {
-            console.error(`[ResourceManager] ❌ BGMファイル読み込みエラー:`, error);
+            console.error('[ResourceManager] ❌ BGMファイル読み込みエラー:', error);
             throw error;
         }
     }
@@ -202,7 +202,7 @@ export class ResourceManager {
             const loadPromises = characterKeys.map(key => this.loadCharacter(key));
             await Promise.all(loadPromises);
         } catch (error) {
-            console.error(`[ResourceManager] ❌ キャラクター画像読み込みエラー:`, error);
+            console.error('[ResourceManager] ❌ キャラクター画像読み込みエラー:', error);
             throw error;
         }
     }
@@ -238,7 +238,7 @@ export class ResourceManager {
             const loadPromises = seKeys.map(key => this.loadSoundEffect(key));
             await Promise.all(loadPromises);
         } catch (error) {
-            console.error(`[ResourceManager] ❌ 効果音読み込みエラー:`, error);
+            console.error('[ResourceManager] ❌ 効果音読み込みエラー:', error);
             throw error;
         }
     }
