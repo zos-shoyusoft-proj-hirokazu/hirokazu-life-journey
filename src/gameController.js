@@ -70,7 +70,7 @@ function initializeGame() {
     return gameInstance;
 }
 
-// ゲーム開始関数（動的シーン読み込み）
+// ゲーム開始関数（動的シーン読み込み）あああああ
 export function startPhaserGame(stageNumber) {
     // 多重起動防止（高速連打対策）
     // 起動前に残骸を掃除（直接呼ばれた場合の保険）
