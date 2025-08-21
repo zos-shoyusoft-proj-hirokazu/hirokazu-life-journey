@@ -40,7 +40,7 @@ export const AreaConfig = {
     },
     
     // 三重町マップ
-    miemachi: {
+    miemachistage: {
         mapKey: 'miemachi',
         tilesetKey: 'miemachi',
         mapTitle: '三重町マップ',
@@ -96,7 +96,7 @@ export const AreaConfig = {
     },
     
     // 日本ステージ
-    japan: {
+    japanstage: {
         mapKey: 'japan',              // そのまま
         tilesetKey: 'japan',          // zennkokuからjapanに統一
         mapTitle: '日本マップ',

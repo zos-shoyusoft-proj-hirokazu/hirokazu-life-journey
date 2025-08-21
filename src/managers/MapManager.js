@@ -31,16 +31,58 @@ export class MapManager {
     }
 
     createNewMap(mapKey, tilesetKey, layerName = 'タイルレイヤー1') {
+        console.log(`[MapManager] マップ作成開始: mapKey=${mapKey}, tilesetKey=${tilesetKey}, layerName=${layerName}`);
+        
         // Tiledマップを作成
         this.tilemap = this.scene.make.tilemap({ key: mapKey });
         this.map = this.tilemap; // 後方互換性
         
-        // タイルセットを追加
-        const tileset = this.tilemap.addTilesetImage(tilesetKey, tilesetKey);
+        // 詳細なログを追加
+        console.log('[MapManager] === タイルマップ作成直後の詳細調査 ===');
+        console.log('Raw tilemap:', this.tilemap);
+        console.log('Raw layers:', this.tilemap.layers);
+        console.log('Layer details:', this.tilemap.layers.map(l => ({
+            name: l.name,
+            type: l.type,
+            id: l.id,
+            visible: l.visible,
+            objects: l.objects ? l.objects.length : 'N/A'
+        })));
+        console.log('Tilemap properties:', {
+            width: this.tilemap.width,
+            height: this.tilemap.height,
+            tileWidth: this.tilemap.tileWidth,
+            tileHeight: this.tilemap.tileHeight,
+            widthInPixels: this.tilemap.widthInPixels,
+            heightInPixels: this.tilemap.heightInPixels
+        });
+        console.log('[MapManager] === 詳細調査完了 ===');
         
-        // レイヤーを作成
-        this.mapLayer = this.tilemap.createLayer(layerName, tileset);
+        console.log('[MapManager] タイルマップ作成完了:', this.tilemap);
+        console.log(`[MapManager] タイルマップのレイヤー数: ${this.tilemap.layers.length}`);
+        console.log('[MapManager] タイルマップのレイヤー:', this.tilemap.layers);
+        
+        // 各レイヤーの詳細情報を出力
+        this.tilemap.layers.forEach((layer, index) => {
+            console.log(`[MapManager] レイヤー${index}:`, {
+                name: layer.name,
+                type: layer.type,
+                id: layer.id,
+                visible: layer.visible
+            });
+        });
+        
+        // タイルセットを追加（TMJのtileset名と、ロード済みテクスチャキーを正しく関連付け）
+        const tmjTilesetName = (this.tilemap.tilesets && this.tilemap.tilesets[0] && this.tilemap.tilesets[0].name) || tilesetKey;
+        console.log('[MapManager] tileset link: tmjName=', tmjTilesetName, ' textureKey=', tilesetKey);
+        const tileset = this.tilemap.addTilesetImage(tmjTilesetName, tilesetKey);
+        console.log('[MapManager] タイルセット追加完了:', tileset);
+        
+        // レイヤーを作成（実際のファイルのレイヤー名を使用）
+        this.mapLayer = this.tilemap.createLayer('タイルレイヤー1', tileset);
         this.layers = [this.mapLayer]; // 後方互換性
+        
+        console.log('[MapManager] マップレイヤー作成完了:', this.mapLayer);
         
         // マップサイズを取得
         this.mapWidth = this.tilemap.widthInPixels;
@@ -50,8 +92,11 @@ export class MapManager {
         this.scaleMapToScreen();
         
         // オブジェクトレイヤーから場所データを取得（マップごとに適切なレイヤー名を指定）
+        console.log(`[MapManager] オブジェクトレイヤー処理開始: mapKey='${mapKey}'`);
         const objectLayerName = this.getObjectLayerName(mapKey);
+        console.log('[MapManager] 取得したオブジェクトレイヤー名: ' + objectLayerName);
         this.extractAreaData(objectLayerName);
+        console.log('[MapManager] オブジェクトレイヤー処理完了');
         
         return this.tilemap;
     }
@@ -144,10 +189,15 @@ export class MapManager {
     getObjectLayerName(mapKey) {
         // マップキーに基づいて適切なオブジェクトレイヤー名を返す
         const layerNames = {
-            'bunngo_mie_city': 'miemachi',
-            'taketa_city': 'taketa',
-            'japan': 'zennkoku'
+            'miemachi': 'miemachi',
+            'taketa': 'taketa',
+            'japan': 'zennkoku',
+            'miemachistage': 'miemachi',
+            'taketastage': 'taketa',
+            'japanstage': 'zennkoku'
         };
+        
+        console.log(`[MapManager] getObjectLayerName: mapKey='${mapKey}', layerName='${layerNames[mapKey]}'`);
         
         // マップキーが登録されていない場合は警告を出す
         if (!layerNames[mapKey]) {
@@ -172,8 +222,36 @@ export class MapManager {
             return;
         }
         
-        const objectLayer = this.tilemap.getObjectLayer(objectLayerName);
-        if (objectLayer) {
+        // Tiledのオブジェクトレイヤーを取得（tilelayerとは別 API）
+        let objectLayer = null;
+        try {
+            if (typeof this.tilemap.getObjectLayer === 'function') {
+                objectLayer = this.tilemap.getObjectLayer(objectLayerName);
+            }
+        } catch (_) { /* ignore */ }
+
+        // 互換: tilemap.objects からの直接検索
+        if (!objectLayer && Array.isArray(this.tilemap.objects)) {
+            objectLayer = this.tilemap.objects.find(l => l && l.name === objectLayerName);
+        }
+
+        console.log(`[MapManager] extractAreaData: objectLayerName='${objectLayerName}', objectLayer:`, objectLayer);
+        console.log('[MapManager] 利用可能なレイヤー:', this.tilemap.layers);
+        console.log('[MapManager] レイヤー名一覧:', this.tilemap.layers.map(layer => ({ id: layer.id, name: layer.name, type: layer.type })));
+        
+        // オブジェクトレイヤーが見つからない場合の詳細調査
+        if (!objectLayer) {
+            console.warn(`[MapManager] オブジェクトレイヤー'${objectLayerName}'が見つかりません`);
+            console.log('[MapManager] 全レイヤーの詳細:', this.tilemap.layers.map(layer => ({
+                id: layer.id,
+                name: layer.name,
+                type: layer.type,
+                visible: layer.visible,
+                objects: layer.objects ? layer.objects.length : 'N/A'
+            })));
+        }
+        
+        if (objectLayer && objectLayer.objects) {
             // 既存のエリアをクリア
             this.areas = [];
             
@@ -193,11 +271,19 @@ export class MapManager {
                 type: obj.type || 'location'
             }));
             
-            console.log(`MapManager: Extracted ${this.areas.length} areas from object layer '${objectLayerName}'`);
-            console.log('MapManager: Areas:', this.areas);
+            console.log(`[MapManager] Extracted ${this.areas.length} areas from object layer '${objectLayerName}'`);
+            console.log('[MapManager] Areas:', this.areas);
         } else {
-            console.warn(`MapManager: Object layer '${objectLayerName}' not found`);
-            console.log('MapManager: Available layers:', this.tilemap.layers);
+            console.warn(`[MapManager] Object layer '${objectLayerName}' not found or has no objects`);
+            console.log('[MapManager] Available layers:', this.tilemap.layers);
+            console.log('[MapManager] Tilemap:', this.tilemap);
+            
+            // 代替処理：最初のオブジェクトレイヤーを探す
+            const fallbackLayer = this.tilemap.layers.find(layer => layer.type === 'objectgroup');
+            if (fallbackLayer) {
+                console.log('[MapManager] 代替レイヤーを使用: ' + fallbackLayer.name);
+                this.extractAreaData(fallbackLayer.name);
+            }
         }
     }
 
