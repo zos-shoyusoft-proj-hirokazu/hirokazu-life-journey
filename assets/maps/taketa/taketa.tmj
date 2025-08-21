@@ -110,11 +110,11 @@
         {
          "columns":30,
          "firstgid":1,
-         "image":"..\/taild\/\u3082\u3068\/\u7af9\u7530\/taketa_map.png",
+         "image":"..\/taild\/\u3082\u3068\/\u7af9\u7530\/taketa.png",
          "imageheight":1080,
          "imagewidth":1924,
          "margin":0,
-         "name":"taketa_map",
+         "name":"taketa",
          "spacing":0,
          "tilecount":480,
          "tileheight":64,

@@ -191,10 +191,10 @@ export class MapManager {
         const layerNames = {
             'miemachi': 'miemachi',
             'taketa': 'taketa',
-            'japan': 'zennkoku',
+            'japan': 'japan',
             'miemachistage': 'miemachi',
             'taketastage': 'taketa',
-            'japanstage': 'zennkoku'
+            'japanstage': 'japan'
         };
         
         console.log(`[MapManager] getObjectLayerName: mapKey='${mapKey}', layerName='${layerNames[mapKey]}'`);

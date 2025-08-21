@@ -507,15 +507,15 @@ export class AudioManager {
                 const { AreaConfig } = await import('../config/AreaConfig.js');
                 
                 // 現在のシーンからエリア名を取得
-                let areaName = 'miemachi'; // デフォルト
+                let areaName = 'miemachistage'; // デフォルト
                 if (this.scene && this.scene.scene && this.scene.scene.key) {
                     const sceneKey = this.scene.scene.key;
                     if (sceneKey.includes('Miemachi') || sceneKey.includes('miemachi')) {
-                        areaName = 'miemachi';
+                        areaName = 'miemachistage';
                     } else if (sceneKey.includes('Taketa') || sceneKey.includes('taketa')) {
                         areaName = 'taketastage';
                     } else if (sceneKey.includes('Japan') || sceneKey.includes('japan')) {
-                        areaName = 'japan';
+                        areaName = 'japanstage';
                     }
                 }
                 

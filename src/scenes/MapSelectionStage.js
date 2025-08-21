@@ -8,6 +8,7 @@ import { VisualFeedbackManager } from '../managers/VisualFeedbackManager.js';
 import { ConversationTrigger } from '../managers/ConversationTrigger.js';
 import { ConversationScene } from '../managers/ConversationScene.js';
 
+
 export class MapSelectionStage extends Phaser.Scene {
     constructor(config) {
         super({ key: config.sceneKey });
@@ -56,6 +57,15 @@ export class MapSelectionStage extends Phaser.Scene {
             console.error(`File not found: ${file.key}, path: ${file.url}`);
         });
         
+        // ファイル読み込みの詳細ログ
+        this.load.on('load', (file) => {
+            console.log(`[MapSelectionStage] ファイル読み込み成功: ${file.key}, type: ${file.type}`);
+        });
+        
+        this.load.on('loaderror', (file) => {
+            console.error(`[MapSelectionStage] ファイル読み込みエラー: ${file.key}, error:`, file);
+        });
+        
         // UI要素とアイコン
         
         // 最小限のリソースのみ読み込み（会話イベント用は後で動的読み込み）
@@ -69,6 +79,26 @@ export class MapSelectionStage extends Phaser.Scene {
         
         // デバッグ用
         this.load.on('complete', () => {
+            console.log(`[MapSelectionStage] リソース読み込み完了: ${this.mapId}`);
+            console.log(`[MapSelectionStage] マップファイル: ${this.mapConfig.mapKey}`);
+            console.log(`[MapSelectionStage] タイルセット: ${this.mapConfig.tilesetKey}`);
+            
+            // 読み込まれたリソースの詳細を確認
+            try {
+                if (this.cache.tilemap && this.cache.tilemap.entries) {
+                    console.log('[MapSelectionStage] 読み込まれたリソース:', this.cache.tilemap.entries);
+                } else {
+                    console.log('[MapSelectionStage] タイルマップキャッシュが利用できません');
+                }
+                
+                if (this.cache.image && this.cache.image.entries) {
+                    console.log('[MapSelectionStage] 読み込まれた画像:', this.cache.image.entries);
+                } else {
+                    console.log('[MapSelectionStage] 画像キャッシュが利用できません');
+                }
+            } catch (error) {
+                console.warn('[MapSelectionStage] キャッシュ情報の取得に失敗:', error);
+            }
         });
     }
     
@@ -147,13 +177,12 @@ export class MapSelectionStage extends Phaser.Scene {
     loadMapSeFiles() {
         if (this.mapConfig.se) {
             // マップ操作用のSEのみ読み込み（会話イベント用は除外）
-            const mapSeKeys = ['touch', 'map_touch'];
+            const mapSeKeys = ['se_touch', 'se_map_touch'];
             mapSeKeys.forEach(seKey => {
                 if (this.mapConfig.se[seKey]) {
                     const sePath = this.mapConfig.se[seKey];
-                    const seKeyWithPrefix = `se_${seKey}`;
-                    console.log(`[MapSelectionStage] マップSE読み込み: ${seKeyWithPrefix} -> ${sePath}`);
-                    this.load.audio(seKeyWithPrefix, sePath);
+                    console.log(`[MapSelectionStage] マップSE読み込み: ${seKey} -> ${sePath}`);
+                    this.load.audio(seKey, sePath);
                 }
             });
         } else {
@@ -176,8 +205,10 @@ export class MapSelectionStage extends Phaser.Scene {
             this.cameraManager.setBackgroundColor('#87CEEB');
             
             // マップマネージャーを初期化
+            console.log('[MapSelectionStage] マップ作成開始: mapKey=\'' + this.mapConfig.mapKey + '\', tilesetKey=\'' + this.mapConfig.tilesetKey + '\'');
             this.mapManager = new MapManager(this);
-            this.mapManager.createMap(this.mapConfig.mapKey, this.mapConfig.tilesetKey);
+            this.mapManager.createMap(this.mapConfig.mapKey, this.mapConfig.tilesetKey, 'タイルレイヤー1');
+            console.log('[MapSelectionStage] マップ作成完了');
             
             // 初期スケールを全体表示に設定（カメラ設定より先に実行）
             this.mapManager.scaleMapToScreen();
@@ -191,7 +222,7 @@ export class MapSelectionStage extends Phaser.Scene {
             this.visualFeedbackManager = new VisualFeedbackManager(this);
             
             // 竹田ステージ、三重町ステージ、日本ステージの場合は会話システムを初期化
-            if (this.mapConfig.mapKey === 'taketa_city' || this.mapConfig.mapKey === 'bunngo_mie_city' || this.mapConfig.mapKey === 'japan') {
+            if (this.mapConfig.mapKey === 'taketa' || this.mapConfig.mapKey === 'miemachi' || this.mapConfig.mapKey === 'japan') {
                 this.conversationTrigger = new ConversationTrigger(this);
                 // ConversationSceneを重複登録しない
                 try {
