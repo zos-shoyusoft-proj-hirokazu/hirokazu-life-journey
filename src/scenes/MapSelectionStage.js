@@ -275,6 +275,9 @@ export class MapSelectionStage extends Phaser.Scene {
             // スケール切り替えボタンを追加
             this.createScaleToggleButton();
             
+            // 完了状態をチェックして適用
+            this.checkAndApplyCompletedAreas();
+            
             // AudioManagerを初期化し、iOSのロックを考慮してBGMを開始
             try {
                 this.audioManager = new AudioManager(this);
@@ -635,6 +638,27 @@ export class MapSelectionStage extends Phaser.Scene {
         // マネージャーの更新処理
         this.areaSelectionManager?.update();
         this.cameraManager?.update();
+    }
+
+    // 完了状態をチェックして適用
+    checkAndApplyCompletedAreas() {
+        try {
+            // ConversationSceneが存在するかチェック
+            const conversationScene = this.scene.manager.getScene('ConversationScene');
+            if (conversationScene && conversationScene.completedAreaName) {
+                const completedAreaName = conversationScene.completedAreaName;
+                console.log(`[MapSelectionStage] 完了状態を適用: ${completedAreaName}`);
+                
+                // 完了状態を適用
+                this.areaSelectionManager.markAreaAsCompleted(completedAreaName);
+                
+                // 完了状態をクリア
+                conversationScene.completedAreaName = null;
+                console.log(`[MapSelectionStage] 完了状態をクリア: ${completedAreaName}`);
+            }
+        } catch (error) {
+            console.error('[MapSelectionStage] 完了状態適用エラー:', error);
+        }
     }
 
     destroy() {

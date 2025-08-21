@@ -105,6 +105,7 @@ export class AreaSelectionManager {
                 const marker = this.createAreaMarker(area);
                 if (marker) {
                     this.areaSprites.push(marker);
+                    console.log(`[AreaSelectionManager] マーカーを配列に追加: ${area.name}, 配列サイズ: ${this.areaSprites.length}`);
                 }
             }
         });
@@ -198,6 +199,8 @@ export class AreaSelectionManager {
         // 完了状態をチェック
         const isCompleted = this.completionManager.isAreaCompleted(area.name);
         
+
+        
         // オブジェクトの回転を考慮した中心座標を計算
         // Tiledのオブジェクトは、x, yが回転前の左上座標。
         // 回転の中心をオブジェクトの中心にするために、回転後の中心座標を計算する。
@@ -220,6 +223,7 @@ export class AreaSelectionManager {
 
         // 背景形状（オブジェクトの実際の範囲と形状に合わせる）
         let background;
+        console.log(`[AreaSelectionManager] 背景形状作成開始 - エリア: ${area.name}, 完了状態: ${isCompleted}`);
         if (isCompleted) {
             // 完了済みエリア：緑色で光らせる
             if (isEllipse) {
@@ -228,42 +232,39 @@ export class AreaSelectionManager {
                 background = this.scene.add.rectangle(rotatedCenterX, rotatedCenterY, objectWidth, objectHeight, 0x00FF00, 0.3);
             }
             
+
+            
             // 緑色の光るエフェクトを追加
+            background.setAlpha(0.7); // より見やすいアルファ値に設定
             this.scene.tweens.add({
                 targets: background,
-                alpha: 0.6,
+                alpha: 1.0,
                 duration: 1500,
                 yoyo: true,
                 repeat: -1,
                 ease: 'Sine.easeInOut'
             });
-        } else {
-            // 未完了エリア：通常の青色
-            if (isEllipse) {
-                background = this.scene.add.ellipse(rotatedCenterX, rotatedCenterY, objectWidth, objectHeight, 0x4169E1, 0.1);
-            } else {
-                background = this.scene.add.rectangle(rotatedCenterX, rotatedCenterY, objectWidth, objectHeight, 0x4169E1, 0.1);
-            }
             
-            // 淡く光らせるエフェクトを追加
-            this.scene.tweens.add({
-                targets: background,
-                alpha: 0.3,
-                duration: 2000,
-                yoyo: true,
-                repeat: -1,
-                ease: 'Sine.easeInOut'
-            });
+
+        } else {
+            // 未完了エリア：透明な背景（見えないが存在する）
+            if (isEllipse) {
+                background = this.scene.add.ellipse(rotatedCenterX, rotatedCenterY, objectWidth, objectHeight, 0x4169E1, 0);
+            } else {
+                background = this.scene.add.rectangle(rotatedCenterX, rotatedCenterY, objectWidth, objectHeight, 0x4169E1, 0);
+            }
         }
         
-        background.setData('markerType', 'areaMarker');
-        background.setData('areaName', area.name);
-        background.setData('isCompleted', isCompleted);
-        
-        // Phaserオブジェクトの原点を中心に設定し、回転を適用
-        background.setOrigin(0.5, 0.5);
-        if (rotation !== 0) {
-            background.setRotation(rotation * Math.PI / 180);
+        if (background) {
+            background.setData('markerType', 'areaMarker');
+            background.setData('areaName', area.name);
+            background.setData('isCompleted', isCompleted);
+            
+            // Phaserオブジェクトの原点を中心に設定し、回転を適用
+            background.setOrigin(0.5, 0.5);
+            if (rotation !== 0) {
+                background.setRotation(rotation * Math.PI / 180);
+            }
         }
         
         // テキストラベル（矩形の上部に配置）
@@ -303,8 +304,25 @@ export class AreaSelectionManager {
         }
         
         // マーカーコンテナに追加
-        marker.add(background);
+        if (background) {
+            marker.add(background);
+        }
         marker.add(label);
+        console.log(`[AreaSelectionManager] マーカーに要素を追加完了 - エリア: ${area.name}, 背景: ${background ? 'OK' : 'NG'}, ラベル: ${label ? 'OK' : 'NG'}`);
+        
+        // 子要素の数を確認
+        console.log(`[AreaSelectionManager] マーカー ${area.name} の子要素数: ${marker.children ? marker.children.entries ? marker.children.entries.length : 'unknown' : 'none'}`);
+        
+        // 子要素の詳細を確認
+        if (marker.children && marker.children.entries) {
+            marker.children.entries.forEach((child, index) => {
+                console.log(`[AreaSelectionManager] 子要素${index}:`, {
+                    type: child.constructor.name,
+                    visible: child.visible,
+                    active: child.active
+                });
+            });
+        }
         
         // インタラクティブ設定
         background.setInteractive();
@@ -315,6 +333,23 @@ export class AreaSelectionManager {
         
         // クリック/タップイベント
         this.setupMarkerClick(background);
+        
+        // マーカーをシーンに追加
+        try {
+            if (this.scene.add.existing) {
+                this.scene.add.existing(marker);
+            } else {
+                // Phaser 3.60以降の代替方法
+                this.scene.children.add(marker);
+            }
+            console.log(`[AreaSelectionManager] マーカーをシーンに追加完了: ${area.name}`);
+            
+            // デバッグ用：マーカーの位置と表示状態を確認
+            console.log(`[AreaSelectionManager] マーカー ${area.name} の位置: x=${marker.x}, y=${marker.y}, visible=${marker.visible}, active=${marker.active}`);
+            console.log(`[AreaSelectionManager] マーカー ${area.name} の子要素数: ${marker.children ? marker.children.entries ? marker.children.entries.length : 'unknown' : 'none'}`);
+        } catch (error) {
+            console.error(`[AreaSelectionManager] マーカーをシーンに追加失敗: ${area.name}`, error);
+        }
         
         return marker;
     }
@@ -435,6 +470,7 @@ export class AreaSelectionManager {
 
     selectArea(area) {
         try {
+            console.log(`[AreaSelectionManager] selectArea開始: ${area.name}`);
             if (!this.isInteractive) {
                 return;
             }
@@ -453,8 +489,11 @@ export class AreaSelectionManager {
             // 音効果を再生
             this.playSelectionSound();
             
+            console.log(`[AreaSelectionManager] selectArea完了: ${area.name}`);
+            
         } catch (error) {
             // エラーハンドリング
+            console.error(`[AreaSelectionManager] selectAreaエラー: ${area.name}`, error);
         }
     }
 
@@ -465,13 +504,23 @@ export class AreaSelectionManager {
         this.showConfirmDialog(area);
     }
 
-    // 全てのオブジェクトの色を戻す
+    // 全てのオブジェクトの色を戻す（完了済みエリアは緑のまま）
     resetAllObjectColors() {
         this.areaSprites.forEach(marker => {
             // マーカーコンテナ内の背景オブジェクトを取得
             const background = marker.getAt(0); // 最初の要素（背景）
             if (background && background.setFillStyle) {
-                background.setFillStyle(0x4169E1, 0.1);
+                // 完了済みエリアかどうかをチェック
+                const areaName = marker.getData('areaName');
+                const isCompleted = this.completionManager.isAreaCompleted(areaName);
+                
+                if (isCompleted) {
+                    // 完了済みエリアは緑色を維持
+                    background.setFillStyle(0x00FF00, 0.3);
+                } else {
+                    // 未完了エリアは青色に戻す
+                    background.setFillStyle(0x4169E1, 0.1);
+                }
             }
         });
     }
@@ -590,24 +639,41 @@ export class AreaSelectionManager {
                 closeDialog();
             }
         });
+
     }
 
     handleAreaSelection(area) {
+        console.log(`[AreaSelectionManager] handleAreaSelection開始: ${area.name}`);
         // エリア選択後の処理
+        
+        console.log('[AreaSelectionManager] handleAreaSelection: this.scene.mapConfig=', this.scene.mapConfig);
+        console.log(`[AreaSelectionManager] handleAreaSelection: this.scene.mapConfig?.mapKey=${this.scene.mapConfig?.mapKey}`);
         
         // 竹田ステージと三重町ステージの会話イベントをチェック（NPCクリック時と同じ会話システムを使用）
         if (this.scene.mapConfig && this.scene.mapConfig.mapKey === 'taketa') {
+            console.log('[AreaSelectionManager] handleAreaSelection: 竹田ステージの処理を実行');
             this.handleTaketaConversation(area);
         } else if (this.scene.mapConfig && this.scene.mapConfig.mapKey === 'miemachi') {
-            this.handleMiemachiConversation(area);
+            console.log('[AreaSelectionManager] handleAreaSelection: 三重町ステージの処理を実行');
+            console.log('[AreaSelectionManager] handleAreaSelection: this.handleMiemachiConversation=', this.handleMiemachiConversation);
+            try {
+                this.handleMiemachiConversation(area);
+                console.log('[AreaSelectionManager] handleAreaSelection: handleMiemachiConversation呼び出し完了');
+            } catch (error) {
+                console.error('[AreaSelectionManager] handleAreaSelection: handleMiemachiConversation呼び出しエラー:', error);
+            }
         } else if (this.scene.mapConfig && this.scene.mapConfig.mapKey === 'japan') {
+            console.log('[AreaSelectionManager] handleAreaSelection: 日本ステージの処理を実行');
             this.handleJapanConversation(area);
         } else {
+            console.log('[AreaSelectionManager] handleAreaSelection: 従来の処理を実行');
             // 従来の処理（他のマップ用）
             this.scene.time.delayedCall(1000, () => {
                 this.navigateToArea(area);
             });
         }
+        
+        console.log(`[AreaSelectionManager] handleAreaSelection完了: ${area.name}`);
     }
 
     handleTaketaConversation(area) {
@@ -712,6 +778,7 @@ export class AreaSelectionManager {
     }
 
     handleMiemachiConversation(area) {
+        console.log(`[AreaSelectionManager] handleMiemachiConversation開始: ${area.name}`);
         // 三重町ステージの会話イベントを処理
         let eventId = null;
         
@@ -757,9 +824,13 @@ export class AreaSelectionManager {
             }
         }
         
+        console.log(`[AreaSelectionManager] handleMiemachiConversation: eventId=${eventId}`);
+        
         // 会話データを取得（汎用化）
         const currentMapId = this.scene.mapConfig?.mapKey || 'unknown';
         const conversationData = this.getConversationData(currentMapId, eventId);
+        
+        console.log(`[AreaSelectionManager] handleMiemachiConversation: currentMapId=${currentMapId}, conversationData=`, conversationData);
         
         if (conversationData) {
             // DynamicConversationSceneを使用して会話システムを開始
@@ -770,10 +841,13 @@ export class AreaSelectionManager {
                 this.navigateToArea(area);
             });
         }
+        
+        console.log(`[AreaSelectionManager] handleMiemachiConversation完了: ${area.name}`);
     }
 
     // DynamicConversationSceneを開始
     startDynamicConversation(eventId) {
+        console.log(`[AreaSelectionManager] startDynamicConversation開始: ${eventId}`);
         try {
             import('../scenes/DynamicConversationScene.js').then(({ DynamicConversationScene }) => {
                 // シーンが既に存在する場合は削除
@@ -984,9 +1058,12 @@ export class AreaSelectionManager {
 
     // エリアを完了済みに設定
     markAreaAsCompleted(areaName) {
+        console.log(`[AreaSelectionManager] markAreaAsCompleted呼び出し: ${areaName}`);
         this.completionManager.markAreaAsCompleted(areaName);
+        console.log(`[AreaSelectionManager] localStorage保存完了: event_completed_${areaName} = true`);
         // 完了状態を視覚的に更新
         this.updateAreaCompletionDisplay(areaName);
+        console.log(`[AreaSelectionManager] 表示更新完了: ${areaName}`);
     }
 
     // 完了状態の表示を更新
@@ -994,12 +1071,12 @@ export class AreaSelectionManager {
         // 該当エリアのマーカーを見つけて更新
         this.areaSprites.forEach(marker => {
             if (marker && marker.getData('areaName') === areaName) {
-                // より安全なチェックを追加
-                if (!marker.children) {
-                    // 子要素が存在しない場合は、マーカーを再作成
-                    this.recreateMarker(areaName);
-                    return;
-                }
+                            // より安全なチェックを追加
+            if (!marker.children) {
+                // 子要素が存在しない場合は、ログを出力してスキップ
+                console.warn(`[AreaSelectionManager] マーカー ${areaName} の子要素が存在しません`);
+                return;
+            }
                 
                 // Phaser 3.60以降の方法で子要素を取得
                 let childrenEntries = [];

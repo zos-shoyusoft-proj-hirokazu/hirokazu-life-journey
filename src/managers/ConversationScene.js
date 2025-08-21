@@ -28,6 +28,9 @@ export class ConversationScene extends Phaser.Scene {
         // 元のシーンのキーを保存（会話終了後に戻るため）
         this.originalSceneKey = data && data.originalSceneKey ? data.originalSceneKey : null;
         
+        // エリア名を受け取る
+        this.areaName = data && data.areaName ? data.areaName : null;
+        
         // シーンキーを正規化（スペースを除去）
         if (this.originalSceneKey) {
             this.originalSceneKey = this.originalSceneKey.replace(/\s+/g, '');
@@ -38,6 +41,7 @@ export class ConversationScene extends Phaser.Scene {
         console.log('[ConversationScene] audioManager:', this.audioManager);
         console.log('[ConversationScene] _pendingConversation set to:', this._pendingConversation);
         console.log('[ConversationScene] originalSceneKey:', this.originalSceneKey);
+        console.log('[ConversationScene] areaName:', this.areaName);
     }
 
 
@@ -366,6 +370,12 @@ export class ConversationScene extends Phaser.Scene {
     startConversation(conversationData) {
         this.currentConversation = conversationData;
         this.currentConversationIndex = 0;
+        
+        // エリア名を設定
+        if (this.areaName) {
+            this.currentConversation.areaName = this.areaName;
+            console.log(`[ConversationScene] エリア名を設定: ${this.areaName}`);
+        }
         
         // 会話開始イベントを発火
         this.events.emit('conversationStarted');
@@ -1090,61 +1100,23 @@ export class ConversationScene extends Phaser.Scene {
 
     // エリアを完了済みに設定
     markAreaAsCompleted() {
+        console.log('[ConversationScene] markAreaAsCompleted呼び出し開始');
         try {
             // 現在の会話データからエリア名を取得
             if (this.currentConversation && this.currentConversation.areaName) {
                 const areaName = this.currentConversation.areaName;
-                console.log(`[ConversationScene] エリア完了設定開始: ${areaName}`);
                 
-                // 元のシーンのキーが設定されている場合は、そのシーンを直接使用
-                if (this.originalSceneKey) {
-                    const sceneManager = this.scene.manager;
-                    if (sceneManager) {
-                        const originalScene = sceneManager.getScene(this.originalSceneKey);
-                        if (originalScene && originalScene.areaSelectionManager) {
-                            // エリアを完了済みに設定
-                            originalScene.areaSelectionManager.markAreaAsCompleted(areaName);
-                            console.log('[ConversationScene] 元のシーン', this.originalSceneKey, 'のエリア', areaName, 'を完了済みに設定しました');
-                        } else {
-                            console.warn(`[ConversationScene] 元のシーン ${this.originalSceneKey} のareaSelectionManagerが見つかりません`);
-                        }
-                    }
-                } else {
-                    // フォールバック: 従来の方法
-                    const sceneManager = this.scene.manager;
-                    if (!sceneManager) {
-                        console.warn('[ConversationScene] シーンマネージャーが利用できません');
-                        return;
-                    }
-                    
-                    // 利用可能なシーンを確認
-                    const availableScenes = ['MiemachiStage', 'TaketastageStage', 'JapanStage'];
-                    let originalScene = null;
-                    
-                    for (const sceneKey of availableScenes) {
-                        try {
-                            const scene = sceneManager.getScene(sceneKey);
-                            if (scene && scene.areaSelectionManager) {
-                                originalScene = scene;
-                                break;
-                            }
-                        } catch (e) {
-                            // シーンが存在しない場合はスキップ
-                        }
-                    }
-                    
-                    if (originalScene && originalScene.areaSelectionManager) {
-                        // エリアを完了済みに設定
-                        originalScene.areaSelectionManager.markAreaAsCompleted(areaName);
-                        console.log(`[ConversationScene] エリア ${areaName} を完了済みに設定しました`);
-                    } else {
-                        console.warn(`[ConversationScene] エリア完了設定に必要なシーンが見つかりません: ${areaName}`);
-                    }
-                }
+                // 完了状態を一時保存（ここが重要！）
+                this.completedAreaName = areaName;
+                console.log(`[ConversationScene] 完了状態を一時保存: ${areaName}`);
+                
+                // 元のシーンは探さない（停止されてるから）
+                console.log(`[ConversationScene] 完了状態を保存完了: ${areaName}`);
             }
         } catch (error) {
             console.error('[ConversationScene] エリア完了設定エラー:', error);
         }
+        console.log('[ConversationScene] markAreaAsCompleted完了');
     }
     
     // キャラクタースプライトのクリーンアップ

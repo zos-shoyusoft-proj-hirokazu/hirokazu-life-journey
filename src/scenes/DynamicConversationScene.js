@@ -182,12 +182,23 @@ export class DynamicConversationScene extends Phaser.Scene {
         
         console.log(`[DynamicConversationScene] 元のシーンキー: ${originalSceneKey}`);
         
-        this.scene.start('ConversationScene', { 
+        // エリア名を取得（eventIdから推測）
+        const areaName = this.eventId;
+        console.log(`[DynamicConversationScene] エリア名: ${areaName}`);
+        
+        this.scene.launch('ConversationScene', { 
             conversationId: this.eventId,
             eventConfig: this.eventConfig,
             conversations: this.conversationData,  // 既存のconversationDataを渡す
             audioManager: this.audioManager,  // 取得したaudioManagerを渡す
-            originalSceneKey: originalSceneKey  // 元のシーンキーをそのまま渡す
+            originalSceneKey: originalSceneKey,  // 元のシーンキーをそのまま渡す
+            areaName: areaName  // エリア名を追加
         });
+        
+        // 会話シーンを最前面に表示
+        this.scene.bringToTop('ConversationScene');
+        
+        // DynamicConversationScene自体を停止（MiemachiStageは停止しない）
+        this.scene.stop();
     }
 }
