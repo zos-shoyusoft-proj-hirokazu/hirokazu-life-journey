@@ -721,11 +721,13 @@ export class AreaSelectionManager {
 
     handleJapanConversation(area) {
         // 日本ステージの会話イベントを処理
+        console.log('[AreaSelectionManager] handleJapanConversation開始:', area);
         let eventId = null;
         
         // エリアのconversationIdを確認
         if (area.conversationId && area.conversationId !== null) {
             eventId = area.conversationId;
+            console.log('[AreaSelectionManager] conversationIdから取得:', eventId);
         } else {
             // エリア名に基づいて会話イベントを決定（フォールバック）
             switch (area.name) {

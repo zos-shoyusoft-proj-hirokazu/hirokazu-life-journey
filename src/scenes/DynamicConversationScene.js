@@ -110,7 +110,7 @@ export class DynamicConversationScene extends Phaser.Scene {
                         break;
                     case 'japan':
                         import('../data/japan/conversationData.js').then(({ japanConversationData }) => {
-                            const conversationKey = this.eventConfig.eventConfig.conversationDataKey;
+                            const conversationKey = this.eventConfig.conversationDataKey;
                             this.conversationData = japanConversationData[conversationKey];
                             resolve();
                         });

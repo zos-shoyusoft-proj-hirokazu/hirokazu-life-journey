@@ -62,7 +62,7 @@ export const EventConfig = {
                 // seセクションは不要：conversationDataにSEの指定がないため
             },
             conversationDataKey: 'momoiro_jyogakuenn',   // 必要：conversationDataのキーと一致
-            areaName: 'momoiro'                 // 必要：エリア名の指定
+            areaName: 'momoiro_jyogakuenn'      // 必要：エリア名の指定
         },
         
         // アンタレス
@@ -98,7 +98,7 @@ export const EventConfig = {
                 // seセクションは不要：conversationDataにSEの指定がないため（taiko_2renは1箇所のみ）
             },
             conversationDataKey: 'drinking_dutu',   // 必要：conversationDataのキーと一致
-            areaName: 'dutu'                     // 必要：エリア名の指定
+            areaName: 'drinking_dutu'            // 必要：エリア名の指定
         },
         
         // 川で火事
@@ -116,7 +116,7 @@ export const EventConfig = {
                 se: ['sei_ge_matti_tukeru01', 'takibi_tan', 'wind2']  // 必要：conversationDataで使用されるSE
             },
             conversationDataKey: 'Weeds_burn',    // 必要：conversationDataのキーと一致
-            areaName: 'Fire'                     // 必要：エリア名の指定
+            areaName: 'Weeds_burn'               // 必要：エリア名の指定
         },
         
 
@@ -136,7 +136,7 @@ export const EventConfig = {
                 se: ['taiko_2ren', 'don']        // 必要：conversationDataで使用されるSE
             },
             conversationDataKey: 'snack_street_night',  // 必要：conversationDataのキーと一致
-            areaName: 'miemachimae'              // 必要：エリア名の指定
+            areaName: 'snack_street_night'       // 必要：エリア名の指定
         },
         
         // チーム醤油飲み会
@@ -544,7 +544,7 @@ export const EventConfig = {
         // 路上のペンキ
         'rojyounopenki': {
             id: 'rojyounopenki',                 // 必要：イベントを識別するためのID
-            title: '路上のペンキ',                  // 必要：イベントのタイトル表示用
+            title: '路上のペンキ',                  // 必要：イベントの種類を指定
             type: 'conversation',                // 必要：イベントの種類を指定
             areaType: 'japan',                   // 必要：エリアタイプを指定
             background: 'test_1',                // 必要：conversationDataのbackgroundと一致
@@ -577,8 +577,44 @@ export const EventConfig = {
             areaName: 'tereapo'                  // 必要：エリア名の指定
         },
         
+        // 初日の出
+        'first_rising_sun': {
+            id: 'first_rising_sun',              // 必要：イベントを識別するためのID
+            title: '初日の出',                     // 必要：イベントのタイトル表示用
+            type: 'conversation',                // 必要：イベントの種類を指定
+            areaType: 'japan',                   // 必要：イベントの種類を指定
+            background: 'test_1',                // 必要：conversationDataのbackgroundと一致
+            bgm: 'curono',                       // 必要：conversationDataのbgmと一致
+            required: {
+                backgrounds: ['test_1'],          // 必要：背景画像の読み込みに必要
+                characters: ['hirokazu_a', 'hirokazu_b'],  // 必要：character+expressionの組み合わせ
+                bgm: ['curono']                   // 必要：BGMファイルの読み込みに必要
+                // seセクションは不要：conversationDataにSEの指定がないため
+            },
+            conversationDataKey: 'first_rising_sun',  // 必要：conversationDataのキーと一致
+            areaName: 'first_rising_sun'         // 必要：エリア名の指定
+        },
+        
+        // 荒地
+        'arechi': {
+            id: 'arechi',                        // 必要：イベントを識別するためのID
+            title: '荒地',                         // 必要：イベントのタイトル表示用
+            type: 'conversation',                // 必要：イベントの種類を指定
+            areaType: 'japan',                   // 必要：エリアタイプを指定
+            background: 'test_1',                // 必要：conversationDataのbackgroundと一致
+            bgm: 'curono',                       // 必要：conversationDataのbgmと一致
+            required: {
+                backgrounds: ['test_1'],          // 必要：背景画像の読み込みに必要
+                characters: ['hirokazu_a', 'hirokazu_b'],  // 必要：character+expressionの組み合わせ
+                bgm: ['curono']                   // 必要：BGMファイルの読み込みに必要
+                // seセクションは不要：conversationDataにSEの指定がないため
+            },
+            conversationDataKey: 'arechi',        // 必要：conversationDataのキーと一致
+            areaName: 'arechi'                   // 必要：エリア名の指定
+        },
+        
         // グレイバイツ
-        'gray_byte': {
+        'gray_bytes': {
             id: 'gray_bytes',                    // 必要：イベントを識別するためのID
             title: 'グレイバイツ',                  // 必要：イベントのタイトル表示用
             type: 'conversation',                // 必要：イベントの種類を指定
