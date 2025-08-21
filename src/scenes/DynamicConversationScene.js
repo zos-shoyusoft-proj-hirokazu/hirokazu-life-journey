@@ -161,24 +161,22 @@ export class DynamicConversationScene extends Phaser.Scene {
         console.log(`[DynamicConversationScene] ConversationScene開始: ${this.eventId}`);
         console.log('[DynamicConversationScene] this.audioManager:', this.audioManager);
         
-        // 元のシーンのキーを取得（DynamicConversationSceneを開始したシーン）
+        // 元のシーンのキーを取得（areaTypeに基づいて決定）
         let originalSceneKey = 'MiemachiStage'; // デフォルト
         
-        // シーンマネージャーから適切なシーンを探す
-        const sceneManager = this.scene.manager;
-        if (sceneManager) {
-            // 利用可能なシーンを確認
-            const availableScenes = ['MiemachiStage', 'TaketastageStage', 'JapanStage'];
-            for (const sceneKey of availableScenes) {
-                try {
-                    const scene = sceneManager.getScene(sceneKey);
-                    if (scene && scene.scene && scene.scene.isActive()) {
-                        originalSceneKey = sceneKey;
-                        break;
-                    }
-                } catch (e) {
-                    // シーンが存在しない場合はスキップ
-                }
+        if (this.eventConfig && this.eventConfig.areaType) {
+            switch (this.eventConfig.areaType) {
+                case 'miemachi':
+                    originalSceneKey = 'MiemachiStage';
+                    break;
+                case 'taketa':
+                    originalSceneKey = 'TaketastageStage';
+                    break;
+                case 'japan':
+                    originalSceneKey = 'JapanStage';
+                    break;
+                default:
+                    originalSceneKey = 'MiemachiStage';
             }
         }
         
