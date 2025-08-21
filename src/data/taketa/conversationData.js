@@ -520,7 +520,7 @@ export const taketaConversationData = {
     
     
     // 銀河の水
-    'ginnga_water': {
+    'galaxy_water': {
         'background': 'galaxy',
         'bgm': 'nightbarth',
         'conversations': [
@@ -970,7 +970,7 @@ export const taketaConversationData = {
     },
     
     // めっちゃ腕振って歩く人
-    'arm_swinging_person': {
+    'udefuriojisann': {
         'background': 'street',
         'bgm': 'Fantasy',
         'conversations': [

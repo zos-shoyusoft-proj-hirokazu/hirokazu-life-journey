@@ -126,11 +126,9 @@ export class DynamicConversationScene extends Phaser.Scene {
 
     create() {
         // 作成処理
-        console.log(`[DynamicConversationScene] create started for event: ${this.eventId}`);
         
         // リソース読み込みとconversationData読み込みが完了しているかチェック
         if (!this.resourcesLoaded || !this.conversationDataLoaded) {
-            console.log(`[DynamicConversationScene] リソース読み込み待機中: ${this.eventId}`);
             // 100ms後に再チェック
             this.time.delayedCall(100, () => {
                 this.create();
@@ -139,8 +137,6 @@ export class DynamicConversationScene extends Phaser.Scene {
         }
         
         // リソース読み込み完了後、既存のConversationSceneを開始
-        console.log(`[DynamicConversationScene] ConversationScene開始: ${this.eventId}`);
-        console.log('[DynamicConversationScene] this.audioManager:', this.audioManager);
         
         // 元のシーンのキーを取得（areaTypeに基づいて決定）
         let originalSceneKey = 'MiemachiStage'; // デフォルト
@@ -161,11 +157,8 @@ export class DynamicConversationScene extends Phaser.Scene {
             }
         }
         
-        console.log(`[DynamicConversationScene] 元のシーンキー: ${originalSceneKey}`);
-        
         // エリア名を取得（EventConfigのareaNameを優先、フォールバックでeventId）
         const areaName = this.eventConfig?.areaName || this.eventId;
-        console.log('[DynamicConversationScene] エリア名: ' + areaName);
         
         this.scene.launch('ConversationScene', { 
             conversationId: this.eventId,
