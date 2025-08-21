@@ -943,7 +943,7 @@ export class AreaSelectionManager {
                 this.selectArea(touchedArea);
             } else {
                 // 背景タッチ時のSE再生（会話中でも再生）
-                if (this.scene.audioManager && this.scene.mapConfig?.se?.map_touch) {
+                if (this.scene.audioManager) {
                     this.scene.audioManager.playSe('se_map_touch', 0.3);
                 }
             }

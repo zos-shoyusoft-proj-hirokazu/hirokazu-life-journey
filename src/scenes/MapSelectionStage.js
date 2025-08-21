@@ -43,14 +43,10 @@ export class MapSelectionStage extends Phaser.Scene {
 
     preload() {
         // 設定ファイルから動的にアセットを読み込み
-        // taketastageの場合はtaketaフォルダを使用
-        const folderName = this.mapId === 'taketastage' ? 'taketa' : this.mapId;
-        
-        // 竹田ステージの場合はファイル名も調整
-        const mapFileName = this.mapId === 'taketastage' ? 'taketa' : this.mapConfig.mapKey;
-        
-        // japanステージの場合はzennkoku.pngを使用
-        const tilesetFileName = this.mapId === 'japan' ? 'zennkoku' : this.mapConfig.tilesetKey;
+        // フォルダ名とファイル名を統一
+        const folderName = this.mapConfig.folderName || this.mapId;
+        const mapFileName = this.mapConfig.mapFileName || this.mapConfig.mapKey;
+        const tilesetFileName = this.mapConfig.tilesetFileName || this.mapConfig.tilesetKey;
         
         this.load.tilemapTiledJSON(this.mapConfig.mapKey, `assets/maps/${folderName}/${mapFileName}.tmj`);
         this.load.image(this.mapConfig.tilesetKey, `assets/maps/${folderName}/${tilesetFileName}.png`);
@@ -171,6 +167,9 @@ export class MapSelectionStage extends Phaser.Scene {
             // モバイルデバイスの検出
             this.isMobile = this.sys.game.device.input.touch;
             this._isShuttingDown = false;
+            
+            // マップBGM抑制フラグを確実にリセット
+            this._suppressMapBgm = false;
             
             // カメラマネージャーを先に初期化
             this.cameraManager = new CameraManager(this);

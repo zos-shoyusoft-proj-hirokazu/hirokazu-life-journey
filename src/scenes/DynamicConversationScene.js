@@ -39,14 +39,9 @@ export class DynamicConversationScene extends Phaser.Scene {
         this.eventConfig = getEventConfig(this.eventId);
         const required = getRequiredResources(this.eventId);
         
-        console.log('[DynamicConversationScene] eventConfig:', this.eventConfig);
-        console.log('[DynamicConversationScene] required resources:', required);
-        
         if (required) {
             // 背景画像
-            console.log('[DynamicConversationScene] 背景画像読み込み開始');
             required.backgrounds?.forEach(bg => {
-                console.log(`[DynamicConversationScene] 背景画像読み込み: ${bg} -> assets/backgrounds/miemachi_bk/${bg}.png`);
                 this.load.image(bg, `assets/backgrounds/miemachi_bk/${bg}.png`);
             });
             
@@ -55,29 +50,9 @@ export class DynamicConversationScene extends Phaser.Scene {
                 this.load.image(char, `assets/characters/portraits/${char}.png`);
             });
             
-            // 音声ファイルを先に読み込み（Stage1Sceneと同じ順序）
+            // AudioManagerを初期化
             if (required.bgm || required.se) {
-                console.log('[DynamicConversationScene] 音声ファイル読み込み開始');
-                
-                // BGMファイルの読み込み
-                if (required.bgm) {
-                    required.bgm.forEach(bgmKey => {
-                        const audioKey = `bgm_${bgmKey}`;
-                        const bgmPath = `assets/audio/bgm/${bgmKey}.mp3`;
-                        this.load.audio(audioKey, bgmPath);
-                        console.log(`[DynamicConversationScene] BGM読み込み: ${audioKey} -> ${bgmPath}`);
-                    });
-                }
-                
-                // SEファイルの読み込み
-                if (required.se) {
-                    required.se.forEach(seKey => {
-                        const audioKey = `se_${seKey}`;
-                        const sePath = `assets/audio/se/${seKey}.mp3`;
-                        this.load.audio(audioKey, sePath);
-                        console.log(`[DynamicConversationScene] SE読み込み: ${audioKey} -> ${sePath}`);
-                    });
-                }
+                this.audioManager = new (await import('../managers/AudioManager.js')).AudioManager(this);
             }
         }
         
@@ -85,38 +60,25 @@ export class DynamicConversationScene extends Phaser.Scene {
         await this.loadConversationData();
         this.conversationDataLoaded = true;
         
-        // Phaserのloaderの完了を待つ（音声ファイルも含む）
+        // Phaserのloaderの完了を待つ
         if (required && (required.backgrounds || required.characters || required.bgm || required.se)) {
-            console.log('[DynamicConversationScene] Phaserのloader開始');
             await new Promise(resolve => {
                 this.load.on('complete', () => {
-                    console.log('[DynamicConversationScene] Phaserのloader完了');
-                    
-                    // 音声ファイルの読み込み完了後、AudioManagerを初期化（Stage1Sceneと同じ順序）
-                    if (required.bgm || required.se) {
-                        console.log('[DynamicConversationScene] AudioManager初期化開始');
-                        import('../managers/AudioManager.js').then(({ AudioManager }) => {
-                            this.audioManager = new AudioManager(this);
-                            
-                            // loadedSoundsに音声ファイルを追加
-                            if (required.bgm) {
-                                required.bgm.forEach(bgmKey => {
-                                    const audioKey = `bgm_${bgmKey}`;
-                                    this.audioManager.loadedSounds.add(audioKey);
-                                    console.log(`[DynamicConversationScene] BGM読み込み完了: ${audioKey}`);
-                                });
-                            }
-                            if (required.se) {
-                                required.se.forEach(seKey => {
-                                    const audioKey = `se_${seKey}`;
-                                    this.audioManager.loadedSounds.add(audioKey);
-                                    console.log(`[DynamicConversationScene] SE読み込み完了: ${audioKey}`);
-                                });
-                            }
-                            console.log('[DynamicConversationScene] AudioManager初期化完了');
-                        });
+                    // 音声ファイルの読み込み完了後、loadedSoundsに追加
+                    if (this.audioManager && (required.bgm || required.se)) {
+                        if (required.bgm) {
+                            required.bgm.forEach(bgmKey => {
+                                const audioKey = `bgm_${bgmKey}`;
+                                this.audioManager.loadedSounds.add(audioKey);
+                            });
+                        }
+                        if (required.se) {
+                            required.se.forEach(seKey => {
+                                const audioKey = `se_${seKey}`;
+                                this.audioManager.loadedSounds.add(audioKey);
+                            });
+                        }
                     }
-                    
                     resolve();
                 });
                 this.load.start();
@@ -125,7 +87,6 @@ export class DynamicConversationScene extends Phaser.Scene {
         
         // リソース読み込み完了
         this.resourcesLoaded = true;
-        console.log('[DynamicConversationScene] リソース読み込み完了');
     }
 
     // 既存のconversationDataを取得
@@ -200,11 +161,35 @@ export class DynamicConversationScene extends Phaser.Scene {
         console.log(`[DynamicConversationScene] ConversationScene開始: ${this.eventId}`);
         console.log('[DynamicConversationScene] this.audioManager:', this.audioManager);
         
+        // 元のシーンのキーを取得（DynamicConversationSceneを開始したシーン）
+        let originalSceneKey = 'MiemachiStage'; // デフォルト
+        
+        // シーンマネージャーから適切なシーンを探す
+        const sceneManager = this.scene.manager;
+        if (sceneManager) {
+            // 利用可能なシーンを確認
+            const availableScenes = ['MiemachiStage', 'TaketastageStage', 'JapanStage'];
+            for (const sceneKey of availableScenes) {
+                try {
+                    const scene = sceneManager.getScene(sceneKey);
+                    if (scene && scene.scene && scene.scene.isActive()) {
+                        originalSceneKey = sceneKey;
+                        break;
+                    }
+                } catch (e) {
+                    // シーンが存在しない場合はスキップ
+                }
+            }
+        }
+        
+        console.log(`[DynamicConversationScene] 元のシーンキー: ${originalSceneKey}`);
+        
         this.scene.start('ConversationScene', { 
             conversationId: this.eventId,
             eventConfig: this.eventConfig,
             conversations: this.conversationData,  // 既存のconversationDataを渡す
-            audioManager: this.audioManager  // 取得したaudioManagerを渡す
+            audioManager: this.audioManager,  // 取得したaudioManagerを渡す
+            originalSceneKey: originalSceneKey  // 元のシーンキーをそのまま渡す
         });
     }
 }

@@ -490,27 +490,62 @@ export class AudioManager {
      * @param {string} key - SEのキー
      * @param {number} volume - 音量（0-1）
      */
-    playSe(key, volume = this.seVolume) {
+    async playSe(key, volume = this.seVolume) {
         if (!this.isSceneUsable()) return;
-        this.ensureAudioUnlocked();
         if (this.isSeMuted) return;
-        
-        // シーンとサウンドシステムの有効性をチェック
-        if (!this.scene || !this.scene.sound) {
-            console.warn('[AudioManager] Scene or sound system is not available for SE:', key);
-            return;
-        }
-        
+
         try {
-            const se = this.scene.sound.add(key, {
-                volume: volume
-            });
-            se.play();
+            let sePath;
             
+            // 1. まずEventConfigのSE_MAPPINGをチェック（イベントSE用）
+            const { SE_MAPPING } = await import('../config/EventConfig.js');
+            if (SE_MAPPING[key]) {
+                sePath = `assets/audio/se/${SE_MAPPING[key]}`;
+            }
+            // 2. 次にAreaConfigのSEをチェック（マップUI用）
+            else {
+                const { AreaConfig } = await import('../config/AreaConfig.js');
+                
+                // 現在のシーンからエリア名を取得
+                let areaName = 'miemachi'; // デフォルト
+                if (this.scene && this.scene.scene && this.scene.scene.key) {
+                    const sceneKey = this.scene.scene.key;
+                    if (sceneKey.includes('Miemachi') || sceneKey.includes('miemachi')) {
+                        areaName = 'miemachi';
+                    } else if (sceneKey.includes('Taketa') || sceneKey.includes('taketa')) {
+                        areaName = 'taketastage';
+                    } else if (sceneKey.includes('Japan') || sceneKey.includes('japan')) {
+                        areaName = 'japan';
+                    }
+                }
+                
+                const areaConfig = AreaConfig[areaName];
+                if (areaConfig && areaConfig.se && areaConfig.se[key]) {
+                    sePath = areaConfig.se[key];
+                }
+                // 3. フォールバック
+                else {
+                    sePath = `assets/audio/se/${key}.mp3`;
+                }
+            }
+
+            // HTMLAudioを直接使用（Phaserの問題を回避、iOS対応）
+            const se = new Audio(sePath);
+            se.volume = volume;
+
+            // 再生開始
+            const playPromise = se.play();
+            if (playPromise !== undefined) {
+                playPromise.catch(error => {
+                    console.error(`SE ${key} の再生に失敗しました:`, error);
+                });
+            }
+
             // 再生終了後にメモリから削除
-            se.once('complete', () => {
-                se.destroy();
+            se.addEventListener('ended', () => {
+                se.remove();
             });
+
         } catch (error) {
             console.error(`SE ${key} の再生に失敗しました:`, error);
         }
@@ -851,24 +886,17 @@ export class AudioManager {
      */
     async playConversationBgm(bgmKey, volume = this.bgmVolume, fadeIn = true) {
         try {
-            console.log(`[AudioManager] playConversationBgm開始: ${bgmKey}`);
-            
             // 既存のBGMを停止
             this.stopBgm(false);
             
             // bgm_プレフィックス付きのキーを作成
             const audioKey = `bgm_${bgmKey}`;
-            console.log(`[AudioManager] 音声キー: ${audioKey}`);
-            console.log('[AudioManager] loadedSounds:', Array.from(this.loadedSounds));
             
             // 会話用BGMを再生
             if (this.loadedSounds.has(audioKey)) {
-                console.log(`[AudioManager] 音声ファイルが見つかりました: ${audioKey}`);
-                
                 try {
                     // HTMLAudioを直接使用（Phaserの問題を回避）
                     const bgmPath = `assets/audio/bgm/${bgmKey}.mp3`;
-                    console.log(`[AudioManager] HTMLAudioでBGM再生開始: ${bgmPath}`);
                     
                     // HTMLAudio要素を作成
                     this.bgm = new Audio(bgmPath);
@@ -879,8 +907,6 @@ export class AudioManager {
                     const playPromise = this.bgm.play();
                     if (playPromise !== undefined) {
                         playPromise.then(() => {
-                            console.log(`[AudioManager] HTMLAudio BGM再生成功: ${audioKey}`);
-                            
                             // フェードイン処理
                             if (fadeIn) {
                                 let currentVolume = 0;
@@ -902,26 +928,20 @@ export class AudioManager {
                     // keyプロパティを設定（Phaserとの互換性のため）
                     this.bgm.key = audioKey;
                     
-                    console.log(`[AudioManager] HTMLAudio BGM再生開始: ${audioKey}`);
                     return true;
                     
                 } catch (playError) {
-                    console.error(`[AudioManager] HTMLAudio BGM再生エラー詳細: ${audioKey}`, playError);
-                    console.error('[AudioManager] エラータイプ:', typeof playError);
-                    console.error('[AudioManager] エラーメッセージ:', playError.message);
-                    console.error('[AudioManager] エラースタック:', playError.stack);
+                    console.error(`[AudioManager] HTMLAudio BGM再生エラー: ${audioKey}`, playError);
                     return false;
                 }
             } else {
                 console.warn(`[AudioManager] BGMファイルが読み込まれていません: ${audioKey}`);
-                console.warn('[AudioManager] 利用可能な音声ファイル:', Array.from(this.loadedSounds));
                 return false;
             }
             
         } catch (error) {
             console.error(`[AudioManager] playConversationBgm error: ${bgmKey}`, error);
-            console.error('[AudioManager] エラースタック:', error.stack);
             return false;
         }
     }
-} 
+}

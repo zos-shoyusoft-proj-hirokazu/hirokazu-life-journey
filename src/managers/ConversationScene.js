@@ -24,9 +24,20 @@ export class ConversationScene extends Phaser.Scene {
         
         // start() から渡された会話データを保持
         this._pendingConversation = data && data.conversations ? data.conversations : null;
+        
+        // 元のシーンのキーを保存（会話終了後に戻るため）
+        this.originalSceneKey = data && data.originalSceneKey ? data.originalSceneKey : null;
+        
+        // シーンキーを正規化（スペースを除去）
+        if (this.originalSceneKey) {
+            this.originalSceneKey = this.originalSceneKey.replace(/\s+/g, '');
+            console.log('[ConversationScene] シーンキーを正規化:', data.originalSceneKey, '→', this.originalSceneKey);
+        }
+        
         console.log('[ConversationScene] init called with data:', data);
         console.log('[ConversationScene] audioManager:', this.audioManager);
         console.log('[ConversationScene] _pendingConversation set to:', this._pendingConversation);
+        console.log('[ConversationScene] originalSceneKey:', this.originalSceneKey);
     }
 
 
@@ -240,16 +251,16 @@ export class ConversationScene extends Phaser.Scene {
                 console.warn('[ConversationScene] ConversationTriggerフラグリセットエラー:', e);
             }
             
-            // 元のシーンに戻る
-            this.scene.stop();
+            // 元のシーンに戻る（新しく作成したメソッドを使用）
+            this.returnToOriginalScene();
             
         } catch (error) {
             console.error('[ConversationScene] Error in interruptConversation:', error);
             // エラーが発生しても強制的にシーンを停止
             try {
-                this.scene.stop();
+                this.returnToOriginalScene();
             } catch (stopError) {
-                console.error('[ConversationScene] Error stopping scene:', stopError);
+                console.error('[ConversationScene] Error returning to original scene:', stopError);
             }
         }
     }
@@ -865,9 +876,18 @@ export class ConversationScene extends Phaser.Scene {
             const result = await this.audioManager.playConversationBgm(eventBgmKey, undefined, true);
             if (result) {
                 this._eventBgmStarted = true;
-                console.log(`[ConversationScene] イベントBGM開始: ${eventBgmKey}`);
+                
+                // AudioManagerから現在再生中のBGMオブジェクトを取得して保存
+                if (this.audioManager.bgm) {
+                    this._eventHtmlBgm = this.audioManager.bgm;
+                    console.log('[ConversationScene] イベントBGMオブジェクトを保存:', this._eventHtmlBgm);
+                } else {
+                    console.warn('[ConversationScene] AudioManagerからBGMオブジェクトが取得できません');
+                }
+                
+                console.log('[ConversationScene] イベントBGM開始:', eventBgmKey);
             } else {
-                console.warn(`[ConversationScene] イベントBGM開始失敗: ${eventBgmKey}`);
+                console.warn('[ConversationScene] イベントBGM開始失敗:', eventBgmKey);
             }
         }
     }
@@ -912,147 +932,159 @@ export class ConversationScene extends Phaser.Scene {
 
     // 元のBGMに戻す（ハードコードせず、会話開始前に覚えたキーで復帰）
     restoreOriginalBgm() {
+        console.log('[ConversationScene] restoreOriginalBgm メソッド開始');
         try {
-            // MapSelectionStageも含めて検索
-            const mainScene = this.scene.get('Stage1Scene') || this.scene.get('Stage2Scene') || this.scene.get('Stage3Scene') || this.scene.get('MiemachiStage') || this.scene.get('TaketastageStage') || this.scene.get('JapanStage');
-            if (mainScene && mainScene.audioManager) {
-                // イベントBGMを確実に停止（2重再生防止）
-                try {
-                    if (this._eventHtmlBgm) {
-                        console.log('[ConversationScene] restoreOriginalBgm: イベントBGMを停止');
-                        this._eventHtmlBgm.pause();
-                        this._eventHtmlBgm = null;
-                    }
-                } catch (e) {
-                    console.warn('[ConversationScene] イベントBGM停止エラー:', e);
+            // まず、現在のイベントBGMを確実に停止
+            try {
+                // 保存されたイベントBGMを停止
+                if (this._eventHtmlBgm) {
+                    console.log('[ConversationScene] restoreOriginalBgm: 保存されたイベントBGMを停止');
+                    this._eventHtmlBgm.pause();
+                    this._eventHtmlBgm = null;
                 }
                 
-                // イベントBGMが正常に再生されている場合は、pause()しない（AbortError防止）
-                if (this._eventBgmStarted && this._eventHtmlBgm && !this._eventHtmlBgm.paused) {
-                    console.log('[ConversationScene] イベントBGM再生中、pause()をスキップ');
-                    // イベントBGMを停止する代わりに、音量を徐々に下げる
-                    try {
-                        this._eventHtmlBgm.volume = 0.1;
-                        this.time.delayedCall(500, () => {
-                            try {
-                                if (this._eventHtmlBgm) {
-                                    this._eventHtmlBgm.pause();
-                                    this._eventHtmlBgm = null;
-                                }
-                            } catch (e) { /* ignore */ }
-                        });
-                    } catch (e) { /* ignore */ }
-                } else {
-                    // iOS: イベント用HTMLAudioがあれば停止
-                    try { if (this._eventHtmlBgm) { this._eventHtmlBgm.pause(); this._eventHtmlBgm = null; } } catch (e) { /* ignore */ }
+                // AudioManagerから直接現在のBGMを停止
+                if (this.audioManager && this.audioManager.bgm) {
+                    console.log('[ConversationScene] restoreOriginalBgm: AudioManagerの現在のBGMを停止');
+                    this.audioManager.bgm.pause();
+                    this.audioManager.bgm = null;
                 }
                 
-                mainScene.audioManager.stopBgm(false);
-                
-                let keyToPlay = this._originalBgmKey;
-                
-                // もし覚えていなければ、MapやSceneの設定から推測
-                if (!keyToPlay) {
-                    try {
-                        // 基本的なBGMキーを使用
-                        keyToPlay = 'bgm_default';
-                    } catch (_) { /* ignore */ }
+                if (this._eventBgmStarted) {
+                    this._eventBgmStarted = false;
+                    console.log('[ConversationScene] イベントBGMフラグをリセット');
                 }
-                
-                if (keyToPlay) {
-                    try { 
-                        console.log(`[ConversationScene] 元のBGMを復元: ${keyToPlay}`);
+            } catch (e) {
+                console.warn('[ConversationScene] イベントBGM停止エラー:', e);
+            }
+            
+            // 元のシーンのキーが設定されている場合は、そのシーンからBGMを復元
+            if (this.originalSceneKey) {
+                const sceneManager = this.scene.manager;
+                if (sceneManager) {
+                    const originalScene = sceneManager.getScene(this.originalSceneKey);
+                    if (originalScene && originalScene.audioManager) {
+                        console.log('[ConversationScene] 元のシーン', this.originalSceneKey, 'のBGMを復元します');
                         
-                        // 音声コンテキストを確実に復活させる
-                        if (mainScene.sound && mainScene.sound.context) {
-                            if (mainScene.sound.context.state === 'suspended') {
-                                console.log('[ConversationScene] 音声コンテキストを再開中...');
-                                mainScene.sound.context.resume();
-                            }
-                            
-                            // 音声コンテキストが確実に動作するまで待機
-                            if (mainScene.sound.context.state !== 'running') {
-                                console.log('[ConversationScene] 音声コンテキストの状態を待機中...');
-                                mainScene.sound.context.onstatechange = () => {
-                                    if (mainScene.sound.context.state === 'running') {
-                                        console.log('[ConversationScene] 音声コンテキストが動作開始、BGM再生を実行');
-                                        mainScene.audioManager.playBgm(keyToPlay, undefined, true);
-                                    }
-                                };
-                            } else {
-                                // 音声コンテキストが既に動作中なら即座にBGM再生
-                                mainScene.audioManager.playBgm(keyToPlay, undefined, true);
-                            }
-                        } else {
-                            // 音声コンテキストが存在しない場合は直接BGM再生を試行
-                            console.warn('[ConversationScene] 音声コンテキストが存在しません、直接BGM再生を試行');
-                            mainScene.audioManager.playBgm(keyToPlay, undefined, true);
+                        // 元のシーンのBGMを再開
+                        try {
+                            originalScene.audioManager.playBgm('map', undefined, true);
+                            console.log('[ConversationScene] 元のシーンのBGMを再開しました:', this.originalSceneKey);
+                        } catch (error) {
+                            console.warn('[ConversationScene] BGM再開エラー:', error);
                         }
                         
-                    } catch (error) { 
-                        console.warn(`[ConversationScene] BGM復元失敗: ${keyToPlay}`, error);
+                        // マップBGM抑制フラグを解除
+                        try { originalScene._suppressMapBgm = false; } catch (e) { /* ignore */ }
                     }
                 }
-                
-                // iOSでHTMLAudioを使っていた場合は再開（会話終了でマップBGMに戻す）
-                try {
-                    if (this._pausedHtmlMapBgm && mainScene._htmlBgm) {
-                        try { mainScene._htmlBgm.currentTime = 0; } catch (e) { /* ignore */ }
-                        const p = mainScene._htmlBgm.play();
-                        if (p && typeof p.catch === 'function') p.catch(() => {});
-                        this._pausedHtmlMapBgm = false;
+            } else {
+                // フォールバック: 従来の方法
+                const mainScene = this.scene.get('Stage1Scene') || this.scene.get('Stage2Scene') || this.scene.get('Stage3Scene') || this.scene.get('MiemachiStage') || this.scene.get('TaketastageStage') || this.scene.get('JapanStage');
+                if (mainScene && mainScene.audioManager) {
+                    // マップBGMを再開
+                    try { 
+                        console.log('[ConversationScene] マップBGMを再開');
+                        mainScene.audioManager.playBgm('map', undefined, true);
+                    } catch (error) { 
+                        console.warn('[ConversationScene] マップBGM再開失敗:', error);
                     }
-                } catch (e) { /* ignore */ }
-                
-                // マップBGM抑制フラグを解除
-                try { mainScene._suppressMapBgm = false; } catch (e) { /* ignore */ }
-                
-                // イベントBGM再生フラグをリセット
-                this._eventBgmStarted = false;
+                    
+                    // マップBGM抑制フラグを解除
+                    try { mainScene._suppressMapBgm = false; } catch (e) { /* ignore */ }
+                }
             }
         } catch (error) {
             console.error('[ConversationScene] restoreOriginalBgm エラー:', error);
         }
+        console.log('[ConversationScene] restoreOriginalBgm メソッド完了');
     }
     
     // 会話終了
     endConversation() {
         try {
+            console.log('[ConversationScene] endConversation 開始');
+            
             // 会話終了イベントを発火
             this.events.emit('conversationEnded');
+            console.log('[ConversationScene] 会話終了イベント発火完了');
             
             // エリアを完了済みに設定
             this.markAreaAsCompleted();
+            console.log('[ConversationScene] エリア完了設定完了');
             
             // BGMを元に戻す
+            console.log('[ConversationScene] restoreOriginalBgm 開始');
             this.restoreOriginalBgm();
+            console.log('[ConversationScene] restoreOriginalBgm 完了');
             
             // スプライトをクリーンアップ
             this.cleanupCharacterSprites();
+            console.log('[ConversationScene] スプライトクリーンアップ完了');
             
             // 戻るボタンをクリーンアップ
             this.cleanupBackButton();
+            console.log('[ConversationScene] 戻るボタンクリーンアップ完了');
             
             // テキストアニメーションタイマーをクリーンアップ
             if (this.currentTextTimer) {
                 this.currentTextTimer.destroy();
                 this.currentTextTimer = null;
             }
+            console.log('[ConversationScene] テキストタイマークリーンアップ完了');
             
             // UI要素をリセット（削除はしない）
             this.resetUI();
+            console.log('[ConversationScene] UIリセット完了');
             
             // 元のシーンに戻る
-            this.scene.stop();
+            console.log('[ConversationScene] returnToOriginalScene 開始');
+            this.returnToOriginalScene();
             
         } catch (error) {
             console.error('[ConversationScene] Error in endConversation:', error);
             // エラーが発生しても強制的にシーンを停止
             try {
-                this.scene.stop();
+                this.returnToOriginalScene();
             } catch (stopError) {
-                console.error('[ConversationScene] Error stopping scene:', stopError);
+                console.error('[ConversationScene] Error returning to original scene:', stopError);
             }
+        }
+    }
+
+    // 元のシーンに戻る
+    returnToOriginalScene() {
+        try {
+            console.log('[ConversationScene] 元のシーン', this.originalSceneKey, 'に戻ります');
+            
+            if (this.originalSceneKey) {
+                // シーンの存在確認
+                const sceneManager = this.scene.manager;
+                if (sceneManager) {
+                    const existingScene = sceneManager.getScene(this.originalSceneKey);
+                    if (existingScene) {
+                        console.log('[ConversationScene] 既存のシーン', this.originalSceneKey, 'が見つかりました');
+                    } else {
+                        console.warn('[ConversationScene] シーン', this.originalSceneKey, 'が見つかりません');
+                    }
+                }
+                
+                // 現在のシーンを停止してから、即座に元のシーンを開始
+                this.scene.stop();
+                this.scene.start(this.originalSceneKey);
+                console.log('[ConversationScene] シーン', this.originalSceneKey, 'を開始しました');
+                
+            } else {
+                console.warn('[ConversationScene] 元のシーンのキーが設定されていません');
+                this.scene.stop();
+                // フォールバック: メインメニューに戻る
+                this.scene.start('TitleScene');
+            }
+            
+        } catch (error) {
+            console.error('[ConversationScene] Error returning to original scene:', error);
+            // エラーが発生した場合は強制的にシーンを停止
+            this.scene.stop();
         }
     }
 
@@ -1062,56 +1094,52 @@ export class ConversationScene extends Phaser.Scene {
             // 現在の会話データからエリア名を取得
             if (this.currentConversation && this.currentConversation.areaName) {
                 const areaName = this.currentConversation.areaName;
+                console.log(`[ConversationScene] エリア完了設定開始: ${areaName}`);
                 
-                // より安全なシーン取得方法
-                const sceneManager = this.scene.manager;
-                if (!sceneManager) {
-                    console.warn('[ConversationScene] シーンマネージャーが利用できません');
-                    return;
-                }
-                
-                // 利用可能なシーンを確認
-                const availableScenes = ['MiemachiStage', 'TaketastageStage', 'JapanStage'];
-                let originalScene = null;
-                
-                for (const sceneKey of availableScenes) {
-                    try {
-                        const scene = sceneManager.getScene(sceneKey);
-                        if (scene && scene.areaSelectionManager) {
-                            originalScene = scene;
-                            break;
+                // 元のシーンのキーが設定されている場合は、そのシーンを直接使用
+                if (this.originalSceneKey) {
+                    const sceneManager = this.scene.manager;
+                    if (sceneManager) {
+                        const originalScene = sceneManager.getScene(this.originalSceneKey);
+                        if (originalScene && originalScene.areaSelectionManager) {
+                            // エリアを完了済みに設定
+                            originalScene.areaSelectionManager.markAreaAsCompleted(areaName);
+                            console.log('[ConversationScene] 元のシーン', this.originalSceneKey, 'のエリア', areaName, 'を完了済みに設定しました');
+                        } else {
+                            console.warn(`[ConversationScene] 元のシーン ${this.originalSceneKey} のareaSelectionManagerが見つかりません`);
                         }
-                    } catch (e) {
-                        // シーンが存在しない場合はスキップ
-                    }
-                }
-                
-                if (originalScene && originalScene.areaSelectionManager) {
-                    // エリアを完了済みに設定
-                    originalScene.areaSelectionManager.markAreaAsCompleted(areaName);
-                    console.log(`[ConversationScene] エリア ${areaName} を完了済みに設定しました`);
-                    
-                    // 現在アクティブなシーンも更新（即座に緑色に光らせるため）
-                    try {
-                        // Phaser 3.60以降の方法
-                        if (this.scene.manager.getActiveScene) {
-                            const activeScene = this.scene.manager.getScene(this.scene.manager.getActiveScene());
-                            if (activeScene && activeScene.areaSelectionManager) {
-                                activeScene.areaSelectionManager.markAreaAsCompleted(areaName);
-                                console.log(`[ConversationScene] アクティブシーンのエリア ${areaName} も更新しました`);
-                            }
-                        }
-                    } catch (e) {
-                        console.log('[ConversationScene] アクティブシーンの取得に失敗（無視）:', e.message);
-                    }
-                    
-                    // さらに、現在のシーンがMapSelectionStageの場合、直接更新（単一実行に簡素化）
-                    if (this.scene && this.scene.areaSelectionManager) {
-                        this.scene.areaSelectionManager.markAreaAsCompleted(areaName);
-                        console.log(`[ConversationScene] 現在シーンのエリア ${areaName} も更新しました`);
                     }
                 } else {
-                    console.warn(`[ConversationScene] エリア完了設定に必要なシーンが見つかりません: ${areaName}`);
+                    // フォールバック: 従来の方法
+                    const sceneManager = this.scene.manager;
+                    if (!sceneManager) {
+                        console.warn('[ConversationScene] シーンマネージャーが利用できません');
+                        return;
+                    }
+                    
+                    // 利用可能なシーンを確認
+                    const availableScenes = ['MiemachiStage', 'TaketastageStage', 'JapanStage'];
+                    let originalScene = null;
+                    
+                    for (const sceneKey of availableScenes) {
+                        try {
+                            const scene = sceneManager.getScene(sceneKey);
+                            if (scene && scene.areaSelectionManager) {
+                                originalScene = scene;
+                                break;
+                            }
+                        } catch (e) {
+                            // シーンが存在しない場合はスキップ
+                        }
+                    }
+                    
+                    if (originalScene && originalScene.areaSelectionManager) {
+                        // エリアを完了済みに設定
+                        originalScene.areaSelectionManager.markAreaAsCompleted(areaName);
+                        console.log(`[ConversationScene] エリア ${areaName} を完了済みに設定しました`);
+                    } else {
+                        console.warn(`[ConversationScene] エリア完了設定に必要なシーンが見つかりません: ${areaName}`);
+                    }
                 }
             }
         } catch (error) {
@@ -1279,14 +1307,12 @@ export class ConversationScene extends Phaser.Scene {
     playDialogSE(seKey) {
         console.log('[ConversationScene] SE再生を試行:', seKey);
         
-        // MapSelectionStageのaudioManagerを取得
-        const mapStage = this.scene.get('MiemachiStage') || this.scene.get('TaketastageStage') || this.scene.get('JapanStage');
-        
-        if (mapStage && mapStage.audioManager) {
-            console.log('[ConversationScene] AudioManager発見、SE再生:', `se_${seKey}`);
-            mapStage.audioManager.playSe(`se_${seKey}`);
+        // 直接this.audioManagerを使用（「借りる」設計なし）
+        if (this.audioManager) {
+            console.log('[ConversationScene] AudioManager発見、SE再生:', seKey);
+            this.audioManager.playSe(seKey);
         } else {
-            console.warn('[ConversationScene] AudioManagerが見つかりません:', mapStage);
+            console.warn('[ConversationScene] AudioManagerが見つかりません:', this.audioManager);
         }
     }
 } 
