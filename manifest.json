@@ -1,0 +1,21 @@
+{
+  "name": "Hirokazu Life Journey",
+  "short_name": "Hirokazu Game",
+  "description": "Hirokazu Life Journey - ゲーム",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "orientation": "landscape",
+  "scope": "./",
+  "lang": "ja",
+  "categories": ["games", "entertainment"],
+  "icons": [
+    {
+      "src": "./icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+} 

@@ -1,0 +1,544 @@
+/* メインメニュー画面のスタイル */
+#main-menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1500;
+    overflow: hidden;
+}
+
+
+
+#main-menu::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.4) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.4) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.3) 0%, transparent 50%);
+    animation: backgroundShift 12s ease-in-out infinite;
+}
+
+@keyframes backgroundShift {
+    0%, 100% { 
+        background: 
+            radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.4) 0%, transparent 50%),
+            radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.4) 0%, transparent 50%),
+            radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.3) 0%, transparent 50%);
+        transform: scale(1);
+    }
+    50% { 
+        background: 
+            radial-gradient(circle at 80% 80%, rgba(120, 119, 198, 0.4) 0%, transparent 50%),
+            radial-gradient(circle at 20% 20%, rgba(255, 119, 198, 0.4) 0%, transparent 50%),
+            radial-gradient(circle at 60% 60%, rgba(120, 219, 255, 0.3) 0%, transparent 50%);
+        transform: scale(1.05);
+    }
+}
+
+.main-menu-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    color: white;
+    padding: 25px;
+    max-width: 1400px;
+    width: 95%;
+    min-height: 350px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 25px;
+    backdrop-filter: blur(20px);
+    border: 2px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 
+        0 30px 60px rgba(0, 0, 0, 0.6),
+        inset 0 2px 0 rgba(255, 255, 255, 0.2),
+        0 0 30px rgba(255, 255, 255, 0.1);
+    position: relative;
+    z-index: 10;
+    animation: containerGlow 4s ease-in-out infinite alternate;
+    gap: 35px;
+    /* インストールポップアップの配置のため */
+    overflow: visible;
+}
+
+/* メインコンテンツエリア */
+.main-content {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 30px;
+    flex: 1;
+}
+
+/* インストールポップアップ専用領域（横向きデフォルトは右下） */
+.install-area {
+    position: absolute;
+    bottom: 30px;
+    right: 30px;
+    z-index: 1000;
+}
+
+@keyframes containerGlow {
+    0% {
+        box-shadow: 
+            0 30px 60px rgba(0, 0, 0, 0.6),
+            inset 0 2px 0 rgba(255, 255, 255, 0.2),
+            0 0 30px rgba(255, 255, 255, 0.1);
+        transform: scale(1);
+    }
+    100% {
+        box-shadow: 
+            0 30px 60px rgba(0, 0, 0, 0.6),
+            inset 0 2px 0 rgba(255, 255, 255, 0.2),
+            0 0 40px rgba(255, 255, 255, 0.2);
+        transform: scale(1.02);
+    }
+}
+
+.main-menu-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, transparent, #ff6b6b, #4ecdc4, #45b7d1, #ff6b6b, transparent);
+    border-radius: 30px 30px 0 0;
+    animation: borderFlow 6s ease-in-out infinite;
+}
+
+@keyframes borderFlow {
+    0%, 100% { 
+        background: linear-gradient(90deg, transparent, #ff6b6b, #4ecdc4, #45b7d1, #ff6b6b, transparent);
+    }
+    25% { 
+        background: linear-gradient(90deg, transparent, #4ecdc4, #45b7d1, #ff6b6b, #4ecdc4, transparent);
+    }
+    50% { 
+        background: linear-gradient(90deg, transparent, #45b7d1, #ff6b6b, #4ecdc4, #45b7d1, transparent);
+    }
+    75% { 
+        background: linear-gradient(90deg, transparent, #ff6b6b, #4ecdc4, #45b7d1, #ff6b6b, transparent);
+    }
+}
+
+.game-title {
+    flex: 1;
+    text-align: left;
+}
+
+.game-title h1 {
+    font-size: 3rem;
+    margin-bottom: 15px;
+    text-shadow: 
+        0 4px 8px rgba(0, 0, 0, 0.8),
+        0 0 30px rgba(255, 255, 255, 0.4);
+    animation: titleGlow 4s ease-in-out infinite alternate;
+    font-weight: bold;
+    letter-spacing: 2px;
+    color: #ffffff;
+    text-transform: uppercase;
+    position: relative;
+    z-index: 20;
+}
+
+@keyframes titleGlow {
+    from { 
+        text-shadow: 
+            0 4px 8px rgba(0, 0, 0, 0.8),
+            0 0 30px rgba(255, 255, 255, 0.4);
+        transform: scale(1);
+    }
+    to { 
+        text-shadow: 
+            0 4px 8px rgba(0, 0, 0, 0.8),
+            0 0 40px rgba(255, 255, 255, 0.7);
+        transform: scale(1.03);
+    }
+}
+
+.subtitle {
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+    opacity: 0.95;
+    text-shadow: 0 3px 6px rgba(0, 0, 0, 0.8);
+    animation: subtitlePulse 5s ease-in-out infinite;
+    font-weight: 500;
+    letter-spacing: 1px;
+    color: #ffffff;
+    position: relative;
+    z-index: 20;
+}
+
+@keyframes subtitlePulse {
+    0%, 100% { 
+        opacity: 0.95;
+        transform: translateY(0);
+    }
+    50% { 
+        opacity: 1;
+        transform: translateY(-2px);
+    }
+}
+
+.menu-buttons {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+}
+
+.menu-button {
+    display: block;
+    width: 250px;
+    margin: 20px auto;
+    padding: 20px 40px;
+    font-size: 1.4rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 
+        0 12px 24px rgba(0, 0, 0, 0.4),
+        inset 0 2px 0 rgba(255, 255, 255, 0.2);
+}
+
+.menu-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    transition: left 0.8s ease;
+}
+
+.menu-button:hover::before {
+    left: 100%;
+}
+
+.menu-button.primary {
+    background: linear-gradient(145deg, #ff6b6b 0%, #ee5a24 50%, #ff6b6b 100%);
+    color: white;
+    box-shadow: 
+        0 12px 24px rgba(255, 107, 107, 0.5),
+        inset 0 2px 0 rgba(255, 255, 255, 0.2),
+        0 0 25px rgba(255, 107, 107, 0.3);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.menu-button.primary:hover {
+    background: linear-gradient(145deg, #ee5a24 0%, #ff6b6b 50%, #ee5a24 100%);
+    transform: translateY(-5px) scale(1.08);
+    box-shadow: 
+        0 20px 40px rgba(255, 107, 107, 0.7),
+        inset 0 2px 0 rgba(255, 255, 255, 0.25),
+        0 0 35px rgba(255, 107, 107, 0.5);
+}
+
+.menu-button.secondary {
+    background: linear-gradient(145deg, #4ecdc4 0%, #44a08d 50%, #4ecdc4 100%);
+    color: white;
+    box-shadow: 
+        0 12px 24px rgba(78, 205, 196, 0.5),
+        inset 0 2px 0 rgba(255, 255, 255, 0.2),
+        0 0 25px rgba(78, 205, 196, 0.3);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.menu-button.secondary:hover {
+    background: linear-gradient(145deg, #44a08d 0%, #4ecdc4 50%, #44a08d 100%);
+    transform: translateY(-5px) scale(1.08);
+    box-shadow: 
+        0 20px 40px rgba(78, 205, 196, 0.7),
+        inset 0 2px 0 rgba(255, 255, 255, 0.25),
+        0 0 35px rgba(78, 205, 196, 0.5);
+}
+
+.game-info {
+    margin-top: 60px;
+    opacity: 0.9;
+    background: rgba(0, 0, 0, 0.4);
+    padding: 25px;
+    border-radius: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    box-shadow: 
+        0 15px 30px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.game-info p {
+    margin: 10px 0;
+    font-size: 1.1rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+    animation: infoGlow 6s ease-in-out infinite;
+    font-weight: 500;
+    color: #ffffff;
+    position: relative;
+    z-index: 20;
+}
+
+@keyframes infoGlow {
+    0%, 100% { 
+        opacity: 0.9;
+        transform: translateY(0);
+    }
+    50% { 
+        opacity: 1;
+        transform: translateY(-1px);
+    }
+}
+
+/* スマホ対応 - 能動的にサイズ調整 */
+@media (max-width: 900px) {
+    .main-menu-container {
+        padding: 30px 20px;
+        gap: 30px;
+        width: 98%;
+        max-width: 800px;
+    }
+    
+    .game-title h1 {
+        font-size: 2.5rem;
+        letter-spacing: 1px;
+        margin-bottom: 10px;
+    }
+    
+    .subtitle {
+        font-size: 1rem;
+        margin-bottom: 20px;
+    }
+    
+    .menu-button {
+        width: 200px;
+        font-size: 1.2rem;
+        padding: 18px 30px;
+        letter-spacing: 1px;
+        margin: 15px auto;
+    }
+    
+    .game-info {
+        padding: 15px;
+        margin-top: 30px;
+    }
+    
+    .game-info p {
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 600px) {
+    .main-menu-container {
+        padding: 20px 15px;
+        gap: 20px;
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .game-title {
+        text-align: center;
+    }
+    
+    .game-title h1 {
+        font-size: 2rem;
+        letter-spacing: 0.5px;
+    }
+    
+    .subtitle {
+        font-size: 0.9rem;
+        margin-bottom: 15px;
+    }
+    
+    .menu-button {
+        width: 180px;
+        font-size: 1.1rem;
+        padding: 15px 25px;
+    }
+    
+    .game-info {
+        padding: 12px;
+        margin-top: 20px;
+    }
+    
+    .game-info p {
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 400px) {
+    .main-menu-container {
+        padding: 15px 10px;
+        gap: 15px;
+    }
+    
+    .game-title h1 {
+        font-size: 1.8rem;
+    }
+    
+    .subtitle {
+        font-size: 0.8rem;
+    }
+    
+    .menu-button {
+        width: 160px;
+        font-size: 1rem;
+        padding: 12px 20px;
+    }
+}
+
+/* 横画面専用の調整 */
+@media (orientation: landscape) and (max-height: 500px) {
+    .main-menu-container {
+        padding: 20px 15px;
+        gap: 25px;
+    }
+    
+    .game-title h1 {
+        font-size: 2rem;
+        margin-bottom: 8px;
+    }
+    
+    .subtitle {
+        font-size: 0.9rem;
+        margin-bottom: 12px;
+    }
+    
+    .menu-button {
+        width: 180px;
+        padding: 15px 25px;
+        margin: 12px auto;
+    }
+    
+    .game-info {
+        padding: 15px;
+        margin-top: 20px;
+    }
+}
+
+/* 縦向き専用の調整 */
+@media (orientation: portrait) {
+    .main-menu-container {
+        flex-direction: column;
+        padding: 30px 20px;
+        gap: 40px;
+        min-height: 400px;
+        justify-content: flex-start;
+        align-items: center;
+    }
+    
+    .main-content {
+        flex-direction: column;
+        gap: 40px;
+        align-items: center;
+        text-align: center;
+        width: 100%;
+    }
+    
+    .game-title {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    
+    .game-title h1 {
+        font-size: 2.5rem;
+        margin-bottom: 20px;
+        letter-spacing: 1px;
+    }
+    
+    .subtitle {
+        font-size: 1.1rem;
+        margin-bottom: 40px;
+        text-align: center;
+    }
+    
+    .menu-buttons {
+        margin: 20px 0;
+    }
+    
+    .menu-button {
+        width: 220px;
+        margin: 25px auto;
+        padding: 22px 35px;
+        font-size: 1.3rem;
+    }
+    
+    .game-info {
+        margin-top: 40px;
+        padding: 20px;
+        text-align: center;
+        width: 100%;
+    }
+    
+    .game-info p {
+        font-size: 1rem;
+        margin: 12px 0;
+    }
+    
+    .install-area {
+        position: static;
+        bottom: auto;
+        right: auto;
+        width: 100%;
+        margin-top: 30px;
+        text-align: center;
+        order: 3;
+    }
+    
+    .install-banner {
+        width: 100%;
+        max-width: 400px;
+        margin: 0 auto;
+    }
+}
+
+/* 縦向きで小さい画面の調整 */
+@media (orientation: portrait) and (max-height: 600px) {
+    .main-menu-container {
+        padding: 25px 15px;
+        gap: 30px;
+        min-height: 350px;
+    }
+    
+    .game-title h1 {
+        font-size: 2.2rem;
+        margin-bottom: 15px;
+    }
+    
+    .subtitle {
+        font-size: 1rem;
+        margin-bottom: 30px;
+    }
+    
+    .menu-button {
+        width: 200px;
+        margin: 20px auto;
+        padding: 20px 30px;
+        font-size: 1.2rem;
+    }
+    
+    .game-info {
+        margin-top: 30px;
+        padding: 18px;
+    }
+} 
