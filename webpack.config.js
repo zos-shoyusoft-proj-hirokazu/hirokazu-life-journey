@@ -10,6 +10,8 @@ module.exports = {
     clean: true
   },
   
+
+  
   module: {
     rules: [
       {
@@ -55,7 +57,9 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       template: './src/index.html',
-      title: 'ひろかずRPG'
+      title: 'ひろかずRPG',
+      inject: true, // すべてのアセットを自動注入
+      chunks: 'all' // すべてのチャンクを含める
     }),
     new CopyWebpackPlugin({
       patterns: [
