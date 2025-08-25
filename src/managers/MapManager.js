@@ -54,10 +54,10 @@ export class MapManager {
         // Tiledマップを作成
         try {
             console.log('[MapManager] this.scene.make.tilemap呼び出し開始');
-            this.tilemap = this.scene.make.tilemap({ key: mapKey });
+        this.tilemap = this.scene.make.tilemap({ key: mapKey });
             console.log('[MapManager] this.scene.make.tilemap呼び出し完了, 結果:', this.tilemap);
             
-            this.map = this.tilemap; // 後方互換性
+        this.map = this.tilemap; // 後方互換性
         } catch (error) {
             console.error('[MapManager] タイルマップ作成エラー:', error);
             throw error;
@@ -388,9 +388,9 @@ export class MapManager {
             } else {
                 // 従来のタイルセット処理（stage1, stage2, stage3用）
                 console.log('[MapManager] 従来のタイルセット処理を使用');
-                const availableTilesets = this.createTilesets();
-                this.createLayers(availableTilesets);
-                this.placeObjects();
+            const availableTilesets = this.createTilesets();
+            this.createLayers(availableTilesets);
+            this.placeObjects();
             }
             
         } catch (error) {
@@ -576,7 +576,7 @@ export class MapManager {
         const currentMapKey = this.scene.mapConfig?.mapKey || this.currentMapKey;
         if (currentMapKey) {
             const objectLayerName = this.getObjectLayerName(currentMapKey);
-            this.extractAreaData(objectLayerName);
+        this.extractAreaData(objectLayerName);
         }
     }
 

@@ -6,7 +6,7 @@ export const StageConfig = {
         stageTitle: '竹田高校',
         folderName: 'taketa/taketa_highschool',
         bgm: {
-            map: 'assets/audio/bgm/taketa_highschool.mp3'
+            map: 'assets/audio/bgm/Pollyanna.mp3'
         },
         se: {
             se_touch: 'assets/audio/se/touch_7.mp3',
