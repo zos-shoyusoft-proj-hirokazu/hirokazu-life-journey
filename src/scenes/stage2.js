@@ -149,11 +149,6 @@ export class Stage2 extends Phaser.Scene {
             this.cameraManager.setupCamera(this, this.mapManager.map, this.playerController.player);
 
             // デバッグ: 画面サイズとマップサイズを確認
-            console.log('Stage 2: 画面サイズ - 幅:', this.scale.width, '高さ:', this.scale.height);
-            console.log('Stage 2: マップサイズ - 幅:', this.mapManager.map.widthInPixels, '高さ:', this.mapManager.map.heightInPixels);
-            console.log('Stage 2: プレイヤー位置:', this.playerController.getPosition());
-            console.log('Stage 2: カメラ位置 - X:', this.cameras.main.scrollX, 'Y:', this.cameras.main.scrollY);
-            console.log('Stage 2: カメラズーム:', this.cameras.main.zoom);
 
             this.collisionManager.setupAllCollisions(this.playerController.player, this.mapManager);
             

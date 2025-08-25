@@ -78,10 +78,7 @@ export class StageScene extends Phaser.Scene {
             
             // 設定ファイルから動的にマップキーを取得
             const firstFloor = this.stageConfig.floors[0];
-            console.log('[StageScene] 1階の設定:', firstFloor);
             this.mapManager.currentMapKey = firstFloor.mapKey;
-            console.log('[StageScene] マップキー設定:', this.mapManager.currentMapKey);
-            console.log('[StageScene] 期待されるマップキー: taketa_highschool_1');
             
             this.mapManager.createMap();
             console.log('[StageScene] 基本的なマップ表示完了');
@@ -278,7 +275,6 @@ export class StageScene extends Phaser.Scene {
             // 新しいフロアのマップを作成
             this.currentFloor = floorNumber;
             this.mapManager.currentMapKey = floorConfig.mapKey;
-            console.log(`[StageScene] 新しいマップキー設定: ${this.mapManager.currentMapKey}`);
             
             this.mapManager.createMap();
             console.log(`[StageScene] フロア${floorNumber}のマップ作成完了`);

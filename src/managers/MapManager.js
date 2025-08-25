@@ -83,29 +83,21 @@ export class MapManager {
             // 各レイヤーを個別に作成（createLegacyMapと同じ方法）
             this.tilemap.layers.forEach((layerData, index) => {
                 try {
-                    console.log(`[MapManager] レイヤー${index + 1}作成開始: ${layerData.name}`);
-                    
                     // createLegacyMapと同じ方法でレイヤーを作成
                     const layer = this.tilemap.createLayer(layerData.name, this.tilemap.tilesets, 0, 0);
                     
                     if (layer) {
-                        console.log(`[MapManager] ✅ レイヤー${index + 1}作成成功: ${layerData.name}`);
                         this.layers.push(layer);
                         
                         // 最初のレイヤーをメインレイヤーとして設定
                         if (index === 0) {
                             this.mapLayer = layer;
-                            console.log(`[MapManager] メインレイヤー設定: ${layerData.name}`);
                         }
-                    } else {
-                        console.warn(`[MapManager] ❌ レイヤー${index + 1}作成失敗: ${layerData.name}`);
                     }
                 } catch (error) {
                     console.error(`[MapManager] ❌ レイヤー${index + 1}作成エラー: ${layerData.name}`, error);
                 }
             });
-            
-            console.log(`[MapManager] レイヤー作成完了 - 作成数: ${this.layers.length}`);
             
             if (this.layers.length === 0) {
                 console.error('[MapManager] レイヤーが作成されていません');
@@ -372,13 +364,6 @@ export class MapManager {
                 const centerX = x + (width / 2);
                 const centerY = y + (height / 2);
                 
-                console.log(`[MapManager] オブジェクト${index}: ${name} (${type}) at (${x}, ${y}) size(${width}, ${height})`);
-                console.log(`[MapManager] 元の座標: (${obj.x}, ${obj.y}), 変換後: (${x}, ${y}), 中央座標: (${centerX}, ${centerY})`);
-                console.log(`[MapManager] マップスケール: ${mapScale}, マップ位置: (${mapOffsetX}, ${mapOffsetY})`);
-                if (this.mapLayer) {
-                    console.log(`[MapManager] レイヤー位置: (${this.mapLayer.x || 0}, ${this.mapLayer.y || 0})`);
-                }
-                
                 // テスト用：黒い矩形スプライトを作成（中央座標を使用）
                 // moveオブジェクトは特別な色で表示
                 let color = 0x000000; // デフォルトは黒
@@ -414,8 +399,6 @@ export class MapManager {
                 sprite.setData('originalData', obj);
             });
             
-            console.log(`[MapManager] オブジェクトレイヤー処理完了 - ${objectLayer.objects.length}個のオブジェクト`);
-            
         } catch (error) {
             console.error('[MapManager] オブジェクトレイヤー処理エラー:', error);
         }
@@ -434,7 +417,6 @@ export class MapManager {
         // CameraManagerに全体表示用スケールを設定
         if (this.scene.cameraManager) {
             this.scene.cameraManager.currentScale = scale;
-            console.log(`MapManager: Set initial scale to ${scale} (whole map view)`);
         }
         
         this.mapScaleX = scale;
@@ -475,8 +457,6 @@ export class MapManager {
                 mapOffsetX + this.scaledMapWidth / 2, 
                 mapOffsetY + this.scaledMapHeight / 2
             );
-            
-            console.log(`MapManager: Initial camera bounds: (0, 0, ${screenWidth}, ${screenHeight})`);
         }
         
         // スケール切り替え時は座標のみ再計算
@@ -515,7 +495,6 @@ export class MapManager {
         if (!objectLayerName) {
             const mapKey = this.scene.mapConfig?.mapKey || 'taketa';
             objectLayerName = this.getObjectLayerName(mapKey);
-            console.log(`[MapManager] extractAreaData: mapKey='${mapKey}', objectLayerName='${objectLayerName}'`);
         }
         
         // objectLayerNameがundefinedの場合は処理をスキップ
@@ -630,8 +609,6 @@ export class MapManager {
             const mapOffsetX = this.mapLayer ? this.mapLayer.x : 0;
             const mapOffsetY = this.mapLayer ? this.mapLayer.y : 0;
             
-            console.log(`MapManager: Map layer position - x: ${mapOffsetX}, y: ${mapOffsetY}, scale: ${scale}`);
-            
             // エリアの座標とサイズを更新
             this.areas.forEach(area => {
                 // originalX/originalYを使用して正確な座標を計算
@@ -641,8 +618,6 @@ export class MapManager {
                 // サイズもスケールに合わせて調整（元のサイズから計算）
                 area.width = area.originalWidth * scale;
                 area.height = area.originalHeight * scale;
-                
-                console.log(`MapManager: Area ${area.name} - original: (${area.originalX}, ${area.originalY}), new: (${area.x}, ${area.y}), size: (${area.width}, ${area.height})`);
             });
             
             // スケール後のマップサイズを更新
@@ -651,12 +626,8 @@ export class MapManager {
             
             // エリア選択マネージャーに位置更新を通知（更新されたエリアデータを渡す）
             if (this.scene.areaSelectionManager) {
-                console.log(`MapManager: Sending ${this.areas.length} areas to AreaSelectionManager`);
                 this.scene.areaSelectionManager.updateAreaPositions([...this.areas]);
             }
-            
-            // デバッグ用：座標更新を確認
-            console.log(`MapManager: Updated object positions with scale ${scale}, areas count: ${this.areas.length}`);
         } else {
             console.warn('MapManager: No areas available for position update');
         }
@@ -725,8 +696,6 @@ export class MapManager {
                 return;
             }
             
-            console.log('[MapManager] レイヤー作成開始');
-            
             // タイルセットを追加
             if (this.tilemap.tilesets && this.tilemap.tilesets.length > 0) {
                 this.tilemap.tilesets.forEach((tiledTileset) => {
@@ -739,7 +708,6 @@ export class MapManager {
                         
                         if (textureKey) {
                             this.tilemap.addTilesetImage(tiledTileset.name, textureKey);
-                            console.log(`[MapManager] タイルセット追加: ${tiledTileset.name}`);
                         }
                     } catch (error) {
                         console.warn(`[MapManager] タイルセット追加エラー: ${tiledTileset.name}`, error);
@@ -770,7 +738,6 @@ export class MapManager {
                                     this.mapLayer = layer;
                                 }
                                 
-                                console.log(`[MapManager] レイヤー作成: ${layerData.name}, 深度: ${layerDepth}`);
                             }
                         }
                     } catch (error) {
@@ -778,8 +745,6 @@ export class MapManager {
                     }
                 });
             }
-            
-            console.log(`[MapManager] レイヤー作成完了: ${this.layers.length}個`);
             
         } catch (error) {
             console.error('[MapManager] レイヤー作成エラー:', error);
@@ -809,7 +774,6 @@ export class MapManager {
                     }
                     
                     sprite.setDepth(objectDepth);
-                    console.log(`[MapManager] オブジェクト深度設定: ${imageKey} = ${objectDepth}`);
                     
                     if (obj.type === 'npc') {
                         this.npcSprites.set(obj.name, sprite);
@@ -841,7 +805,6 @@ export class MapManager {
                     }
                 } else {
                     console.warn(`Image not found: ${imageKey} - スプライト作成をスキップします`);
-                    console.log('[MapManager] 利用可能なテクスチャ:', Object.keys(this.scene.textures.list).filter(t => t.includes('pika')));
                 }
             });
         });

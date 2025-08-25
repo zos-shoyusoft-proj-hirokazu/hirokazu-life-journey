@@ -164,7 +164,6 @@ export class CollisionManager {
                 }
             });
             
-            console.log(`[CollisionManager] オブジェクトレイヤー当たり判定設定完了: ${mapManager.objectGroup.children.entries.length}個のオブジェクト`);
         }
     }
 
