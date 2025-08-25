@@ -99,6 +99,9 @@ export class MapSelectionStage extends Phaser.Scene {
             } catch (error) {
                 console.warn('[MapSelectionStage] キャッシュ情報の取得に失敗:', error);
             }
+            
+            // マップ作成
+            this.createMap();
         });
     }
     
@@ -190,7 +193,8 @@ export class MapSelectionStage extends Phaser.Scene {
         }
     }
 
-    create() {
+    // マップ作成メソッド
+    createMap() {
         try {
             const IS_IOS = /iPad|iPhone|iPod/i.test(navigator.userAgent);
             // モバイルデバイスの検出
@@ -237,6 +241,7 @@ export class MapSelectionStage extends Phaser.Scene {
                 // 会話開始・終了のイベントリスナーを設定
                 this.setupConversationEventListeners();
             }
+            
             // 設定ファイルからエリア情報を取得し、マップエリアとマージ
             const mapAreas = this.mapManager.getAreas();
             const configAreas = this.mapConfig.areas;
@@ -244,8 +249,6 @@ export class MapSelectionStage extends Phaser.Scene {
             console.log('[MapSelectionStage] エリアデータ処理開始: mapAreas=' + (mapAreas ? mapAreas.length : 'undefined') + ', configAreas=' + (configAreas ? configAreas.length : 'undefined'));
             console.log('[MapSelectionStage] mapAreas:', mapAreas);
             console.log('[MapSelectionStage] configAreas:', configAreas);
-            
-
             
             // エリア情報をマージ（座標はマップから、シーン情報は設定から）
             const mergedAreas = mapAreas.map(mapArea => {
@@ -418,19 +421,19 @@ export class MapSelectionStage extends Phaser.Scene {
             } catch (error) {
                 // エラーは無視
             }
+            
             // リサイズイベントを設定
             this.scale.on('resize', this.handleResize, this);
             this._onResizeBound = true;
+            
             // シーンシャットダウン時のクリーンアップ登録
             this.events.on('shutdown', () => {
                 try { if (this.load && this.load.reset) this.load.reset(); } catch(e) { /* ignore */ }
                 try { if (this.load && this.load.removeAllListeners) this.load.removeAllListeners(); } catch(e) { /* ignore */ }
                 this.shutdown();
             }, this);
-
         } catch (error) {
-            console.error(`Error creating ${this.mapConfig.mapTitle}:`, error);
-            console.error('Stack trace:', error.stack);
+            console.error('[MapSelectionStage] マップ作成エラー:', error);
         }
     }
 

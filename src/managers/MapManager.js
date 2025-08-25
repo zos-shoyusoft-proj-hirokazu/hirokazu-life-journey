@@ -44,20 +44,16 @@ export class MapManager {
         }
     }
 
-    createNewMap(mapKey, tilesetKey, layerName) {
-        console.log('=== FORCE LOG: createNewMap START ===');
-        console.log(`[MapManager] マップ作成開始: mapKey=${mapKey}, tilesetKey=${tilesetKey}, layerName=${layerName}`);
+    createNewMap(mapKey) {
+        console.log(`[MapManager] マップ作成開始: ${mapKey}`);
         
         // 現在のマップキーを保存
         this.currentMapKey = mapKey;
         
         // Tiledマップを作成
         try {
-            console.log('[MapManager] this.scene.make.tilemap呼び出し開始');
-        this.tilemap = this.scene.make.tilemap({ key: mapKey });
-            console.log('[MapManager] this.scene.make.tilemap呼び出し完了, 結果:', this.tilemap);
-            
-        this.map = this.tilemap; // 後方互換性
+            this.tilemap = this.scene.make.tilemap({ key: mapKey });
+            this.map = this.tilemap; // 後方互換性
         } catch (error) {
             console.error('[MapManager] タイルマップ作成エラー:', error);
             throw error;
@@ -65,7 +61,8 @@ export class MapManager {
         
         // タイルセットを追加
         if (this.tilemap.tilesets && this.tilemap.tilesets.length > 0) {
-            console.log(`[MapManager] タイルセット処理開始 - 数: ${this.tilemap.tilesets.length}`);
+            let successCount = 0;
+            let failCount = 0;
             
             this.tilemap.tilesets.forEach((tiledTileset) => {
                 try {
@@ -88,19 +85,20 @@ export class MapManager {
                     if (textureKey) {
                         const tileset = this.tilemap.addTilesetImage(tiledTileset.name, textureKey);
                         if (tileset) {
-                            console.log(`[MapManager] ✅ タイルセット追加成功: '${tiledTileset.name}'`);
+                            successCount++;
                         } else {
-                            console.warn(`[MapManager] ❌ タイルセット追加失敗: '${tiledTileset.name}'`);
+                            failCount++;
                         }
                     } else {
-                        console.warn(`[MapManager] ⚠️ テクスチャキー未発見: '${tiledTileset.name}'`);
+                        failCount++;
                     }
                 } catch (error) {
-                    console.error(`[MapManager] ❌ タイルセット '${tiledTileset.name}' エラー:`, error);
+                    failCount++;
                 }
             });
+            
+            console.log(`[MapManager] タイルセット処理完了 - 成功: ${successCount}, 失敗: ${failCount}`);
         }
-        console.log('[MapManager] タイルセット追加完了');
         
         // レイヤー作成（createLegacyMapと同じ方法で動作するように修正）
         console.log('[MapManager] レイヤー作成開始');
