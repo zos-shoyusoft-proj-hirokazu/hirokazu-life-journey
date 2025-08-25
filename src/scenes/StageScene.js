@@ -77,8 +77,20 @@ export class StageScene extends Phaser.Scene {
             console.log('[StageScene] 基本的なマップ表示開始');
             
             // 設定ファイルから動的にマップキーを取得
-            const firstFloor = this.stageConfig.floors[0];
-            this.mapManager.currentMapKey = firstFloor.mapKey;
+            // フロア変更から来た場合は、指定されたフロアから開始
+            let targetFloor;
+            if (this.nextFloorNumber) {
+                targetFloor = this.stageConfig.floors.find(f => f.number === this.nextFloorNumber);
+                this.currentFloor = this.nextFloorNumber;
+                this.nextFloorNumber = null; // 使用後はクリア
+                console.log(`[StageScene] フロア${this.currentFloor}から開始`);
+            } else {
+                targetFloor = this.stageConfig.floors[0];
+                this.currentFloor = 1;
+                console.log('[StageScene] フロア1から開始');
+            }
+            
+            this.mapManager.currentMapKey = targetFloor.mapKey;
             
             this.mapManager.createMap();
             console.log('[StageScene] 基本的なマップ表示完了');
@@ -148,21 +160,12 @@ export class StageScene extends Phaser.Scene {
                 console.warn('[StageScene] BGM設定が見つかりません');
             }
             
-            // 衝突判定設定
-            // this.collisionManager = new CollisionManager(this); // この行は上で初期化済みなので削除
-            // this.collisionManager.setupCollisionGroups(); // この行は上で初期化済みなので削除
-            
             // タッチイベントを設定
             this.setupTouchEvents();
             
             // 当たり判定の設定
             this.collisionManager.setupAllCollisions(this.playerController.player, this.mapManager);
             console.log('[StageScene] 当たり判定設定完了');
-            
-            // カメラ設定
-            this.cameraManager = new CameraManager(this);
-            this.cameraManager.setupCamera(this, this.mapManager.map, this.playerController.player);
-            console.log('[StageScene] カメラ設定完了');
             
             console.log('[StageScene] === create() 完了 ===');
             
@@ -255,8 +258,6 @@ export class StageScene extends Phaser.Scene {
     changeFloor(floorNumber) {
         if (floorNumber === this.currentFloor) return;
         
-        console.log(`[StageScene] フロア変更開始: ${this.currentFloor} → ${floorNumber}`);
-        
         try {
             // 設定からフロア情報を取得
             const floorConfig = this.stageConfig.floors.find(f => f.number === floorNumber);
@@ -265,82 +266,12 @@ export class StageScene extends Phaser.Scene {
                 return;
             }
             
-            // 現在のマップとオブジェクトを完全にクリーンアップ
-            if (this.mapManager) {
-                console.log('[StageScene] 既存マップとオブジェクトを削除中...');
-                this.mapManager.destroy();
-                console.log('[StageScene] 既存マップ削除完了');
-            }
+            // フロア番号を保存（Scene再起動時に使用）
+            this.nextFloorNumber = floorNumber;
             
-            // 衝突判定をクリア
-            if (this.collisionManager) {
-                console.log('[StageScene] 既存の衝突判定をクリア中...');
-                this.collisionManager.destroy();
-                this.collisionManager = null;
-                console.log('[StageScene] 衝突判定クリア完了');
-            }
+            // Scene全体を完全に再起動（これが最も確実）
+            this.scene.restart();
             
-            // プレイヤーコントローラーをクリア
-            if (this.playerController) {
-                console.log('[StageScene] 既存のプレイヤーコントローラーをクリア中...');
-                this.playerController.destroy();
-                this.playerController = null;
-                console.log('[StageScene] プレイヤーコントローラークリア完了');
-            }
-            
-            // タッチコントローラーをクリア
-            if (this.touchControlManager) {
-                console.log('[StageScene] 既存のタッチコントローラーをクリア中...');
-                this.touchControlManager.destroy();
-                this.touchControlManager = null;
-                console.log('[StageScene] タッチコントローラークリア完了');
-            }
-            
-            // 新しいフロアのマップを作成
-            this.currentFloor = floorNumber;
-            this.mapManager.currentMapKey = floorConfig.mapKey;
-            
-            this.mapManager.createMap();
-            console.log(`[StageScene] フロア${floorNumber}のマップ作成完了`);
-            
-            // マネージャーを再作成（Sceneを完全に作り直す）
-            console.log('[StageScene] マネージャーを再作成中...');
-            
-            // プレイヤーコントローラーを再作成
-            this.playerController = new PlayerController(this);
-            this.playerController.createPlayer(100, 100);
-            console.log('[StageScene] プレイヤーコントローラー再作成完了');
-            
-            // タッチコントローラーを再作成
-            this.touchControlManager = new TouchControlManager(this);
-            this.touchControlManager.createControls();
-            console.log('[StageScene] タッチコントローラー再作成完了');
-            
-            // 衝突判定を再設定
-            this.collisionManager = new CollisionManager(this);
-            this.collisionManager.setupAllCollisions(this.playerController.player, this.mapManager);
-            console.log('[StageScene] 衝突判定再設定完了');
-            
-            // カメラを再設定
-            if (this.cameraManager) {
-                this.cameraManager.setupCamera(this.playerController.player);
-                console.log('[StageScene] カメラ再設定完了');
-            }
-            
-            console.log('[StageScene] マネージャー再作成完了');
-            
-            // UIタイトルを更新
-            if (this.uiManager) {
-                this.uiManager.updateMapTitle(floorConfig.title, this);
-                console.log('[StageScene] UIタイトル更新完了');
-            }
-            
-            // SE再生
-            if (this.stageConfig.se && this.stageConfig.se.se_floor_change) {
-                this.audioManager.playSe('se_floor_change');
-            }
-            
-            console.log('[StageScene] フロア変更完了: ' + floorNumber);
         } catch (error) {
             console.error('[StageScene] フロア変更エラー:', error);
         }
