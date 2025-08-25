@@ -1,12 +1,4 @@
 { "compressionlevel":-1,
- "editorsettings":
-    {
-     "export":
-        {
-         "format":"json",
-         "target":"taketa_highschool_3.tmj"
-        }
-    },
  "height":19,
  "infinite":false,
  "layers":[
