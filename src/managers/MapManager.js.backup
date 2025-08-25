@@ -39,21 +39,15 @@ export class MapManager {
         
         // Tiledマップを作成
         try {
-            this.tilemap = this.scene.make.tilemap({ key: mapKey });
-            this.map = this.tilemap; // 後方互換性
-            
-            // tilemapが正常に作成されたか確認
-            if (!this.tilemap) {
-                console.error('[MapManager] タイルマップの作成に失敗しました');
-                return;
-            }
+        this.tilemap = this.scene.make.tilemap({ key: mapKey });
+        this.map = this.tilemap; // 後方互換性
         } catch (error) {
             console.error('[MapManager] タイルマップ作成エラー:', error);
             throw error;
         }
         
         // タイルセットを追加
-        if (this.tilemap && this.tilemap.tilesets && this.tilemap.tilesets.length > 0) {
+        if (this.tilemap.tilesets && this.tilemap.tilesets.length > 0) {
             this.tilemap.tilesets.forEach((tiledTileset) => {
                 try {
                     // テクスチャキーを検索
@@ -63,44 +57,41 @@ export class MapManager {
                     // 完全一致を試行
                     if (availableTextures.includes(tiledTileset.name)) {
                         textureKey = tiledTileset.name;
-                    }
-                    
-                    // 部分一致を試行（完全一致で見つからない場合）
-                    if (!textureKey) {
+                    } else {
+                        // 部分一致を試行
                         const partialMatch = availableTextures.find(texture => 
-                            tiledTileset.name.includes(texture) || 
-                            texture.includes(tiledTileset.name)
+                            texture.includes(tiledTileset.name) || 
+                            tiledTileset.name.includes(texture)
                         );
-                        if (partialMatch) {
-                            textureKey = partialMatch;
-                        }
+                        textureKey = partialMatch || null;
                     }
                     
-                    if (textureKey && this.tilemap) {
+                    if (textureKey) {
                         this.tilemap.addTilesetImage(tiledTileset.name, textureKey);
                     }
                 } catch (error) {
-                    console.error(`[MapManager] タイルセット処理エラー: ${tiledTileset.name}`, error);
+                    // エラーは無視
                 }
             });
         }
         
-        // レイヤー作成
-        if (this.tilemap && this.tilemap.layers && this.tilemap.layers.length > 0) {
+        // レイヤー作成（createLegacyMapと同じ方法で動作するように修正）
+        // createLegacyMapと同じ方法でレイヤーを作成
+        if (this.tilemap.layers && this.tilemap.layers.length > 0) {
             this.layers = [];
             
+            // 各レイヤーを個別に作成（createLegacyMapと同じ方法）
             this.tilemap.layers.forEach((layerData, index) => {
                 try {
-                    if (this.tilemap && this.tilemap.tilesets) {
-                        const layer = this.tilemap.createLayer(layerData.name, this.tilemap.tilesets, 0, 0);
+                    // createLegacyMapと同じ方法でレイヤーを作成
+                    const layer = this.tilemap.createLayer(layerData.name, this.tilemap.tilesets, 0, 0);
+                    
+                    if (layer) {
+                        this.layers.push(layer);
                         
-                        if (layer) {
-                            this.layers.push(layer);
-                            
-                            // 最初のレイヤーをメインレイヤーとして設定
-                            if (index === 0) {
-                                this.mapLayer = layer;
-                            }
+                        // 最初のレイヤーをメインレイヤーとして設定
+                        if (index === 0) {
+                            this.mapLayer = layer;
                         }
                     }
                 } catch (error) {
@@ -117,16 +108,9 @@ export class MapManager {
             return this.tilemap;
         }
         
-        // マップサイズを取得（tilemapが存在することを確認）
-        if (this.tilemap) {
-            this.mapWidth = this.tilemap.widthInPixels || 
-                          (this.tilemap.width * this.tilemap.tileWidth) || 0;
-            this.mapHeight = this.tilemap.heightInPixels || 
-                           (this.tilemap.height * this.tilemap.tileHeight) || 0;
-        } else {
-            this.mapWidth = 0;
-            this.mapHeight = 0;
-        }
+        // マップサイズを取得
+        this.mapWidth = this.tilemap.widthInPixels;
+        this.mapHeight = this.tilemap.heightInPixels;
         
         // スマホ画面に合わせてマップレイヤーをスケール
         this.scaleMapToScreen();
@@ -155,61 +139,67 @@ export class MapManager {
             this.tilemap = this.scene.make.tilemap({ key: mapKey });
             this.map = this.tilemap;
             
-            // tilemapが正常に作成されたか確認
-            if (!this.tilemap) {
-                console.error('[MapManager] タイルマップの作成に失敗しました');
-                return;
-            }
-            
-                    // 竹田高校の場合は新しいタイルセット処理を使用
-        if (mapKey && mapKey.includes('taketa_highschool')) {
-            // 新しいタイルセット処理（createNewMapと同じ方法）
-            if (this.tilemap && this.tilemap.tilesets && this.tilemap.tilesets.length > 0) {
+            // 竹田高校の場合は新しいタイルセット処理を使用
+            if (mapKey && mapKey.includes('taketa_highschool')) {
+                // 新しいタイルセット処理（createNewMapと同じ方法）
+                if (this.tilemap.tilesets && this.tilemap.tilesets.length > 0) {
                     this.tilemap.tilesets.forEach((tiledTileset) => {
                         try {
                             // テクスチャキーを検索（より柔軟な検索）
                             const availableTextures = Object.keys(this.scene.textures.list);
                             let textureKey = null;
                             
+                            // 特殊文字を含むファイル名の処理
+                            const cleanTilesetName = tiledTileset.name.replace(/[!@#$%^&*()]/g, '');
+                            
                             // 完全一致を試行
                             if (availableTextures.includes(tiledTileset.name)) {
                                 textureKey = tiledTileset.name;
-                            }
-                            
-                            // 部分一致を試行（完全一致で見つからない場合）
-                            if (!textureKey) {
-                                const partialMatch = availableTextures.find(texture => 
-                                    tiledTileset.name.includes(texture) || 
-                                    texture.includes(tiledTileset.name)
-                                );
-                                if (partialMatch) {
-                                    textureKey = partialMatch;
-                                }
+                            } else if (availableTextures.includes(cleanTilesetName)) {
+                                textureKey = cleanTilesetName;
+                            } else {
+                                // 部分一致を試行（より柔軟に）
+                                const partialMatch = availableTextures.find(texture => {
+                                    const tilesetName = tiledTileset.name.toLowerCase();
+                                    const cleanTilesetNameLower = cleanTilesetName.toLowerCase();
+                                    const textureName = texture.toLowerCase();
+                                    
+                                    return textureName.includes(tilesetName) || 
+                                           textureName.includes(cleanTilesetNameLower) ||
+                                           tilesetName.includes(textureName) ||
+                                           cleanTilesetNameLower.includes(textureName) ||
+                                           textureName.includes(tilesetName.replace('_', '')) ||
+                                           cleanTilesetNameLower.includes(textureName.replace('_', ''));
+                                });
+                                textureKey = partialMatch || null;
                             }
                             
                             if (textureKey) {
                                 this.tilemap.addTilesetImage(tiledTileset.name, textureKey);
                             }
                         } catch (error) {
-                            console.error(`[MapManager] タイルセット処理エラー: ${tiledTileset.name}`, error);
+                            // エラーは無視
                         }
                     });
                 }
                 
-                // レイヤー作成
-                if (this.tilemap && this.tilemap.layers && this.tilemap.layers.length > 0) {
+                // レイヤー作成（createNewMapと同じ方法）
+                if (this.tilemap.layers && this.tilemap.layers.length > 0) {
                     this.layers = [];
                     
                     this.tilemap.layers.forEach((layerData, index) => {
                         try {
+                            // 正しく初期化されたタイルセットの配列を取得
+                            // this.tilemap.tilesetsは[initialize]状態なので、実際のタイルセットオブジェクトを取得
                             const actualTilesets = [];
                             
+                            // 各タイルセット名に対応する実際のタイルセットオブジェクトを取得
                             this.tilemap.tilesets.forEach((tiledTileset) => {
                                 if (tiledTileset && tiledTileset.name) {
                                     // テクスチャキーを検索
                                     const availableTextures = Object.keys(this.scene.textures.list);
                                     const textureKey = availableTextures.find(texture => 
-                                        texture.includes(tiledTileset.name)
+                                        texture.includes(tiledTileset.name.replace(/[!@#$%^&*()]/g, ''))
                                     );
                                     
                                     if (textureKey) {
@@ -229,17 +219,19 @@ export class MapManager {
                             const layer = this.tilemap.createLayer(layerData.name, actualTilesets, 0, 0);
                             
                             if (layer) {
-                                // レイヤーの深度設定
+                                // レイヤーの表示設定を明示的に追加
+                                // レイヤー名に基づいて深度を設定
                                 let layerDepth;
                                 
                                 if (layerData.name.includes('床')) {
                                     layerDepth = 0;   // 床は最奥
                                 } else {
-                                    layerDepth = 50 + index; // 床以外は主人公より上
+                                    // 主人公（深度40）が隠れないように深度を調整
+                                    layerDepth = 50 + index; // 床以外は主人公（40）より上、タッチコントロール（999+）より下
                                 }
                                 
                                 layer.setDepth(layerDepth);
-                                layer.setVisible(true);
+                                layer.setVisible(true); // 可視性を設定
                                 
                                 this.layers.push(layer);
                                 
@@ -252,14 +244,20 @@ export class MapManager {
                         }
                     });
                     
-                    // マップサイズを取得（mapLayerが存在しない場合はtilemapから直接取得）
-                    this.mapWidth = this.tilemap.widthInPixels || 
-                                  (this.tilemap.width * this.tilemap.tileWidth) || 0;
-                    this.mapHeight = this.tilemap.heightInPixels || 
-                                   (this.tilemap.height * this.tilemap.tileHeight) || 0;
+                    // マップサイズを取得（レイヤー作成後に再試行）
+                    if (this.mapLayer) {
+                        // 複数の方法でマップサイズを取得
+                        this.mapWidth = this.mapLayer.width || 
+                                      this.tilemap.widthInPixels || 
+                                      (this.tilemap.width * this.tilemap.tileWidth) || 0;
+                        this.mapHeight = this.mapLayer.height || 
+                                       this.tilemap.heightInPixels || 
+                                       (this.tilemap.height * this.tilemap.tileHeight) || 0;
+                    }
                     
-                    // オブジェクトレイヤー処理
+                    // 利用可能なすべてのオブジェクトレイヤーを動的に検出して処理
                     if (this.tilemap) {
+                        // オブジェクトレイヤー名を直接指定して処理
                         const objectLayerNames = ['オブジェクトレイヤー1', 'オブジェクトレイヤー2'];
                         
                         objectLayerNames.forEach(layerName => {
