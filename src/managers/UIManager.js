@@ -134,6 +134,17 @@ export class UIManager {
                     } catch (err) { /* ignore */ }
                 };
                 try { requestAnimationFrame(() => setTimeout(backToSelect, 0)); } catch (_) { backToSelect(); }
+            } else if (scene.scene?.key === 'taketa_highschool') {
+                // 竹田高校から竹田マップに戻る
+                const backToTaketaMap = () => {
+                    if (window.returnToTaketaMap) {
+                        window.returnToTaketaMap();
+                    } else {
+                        // フォールバック：竹田マップに戻る
+                        scene.scene.start('TaketastageStage');
+                    }
+                };
+                try { requestAnimationFrame(() => setTimeout(backToTaketaMap, 0)); } catch (_) { backToTaketaMap(); }
             } else {
                 // その他のシーン：ステージ選択画面に戻る
                 const back = () => {

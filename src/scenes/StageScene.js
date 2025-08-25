@@ -122,6 +122,16 @@ export class StageScene extends Phaser.Scene {
             // AudioManagerを初期化
             this.audioManager = new AudioManager(this);
             
+            // 竹田マップに戻るための関数を設定
+            window.returnToTaketaMap = () => {
+                // 竹田マップに戻る（gameController.jsを使用）
+                if (window.startPhaserGame) {
+                    window.startPhaserGame('taketa');
+                } else {
+                    console.error('startPhaserGame not found');
+                }
+            };
+            
             // 設定からBGMを再生
             if (this.stageConfig.bgm && this.stageConfig.bgm.map) {
                 console.log('[StageScene] BGM再生開始:', this.stageConfig.bgm.map);
