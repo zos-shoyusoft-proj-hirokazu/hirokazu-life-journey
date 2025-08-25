@@ -141,30 +141,62 @@ export class CollisionManager {
 
     // 統合メソッド
     setupAllCollisions(player, mapManager) {
+        console.log('[CollisionManager] setupAllCollisions開始');
+        console.log(`[CollisionManager] プレイヤー: ${player ? '存在' : 'null'}, MapManager: ${mapManager ? '存在' : 'null'}`);
+        
         this.setupTileCollisions(player, mapManager);
         this.setupObjectCollisions(player, mapManager);
         this.setupPlayerCollisions(player);
+        
+        console.log('[CollisionManager] setupAllCollisions完了');
     }
     
     // オブジェクトレイヤーとの当たり判定
     setupObjectCollisions(player, mapManager) {
+        console.log('[CollisionManager] setupObjectCollisions開始');
+        
         if (mapManager && mapManager.objectGroup) {
-            // 壁との衝突
-            this.scene.physics.add.collider(player, mapManager.objectGroup);
+            console.log(`[CollisionManager] objectGroup発見: ${mapManager.objectGroup.children.entries.length}個のオブジェクト`);
             
             // オブジェクトグループ内の各オブジェクトを処理
             mapManager.objectGroup.children.entries.forEach(sprite => {
                 const objectType = sprite.getData('objectType');
                 const objectName = sprite.getData('objectName');
                 
-                if (objectType === 'npc') {
-                    // NPCとの重複（会話）
+                console.log(`[CollisionManager] オブジェクト処理: ${objectName} (${objectType})`);
+                
+                if (objectType === 'wall' || objectType === '壁' || objectType === 'Wall') {
+                    // 壁はプレイヤーと衝突させる
+                    this.scene.physics.add.collider(player, sprite);
+                    console.log(`[CollisionManager] 壁の衝突判定を設定: ${objectName}`);
+                } else if (objectType === 'npc') {
+                    // NPCは重なりで会話、かつ衝突も設定
                     this.scene.physics.add.overlap(player, sprite, 
                         () => this.startConversation(objectName), null, this.scene);
+                    this.scene.physics.add.collider(player, sprite);
+                    console.log(`[CollisionManager] NPCの衝突判定と重なり判定を設定: ${objectName}`);
+                } else if (objectType === 'move') {
+                    // moveは重なりで移動のみ
+                    console.log(`[CollisionManager] moveオブジェクトの衝突判定を設定: ${objectName}`);
+                    console.log(`[CollisionManager] moveオブジェクトの座標: (${sprite.x}, ${sprite.y}), サイズ: ${sprite.width}x${sprite.height}`);
+                    console.log(`[CollisionManager] プレイヤーの初期位置: (${player.x}, ${player.y})`);
+                    console.log('[CollisionManager] moveオブジェクトの物理ボディ:', sprite.body);
+                    console.log('[CollisionManager] プレイヤーの物理ボディ:', player.body);
+                    console.log('[CollisionManager] moveオブジェクトにoverlapイベントを設定中...');
+                    this.scene.physics.add.overlap(player, sprite, 
+                        () => {
+                            console.log(`[CollisionManager] moveオブジェクトに触れました: ${objectName}`);
+                            this.handleMoveObject(player, sprite);
+                        }, null, this.scene);
+                    console.log('[CollisionManager] moveオブジェクトにoverlapイベントを設定完了');
                 }
             });
             
+        } else {
+            console.warn('[CollisionManager] objectGroupが見つかりません');
         }
+        
+        console.log('[CollisionManager] setupObjectCollisions完了');
     }
 
     // タイルマップとの当たり判定

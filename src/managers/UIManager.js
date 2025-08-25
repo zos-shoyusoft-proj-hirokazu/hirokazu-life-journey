@@ -28,6 +28,22 @@ export class UIManager {
         // 戻るボタンを作成
         this.createBackButton(scene);
     }
+
+    // 追加：マップタイトルを更新
+    updateMapTitle(title, scene) {
+        try {
+            if (this.titleText) {
+                this.titleText.setText(title);
+            } else if (scene && scene.add) {
+                // タイトル未作成の場合は簡易に作成（左下と整合）
+                this.titleText = scene.add.text(5, scene.cameras.main.height - 25, title, {
+                    fontSize: '18px',
+                    fill: '#FFD700',
+                    fontWeight: 'bold'
+                }).setOrigin(0, 1);
+            }
+        } catch (_) { /* noop */ }
+    }
     
     // 戻るボタンを作成する関数
     createBackButton(scene) {
@@ -153,7 +169,7 @@ export class UIManager {
                     } else {
                         const stageSelect = document.getElementById('stage-select');
                         const gameContainer = document.getElementById('game-container');
-                        if (stageSelect) stageSelect.style.display = 'flex';
+                        if (stageSelect) stageSelect.style.display = 'block';
                         if (gameContainer) gameContainer.style.display = 'none';
                     }
                 };

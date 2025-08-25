@@ -141,31 +141,109 @@ export class PlayerController {
     }
 
     update() {
-        // 初期化チェック
-        if (!this.player || !this.cursors || !this.wasd) {
+        // 基本的なログ（毎フレーム）
+        console.log('[PlayerController] update() 呼び出し');
+        
+        // プレイヤーの存在チェック（必須）
+        if (!this.player) {
+            console.warn('[PlayerController] プレイヤーが存在しません');
             return;
         }
 
-        let velocityX = 0;
-        let velocityY = 0;
+        // キーボード入力の処理（オプション）
+        if (this.cursors && this.wasd) {
+            let velocityX = 0;
+            let velocityY = 0;
 
-        // 左右移動
-        if (this.cursors.left.isDown || this.wasd.A.isDown) {
-            velocityX = -this.speed;
-        } else if (this.cursors.right.isDown || this.wasd.D.isDown) {
-            velocityX = this.speed;
+            // 左右移動
+            if (this.cursors.left.isDown || this.wasd.A.isDown) {
+                velocityX = -this.speed;
+            } else if (this.cursors.right.isDown || this.wasd.D.isDown) {
+                velocityX = this.speed;
+            }
+
+            // 上下移動
+            if (this.cursors.up.isDown || this.wasd.W.isDown) {
+                velocityY = -this.speed;
+            } else if (this.cursors.down.isDown || this.wasd.S.isDown) {
+                velocityY = this.speed;
+            }
+
+            // 実際の速度設定
+            this.player.setVelocityX(velocityX);
+            this.player.setVelocityY(velocityY);
         }
-
-        // 上下移動
-        if (this.cursors.up.isDown || this.wasd.W.isDown) {
-            velocityY = -this.speed;
-        } else if (this.cursors.down.isDown || this.wasd.S.isDown) {
-            velocityY = this.speed;
+        
+        // デバッグ: プレイヤーの位置を常に表示
+        console.log(`[PlayerController] プレイヤー位置: (${this.player.x}, ${this.player.y})`);
+        
+        // moveオブジェクトとの距離を計算（動的に座標を取得）
+        let moveObjectX = 766;  // デフォルト値
+        let moveObjectY = 895;  // デフォルト値
+        
+        // シーンからmoveオブジェクトを探して座標を取得
+        if (this.scene && this.scene.collisionManager) {
+            // MapManagerからobjectGroupを取得
+            const mapManager = this.scene.mapManager;
+            if (mapManager && mapManager.objectGroup) {
+                const moveObject = mapManager.objectGroup.children.entries.find(sprite => 
+                    sprite.getData('objectType') === 'move'
+                );
+                
+                if (moveObject) {
+                    moveObjectX = moveObject.x;
+                    moveObjectY = moveObject.y;
+                    console.log(`[PlayerController] 実際のmoveオブジェクト座標: (${moveObjectX}, ${moveObjectY})`);
+                }
+            }
         }
-
-        // 実際の速度設定
-        this.player.setVelocityX(velocityX);
-        this.player.setVelocityY(velocityY);
+        
+        const distance = Math.sqrt(
+            Math.pow(this.player.x - moveObjectX, 2) + 
+            Math.pow(this.player.y - moveObjectY, 2)
+        );
+        
+        // 100ピクセル以内に近づいたら警告
+        if (distance < 100) {
+            console.log(`[PlayerController] ⚠️ moveオブジェクトに近づいています: 距離=${distance.toFixed(2)}`);
+            
+            // 物理ボディの詳細情報を表示
+            if (this.scene && this.scene.collisionManager) {
+                const mapManager = this.scene.mapManager;
+                if (mapManager && mapManager.objectGroup) {
+                    const moveObject = mapManager.objectGroup.children.entries.find(sprite => 
+                        sprite.getData('objectType') === 'move'
+                    );
+                    
+                    if (moveObject) {
+                        console.log('[PlayerController] moveオブジェクト詳細:');
+                        console.log(`  - 見た目の座標: (${moveObject.x}, ${moveObject.y})`);
+                        console.log(`  - 見た目のサイズ: ${moveObject.width} x ${moveObject.height}`);
+                        console.log(`  - 物理ボディ:`, moveObject.body);
+                        
+                        if (moveObject.body) {
+                            console.log(`  - 物理ボディ座標: (${moveObject.body.x}, ${moveObject.body.y})`);
+                            console.log(`  - 物理ボディサイズ: ${moveObject.body.width} x ${moveObject.body.height}`);
+                            console.log(`  - 物理ボディの中心: (${moveObject.body.center.x}, ${moveObject.body.center.y})`);
+                        }
+                    }
+                }
+            }
+            
+            // 非常に近い場合（触れている場合）の詳細ログ
+            if (distance < 50) {
+                console.log(`[PlayerController] 🔥 moveオブジェクトに非常に近いです: 距離=${distance.toFixed(2)}`);
+                
+                // プレイヤーとmoveオブジェクトの座標を詳細表示
+                console.log(`[PlayerController] プレイヤー座標: (${this.player.x}, ${this.player.y})`);
+                console.log(`[PlayerController] moveオブジェクト座標: (${moveObjectX}, ${moveObjectY})`);
+                
+                // 物理ボディの状態を確認
+                if (this.player.body) {
+                    console.log('[PlayerController] プレイヤーの物理ボディ:', this.player.body);
+                }
+            }
+        }
     }
 
     // タッチ操作用のメソッド（統一された方法）

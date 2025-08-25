@@ -258,19 +258,34 @@ export class MapManager {
                     this.mapHeight = this.tilemap.heightInPixels || 
                                    (this.tilemap.height * this.tilemap.tileHeight) || 0;
                     
-                    // オブジェクトレイヤー処理
-                    if (this.tilemap) {
-                        const objectLayerNames = ['オブジェクトレイヤー1', 'オブジェクトレイヤー2'];
-                        
-                        objectLayerNames.forEach(layerName => {
-                            const objectLayer = this.tilemap.getObjectLayer(layerName);
-                            if (objectLayer) {
-                                this.processObjectLayer(layerName);
-                            }
-                        });
-                    } else {
-                        console.warn('[MapManager] tilemapが存在しません');
-                    }
+                            // オブジェクトレイヤー処理
+        if (this.tilemap) {
+            const objectLayerNames = ['オブジェクトレイヤー1', 'オブジェクトレイヤー2'];
+            
+            console.log('[MapManager] オブジェクトレイヤー処理開始');
+            console.log(`[MapManager] tilemap情報: 幅=${this.tilemap.width}, 高さ=${this.tilemap.height}, タイル幅=${this.tilemap.tileWidth}, タイル高さ=${this.tilemap.tileHeight}`);
+            
+            objectLayerNames.forEach(layerName => {
+                const objectLayer = this.tilemap.getObjectLayer(layerName);
+                if (objectLayer) {
+                    // オブジェクトレイヤーの寸法を正しく取得
+                    const layerWidth = objectLayer.width || this.tilemap.widthInPixels || (this.tilemap.width * this.tilemap.tileWidth) || 0;
+                    const layerHeight = objectLayer.height || this.tilemap.heightInPixels || (this.tilemap.height * this.tilemap.tileHeight) || 0;
+                    
+                    console.log(`[MapManager] オブジェクトレイヤー発見: ${layerName}, 幅: ${layerWidth}, 高さ: ${layerHeight}`);
+                    
+                    // オブジェクトレイヤーの寸法を設定
+                    objectLayer.width = layerWidth;
+                    objectLayer.height = layerHeight;
+                    
+                    this.processObjectLayer(layerName);
+                } else {
+                    console.warn(`[MapManager] オブジェクトレイヤーが見つかりません: ${layerName}`);
+                }
+            });
+        } else {
+            console.warn('[MapManager] tilemapが存在しません');
+        }
                     
                     // エリアデータを抽出（最初のオブジェクトレイヤーを使用）
                     if (this.tilemap && this.tilemap.layers) {
@@ -394,6 +409,13 @@ export class MapManager {
                 sprite.setData('objectType', type);
                 sprite.setData('objectName', name);
                 sprite.setData('objectId', obj.id);
+                
+                // moveオブジェクトの場合は特別な設定を追加
+                if (type === 'move') {
+                    sprite.setData('moveId', name);
+                    sprite.setData('moveType', type);
+                    console.log(`[MapManager] moveオブジェクト作成: ${name}, 座標: (${centerX}, ${centerY}), サイズ: ${width}x${height}`);
+                }
                 
                 // オブジェクトの情報を保存
                 sprite.setData('objectType', type);
