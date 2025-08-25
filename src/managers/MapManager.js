@@ -332,7 +332,8 @@ export class MapManager {
                                 if (layerData.name.includes('床')) {
                                     layerDepth = 0;   // 床は最奥
                                 } else {
-                                    layerDepth = 100 + index; // 床以外は主人公より上、タッチコントロールより下
+                                    // 主人公（深度40）が隠れないように深度を調整
+                                    layerDepth = 50 + index; // 床以外は主人公（40）より上、タッチコントロール（999+）より下
                                 }
                                 
                                 layer.setDepth(layerDepth);

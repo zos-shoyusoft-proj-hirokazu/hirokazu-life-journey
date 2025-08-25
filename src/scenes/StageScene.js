@@ -62,16 +62,12 @@ export class StageScene extends Phaser.Scene {
     }
 
     create() {
+        console.log('[StageScene] === create() 開始 ===');
+        console.log('[StageScene] シーンキー:', this.scene.key);
+        console.log('[StageScene] ステージ設定:', this.stageConfig);
+        
         try {
-            // カメラマネージャーを初期化
-            this.cameraManager = new CameraManager(this);
-            this.cameraManager.setBackgroundColor('#87CEEB');
-            
-            // CollisionManagerを初期化
-            this.collisionManager = new CollisionManager(this);
-            this.collisionManager.setupCollisionGroups();
-
-            // マップマネージャーを初期化
+            // 基本的なマップ表示
             this.mapManager = new MapManager(this);
             
             // フロア機能は後で実装（基本的なマップ表示のみ）
@@ -90,24 +86,26 @@ export class StageScene extends Phaser.Scene {
             this.mapManager.createMap();
             console.log('[StageScene] 基本的なマップ表示完了');
             
-            // プレイヤーコントローラーを初期化
+            // プレイヤー作成
             this.playerController = new PlayerController(this);
             this.playerController.createPlayer(100, 100);
             console.log('[StageScene] プレイヤー作成完了');
             
-            // プレイヤーの位置と状態を確認
+            // プレイヤーの位置とオブジェクトを確認
             const playerPos = this.playerController.getPosition();
             console.log('[StageScene] プレイヤー位置:', playerPos);
             console.log('[StageScene] プレイヤーオブジェクト:', this.playerController.player);
-            console.log('[StageScene] プレイヤーの可視性:', this.playerController.player?.visible);
+            console.log('[StageScene] プレイヤーの可視性:', this.playerController.player.visible);
             
-            // タッチ操作のためのコントローラーを追加
+            // タッチコントローラー作成
             this.touchControlManager = new TouchControlManager(this, this.playerController.player, 'se_touch');
             console.log('[StageScene] タッチコントローラー作成完了');
             
             // カメラ設定（stage2と同じ方法）
+            this.cameraManager = new CameraManager(this);
+            this.cameraManager.setBackgroundColor('#87CEEB');
             this.cameraManager.setupCamera(this, this.mapManager.map, this.playerController.player);
-            console.log('[StageScene] カメラ設定完了（stage2と同じ方法）');
+            console.log('[StageScene] カメラ設定完了 (stage2と同じ方法)');
             
             // UI要素を作成
             this.uiManager = new UIManager();
@@ -116,19 +114,16 @@ export class StageScene extends Phaser.Scene {
             // 戻るボタンを作成
             this.uiManager.createBackButton(this);
             
-                    // フロア切り替えボタンを作成（後で実装）
-        // this.createFloorButtons();
-            
             // AudioManagerを初期化
             this.audioManager = new AudioManager(this);
             
             // 竹田マップに戻るための関数を設定
             window.returnToTaketaMap = () => {
-                // 竹田マップに戻る（設定から動的に取得）
-                if (window.startPhaserGame && this.stageConfig && this.stageConfig.mapId) {
-                    window.startPhaserGame(this.stageConfig.mapId);
+                // 竹田マップに戻る（gameController.jsを使用）
+                if (window.startPhaserGame) {
+                    window.startPhaserGame('taketa');
                 } else {
-                    console.error('startPhaserGame or mapId not found');
+                    console.error('startPhaserGame not found');
                 }
             };
             
@@ -151,11 +146,17 @@ export class StageScene extends Phaser.Scene {
                 console.warn('[StageScene] BGM設定が見つかりません');
             }
             
+            // 衝突判定設定
+            this.collisionManager = new CollisionManager(this);
+            this.collisionManager.setupCollisionGroups();
+            
             // タッチイベントを設定
             this.setupTouchEvents();
             
+            console.log('[StageScene] === create() 完了 ===');
+            
         } catch (error) {
-            console.error(`Error creating ${this.stageConfig.stageTitle}:`, error);
+            console.error('[StageScene] create() エラー:', error);
         }
     }
     
