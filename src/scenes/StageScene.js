@@ -126,86 +126,16 @@ export class StageScene extends Phaser.Scene {
             if (this.stageConfig.bgm && this.stageConfig.bgm.map) {
                 console.log('[StageScene] BGM再生開始:', this.stageConfig.bgm.map);
                 
-                // 前のBGMを明示的に停止（強力な方法）
-                console.log('[StageScene] BGM停止処理開始');
-                
-                // 1. AudioManagerの停止
+                // 前のBGMを確実に停止
                 this.audioManager.stopAll();
-                console.log('[StageScene] AudioManager停止完了');
-                
-                // 2. Phaserの音声システムも直接停止
                 if (this.scene.sound) {
-                    try {
-                        this.scene.sound.stopAll();
-                        console.log('[StageScene] Phaser音声システム停止完了');
-                    } catch (e) {
-                        console.warn('[StageScene] Phaser音声システム停止エラー:', e);
-                    }
+                    this.scene.sound.stopAll();
                 }
                 
-                // 3. iOS対応：HTMLAudioの停止（ConversationSceneと同じ方法）
+                // iOS対応：HTMLAudioの停止
                 if (this._htmlBgm) {
-                    try {
-                        this._htmlBgm.pause();
-                        console.log('[StageScene] iOS用HTMLAudio停止完了');
-                    } catch (e) {
-                        console.warn('[StageScene] iOS用HTMLAudio停止エラー:', e);
-                    }
+                    this._htmlBgm.pause();
                 }
-                
-                // 4. 竹田マップのBGMを直接停止
-                console.log('🚨 [StageScene] 竹田マップBGM停止処理開始 🚨');
-                try {
-                    // 利用可能なシーン名を確認
-                    try {
-                        const availableScenes = this.scene.scene.manager.keys;
-                        console.log('🔍 [StageScene] 利用可能なシーン:', availableScenes);
-                    } catch (e) {
-                        console.warn('🔍 [StageScene] シーン一覧取得エラー:', e);
-                    }
-                    
-                    // 竹田マップのBGMを止める強化版アプローチ
-                    console.log('🔍 [StageScene] 竹田マップBGM停止の強化版アプローチ開始');
-                    
-                    // 1. 現在のAudioManagerのBGMを強制停止
-                    if (this.audioManager && this.audioManager.bgm) {
-                        try {
-                            this.audioManager.bgm.pause();
-                            this.audioManager.bgm.stop();
-                            this.audioManager.bgm = null;
-                            console.log('✅ [StageScene] 現在のBGM強制停止完了 ✅');
-                        } catch (e) {
-                            console.warn('⚠️ [StageScene] 現在のBGM停止エラー:', e);
-                        }
-                    }
-                    
-                    // 2. AudioManager全体を停止
-                    if (this.audioManager) {
-                        try {
-                            this.audioManager.stopAll();
-                            console.log('✅ [StageScene] AudioManager全体停止完了 ✅');
-                        } catch (e) {
-                            console.warn('⚠️ [StageScene] AudioManager停止エラー:', e);
-                        }
-                    }
-                    
-                    // 3. Phaserの音声システム全体を停止
-                    if (this.scene.sound) {
-                        try {
-                            this.scene.sound.stopAll();
-                            console.log('✅ [StageScene] Phaser音声システム全体停止完了 ✅');
-                        } catch (e) {
-                            console.warn('⚠️ [StageScene] Phaser音声システム停止エラー:', e);
-                        }
-                    }
-                    
-                    console.log('✅ [StageScene] 竹田マップBGM停止完了（強化版アプローチ） ✅');
-                    
-                } catch (e) {
-                    console.error('💥 [StageScene] 竹田マップBGM停止エラー 💥', e);
-                }
-                
-                console.log('[StageScene] 前のBGM停止完了（全停止処理完了）');
                 
                 // 新しいBGMを再生
                 const result = this.audioManager.playBgm('map');
@@ -397,8 +327,8 @@ export class StageScene extends Phaser.Scene {
 
     setupTouchEvents() {
         // タッチイベントを設定
-        this.input.on('pointerdown', (pointer) => {
-            this.handleTouch(pointer);
+        this.input.on('pointerdown', () => {
+            this.handleTouch();
         });
         
         // スマホ向けスクロール機能を追加
@@ -406,22 +336,19 @@ export class StageScene extends Phaser.Scene {
         this.cameraManager.setupPinchZoom();
     }
 
-    handleTouch(pointer) {
-        // タッチ処理（後で実装）
-        console.log('タッチ位置:', pointer.x, pointer.y);
-        
-        // 音声コンテキストのロック解除を確実にする
+    handleTouch() {
+        // 音声コンテキストのロック解除を強化
         try {
             if (this.scene.sound && this.scene.sound.context) {
                 const ctx = this.scene.sound.context;
+                
+                // 音声コンテキストを再開
                 if (ctx.state === 'suspended') {
                     ctx.resume();
-                    console.log('[StageScene] 音声コンテキストを再開しました');
                 }
                 
                 // ロック状態を解除
                 if (this.scene.sound.locked) {
-                    console.log('[StageScene] 音声ロックを解除中...');
                     // 無音オシレーターでロック解除
                     const osc = ctx.createOscillator();
                     const gain = ctx.createGain();
@@ -429,7 +356,14 @@ export class StageScene extends Phaser.Scene {
                     osc.connect(gain).connect(ctx.destination);
                     osc.start();
                     osc.stop(ctx.currentTime + 0.05);
-                    console.log('[StageScene] 音声ロック解除完了');
+                    
+                    // ロック解除後にBGMを再試行
+                    setTimeout(() => {
+                        if (this.audioManager && !this.scene.sound.locked) {
+                            console.log('[StageScene] ロック解除後、BGM再生を再試行');
+                            this.audioManager.playBgm('map');
+                        }
+                    }, 200);
                 }
             }
         } catch (e) {
