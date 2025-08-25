@@ -415,10 +415,21 @@
                  "width":194,
                  "x":286,
                  "y":16
-                }, 
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":13,
+         "name":"\u30aa\u30d6\u30b8\u30a7\u30af\u30c8\u30ec\u30a4\u30e4\u30fc2",
+         "objects":[
                 {
                  "height":0,
-                 "id":16,
+                 "id":43,
                  "name":"npc_e_2",
                  "point":true,
                  "rotation":0,
@@ -430,7 +441,7 @@
                 }, 
                 {
                  "height":0,
-                 "id":17,
+                 "id":44,
                  "name":"npc_e_1",
                  "point":true,
                  "rotation":0,
@@ -442,7 +453,7 @@
                 }, 
                 {
                  "height":0,
-                 "id":18,
+                 "id":45,
                  "name":"npc_p_2",
                  "point":true,
                  "rotation":0,
@@ -454,7 +465,7 @@
                 }, 
                 {
                  "height":0,
-                 "id":19,
+                 "id":46,
                  "name":"npc_p_1",
                  "point":true,
                  "rotation":0,
@@ -466,7 +477,7 @@
                 }, 
                 {
                  "height":0,
-                 "id":20,
+                 "id":47,
                  "name":"npc_e_3",
                  "point":true,
                  "rotation":0,
@@ -478,7 +489,7 @@
                 }, 
                 {
                  "height":0,
-                 "id":21,
+                 "id":48,
                  "name":"npc_s_3",
                  "point":true,
                  "rotation":0,
@@ -490,7 +501,7 @@
                 }, 
                 {
                  "height":0,
-                 "id":22,
+                 "id":49,
                  "name":"npc_s_2",
                  "point":true,
                  "rotation":0,
@@ -502,7 +513,7 @@
                 }, 
                 {
                  "height":0,
-                 "id":23,
+                 "id":50,
                  "name":"npc_s_1",
                  "point":true,
                  "rotation":0,
@@ -511,18 +522,6 @@
                  "width":0,
                  "x":172,
                  "y":674
-                }, 
-                {
-                 "height":0,
-                 "id":31,
-                 "name":"yajirushi",
-                 "point":true,
-                 "rotation":0,
-                 "type":"yajirushi",
-                 "visible":true,
-                 "width":0,
-                 "x":763.333333333333,
-                 "y":983.333333333333
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -533,7 +532,7 @@
         {
          "draworder":"topdown",
          "id":12,
-         "name":"\u30aa\u30d6\u30b8\u30a7\u30af\u30c8\u30ec\u30a4\u30e4\u30fc2",
+         "name":"\u30aa\u30d6\u30b8\u30a7\u30af\u30c8\u30ec\u30a4\u30e4\u30fc3",
          "objects":[
                 {
                  "height":83.25,
@@ -545,6 +544,18 @@
                  "width":76,
                  "x":728,
                  "y":849.666666666667
+                }, 
+                {
+                 "height":0,
+                 "id":52,
+                 "name":"yajirushi",
+                 "point":true,
+                 "rotation":0,
+                 "type":"yajirushi",
+                 "visible":true,
+                 "width":0,
+                 "x":766,
+                 "y":982.666666666667
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -552,8 +563,8 @@
          "x":0,
          "y":0
         }],
- "nextlayerid":13,
- "nextobjectid":32,
+ "nextlayerid":14,
+ "nextobjectid":53,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",
