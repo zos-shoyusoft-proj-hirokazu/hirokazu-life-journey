@@ -524,7 +524,7 @@
          "name":"\u30aa\u30d6\u30b8\u30a7\u30af\u30c8\u30ec\u30a4\u30e4\u30fc2",
          "objects":[
                 {
-                 "height":111.25,
+                 "height":83.25,
                  "id":28,
                  "name":"move",
                  "rotation":0,
@@ -532,7 +532,7 @@
                  "visible":true,
                  "width":76,
                  "x":728,
-                 "y":849
+                 "y":849.666666666667
                 }],
          "opacity":1,
          "type":"objectgroup",
