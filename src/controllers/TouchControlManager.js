@@ -94,6 +94,9 @@ export class TouchControlManager {
         touchArea.setDepth(999);
         touchArea.setInteractive();
         
+        // タッチエリアの参照を保存
+        this.touchArea = touchArea;
+        
         // タッチイベントの設定
         touchArea.on('pointerdown', (pointer) => {
             if (this.currentPointerId === null) {
@@ -153,6 +156,11 @@ export class TouchControlManager {
         
         this.baseCircle.setPosition(this.centerX, this.centerY);
         this.stickCircle.setPosition(this.centerX, this.centerY);
+
+        // タッチエリアも更新
+        if (this.touchArea) {
+            this.touchArea.setPosition(this.centerX, this.centerY);
+        }
     }
 
     updateStick(touchX, touchY) {
@@ -337,5 +345,36 @@ export class TouchControlManager {
             this.stickCircle.destroy();
         }
         this.scene.scale.off('resize', this.handleResize, this);
+    }
+    
+    // 画面回転時の位置更新
+    updatePosition(width, height) {
+        if (this.baseCircle && this.stickCircle) {
+            // 画面右下にバーチャルパッドを再配置
+            const margin = 120;
+            const padX = width - margin;
+            const padY = height - margin;
+            
+            // ベース円とスティック円の位置を更新
+            this.baseCircle.setPosition(padX, padY);
+            this.stickCircle.setPosition(padX, padY);
+            
+            // 中心位置も更新
+            this.centerX = padX;
+            this.centerY = padY;
+            
+            // タッチエリアも更新
+            if (this.touchArea) {
+                this.touchArea.setPosition(padX, padY);
+            }
+            
+            // スティックがアクティブな場合は、中心に戻す
+            if (this.isStickActive) {
+                this.stickCircle.setPosition(this.centerX, this.centerY);
+                this.currentInput = { x: 0, y: 0 };
+            }
+            
+            console.log('[TouchControlManager] 位置更新完了:', { width, height, padX, padY });
+        }
     }
 }

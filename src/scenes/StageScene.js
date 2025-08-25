@@ -173,6 +173,21 @@ export class StageScene extends Phaser.Scene {
                     console.log('[StageScene] 音声コンテキスト状態リセット完了');
                 }
             }
+            
+            // 音声コンテキストを完全にクリーンアップ
+            if (this.sound && this.sound.context) {
+                try {
+                    // 音声コンテキストを閉じる
+                    if (this.sound.context.close) {
+                        this.sound.context.close();
+                    }
+                    // 音声コンテキストをnullに設定
+                    this.sound.context = null;
+                    console.log('[StageScene] 音声コンテキスト完全クリーンアップ完了');
+                } catch (e) {
+                    console.warn('[StageScene] 音声コンテキストクリーンアップエラー:', e);
+                }
+            }
         } catch (e) {
             console.warn('[StageScene] 音声システムクリーンアップエラー:', e);
         }
@@ -337,40 +352,19 @@ export class StageScene extends Phaser.Scene {
     }
 
     handleTouch() {
-        // 音声コンテキストのロック解除を強化
+        // 基本的な音声コンテキストロック解除
         try {
-            if (this.scene.sound && this.scene.sound.context) {
+            if (this.scene && this.scene.sound && this.scene.sound.context) {
                 const ctx = this.scene.sound.context;
-                
-                // 音声コンテキストを再開
                 if (ctx.state === 'suspended') {
                     ctx.resume();
-                }
-                
-                // ロック状態を解除
-                if (this.scene.sound.locked) {
-                    // 無音オシレーターでロック解除
-                    const osc = ctx.createOscillator();
-                    const gain = ctx.createGain();
-                    gain.gain.value = 0.0001;
-                    osc.connect(gain).connect(ctx.destination);
-                    osc.start();
-                    osc.stop(ctx.currentTime + 0.05);
-                    
-                    // ロック解除後にBGMを再試行
-                    setTimeout(() => {
-                        if (this.audioManager && !this.scene.sound.locked) {
-                            console.log('[StageScene] ロック解除後、BGM再生を再試行');
-                            this.audioManager.playBgm('map');
-                        }
-                    }, 200);
                 }
             }
         } catch (e) {
             console.warn('[StageScene] 音声コンテキスト処理エラー:', e);
         }
     }
-
+    
     update() {
         // マネージャーの更新処理
         this.cameraManager?.update();
@@ -379,6 +373,18 @@ export class StageScene extends Phaser.Scene {
     destroy() {
         this.shutdown();
         super.destroy();
+    }
+
+    resize(gameSize) {
+        const { width, height } = gameSize;
+        
+        // カメラサイズを更新
+        this.cameras.resize(width, height);
+        
+        // タッチコントローラーの位置を更新
+        if (this.touchControlManager) {
+            this.touchControlManager.updatePosition(width, height);
+        }
     }
 }
 
