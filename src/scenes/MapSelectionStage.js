@@ -207,7 +207,7 @@ export class MapSelectionStage extends Phaser.Scene {
             // マップマネージャーを初期化
             console.log('[MapSelectionStage] マップ作成開始: mapKey=\'' + this.mapConfig.mapKey + '\', tilesetKey=\'' + this.mapConfig.tilesetKey + '\'');
             this.mapManager = new MapManager(this);
-            this.mapManager.createMap(this.mapConfig.mapKey, this.mapConfig.tilesetKey, 'タイルレイヤー1');
+            this.mapManager.createMap(this.mapConfig.mapKey, this.mapConfig.tilesetKey);
             console.log('[MapSelectionStage] マップ作成完了');
             
             // 初期スケールを全体表示に設定（カメラ設定より先に実行）

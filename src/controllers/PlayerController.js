@@ -17,6 +17,10 @@ export class PlayerController {
         this.player = this.scene.physics.add.sprite(x, y, 'player_placeholder');
         this.player.setDisplaySize(30, 30);
         this.player.setTint(0xff0000);
+        
+        // 主人公を最前面に表示（レイヤーより手前）
+        this.player.setDepth(40);
+        console.log('[PlayerController] 主人公の深度設定: 40');
 
         // プレイヤーの物理設定
         this.player.setCollideWorldBounds(true); // 画面端で止まる

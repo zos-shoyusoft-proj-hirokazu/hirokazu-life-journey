@@ -1,5 +1,6 @@
 export class MapManager {
     constructor(scene) {
+        console.log('[MapManager] コンストラクタ開始');
         this.scene = scene;
         this.tilemap = null;
         this.mapLayer = null;
@@ -13,76 +14,139 @@ export class MapManager {
         this.scaledMapWidth = 0;
         this.scaledMapHeight = 0;
         
+        // 現在のマップキーを追跡
+        this.currentMapKey = null;
+        
         // 後方互換性のためのプロパティ
         this.map = null; // 旧バージョンとの互換性
         this.layers = []; // 旧バージョンとの互換性
         this.npcSprites = new Map(); // NPCスプライトの参照を保持
         this.objectGroup = null; // 当たり判定用のグループ
+        
+        console.log('[MapManager] コンストラクタ完了 - 初期値:', {
+            tilemap: this.tilemap,
+            mapLayer: this.mapLayer,
+            map: this.map
+        });
     }
 
-    createMap(mapKey, tilesetKey, layerName = 'タイルレイヤー1') {
-        // 街の概要マップ作成
-        if (arguments.length > 0) {
+    createMap(mapKey, tilesetKey, layerName) {
+        console.log(`[MapManager] createMap呼び出し: mapKey=${mapKey}, tilesetKey=${tilesetKey}, layerName=${layerName}, arguments.length=${arguments.length}`);
+        
+        // 引数が存在する場合は新しいマップ作成
+        if (mapKey && tilesetKey) {
+            console.log('[MapManager] createNewMapを呼び出し');
             return this.createNewMap(mapKey, tilesetKey, layerName);
         } else {
-            // 引数なしの場合は実際に歩けるマップを作成
+            // 引数がない場合は実際に歩けるマップを作成
+            console.log('[MapManager] createLegacyMapを呼び出し');
             return this.createLegacyMap();
         }
     }
 
-    createNewMap(mapKey, tilesetKey, layerName = 'タイルレイヤー1') {
+    createNewMap(mapKey, tilesetKey, layerName) {
+        console.log('=== FORCE LOG: createNewMap START ===');
         console.log(`[MapManager] マップ作成開始: mapKey=${mapKey}, tilesetKey=${tilesetKey}, layerName=${layerName}`);
         
+        // 現在のマップキーを保存
+        this.currentMapKey = mapKey;
+        
         // Tiledマップを作成
-        this.tilemap = this.scene.make.tilemap({ key: mapKey });
-        this.map = this.tilemap; // 後方互換性
+        try {
+            console.log('[MapManager] this.scene.make.tilemap呼び出し開始');
+            this.tilemap = this.scene.make.tilemap({ key: mapKey });
+            console.log('[MapManager] this.scene.make.tilemap呼び出し完了, 結果:', this.tilemap);
+            
+            this.map = this.tilemap; // 後方互換性
+        } catch (error) {
+            console.error('[MapManager] タイルマップ作成エラー:', error);
+            throw error;
+        }
         
-        // 詳細なログを追加
-        console.log('[MapManager] === タイルマップ作成直後の詳細調査 ===');
-        console.log('Raw tilemap:', this.tilemap);
-        console.log('Raw layers:', this.tilemap.layers);
-        console.log('Layer details:', this.tilemap.layers.map(l => ({
-            name: l.name,
-            type: l.type,
-            id: l.id,
-            visible: l.visible,
-            objects: l.objects ? l.objects.length : 'N/A'
-        })));
-        console.log('Tilemap properties:', {
-            width: this.tilemap.width,
-            height: this.tilemap.height,
-            tileWidth: this.tilemap.tileWidth,
-            tileHeight: this.tilemap.tileHeight,
-            widthInPixels: this.tilemap.widthInPixels,
-            heightInPixels: this.tilemap.heightInPixels
-        });
-        console.log('[MapManager] === 詳細調査完了 ===');
-        
-        console.log('[MapManager] タイルマップ作成完了:', this.tilemap);
-        console.log(`[MapManager] タイルマップのレイヤー数: ${this.tilemap.layers.length}`);
-        console.log('[MapManager] タイルマップのレイヤー:', this.tilemap.layers);
-        
-        // 各レイヤーの詳細情報を出力
-        this.tilemap.layers.forEach((layer, index) => {
-            console.log(`[MapManager] レイヤー${index}:`, {
-                name: layer.name,
-                type: layer.type,
-                id: layer.id,
-                visible: layer.visible
+        // タイルセットを追加
+        if (this.tilemap.tilesets && this.tilemap.tilesets.length > 0) {
+            console.log(`[MapManager] タイルセット処理開始 - 数: ${this.tilemap.tilesets.length}`);
+            
+            this.tilemap.tilesets.forEach((tiledTileset) => {
+                try {
+                    // テクスチャキーを検索
+                    const availableTextures = Object.keys(this.scene.textures.list);
+                    let textureKey = null;
+                    
+                    // 完全一致を試行
+                    if (availableTextures.includes(tiledTileset.name)) {
+                        textureKey = tiledTileset.name;
+                    } else {
+                        // 部分一致を試行
+                        const partialMatch = availableTextures.find(texture => 
+                            texture.includes(tiledTileset.name) || 
+                            tiledTileset.name.includes(texture)
+                        );
+                        textureKey = partialMatch || null;
+                    }
+                    
+                    if (textureKey) {
+                        const tileset = this.tilemap.addTilesetImage(tiledTileset.name, textureKey);
+                        if (tileset) {
+                            console.log(`[MapManager] ✅ タイルセット追加成功: '${tiledTileset.name}'`);
+                        } else {
+                            console.warn(`[MapManager] ❌ タイルセット追加失敗: '${tiledTileset.name}'`);
+                        }
+                    } else {
+                        console.warn(`[MapManager] ⚠️ テクスチャキー未発見: '${tiledTileset.name}'`);
+                    }
+                } catch (error) {
+                    console.error(`[MapManager] ❌ タイルセット '${tiledTileset.name}' エラー:`, error);
+                }
             });
-        });
+        }
+        console.log('[MapManager] タイルセット追加完了');
         
-        // タイルセットを追加（TMJのtileset名と、ロード済みテクスチャキーを正しく関連付け）
-        const tmjTilesetName = (this.tilemap.tilesets && this.tilemap.tilesets[0] && this.tilemap.tilesets[0].name) || tilesetKey;
-        console.log('[MapManager] tileset link: tmjName=', tmjTilesetName, ' textureKey=', tilesetKey);
-        const tileset = this.tilemap.addTilesetImage(tmjTilesetName, tilesetKey);
-        console.log('[MapManager] タイルセット追加完了:', tileset);
+        // レイヤー作成（createLegacyMapと同じ方法で動作するように修正）
+        console.log('[MapManager] レイヤー作成開始');
+        console.log('[MapManager] this.tilemap.layers:', this.tilemap.layers);
         
-        // レイヤーを作成（実際のファイルのレイヤー名を使用）
-        this.mapLayer = this.tilemap.createLayer('タイルレイヤー1', tileset);
-        this.layers = [this.mapLayer]; // 後方互換性
-        
-        console.log('[MapManager] マップレイヤー作成完了:', this.mapLayer);
+        // createLegacyMapと同じ方法でレイヤーを作成
+        if (this.tilemap.layers && this.tilemap.layers.length > 0) {
+            console.log(`[MapManager] Tiledマップ内のレイヤー数: ${this.tilemap.layers.length}`);
+            
+            this.layers = [];
+            
+            // 各レイヤーを個別に作成（createLegacyMapと同じ方法）
+            this.tilemap.layers.forEach((layerData, index) => {
+                try {
+                    console.log(`[MapManager] レイヤー${index + 1}作成開始: ${layerData.name}`);
+                    
+                    // createLegacyMapと同じ方法でレイヤーを作成
+                    const layer = this.tilemap.createLayer(layerData.name, this.tilemap.tilesets, 0, 0);
+                    
+                    if (layer) {
+                        console.log(`[MapManager] ✅ レイヤー${index + 1}作成成功: ${layerData.name}`);
+                        this.layers.push(layer);
+                        
+                        // 最初のレイヤーをメインレイヤーとして設定
+                        if (index === 0) {
+                            this.mapLayer = layer;
+                            console.log(`[MapManager] メインレイヤー設定: ${layerData.name}`);
+                        }
+                    } else {
+                        console.warn(`[MapManager] ❌ レイヤー${index + 1}作成失敗: ${layerData.name}`);
+                    }
+                } catch (error) {
+                    console.error(`[MapManager] ❌ レイヤー${index + 1}作成エラー: ${layerData.name}`, error);
+                }
+            });
+            
+            console.log(`[MapManager] レイヤー作成完了 - 作成数: ${this.layers.length}`);
+            
+            if (this.layers.length === 0) {
+                console.error('[MapManager] レイヤーが作成されていません');
+                return this.tilemap;
+            }
+        } else {
+            console.error('[MapManager] Tiledマップにレイヤーが定義されていません');
+            return this.tilemap;
+        }
         
         // マップサイズを取得
         this.mapWidth = this.tilemap.widthInPixels;
@@ -98,25 +162,236 @@ export class MapManager {
         this.extractAreaData(objectLayerName);
         console.log('[MapManager] オブジェクトレイヤー処理完了');
         
-
+        console.log('[MapManager] マップ作成完了 - サイズ:', this.mapWidth, 'x', this.mapHeight);
+        console.log('[MapManager] createNewMap 正常終了');
         
-        return this.tilemap;
+        // レイヤーの可視性と深度を明示的に設定
+        if (this.mapLayer) {
+            this.mapLayer.setVisible(true);
+            this.mapLayer.setDepth(0); // 背景レイヤーとして最背面に配置
+            console.log('[MapManager] レイヤー設定完了 - visible:', this.mapLayer.visible, 'depth:', this.mapLayer.depth);
+        }
+        
+        console.log('[MapManager] マップレイヤー作成完了:', this.mapLayer);
+        
+        // レイヤーの詳細情報を出力
+        if (this.mapLayer) {
+            console.log('[MapManager] レイヤー詳細:', {
+                visible: this.mapLayer.visible,
+                depth: this.mapLayer.depth,
+                alpha: this.mapLayer.alpha,
+                x: this.mapLayer.x,
+                y: this.mapLayer.y,
+                scaleX: this.mapLayer.scaleX,
+                scaleY: this.mapLayer.scaleY,
+                width: this.mapLayer.width,
+                height: this.mapLayer.height
+            });
+        }
+        
+
     }
 
     createLegacyMap() {
         // 旧バージョンのcreateMap()（引数なし）
-        this.map = this.scene.make.tilemap({ key: 'map' });
+        // 現在のマップキーを使用（ハードコーディングを削除）
+        const mapKey = this.currentMapKey || 'map';
+        console.log('[MapManager] createLegacyMap: マップキー =', mapKey);
+        
+        this.map = this.scene.make.tilemap({ key: mapKey });
         this.tilemap = this.map; // 新しいプロパティにも設定
 
         try {
-            // タイルセット作成
-            const availableTilesets = this.createTilesets();
-            
-            // レイヤー作成
-            this.createLayers(availableTilesets);
-            
-            // オブジェクト作成
-            this.placeObjects();
+            // 竹田高校の場合は新しいタイルセット処理を使用
+            if (mapKey && mapKey.includes('taketa_highschool')) {
+                console.log('[MapManager] 竹田高校用のタイルセット処理を使用');
+                
+                // 新しいタイルセット処理（createNewMapと同じ方法）
+                console.log('[MapManager] タイルセット情報:', this.tilemap.tilesets);
+                if (this.tilemap.tilesets && this.tilemap.tilesets.length > 0) {
+                    console.log(`[MapManager] タイルセット処理開始 - 数: ${this.tilemap.tilesets.length}`);
+                    
+                    let successCount = 0;
+                    let failCount = 0;
+                    
+                    this.tilemap.tilesets.forEach((tiledTileset) => {
+                        try {
+                            console.log(`[MapManager] タイルセット処理中: ${tiledTileset.name}`);
+                            
+                            // テクスチャキーを検索（より柔軟な検索）
+                            const availableTextures = Object.keys(this.scene.textures.list);
+                            let textureKey = null;
+                            
+                            // 特殊文字を含むファイル名の処理
+                            const cleanTilesetName = tiledTileset.name.replace(/[!@#$%^&*()]/g, '');
+                            console.log(`[MapManager] 元の名前: ${tiledTileset.name}, クリーン名: ${cleanTilesetName}`);
+                            
+                            // 完全一致を試行
+                            if (availableTextures.includes(tiledTileset.name)) {
+                                textureKey = tiledTileset.name;
+                                console.log(`[MapManager] 完全一致: ${tiledTileset.name}`);
+                            } else if (availableTextures.includes(cleanTilesetName)) {
+                                textureKey = cleanTilesetName;
+                                console.log(`[MapManager] クリーン名一致: ${tiledTileset.name} -> ${cleanTilesetName}`);
+                            } else {
+                                // 部分一致を試行（より柔軟に）
+                                const partialMatch = availableTextures.find(texture => {
+                                    const tilesetName = tiledTileset.name.toLowerCase();
+                                    const cleanTilesetNameLower = cleanTilesetName.toLowerCase();
+                                    const textureName = texture.toLowerCase();
+                                    
+                                    return textureName.includes(tilesetName) || 
+                                           textureName.includes(cleanTilesetNameLower) ||
+                                           tilesetName.includes(textureName) ||
+                                           cleanTilesetNameLower.includes(textureName) ||
+                                           textureName.includes(tilesetName.replace('_', '')) ||
+                                           cleanTilesetNameLower.includes(textureName.replace('_', ''));
+                                });
+                                textureKey = partialMatch || null;
+                                
+                                if (partialMatch) {
+                                    console.log(`[MapManager] 部分一致: ${tiledTileset.name} -> ${partialMatch}`);
+                                }
+                            }
+                            
+                            if (textureKey) {
+                                const tileset = this.tilemap.addTilesetImage(tiledTileset.name, textureKey);
+                                if (tileset) {
+                                    console.log(`[MapManager] ✅ タイルセット追加成功: '${tiledTileset.name}'`);
+                                    successCount++;
+                                } else {
+                                    console.warn(`[MapManager] ❌ タイルセット追加失敗: '${tiledTileset.name}'`);
+                                    failCount++;
+                                }
+                            } else {
+                                console.warn(`[MapManager] ⚠️ テクスチャキー未発見: '${tiledTileset.name}'`);
+                                console.log('[MapManager] 利用可能なテクスチャ:', availableTextures.filter(t => t.includes('pika')));
+                                failCount++;
+                            }
+                        } catch (error) {
+                            console.error(`[MapManager] ❌ タイルセット '${tiledTileset.name}' エラー:`, error);
+                            failCount++;
+                        }
+                    });
+                    
+                    console.log(`[MapManager] タイルセット処理完了 - 成功: ${successCount}, 失敗: ${failCount}`);
+                }
+                
+                // レイヤー作成（createNewMapと同じ方法）
+                if (this.tilemap.layers && this.tilemap.layers.length > 0) {
+                    console.log(`[MapManager] Tiledマップ内のレイヤー数: ${this.tilemap.layers.length}`);
+                    
+                    // タイルセットの初期化を待つ
+                    console.log('[MapManager] タイルセット初期化完了後の状態:', this.tilemap.tilesets);
+                    
+                    this.layers = [];
+                    
+                    this.tilemap.layers.forEach((layerData, index) => {
+                        try {
+                            console.log(`[MapManager] レイヤー${index + 1}作成開始: ${layerData.name}`);
+                            
+                            // 正しく初期化されたタイルセットの配列を取得
+                            // this.tilemap.tilesetsは[initialize]状態なので、実際のタイルセットオブジェクトを取得
+                            const actualTilesets = [];
+                            
+                            // 各タイルセット名に対応する実際のタイルセットオブジェクトを取得
+                            this.tilemap.tilesets.forEach((tiledTileset) => {
+                                if (tiledTileset && tiledTileset.name) {
+                                    // テクスチャキーを検索
+                                    const availableTextures = Object.keys(this.scene.textures.list);
+                                    const textureKey = availableTextures.find(texture => 
+                                        texture.includes(tiledTileset.name.replace(/[!@#$%^&*()]/g, ''))
+                                    );
+                                    
+                                    if (textureKey) {
+                                        // 実際のタイルセットオブジェクトを作成
+                                        const tileset = this.tilemap.addTilesetImage(tiledTileset.name, textureKey);
+                                        if (tileset) {
+                                            actualTilesets.push(tileset);
+                                            console.log(`[MapManager] レイヤー${index + 1}用タイルセット追加: ${tiledTileset.name}`);
+                                        }
+                                    }
+                                }
+                            });
+                            
+                            console.log(`[MapManager] レイヤー${index + 1}用実際のタイルセット数:`, actualTilesets.length);
+                            
+                            if (actualTilesets.length === 0) {
+                                console.warn(`[MapManager] ⚠️ レイヤー${index + 1}用の実際のタイルセットがありません: ${layerData.name}`);
+                            }
+                            
+                            const layer = this.tilemap.createLayer(layerData.name, actualTilesets, 0, 0);
+                            
+                            if (layer) {
+                                console.log(`[MapManager] ✅ レイヤー${index + 1}作成成功: ${layerData.name}`);
+                                
+                                // レイヤーの表示設定を明示的に追加
+                                // レイヤー名に基づいて深度を設定
+                                let layerDepth;
+                                
+                                if (layerData.name.includes('床')) {
+                                    layerDepth = 0;   // 床は最奥
+                                } else {
+                                    layerDepth = 100 + index; // 床以外は主人公より上、タッチコントロールより下
+                                }
+                                
+                                layer.setDepth(layerDepth);
+                                layer.setVisible(true); // 可視性を設定
+                                
+                                console.log(`[MapManager] レイヤー${index + 1}の深度設定: ${layerDepth} (${layerData.name})`);
+                                
+                                this.layers.push(layer);
+                                
+                                if (index === 0) {
+                                    this.mapLayer = layer;
+                                    console.log(`[MapManager] メインレイヤー設定: ${layerData.name}`);
+                                }
+                            } else {
+                                console.warn(`[MapManager] ❌ レイヤー${index + 1}作成失敗: ${layerData.name}`);
+                            }
+                        } catch (error) {
+                            console.error(`[MapManager] ❌ レイヤー${index + 1}作成エラー: ${layerData.name}`, error);
+                        }
+                    });
+                    
+                    // マップサイズを取得（レイヤー作成後に再試行）
+                    if (this.mapLayer) {
+                        // 複数の方法でマップサイズを取得
+                        this.mapWidth = this.mapLayer.width || 
+                                      this.tilemap.widthInPixels || 
+                                      (this.tilemap.width * this.tilemap.tileWidth) || 0;
+                        this.mapHeight = this.mapLayer.height || 
+                                       this.tilemap.heightInPixels || 
+                                       (this.tilemap.height * this.tilemap.tileHeight) || 0;
+                        
+                        console.log(`[MapManager] マップサイズ取得: ${this.mapWidth} x ${this.mapHeight}`);
+                        console.log(`[MapManager] タイルマップ情報: width=${this.tilemap.width}, height=${this.tilemap.height}, tileWidth=${this.tilemap.tileWidth}, tileHeight=${this.tilemap.tileHeight}`);
+                    }
+                    
+                    // オブジェクトレイヤーの処理を追加
+                    this.placeObjects();
+                    
+                    // 移動可能エリアの設定を追加
+                    if (this.mapLayer && this.scene.collisionManager) {
+                        // マップ全体を移動可能エリアとして設定
+                        this.scene.collisionManager.addObjectToCollision(this.mapLayer, {
+                            type: 'walkable',
+                            width: this.mapWidth,
+                            height: this.mapHeight,
+                            name: 'map_area'
+                        });
+                        console.log('[MapManager] 移動可能エリアを設定しました');
+                    } else {
+                        console.warn('[MapManager] collisionManagerが利用できません - 移動可能エリアの設定をスキップ');
+                    }
+                }
+            } else {
+                // 従来のタイルセット処理（stage1, stage2, stage3用）
+                console.log('[MapManager] 従来のタイルセット処理を使用');
+                const availableTilesets = this.createTilesets();
+                this.createLayers(availableTilesets);
+                this.placeObjects();
+            }
             
         } catch (error) {
             console.error('Error creating tilesets/layers:', error);
@@ -196,7 +471,11 @@ export class MapManager {
             'japan': 'japan',
             'miemachistage': 'miemachi',
             'taketastage': 'taketa',
-            'japanstage': 'japan'
+            'japanstage': 'japan',
+            // 竹田高校マップの追加（ハードコーディングを削除）
+            'taketa_highschool_1': 'オブジェクトレイヤー',
+            'taketa_highschool_2': 'オブジェクトレイヤー',
+            'taketa_highschool_3': 'オブジェクトレイヤー'
         };
         
         console.log(`[MapManager] getObjectLayerName: mapKey='${mapKey}', layerName='${layerNames[mapKey]}'`);
@@ -294,8 +573,11 @@ export class MapManager {
         this.scaleMapToScreen();
         
         // エリアデータを再計算（現在のマップキーに基づいて適切なレイヤー名を使用）
-        const objectLayerName = this.getObjectLayerName(this.scene.mapConfig?.mapKey || 'taketa');
-        this.extractAreaData(objectLayerName);
+        const currentMapKey = this.scene.mapConfig?.mapKey || this.currentMapKey;
+        if (currentMapKey) {
+            const objectLayerName = this.getObjectLayerName(currentMapKey);
+            this.extractAreaData(objectLayerName);
+        }
     }
 
     createFallbackImage(key) {
@@ -462,6 +744,19 @@ export class MapManager {
                     sprite.setOrigin(0, 0);
                     sprite.setScale(1);
                     
+                    // オブジェクトの深度を適切に設定
+                    let objectDepth;
+                    if (obj.type === 'npc') {
+                        objectDepth = 200; // NPCは主人公より手前
+                    } else if (obj.type === 'wall' || obj.type === '建物') {
+                        objectDepth = 150; // 壁・建物は主人公より手前
+                    } else {
+                        objectDepth = 75; // その他は中間
+                    }
+                    
+                    sprite.setDepth(objectDepth);
+                    console.log(`[MapManager] オブジェクト深度設定: ${imageKey} = ${objectDepth}`);
+                    
                     if (obj.type === 'npc') {
                         this.npcSprites.set(obj.name, sprite);
                         // NPCは必ずCollisionManagerに追加
@@ -492,6 +787,7 @@ export class MapManager {
                     }
                 } else {
                     console.warn(`Image not found: ${imageKey} - スプライト作成をスキップします`);
+                    console.log('[MapManager] 利用可能なテクスチャ:', Object.keys(this.scene.textures.list).filter(t => t.includes('pika')));
                 }
             });
         });

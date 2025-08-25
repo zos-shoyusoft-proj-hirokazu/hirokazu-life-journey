@@ -3,6 +3,7 @@ import { Stage1 } from './scenes/stage1.js';
 import { Stage2 } from './scenes/stage2.js';
 import { Stage3 } from './scenes/stage3.js';
 import { createMapStage } from './scenes/MapSelectionStage.js';
+import { createStageScene } from './scenes/StageScene.js';
 
 // グローバルなゲームインスタンス（1つだけ）
 let gameInstance = null;
@@ -101,6 +102,7 @@ export function startPhaserGame(stageNumber) {
         case 'bunngo_mie_city': sceneClass = createMapStage('miemachistage', 'MiemachiStage'); sceneKey = 'MiemachiStage'; break;
         case 'taketa_city': sceneClass = createMapStage('taketastage', 'TaketastageStage'); sceneKey = 'TaketastageStage'; break;
         case 'zenkoku': sceneClass = createMapStage('japanstage', 'JapanStage'); sceneKey = 'JapanStage'; break;
+        case 'taketa_highschool': sceneClass = createStageScene('taketa_highschool'); sceneKey = 'taketa_highschool'; break;
         
         default: 
             sceneClass = Stage1; 
