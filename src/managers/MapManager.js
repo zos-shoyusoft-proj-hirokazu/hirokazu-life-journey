@@ -374,15 +374,37 @@ export class MapManager {
                         console.log(`[MapManager] タイルマップ情報: width=${this.tilemap.width}, height=${this.tilemap.height}, tileWidth=${this.tilemap.tileWidth}, tileHeight=${this.tilemap.tileHeight}`);
                     }
                     
-                    // オブジェクトレイヤー名を取得
-                    const objectLayerName = this.getObjectLayerName(mapKey);
-                    console.log(`[MapManager] オブジェクトレイヤー名: ${objectLayerName}`);
+                    // 利用可能なすべてのオブジェクトレイヤーを動的に検出して処理
+                    console.log('[MapManager] デバッグ: tilemap存在確認:', !!this.tilemap);
+                    console.log('[MapManager] デバッグ: layers存在確認:', !!this.tilemap?.layers);
                     
-                    // オブジェクトレイヤーを処理
-                    this.processObjectLayer(objectLayerName);
+                    // 利用可能なすべてのオブジェクトレイヤーを動的に検出して処理
+                    if (this.tilemap) {
+                        // オブジェクトレイヤー名を直接指定して処理
+                        const objectLayerNames = ['オブジェクトレイヤー1', 'オブジェクトレイヤー2'];
+                        
+                        objectLayerNames.forEach(layerName => {
+                            const objectLayer = this.tilemap.getObjectLayer(layerName);
+                            if (objectLayer) {
+                                console.log(`[MapManager] オブジェクトレイヤー処理中: ${layerName}`);
+                                this.processObjectLayer(layerName);
+                            } else {
+                                console.log(`[MapManager] オブジェクトレイヤーが見つかりません: ${layerName}`);
+                            }
+                        });
+                        
+                        console.log('[MapManager] オブジェクトレイヤー処理完了');
+                    } else {
+                        console.warn('[MapManager] tilemapが存在しません');
+                    }
                     
-                    // エリアデータを抽出
-                    this.extractAreaData(objectLayerName);
+                    // エリアデータを抽出（最初のオブジェクトレイヤーを使用）
+                    if (this.tilemap && this.tilemap.layers) {
+                        const objectLayers = this.tilemap.layers.filter(layer => layer.type === 'objectgroup');
+                        if (objectLayers.length > 0) {
+                            this.extractAreaData(objectLayers[0].name);
+                        }
+                    }
                 }
                 
             } else {
@@ -400,9 +422,31 @@ export class MapManager {
         }
     }
     
+    // 利用可能なすべてのオブジェクトレイヤーを動的に処理
+    processAllAvailableObjectLayers() {
+        if (!this.tilemap || !this.tilemap.layers) {
+            console.warn('[MapManager] tilemapまたはlayersが存在しません');
+            return;
+        }
+        
+        // オブジェクトレイヤーを検出
+        const objectLayers = this.tilemap.layers.filter(layer => layer.type === 'objectgroup');
+        console.log(`[MapManager] 検出されたオブジェクトレイヤー数: ${objectLayers.length}`);
+        
+        // 各オブジェクトレイヤーを処理
+        objectLayers.forEach((layer, index) => {
+            console.log(`[MapManager] オブジェクトレイヤー${index + 1}を処理中: ${layer.name}`);
+            this.processObjectLayer(layer.name);
+        });
+        
+        console.log(`[MapManager] 全オブジェクトレイヤーの処理完了: ${objectLayers.length}個`);
+    }
+
     // オブジェクトレイヤーを処理
     processObjectLayer(layerName) {
         try {
+            console.log(`[MapManager] processObjectLayer開始: ${layerName}`);
+            
             if (!this.tilemap) {
                 console.warn('[MapManager] tilemapが存在しません');
                 return;
@@ -416,6 +460,7 @@ export class MapManager {
             
             console.log(`[MapManager] オブジェクトレイヤー '${layerName}' を処理中...`);
             console.log(`[MapManager] オブジェクト数: ${objectLayer.objects.length}`);
+            console.log(`[MapManager] 既存のobjectGroup: ${this.objectGroup ? this.objectGroup.children.entries.length : 'なし'}個のオブジェクト`);
             
             // マップの詳細情報を確認
             console.log('[MapManager] マップ詳細情報:');
@@ -434,8 +479,10 @@ export class MapManager {
                 });
             }
             
-            // 当たり判定用のグループを作成
-            this.objectGroup = this.scene.physics.add.staticGroup();
+            // 当たり判定用のグループを作成（既存のものがある場合は使用）
+            if (!this.objectGroup) {
+                this.objectGroup = this.scene.physics.add.staticGroup();
+            }
             
             // マップのスケールとオフセットを取得
             const mapScale = this.tilemap.scale || 1;
@@ -490,7 +537,12 @@ export class MapManager {
                 }
                 
                 // テスト用：黒い矩形スプライトを作成（中央座標を使用）
-                const sprite = this.scene.add.rectangle(centerX, centerY, width, height, 0x000000, 0.5);
+                // moveオブジェクトは特別な色で表示
+                let color = 0x000000; // デフォルトは黒
+                if (type === 'move') {
+                    color = 0x0000FF; // moveオブジェクトは青
+                }
+                const sprite = this.scene.add.rectangle(centerX, centerY, width, height, color, 0.5);
                 
                 // 物理ボディを追加
                 this.scene.physics.add.existing(sprite, true);
@@ -498,19 +550,25 @@ export class MapManager {
                 // 当たり判定グループに追加
                 this.objectGroup.add(sprite);
                 
+                // オブジェクト名のテキストラベルを追加
+                const label = this.scene.add.text(centerX, centerY - height/2 - 10, `${name} (${type})`, {
+                    fontSize: '12px',
+                    fill: '#ffffff',
+                    backgroundColor: '#000000',
+                    padding: { x: 2, y: 1 }
+                });
+                label.setOrigin(0.5, 1);
+                label.setDepth(1000); // 最前面に表示
+                
+                // オブジェクトの情報を保存
+                sprite.setData('objectType', type);
+                sprite.setData('objectName', name);
+                sprite.setData('objectId', obj.id);
+                
                 // オブジェクトの情報を保存
                 sprite.setData('objectType', type);
                 sprite.setData('objectName', name);
                 sprite.setData('originalData', obj);
-                
-                // テスト用：オブジェクト名を表示（左上の座標に表示）
-                const text = this.scene.add.text(x, y - 20, `${name} (${type})`, {
-                    fontSize: '12px',
-                    fill: '#ffffff',
-                    backgroundColor: '#000000',
-                    padding: { x: 2, y: 2 }
-                });
-                text.setDepth(1000); // 最前面に表示
             });
             
             console.log(`[MapManager] オブジェクトレイヤー処理完了 - ${objectLayer.objects.length}個のオブジェクト`);
@@ -583,15 +641,25 @@ export class MapManager {
     }
 
     // マップキーに応じたオブジェクトレイヤー名を取得
-    getObjectLayerName(mapKey) {
+    getObjectLayerName() {
         // 竹田高校の場合は「オブジェクトレイヤー1」
-        if (mapKey && mapKey.includes('taketa_highschool')) {
+        if (this.currentMapKey && this.currentMapKey.includes('highschool')) {
             return 'オブジェクトレイヤー1';
         }
         
         // 竹田マップの場合は「taketa」
-        if (mapKey && mapKey.includes('taketa') && !mapKey.includes('highschool')) {
+        if (this.currentMapKey && this.currentMapKey.includes('taketa') && !this.currentMapKey.includes('highschool')) {
             return 'taketa';
+        }
+        
+        // 三重町マップの場合は「miemachi」
+        if (this.currentMapKey && this.currentMapKey.includes('miemachi')) {
+            return 'miemachi';
+        }
+        
+        // 全国マップの場合は「japan」
+        if (this.currentMapKey && this.currentMapKey.includes('japan')) {
+            return 'japan';
         }
         
         // デフォルト

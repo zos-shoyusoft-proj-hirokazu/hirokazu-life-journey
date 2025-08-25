@@ -45,6 +45,12 @@ export class CollisionManager {
                     this.startConversation(obj.name);
                 });
                 break;
+            case 'move':
+                this.collisionGroups.items.add(sprite);
+                // 移動オブジェクト共通設定
+                sprite.setData('moveId', obj.name);
+                sprite.setData('moveType', obj.type);
+                break;
             case 'item':
                 this.collisionGroups.items.add(sprite);
                 // アイテム共通設定
@@ -77,7 +83,32 @@ export class CollisionManager {
     }
 
     collectItem(player, item) {
-        item.destroy();
+        // moveオブジェクトの場合は移動処理
+        if (item.getData('moveType') === 'move') {
+            this.handleMoveObject(player, item);
+        } else {
+            // 通常のアイテム処理
+            item.destroy();
+        }
+    }
+
+    handleMoveObject(player, moveObject) {
+        const moveId = moveObject.getData('moveId');
+        console.log(`[CollisionManager] 移動オブジェクトに触れました: ${moveId}`);
+        
+        // 移動先のフロアを決定
+        let targetFloor = 1;
+        if (moveId === 'move') {
+            // 現在のフロアから次のフロアへ
+            if (this.scene.currentFloor === 1) {
+                targetFloor = 2;
+            } else if (this.scene.currentFloor === 2) {
+                targetFloor = 1;
+            }
+        }
+        
+        // フロア移動を実行
+        this.scene.changeFloor(targetFloor);
     }
 
     startConversation(npcId) {

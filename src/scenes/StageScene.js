@@ -40,10 +40,13 @@ export class StageScene extends Phaser.Scene {
             }
         });
         
-        // タイルセット画像を動的に読み込み（1階のものを使用）
-        const firstFloor = this.stageConfig.floors[0];
-        firstFloor.tilesets.forEach(tilesetKey => {
-            this.load.image(tilesetKey, `assets/maps/${folderName}/${tilesetKey}.png`);
+        // タイルセット画像を動的に読み込み（実装済みフロアのものを使用）
+        this.stageConfig.floors.forEach(floor => {
+            if (floor.implemented) {
+                floor.tilesets.forEach(tilesetKey => {
+                    this.load.image(tilesetKey, `assets/maps/${folderName}/${tilesetKey}.png`);
+                });
+            }
         });
         
         // BGMを動的に読み込み
@@ -70,15 +73,12 @@ export class StageScene extends Phaser.Scene {
             // 基本的なマップ表示
             this.mapManager = new MapManager(this);
             
-            // フロア機能は後で実装（基本的なマップ表示のみ）
-            // this.createFloorMap(1);
-            
             // 基本的なマップ表示を直接実行
             console.log('[StageScene] 基本的なマップ表示開始');
             
             // 設定ファイルから動的にマップキーを取得
             const firstFloor = this.stageConfig.floors[0];
-            console.log('[StageScene] 取得したフロア設定:', firstFloor);
+            console.log('[StageScene] 1階の設定:', firstFloor);
             this.mapManager.currentMapKey = firstFloor.mapKey;
             console.log('[StageScene] マップキー設定:', this.mapManager.currentMapKey);
             console.log('[StageScene] 期待されるマップキー: taketa_highschool_1');
@@ -255,17 +255,12 @@ export class StageScene extends Phaser.Scene {
         console.log('[StageScene] shutdown() メソッド実行完了');
     }
 
-    createFloorMap(floorNumber) {
-        console.log(`[StageScene] createFloorMap 開始: フロア${floorNumber}`);
+    changeFloor(floorNumber) {
+        if (floorNumber === this.currentFloor) return;
+        
+        console.log(`[StageScene] フロア変更開始: ${this.currentFloor} → ${floorNumber}`);
         
         try {
-            // 現在のマップを削除
-            if (this.mapManager.map) {
-                console.log('[StageScene] 既存マップを削除中...');
-                this.mapManager.destroy();
-                console.log('[StageScene] 既存マップ削除完了');
-            }
-            
             // 設定からフロア情報を取得
             const floorConfig = this.stageConfig.floors.find(f => f.number === floorNumber);
             if (!floorConfig || !floorConfig.implemented) {
@@ -273,21 +268,20 @@ export class StageScene extends Phaser.Scene {
                 return;
             }
             
-            console.log('[StageScene] フロア設定取得成功:', floorConfig);
+            // 現在のマップを削除
+            if (this.mapManager.map) {
+                console.log('[StageScene] 既存マップを削除中...');
+                this.mapManager.destroy();
+                console.log('[StageScene] 既存マップ削除完了');
+            }
             
-            // MapManagerに現在のマップキーを設定
+            // 新しいフロアのマップを作成
+            this.currentFloor = floorNumber;
             this.mapManager.currentMapKey = floorConfig.mapKey;
-            console.log('[StageScene] MapManager.currentMapKey設定完了:', this.mapManager.currentMapKey);
+            console.log(`[StageScene] 新しいマップキー設定: ${this.mapManager.currentMapKey}`);
             
-            // マップを作成
-            console.log('[StageScene] MapManager.createMap呼び出し開始');
-            const result = this.mapManager.createMap();
-            console.log('[StageScene] MapManager.createMap呼び出し完了, result:', result);
-            
-            // マップを画面に合わせてスケール調整
-            console.log('[StageScene] スケール調整開始');
-            this.mapManager.scaleMapToScreen();
-            console.log('[StageScene] スケール調整完了');
+            this.mapManager.createMap();
+            console.log(`[StageScene] フロア${floorNumber}のマップ作成完了`);
             
             // UIタイトルを更新
             if (this.uiManager) {
@@ -295,14 +289,17 @@ export class StageScene extends Phaser.Scene {
                 console.log('[StageScene] UIタイトル更新完了');
             }
             
-            console.log('[StageScene] createFloorMap 完了');
+            // SE再生
+            if (this.stageConfig.se && this.stageConfig.se.se_floor_change) {
+                this.audioManager.playSe('se_floor_change');
+            }
+            
+            console.log('[StageScene] フロア変更完了: ' + floorNumber);
         } catch (error) {
-            console.error('[StageScene] createFloorMap エラー:', error);
+            console.error('[StageScene] フロア変更エラー:', error);
         }
     }
 
-    // フロア関連の機能は後で実装
-    /*
     createFloorButtons() {
         // 設定からフロア情報を動的に取得してボタンを作成
         const buttonY = 50;
@@ -330,25 +327,7 @@ export class StageScene extends Phaser.Scene {
         this.updateFloorButtonHighlight();
     }
 
-    changeFloor(floorNumber) {
-        if (floorNumber === this.currentFloor) return;
-        
-        // 設定からフロア情報を取得
-        const floorConfig = this.stageConfig.floors.find(f => f.number === floorNumber);
-        if (!floorConfig || !floorConfig.implemented) {
-            console.log('このフロアはまだ実装されていません');
-            return;
-        }
-        
-        this.currentFloor = floorNumber;
-        this.createFloorMap(floorNumber);
-        this.updateFloorButtonHighlight();
-        
-        // SE再生
-        if (this.stageConfig.se && this.stageConfig.se.se_floor_change) {
-            this.audioManager.playSe('se_floor_change');
-        }
-    }
+
 
     updateFloorButtonHighlight() {
         this.floorButtons.forEach((button, index) => {
@@ -360,7 +339,6 @@ export class StageScene extends Phaser.Scene {
             }
         });
     }
-    */
 
     setupTouchEvents() {
         // タッチイベントを設定
