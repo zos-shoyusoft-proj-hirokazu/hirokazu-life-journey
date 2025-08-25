@@ -111,7 +111,30 @@ export class CollisionManager {
     // 統合メソッド
     setupAllCollisions(player, mapManager) {
         this.setupTileCollisions(player, mapManager);
+        this.setupObjectCollisions(player, mapManager);
         this.setupPlayerCollisions(player);
+    }
+    
+    // オブジェクトレイヤーとの当たり判定
+    setupObjectCollisions(player, mapManager) {
+        if (mapManager && mapManager.objectGroup) {
+            // 壁との衝突
+            this.scene.physics.add.collider(player, mapManager.objectGroup);
+            
+            // オブジェクトグループ内の各オブジェクトを処理
+            mapManager.objectGroup.children.entries.forEach(sprite => {
+                const objectType = sprite.getData('objectType');
+                const objectName = sprite.getData('objectName');
+                
+                if (objectType === 'npc') {
+                    // NPCとの重複（会話）
+                    this.scene.physics.add.overlap(player, sprite, 
+                        () => this.startConversation(objectName), null, this.scene);
+                }
+            });
+            
+            console.log(`[CollisionManager] オブジェクトレイヤー当たり判定設定完了: ${mapManager.objectGroup.children.entries.length}個のオブジェクト`);
+        }
     }
 
     // タイルマップとの当たり判定

@@ -86,6 +86,11 @@ export class StageScene extends Phaser.Scene {
             this.mapManager.createMap();
             console.log('[StageScene] 基本的なマップ表示完了');
             
+            // 当たり判定マネージャーを初期化
+            this.collisionManager = new CollisionManager(this);
+            this.collisionManager.setupCollisionGroups();
+            console.log('[StageScene] CollisionManager初期化完了');
+            
             // プレイヤー作成
             this.playerController = new PlayerController(this);
             this.playerController.createPlayer(100, 100);
@@ -147,11 +152,20 @@ export class StageScene extends Phaser.Scene {
             }
             
             // 衝突判定設定
-            this.collisionManager = new CollisionManager(this);
-            this.collisionManager.setupCollisionGroups();
+            // this.collisionManager = new CollisionManager(this); // この行は上で初期化済みなので削除
+            // this.collisionManager.setupCollisionGroups(); // この行は上で初期化済みなので削除
             
             // タッチイベントを設定
             this.setupTouchEvents();
+            
+            // 当たり判定の設定
+            this.collisionManager.setupAllCollisions(this.playerController.player, this.mapManager);
+            console.log('[StageScene] 当たり判定設定完了');
+            
+            // カメラ設定
+            this.cameraManager = new CameraManager(this);
+            this.cameraManager.setupCamera(this, this.mapManager.map, this.playerController.player);
+            console.log('[StageScene] カメラ設定完了');
             
             console.log('[StageScene] === create() 完了 ===');
             
