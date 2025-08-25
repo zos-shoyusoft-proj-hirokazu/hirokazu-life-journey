@@ -124,18 +124,16 @@ export class StageScene extends Phaser.Scene {
             
             // 竹田マップに戻るための関数を設定
             window.returnToTaketaMap = () => {
-                // 竹田マップに戻る（gameController.jsを使用）
-                if (window.startPhaserGame) {
-                    window.startPhaserGame('taketa');
+                // 竹田マップに戻る（設定から動的に取得）
+                if (window.startPhaserGame && this.stageConfig && this.stageConfig.mapId) {
+                    window.startPhaserGame(this.stageConfig.mapId);
                 } else {
-                    console.error('startPhaserGame not found');
+                    console.error('startPhaserGame or mapId not found');
                 }
             };
             
             // 設定からBGMを再生
             if (this.stageConfig.bgm && this.stageConfig.bgm.map) {
-                console.log('[StageScene] BGM再生開始:', this.stageConfig.bgm.map);
-                
                 // 前のBGMを確実に停止
                 this.audioManager.stopAll();
                 if (this.scene.sound) {
@@ -148,8 +146,7 @@ export class StageScene extends Phaser.Scene {
                 }
                 
                 // 新しいBGMを再生
-                const result = this.audioManager.playBgm('map');
-                console.log('[StageScene] BGM再生結果:', result);
+                this.audioManager.playBgm('map');
             } else {
                 console.warn('[StageScene] BGM設定が見つかりません');
             }

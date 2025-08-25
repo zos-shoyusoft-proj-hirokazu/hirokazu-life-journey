@@ -5,6 +5,7 @@ export const StageConfig = {
         stageKey: 'taketa_highschool',
         stageTitle: '竹田高校',
         folderName: 'taketa/taketa_highschool',
+        mapId: 'taketa',  // 竹田マップに戻るためのID
         bgm: {
             map: 'assets/audio/bgm/Pollyanna.mp3'
         },
