@@ -425,8 +425,8 @@
                  "type":"npc",
                  "visible":true,
                  "width":0,
-                 "x":794,
-                 "y":1036
+                 "x":827.333333333333,
+                 "y":1047.33333333333
                 }, 
                 {
                  "height":0,
@@ -437,8 +437,8 @@
                  "type":"npc",
                  "visible":true,
                  "width":0,
-                 "x":792,
-                 "y":1074
+                 "x":815.333333333333,
+                 "y":1098
                 }, 
                 {
                  "height":0,
@@ -473,8 +473,8 @@
                  "type":"npc",
                  "visible":true,
                  "width":0,
-                 "x":740,
-                 "y":1125
+                 "x":764.666666666667,
+                 "y":1147
                 }, 
                 {
                  "height":0,
@@ -511,6 +511,18 @@
                  "width":0,
                  "x":172,
                  "y":674
+                }, 
+                {
+                 "height":0,
+                 "id":31,
+                 "name":"yajirushi",
+                 "point":true,
+                 "rotation":0,
+                 "type":"yajirushi",
+                 "visible":true,
+                 "width":0,
+                 "x":763.333333333333,
+                 "y":983.333333333333
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -541,7 +553,7 @@
          "y":0
         }],
  "nextlayerid":13,
- "nextobjectid":31,
+ "nextobjectid":32,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",
