@@ -333,6 +333,48 @@ export class StageScene extends Phaser.Scene {
             this.touchControlManager.updatePosition(width, height);
         }
     }
+    
+    // BGM再生のヘルパーメソッド
+    playBGM() {
+        try {
+            // 前のBGMを確実に停止
+            this.audioManager.stopAll();
+            if (this.scene.sound) {
+                this.scene.sound.stopAll();
+            }
+            
+            // iOS対応：HTMLAudioの停止
+            if (this._htmlBgm) {
+                this._htmlBgm.pause();
+            }
+            
+            // 新しいBGMを再生
+            this.audioManager.playBgm('map');
+            console.log('[StageScene] BGM再生開始');
+        } catch (error) {
+            console.error('[StageScene] BGM再生エラー:', error);
+        }
+    }
+    
+    // 音声コンテキストの復旧を待つメソッド
+    waitForAudioContext() {
+        // ユーザーインタラクションを待つ
+        this.input.once('pointerdown', () => {
+            if (this.scene.sound && this.scene.sound.context) {
+                const ctx = this.scene.sound.context;
+                if (ctx.state === 'suspended') {
+                    ctx.resume().then(() => {
+                        console.log('[StageScene] 音声コンテキストが復旧しました');
+                        this.playBGM();
+                    }).catch(error => {
+                        console.error('[StageScene] 音声コンテキスト復旧エラー:', error);
+                    });
+                } else {
+                    this.playBGM();
+                }
+            }
+        });
+    }
 }
 
 // 設定ファイルベースでステージシーンを作成するヘルパー関数
