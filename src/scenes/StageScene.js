@@ -101,10 +101,12 @@ export class StageScene extends Phaser.Scene {
             this.mapManager.createMap();
             console.log('[StageScene] 基本的なマップ表示完了');
             
-            // プレイヤー作成
+            // プレイヤー作成（フロアごとの開始位置を使用）
             this.playerController = new PlayerController(this);
-            this.playerController.createPlayer(100, 100);
-            console.log('[StageScene] プレイヤー作成完了');
+            const playerStartX = targetFloor.playerStartX || 100;
+            const playerStartY = targetFloor.playerStartY || 100;
+            this.playerController.createPlayer(playerStartX, playerStartY);
+            console.log(`[StageScene] プレイヤー作成完了 - 位置: (${playerStartX}, ${playerStartY})`);
             
             // プレイヤーの位置とオブジェクトを確認
             const playerPos = this.playerController.getPosition();

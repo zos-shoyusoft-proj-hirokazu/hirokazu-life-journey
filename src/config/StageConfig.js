@@ -20,6 +20,8 @@ export const StageConfig = {
                 mapFileName: 'taketa_highschool_1.tmj',
                 title: '竹田高校 1階',
                 implemented: true,
+                playerStartX: 100,
+                playerStartY: 100,
                 tilesets: [
                     'pika_nos_tiles03_A2',
                     'pika_nos_tiles03_A3',
@@ -43,6 +45,8 @@ export const StageConfig = {
                 mapFileName: 'taketa_highschool_2.tmj',
                 title: '竹田高校 2階',
                 implemented: true,
+                playerStartX: 1650,
+                playerStartY: 800,
                 tilesets: [
                     'pika_nos_tiles03_A2',
                     'pika_nos_tiles03_A3',
@@ -66,6 +70,8 @@ export const StageConfig = {
                 mapFileName: 'taketa_highschool_3.tmj',
                 title: '竹田高校 3階',
                 implemented: true,
+                playerStartX: 1200,
+                playerStartY: 1400,
                 tilesets: [
                     'pika_nos_tiles03_A2',
                     'pika_nos_tiles03_A3',
