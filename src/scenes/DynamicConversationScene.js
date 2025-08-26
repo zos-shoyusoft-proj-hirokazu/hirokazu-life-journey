@@ -119,7 +119,7 @@ export class DynamicConversationScene extends Phaser.Scene {
             const sceneManager = this.scene.manager;
             if (sceneManager) {
                 // 現在アクティブなステージシーンの_suppressMapBgmフラグを設定
-                const stageScenes = ['MiemachiStage', 'TaketastageStage', 'JapanStage', 'Stage1Scene', 'Stage2Scene', 'Stage3Scene'];
+                const stageScenes = ['taketa_highschool', 'miemachi_highschool', 'japan_highschool', 'Stage1Scene', 'Stage2Scene', 'Stage3Scene'];
                 
                 for (const sceneKey of stageScenes) {
                     try {
@@ -137,26 +137,49 @@ export class DynamicConversationScene extends Phaser.Scene {
                             if (stage.audioManager) {
                                 console.log('[DynamicConversationScene]', sceneKey, 'の直接BGM停止開始');
                                 
-                                // AudioManagerのBGMを停止
+                                // AudioManagerのBGMを停止（より確実に）
                                 if (stage.audioManager.bgm) {
                                     console.log('[DynamicConversationScene]', sceneKey, 'のBGMオブジェクト停止');
-                                    stage.audioManager.bgm.stop();
+                                    try {
+                                        stage.audioManager.bgm.stop();
+                                        console.log('[DynamicConversationScene]', sceneKey, 'のBGMオブジェクト停止完了');
+                                    } catch (e) {
+                                        console.warn('[DynamicConversationScene]', sceneKey, 'のBGMオブジェクト停止エラー:', e);
+                                    }
+                                } else {
+                                    console.log('[DynamicConversationScene]', sceneKey, 'のBGMオブジェクトはnullです');
                                 }
                                 
                                 // stopBGMメソッドを実行
                                 if (typeof stage.audioManager.stopBgm === 'function') {
                                     console.log('[DynamicConversationScene]', sceneKey, 'のstopBgmメソッド実行');
-                                    stage.audioManager.stopBgm();
+                                    try {
+                                        stage.audioManager.stopBgm();
+                                        console.log('[DynamicConversationScene]', sceneKey, 'のstopBgmメソッド実行完了');
+                                    } catch (e) {
+                                        console.warn('[DynamicConversationScene]', sceneKey, 'のstopBgmメソッド実行エラー:', e);
+                                    }
+                                } else {
+                                    console.log('[DynamicConversationScene]', sceneKey, 'のstopBgmメソッドが存在しません');
                                 }
                                 
                                 // HTML5 BGMを停止（iOS用）
                                 if (stage._htmlBgm) {
                                     console.log('[DynamicConversationScene]', sceneKey, 'のHTML5 BGM停止');
-                                    stage._htmlBgm.pause();
-                                    stage._htmlBgm.currentTime = 0;
+                                    try {
+                                        stage._htmlBgm.pause();
+                                        stage._htmlBgm.currentTime = 0;
+                                        console.log('[DynamicConversationScene]', sceneKey, 'のHTML5 BGM停止完了');
+                                    } catch (e) {
+                                        console.warn('[DynamicConversationScene]', sceneKey, 'のHTML5 BGM停止エラー:', e);
+                                    }
+                                } else {
+                                    console.log('[DynamicConversationScene]', sceneKey, 'のHTML5 BGMは存在しません');
                                 }
                                 
                                 console.log('[DynamicConversationScene]', sceneKey, 'の直接BGM停止完了');
+                            } else {
+                                console.log('[DynamicConversationScene]', sceneKey, 'のaudioManagerが存在しません');
                             }
                             
                             // 3. シーンレベルのサウンド停止（削除済み）
@@ -241,6 +264,7 @@ export class DynamicConversationScene extends Phaser.Scene {
         
         // 元のシーンのキーを取得（areaTypeに基づいて決定）
         let originalSceneKey = 'MiemachiStage'; // デフォルト
+        let currentState = null; // 現在の状態を保存
         
         if (this.eventConfig && this.eventConfig.areaType) {
             switch (this.eventConfig.areaType) {
@@ -248,7 +272,28 @@ export class DynamicConversationScene extends Phaser.Scene {
                     originalSceneKey = 'MiemachiStage';
                     break;
                 case 'taketa':
-                    originalSceneKey = 'TaketastageStage';
+                    // エリア名で判定して適切なシーンに戻る
+                    if (this.eventConfig.areaName === 'taketa_high_school' || 
+                        this.eventConfig.areaName === 'classroom') {
+                        originalSceneKey = 'taketa_highschool'; // 竹田高校内
+                        
+                        // 竹田高校内の場合、現在の詳細な状態を取得
+                        try {
+                            const stage = this.scene.manager.getScene('taketa_highschool');
+                            if (stage) {
+                                currentState = {
+                                    floor: stage.currentFloor || 1,
+                                    playerPosition: stage.playerController ? stage.playerController.getPosition() : { x: 100, y: 100 },
+                                    mapKey: stage.mapManager ? stage.mapManager.currentMapKey : 'taketa_highschool_1'
+                                };
+                                console.log('[DynamicConversationScene] 現在の状態を取得:', currentState);
+                            }
+                        } catch (e) {
+                            console.warn('[DynamicConversationScene] 状態取得エラー:', e);
+                        }
+                    } else {
+                        originalSceneKey = 'TaketastageStage';  // 竹田マップ
+                    }
                     break;
                 case 'japan':
                     originalSceneKey = 'JapanStage';
@@ -276,7 +321,8 @@ export class DynamicConversationScene extends Phaser.Scene {
             conversations: this.conversationData,  // 既存のconversationDataを渡す
             audioManager: this.audioManager,  // 取得したaudioManagerを渡す
             originalSceneKey: originalSceneKey,  // 元のシーンキーをそのまま渡す
-            areaName: areaName  // エリア名を追加
+            areaName: areaName,  // エリア名を追加
+            currentState: currentState  // 現在の状態を追加
         });
         
         // 会話シーンを最前面に表示

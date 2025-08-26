@@ -31,6 +31,9 @@ export class ConversationScene extends Phaser.Scene {
         // エリア名を受け取る
         this.areaName = data && data.areaName ? data.areaName : null;
         
+        // 現在の状態を受け取る（フロア、位置、マップ状態）
+        this.currentState = data && data.currentState ? data.currentState : null;
+        
         // シーンキーを正規化（スペースを除去）
         if (this.originalSceneKey) {
             this.originalSceneKey = this.originalSceneKey.replace(/\s+/g, '');
@@ -941,7 +944,7 @@ export class ConversationScene extends Phaser.Scene {
     }
 
     // 元のBGMに戻す（ハードコードせず、会話開始前に覚えたキーで復帰）
-    restoreOriginalBgm() {
+    async restoreOriginalBgm() {
         console.log('[ConversationScene] restoreOriginalBgm メソッド開始');
         try {
             // まず、現在のイベントBGMを確実に停止
@@ -976,9 +979,10 @@ export class ConversationScene extends Phaser.Scene {
                     if (originalScene && originalScene.audioManager) {
                         console.log('[ConversationScene] 元のシーン', this.originalSceneKey, 'のBGMを復元します');
                         
-                        // 元のシーンのBGMを再開
+                        // 元のシーンのBGMを再開（正しいキーを動的取得）
                         try {
-                            originalScene.audioManager.playBgm('map', undefined, true);
+                            const resumeKey = await originalScene.audioManager.getDefaultBgmKey();
+                            originalScene.audioManager.playBgm(resumeKey, undefined, true);
                             console.log('[ConversationScene] 元のシーンのBGMを再開しました:', this.originalSceneKey);
                         } catch (error) {
                             console.warn('[ConversationScene] BGM再開エラー:', error);
@@ -990,12 +994,13 @@ export class ConversationScene extends Phaser.Scene {
                 }
             } else {
                 // フォールバック: 従来の方法
-                const mainScene = this.scene.get('Stage1Scene') || this.scene.get('Stage2Scene') || this.scene.get('Stage3Scene') || this.scene.get('MiemachiStage') || this.scene.get('TaketastageStage') || this.scene.get('JapanStage');
+                const mainScene = this.scene.get('Stage1Scene') || this.scene.get('Stage2Scene') || this.scene.get('Stage3Scene') || this.scene.get('MiemachiStage') || this.scene.get('TaketastageStage') || this.scene.get('JapanStage') || this.scene.get('taketa_highschool');
                 if (mainScene && mainScene.audioManager) {
                     // マップBGMを再開
                     try { 
-                        console.log('[ConversationScene] マップBGMを再開');
-                        mainScene.audioManager.playBgm('map', undefined, true);
+                        console.log('[ConversationScene] マップBGMを再開（キーを動的取得）');
+                        const resumeKey = await mainScene.audioManager.getDefaultBgmKey();
+                        mainScene.audioManager.playBgm(resumeKey, undefined, true);
                     } catch (error) { 
                         console.warn('[ConversationScene] マップBGM再開失敗:', error);
                     }
@@ -1079,9 +1084,21 @@ export class ConversationScene extends Phaser.Scene {
                     }
                 }
                 
-                // 現在のシーンを停止してから、即座に元のシーンを開始
-                this.scene.stop();
-                this.scene.start(this.originalSceneKey);
+                // 保存された状態がある場合は、その状態で復元
+                if (this.currentState && this.originalSceneKey === 'taketa_highschool') {
+                    console.log('[ConversationScene] 保存された状態で復元:', this.currentState);
+                    this.scene.stop();
+                    this.scene.start(this.originalSceneKey, {
+                        restoreState: true,
+                        targetFloor: this.currentState.floor,
+                        playerPosition: this.currentState.playerPosition,
+                        mapKey: this.currentState.mapKey
+                    });
+                } else {
+                    // 通常の復元
+                    this.scene.stop();
+                    this.scene.start(this.originalSceneKey);
+                }
                 console.log('[ConversationScene] シーン', this.originalSceneKey, 'を開始しました');
                 
 
