@@ -11,6 +11,20 @@ export class DynamicConversationScene extends Phaser.Scene {
 
     init(data) {
         this.eventId = data.eventId;
+        console.log('[DynamicConversationScene] init called with eventId:', this.eventId);
+        
+        // eventConfigを即座に設定
+        this.loadEventConfig();
+    }
+
+    async loadEventConfig() {
+        try {
+            const { getEventConfig } = await import('../config/EventConfig.js');
+            this.eventConfig = getEventConfig(this.eventId);
+            console.log('[DynamicConversationScene] loadEventConfig完了, eventConfig:', this.eventConfig);
+        } catch (error) {
+            console.error('[DynamicConversationScene] loadEventConfigエラー:', error);
+        }
     }
 
     async preload() {
@@ -25,16 +39,26 @@ export class DynamicConversationScene extends Phaser.Scene {
             console.error('[DynamicConversationScene] リソース読み込みエラー:', file);
         });
         
+        // eventConfigが設定されるまで待つ
+        while (!this.eventConfig) {
+            await new Promise(resolve => setTimeout(resolve, 10));
+        }
+        
         // 必要なリソースを動的に読み込み（完了を待つ）
         await this.loadRequiredResources();
     }
 
     // 必要なリソースを動的に読み込み
     async loadRequiredResources() {
+        console.log('[DynamicConversationScene] loadRequiredResources開始, eventId:', this.eventId);
+        
         // EventConfigから必要なリソースを動的に取得
         const { getRequiredResources, getEventConfig } = await import('../config/EventConfig.js');
         this.eventConfig = getEventConfig(this.eventId);
+        console.log('[DynamicConversationScene] eventConfig:', this.eventConfig);
+        
         const required = getRequiredResources(this.eventId);
+        console.log('[DynamicConversationScene] required:', required);
         
         if (required) {
             // 背景画像
@@ -85,12 +109,86 @@ export class DynamicConversationScene extends Phaser.Scene {
         // リソース読み込み完了
         this.resourcesLoaded = true;
     }
+    
+    // 既存のBGM管理システムと直接的なBGM停止を併用
+    suppressStageBGM() {
+        try {
+            console.log('[DynamicConversationScene] suppressStageBGM開始');
+            
+            // 現在のシーンマネージャーからアクティブなステージシーンを特定
+            const sceneManager = this.scene.manager;
+            if (sceneManager) {
+                // 現在アクティブなステージシーンの_suppressMapBgmフラグを設定
+                const stageScenes = ['MiemachiStage', 'TaketastageStage', 'JapanStage', 'Stage1Scene', 'Stage2Scene', 'Stage3Scene'];
+                
+                for (const sceneKey of stageScenes) {
+                    try {
+                        const stage = sceneManager.getScene(sceneKey);
+                        if (stage && stage.scene && stage.scene.isActive()) {
+                            console.log('[DynamicConversationScene]', sceneKey, 'がアクティブです');
+                            
+                            // 1. 既存のBGM管理システムを使用
+                            if (stage._suppressMapBgm !== undefined) {
+                                stage._suppressMapBgm = true;
+                                console.log('[DynamicConversationScene]', sceneKey, 'の_suppressMapBgmフラグをtrueに設定');
+                            }
+                            
+                            // 2. 直接的なBGM停止も実行
+                            if (stage.audioManager) {
+                                console.log('[DynamicConversationScene]', sceneKey, 'の直接BGM停止開始');
+                                
+                                // AudioManagerのBGMを停止
+                                if (stage.audioManager.bgm) {
+                                    console.log('[DynamicConversationScene]', sceneKey, 'のBGMオブジェクト停止');
+                                    stage.audioManager.bgm.stop();
+                                }
+                                
+                                // stopBGMメソッドを実行
+                                if (typeof stage.audioManager.stopBgm === 'function') {
+                                    console.log('[DynamicConversationScene]', sceneKey, 'のstopBgmメソッド実行');
+                                    stage.audioManager.stopBgm();
+                                }
+                                
+                                // HTML5 BGMを停止（iOS用）
+                                if (stage._htmlBgm) {
+                                    console.log('[DynamicConversationScene]', sceneKey, 'のHTML5 BGM停止');
+                                    stage._htmlBgm.pause();
+                                    stage._htmlBgm.currentTime = 0;
+                                }
+                                
+                                console.log('[DynamicConversationScene]', sceneKey, 'の直接BGM停止完了');
+                            }
+                            
+                            // 3. シーンレベルのサウンド停止（削除済み）
+                            // if (stage.sound) {
+                            //     console.log('[DynamicConversationScene]', sceneKey, 'のシーンサウンド停止');
+                            //     stage.sound.stopAll();
+                            // }
+                            
+                            // アクティブなステージを見つけたら終了
+                            break;
+                        }
+                    } catch (e) {
+                        console.warn('[DynamicConversationScene]', sceneKey, 'の処理エラー:', e);
+                    }
+                }
+            }
+            
+            console.log('[DynamicConversationScene] suppressStageBGM完了');
+        } catch (error) {
+            console.warn('[DynamicConversationScene] BGM抑制エラー:', error);
+        }
+    }
 
     // 既存のconversationDataを取得
     loadConversationData() {
         return new Promise((resolve) => {
+            console.log('[DynamicConversationScene] loadConversationData開始');
+            console.log('[DynamicConversationScene] this.eventConfig:', this.eventConfig);
+            
             // エリアタイプに基づいて適切なconversationDataを取得
             const areaType = this.eventConfig?.areaType;
+            console.log('[DynamicConversationScene] areaType:', areaType);
             
             if (areaType) {
                 switch (areaType) {
@@ -136,6 +234,9 @@ export class DynamicConversationScene extends Phaser.Scene {
             return;
         }
         
+        // 既存のBGM管理システムを使用（_suppressMapBgmフラグ）
+        this.suppressStageBGM();
+        
         // リソース読み込み完了後、既存のConversationSceneを開始
         
         // 元のシーンのキーを取得（areaTypeに基づいて決定）
@@ -159,6 +260,15 @@ export class DynamicConversationScene extends Phaser.Scene {
         
         // エリア名を取得（EventConfigのareaNameを優先、フォールバックでeventId）
         const areaName = this.eventConfig?.areaName || this.eventId;
+        
+        // デバッグログを追加
+        console.log('[DynamicConversationScene] ConversationScene起動時のデータ:');
+        console.log('[DynamicConversationScene] conversationId:', this.eventId);
+        console.log('[DynamicConversationScene] eventConfig:', this.eventConfig);
+        console.log('[DynamicConversationScene] conversations:', this.conversationData);
+        console.log('[DynamicConversationScene] audioManager:', this.audioManager);
+        console.log('[DynamicConversationScene] originalSceneKey:', originalSceneKey);
+        console.log('[DynamicConversationScene] areaName:', areaName);
         
         this.scene.launch('ConversationScene', { 
             conversationId: this.eventId,

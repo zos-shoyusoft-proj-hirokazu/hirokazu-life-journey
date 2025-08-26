@@ -22,6 +22,11 @@ export const StageConfig = {
                 implemented: true,
                 playerStartX: 100,
                 playerStartY: 100,
+                npcs: [
+                    { name: 'npc_s_1', eventId: 'XXX' },
+                    { name: 'npc_s_2', eventId: 'XXX' },
+                    { name: 'npc_s_3', eventId: 'XXX' }
+                ],
                 tilesets: [
                     'pika_nos_tiles03_A2',
                     'pika_nos_tiles03_A3',
@@ -47,6 +52,9 @@ export const StageConfig = {
                 implemented: true,
                 playerStartX: 1650,
                 playerStartY: 800,
+                npcs: [
+                    { name: 'npc_s_4', eventId: 'XXX' }
+                ],
                 tilesets: [
                     'pika_nos_tiles03_A2',
                     'pika_nos_tiles03_A3',
@@ -72,6 +80,10 @@ export const StageConfig = {
                 implemented: true,
                 playerStartX: 1200,
                 playerStartY: 1400,
+                npcs: [
+                    { name: 'npc_s_5', eventId: 'XXX' },
+                    { name: 'かなと', eventId: 'drama_filming' }
+                ],
                 tilesets: [
                     'pika_nos_tiles03_A2',
                     'pika_nos_tiles03_A3',

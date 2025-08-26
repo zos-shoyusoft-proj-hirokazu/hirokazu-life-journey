@@ -637,12 +637,21 @@ export const EventConfig = {
 
 // イベントIDからイベント設定を取得
 export function getEventConfig(eventId) {
+    console.log('[EventConfig] getEventConfig呼び出し, eventId:', eventId);
+    console.log('[EventConfig] EventConfig:', EventConfig);
+    
     for (const areaKey in EventConfig) {
+        console.log('[EventConfig] エリア確認:', areaKey);
         const area = EventConfig[areaKey];
+        console.log('[EventConfig] エリア内のイベント:', Object.keys(area));
+        
         if (area[eventId]) {
+            console.log('[EventConfig] イベント発見:', area[eventId]);
             return area[eventId];
         }
     }
+    
+    console.log('[EventConfig] イベントが見つかりませんでした');
     return null;
 }
 

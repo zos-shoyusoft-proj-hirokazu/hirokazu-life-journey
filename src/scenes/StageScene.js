@@ -6,7 +6,10 @@ import { AudioManager } from '../managers/AudioManager.js';
 import { CollisionManager } from '../managers/CollisionManager.js';
 import { PlayerController } from '../controllers/PlayerController.js';
 import { TouchControlManager } from '../controllers/TouchControlManager.js';
+import { ConversationTrigger } from '../managers/ConversationTrigger.js';
 import { StageConfig } from '../config/StageConfig.js';
+import { ConversationScene } from '../managers/ConversationScene.js';
+import { DynamicConversationScene } from '../scenes/DynamicConversationScene.js';
 
 export class StageScene extends Phaser.Scene {
     constructor(config) {
@@ -24,6 +27,7 @@ export class StageScene extends Phaser.Scene {
         this.uiManager = null;
         this.cameraManager = null;
         this.audioManager = null;
+        this.conversationTrigger = null;
         
         // 現在のフロア
         this.currentFloor = 1;
@@ -91,6 +95,15 @@ export class StageScene extends Phaser.Scene {
             }
             
             this.mapManager.currentMapKey = targetFloor.mapKey;
+            
+            // 現在のフロア設定をstageConfigに設定（NPC会話データ取得のため）
+            this.stageConfig.currentFloor = targetFloor;
+            console.log(`[StageScene] 現在のフロア設定を更新: ${targetFloor.number}階`);
+            
+            // デバッグ: StageConfigの内容を確認
+            console.log('[StageScene] 現在のstageConfig:', this.stageConfig);
+            console.log('[StageScene] 現在のフロア設定:', targetFloor);
+            console.log('[StageScene] フロアのNPC設定:', targetFloor.npcs);
             
             // 衝突判定マネージャーを先に初期化
             this.collisionManager = new CollisionManager(this);
@@ -166,6 +179,30 @@ export class StageScene extends Phaser.Scene {
             // タッチイベントを設定
             this.setupTouchEvents();
             
+            // 会話トリガーを初期化
+            this.conversationTrigger = new ConversationTrigger(this);
+            console.log('[StageScene] ConversationTrigger初期化完了');
+            
+            // ConversationSceneを登録
+            try {
+                if (!this.scene.manager.keys || !this.scene.manager.keys.ConversationScene) {
+                    this.scene.add('ConversationScene', ConversationScene);
+                    console.log('[StageScene] ConversationScene登録完了');
+                }
+            } catch (e) {
+                console.warn('[StageScene] ConversationScene登録エラー:', e);
+            }
+            
+            // DynamicConversationSceneを登録
+            try {
+                if (!this.scene.manager.keys || !this.scene.manager.keys.DynamicConversationScene) {
+                    this.scene.add('DynamicConversationScene', DynamicConversationScene);
+                    console.log('[StageScene] DynamicConversationScene登録完了');
+                }
+            } catch (e) {
+                console.warn('[StageScene] DynamicConversationScene登録エラー:', e);
+            }
+            
             // 当たり判定の設定
             this.collisionManager.setupAllCollisions(this.playerController.player, this.mapManager);
             console.log('[StageScene] 当たり判定設定完了');
@@ -186,6 +223,13 @@ export class StageScene extends Phaser.Scene {
             if (this.audioManager) {
                 this.audioManager.stopAll();
                 console.log('[StageScene] AudioManager停止完了');
+            }
+            
+            // 会話トリガーのクリーンアップ
+            if (this.conversationTrigger) {
+                this.conversationTrigger.destroy();
+                this.conversationTrigger = null;
+                console.log('[StageScene] ConversationTrigger停止完了');
             }
             
             if (this.sound) {

@@ -127,19 +127,51 @@ export class CollisionManager {
     }
 
     startConversation(npcId) {
-        // NPCをプレイヤーの方向に向かせる
-        if (this.scene.playerController && this.scene.playerController.player && this.scene.mapManager) {
-            const playerPos = this.scene.playerController.getPosition();
-            this.scene.mapManager.makeNpcFacePlayer(npcId, playerPos.x, playerPos.y);
+        console.log(`[CollisionManager] 会話開始: ${npcId}`);
+        
+        // NPC名からイベントIDを取得
+        const eventId = this.getEventIdFromNPCName(npcId);
+        
+        if (eventId) {
+            // NPCをプレイヤーの方向に向かせる
+            if (this.scene.playerController && this.scene.playerController.player && this.scene.mapManager) {
+                const playerPos = this.scene.playerController.getPosition();
+                this.scene.mapManager.makeNpcFacePlayer(npcId, playerPos.x, playerPos.y);
+            }
+            
+            // ギャルゲ風の会話システムを優先
+            if (this.scene.conversationTrigger) {
+                this.scene.conversationTrigger.startConversation(eventId);
+            } else if (this.dialogSystem) {
+                // フォールバック：既存のDialogSystemを使用
+                this.dialogSystem.startDialog(eventId);
+            }
+        } else {
+            console.warn(`[CollisionManager] ${npcId}の会話データが見つかりません`);
+        }
+    }
+
+    // NPC名からイベントIDを取得するメソッドを追加
+    getEventIdFromNPCName(npcName) {
+        console.log(`[CollisionManager] NPC名からイベントID取得開始: ${npcName}`);
+        
+        const currentFloor = this.scene.stageConfig?.currentFloor;
+        console.log('[CollisionManager] currentFloor:', currentFloor);
+        
+        if (!currentFloor || !currentFloor.npcs) {
+            console.warn('[CollisionManager] currentFloorまたはnpcsが存在しません');
+            return null;
         }
         
-        // ギャルゲ風の会話システムを優先
-        if (this.scene.conversationTrigger) {
-            this.scene.conversationTrigger.startConversation(npcId);
-        } else if (this.dialogSystem) {
-            // フォールバック：既存のDialogSystemを使用
-            this.dialogSystem.startDialog(npcId);
-        }
+        console.log('[CollisionManager] npcs:', currentFloor.npcs);
+        
+        const npc = currentFloor.npcs.find(npc => npc.name === npcName);
+        console.log('[CollisionManager] 見つかったNPC:', npc);
+        
+        const eventId = npc ? npc.eventId : null;
+        console.log(`[CollisionManager] 取得されたイベントID: ${eventId}`);
+        
+        return eventId;
     }
     
     isDialogActive() {
@@ -185,11 +217,14 @@ export class CollisionManager {
                     this.scene.physics.add.collider(player, sprite);
                     console.log(`[CollisionManager] 壁の衝突判定を設定: ${objectName}`);
                 } else if (objectType === 'npc') {
-                    // NPCは重なりで会話、かつ衝突も設定
-                    this.scene.physics.add.overlap(player, sprite, 
-                        () => this.startConversation(objectName), null, this.scene);
+                    // NPCはクリックで会話開始、衝突判定も設定
+                    sprite.setInteractive(); // クリック可能にする
+                    sprite.on('pointerdown', () => {
+                        console.log(`[CollisionManager] NPCをクリック: ${objectName}`);
+                        this.startConversation(objectName);
+                    });
                     this.scene.physics.add.collider(player, sprite);
-                    console.log(`[CollisionManager] NPCの衝突判定と重なり判定を設定: ${objectName}`);
+                    console.log(`[CollisionManager] NPCのクリック判定と衝突判定を設定: ${objectName}`);
                 } else if (objectType === 'move') {
                     // moveは重なりで移動のみ
                     console.log(`[CollisionManager] moveオブジェクトの衝突判定を設定: ${objectName}`);

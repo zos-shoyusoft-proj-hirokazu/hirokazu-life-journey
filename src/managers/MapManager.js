@@ -39,9 +39,9 @@ export class MapManager {
         
         // Tiledマップを作成
         try {
-            this.tilemap = this.scene.make.tilemap({ key: mapKey });
-            this.map = this.tilemap; // 後方互換性
-            
+        this.tilemap = this.scene.make.tilemap({ key: mapKey });
+        this.map = this.tilemap; // 後方互換性
+        
             // tilemapが正常に作成されたか確認
             if (!this.tilemap) {
                 console.error('[MapManager] タイルマップの作成に失敗しました');
@@ -194,8 +194,8 @@ export class MapManager {
                         }
                     });
                 }
-                
-                // レイヤー作成
+            
+            // レイヤー作成
                 if (this.tilemap && this.tilemap.layers && this.tilemap.layers.length > 0) {
                     this.layers = [];
                     
@@ -300,7 +300,7 @@ export class MapManager {
                 /*
                 const availableTilesets = this.createTilesets();
                 this.createLayers(availableTilesets);
-                this.placeObjects();
+            this.placeObjects();
                 */
                 console.log('[MapManager] 従来のタイルセット処理は現在無効化されています');
             }
@@ -756,7 +756,7 @@ export class MapManager {
         if (!objectLayer && Array.isArray(this.tilemap.objects)) {
             objectLayer = this.tilemap.objects.find(l => l && l.name === objectLayerName);
         }
-
+        
         // オブジェクトレイヤーが見つからない場合の詳細調査
         if (!objectLayer) {
             console.warn(`[MapManager] オブジェクトレイヤー'${objectLayerName}'が見つかりません`);

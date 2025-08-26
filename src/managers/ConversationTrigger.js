@@ -1,9 +1,19 @@
 import { ConversationManager } from '../data/stage1/conversationData.js';
+import { TaketaConversationManager } from '../data/taketa/conversationData.js';
 
 export class ConversationTrigger {
     constructor(scene) {
         this.scene = scene;
-        this.conversationManager = new ConversationManager();
+        
+        // ステージに応じて会話データの取得先を動的に選択
+        if (this.scene.scene.key === 'taketa_highschool') {
+            this.conversationManager = new TaketaConversationManager();
+            console.log('[ConversationTrigger] 竹田高校用の会話データマネージャーを初期化');
+        } else {
+            this.conversationManager = new ConversationManager();
+            console.log('[ConversationTrigger] 通常の会話データマネージャーを初期化');
+        }
+        
         this.isConversationActive = false;
         this.triggeredEvents = new Set(); // 発動済みイベントを記録
         
@@ -13,27 +23,27 @@ export class ConversationTrigger {
     }
 
     // 既存のCollisionManagerのstartConversationメソッドを拡張
-    startConversation(npcId) {
-        console.log(`[ConversationTrigger] 会話開始試行: ${npcId}`);
+    startConversation(eventId) {
+        console.log(`[ConversationTrigger] 会話開始試行: ${eventId}`);
         
         // 新しいギャルゲ風システムの会話データがあるかチェック
-        const conversationData = this.conversationManager.getConversation(npcId);
+        const conversationData = this.conversationManager.getConversation(eventId);
         
         console.log('[ConversationTrigger] 会話データ取得結果:', conversationData);
         
         if (conversationData) {
             // 新しいギャルゲ風会話システムを使用
-            console.log(`[ConversationTrigger] ギャルゲ風会話開始: ${npcId}`);
-            this.startVisualNovelConversation(conversationData);
+            console.log(`[ConversationTrigger] ギャルゲ風会話開始: ${eventId}`);
+            this.startVisualNovelConversation(conversationData, null, eventId);
         } else {
             // 既存のシンプルな会話システムを使用
-            console.log(`[ConversationTrigger] シンプル会話開始: ${npcId}`);
-            this.startSimpleDialog(npcId);
+            console.log(`[ConversationTrigger] シンプル会話開始: ${eventId}`);
+            this.startSimpleDialog(eventId);
         }
     }
 
     // ギャルゲ風会話システムの開始（NPCクリック時とエリアマーカー「はい」クリック時の両方で使用）
-    startVisualNovelConversation(conversationData, areaName = null) {
+    startVisualNovelConversation(conversationData, areaName = null, eventId = null) {
         // シーンの有効性をチェック
         if (!this.scene || !this.scene.scene) {
             console.warn('[ConversationTrigger] Scene is not available for conversation');
@@ -71,18 +81,18 @@ export class ConversationTrigger {
             }
 
             if (!cs.scene.isActive()) {
-                // オーバーレイとして起動
-                scenePlugin.launch('ConversationScene');
-                // 起動直後（次フレーム）に会話開始
-                this.scene.time.delayedCall(0, () => {
-                    try {
-                        // 最前面に
-                        try { scenePlugin.bringToTop('ConversationScene'); } catch(e) { /* ignore */ }
-                        cs.scene.setVisible(true);
-                        cs.scene.setActive(true);
-                        cs.startConversation(enhancedConversationData);
-                    } catch(e) { console.error('[ConversationTrigger] start after launch error:', e); this.isConversationActive = false; }
-                });
+                // conversationDataの構造を確認
+                console.log('[ConversationTrigger] conversationData構造確認:');
+                console.log('[ConversationTrigger] conversationData:', conversationData);
+                console.log('[ConversationTrigger] conversationData.eventId:', conversationData.eventId);
+                console.log('[ConversationTrigger] conversationData.id:', conversationData.id);
+                console.log('[ConversationTrigger] conversationDataの全プロパティ:', Object.keys(conversationData));
+                
+                // DynamicConversationSceneを起動（会話処理はDynamicConversationSceneに任せる）
+                // eventIdパラメータを使用（conversationDataにはeventIdプロパティがない）
+                this.scene.scene.launch('DynamicConversationScene', { eventId: eventId });
+                // DynamicConversationScene起動後は、ConversationSceneの処理は行わない
+                return;
             } else {
                 // 既に動作中ならそのまま開始
                 try {
