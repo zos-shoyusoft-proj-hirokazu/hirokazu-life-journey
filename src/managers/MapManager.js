@@ -161,10 +161,10 @@ export class MapManager {
                 return;
             }
             
-                    // 竹田高校の場合は新しいタイルセット処理を使用
-        if (mapKey && mapKey.includes('taketa_highschool')) {
-            // 新しいタイルセット処理（createNewMapと同じ方法）
-            if (this.tilemap && this.tilemap.tilesets && this.tilemap.tilesets.length > 0) {
+            // 竹田高校の場合は新しいタイルセット処理を使用
+            if (mapKey && mapKey.includes('taketa_highschool')) {
+                // 新しいタイルセット処理（createNewMapと同じ方法）
+                if (this.tilemap && this.tilemap.tilesets && this.tilemap.tilesets.length > 0) {
                     this.tilemap.tilesets.forEach((tiledTileset) => {
                         try {
                             // テクスチャキーを検索（より柔軟な検索）
@@ -179,7 +179,6 @@ export class MapManager {
                             // 部分一致を試行（完全一致で見つからない場合）
                             if (!textureKey) {
                                 const partialMatch = availableTextures.find(texture => 
-                                    tiledTileset.name.includes(texture) || 
                                     texture.includes(tiledTileset.name)
                                 );
                                 if (partialMatch) {
@@ -258,34 +257,34 @@ export class MapManager {
                     this.mapHeight = this.tilemap.heightInPixels || 
                                    (this.tilemap.height * this.tilemap.tileHeight) || 0;
                     
-                            // オブジェクトレイヤー処理
-        if (this.tilemap) {
-            const objectLayerNames = ['オブジェクトレイヤー1', 'オブジェクトレイヤー2'];
-            
-            console.log('[MapManager] オブジェクトレイヤー処理開始');
-            console.log(`[MapManager] tilemap情報: 幅=${this.tilemap.width}, 高さ=${this.tilemap.height}, タイル幅=${this.tilemap.tileWidth}, タイル高さ=${this.tilemap.tileHeight}`);
-            
-            objectLayerNames.forEach(layerName => {
-                const objectLayer = this.tilemap.getObjectLayer(layerName);
-                if (objectLayer) {
-                    // オブジェクトレイヤーの寸法を正しく取得
-                    const layerWidth = objectLayer.width || this.tilemap.widthInPixels || (this.tilemap.width * this.tilemap.tileWidth) || 0;
-                    const layerHeight = objectLayer.height || this.tilemap.heightInPixels || (this.tilemap.height * this.tilemap.tileHeight) || 0;
-                    
-                    console.log(`[MapManager] オブジェクトレイヤー発見: ${layerName}, 幅: ${layerWidth}, 高さ: ${layerHeight}`);
-                    
-                    // オブジェクトレイヤーの寸法を設定
-                    objectLayer.width = layerWidth;
-                    objectLayer.height = layerHeight;
-                    
-                    this.processObjectLayer(layerName);
-                } else {
-                    console.warn(`[MapManager] オブジェクトレイヤーが見つかりません: ${layerName}`);
-                }
-            });
-        } else {
-            console.warn('[MapManager] tilemapが存在しません');
-        }
+                    // オブジェクトレイヤー処理（統合）
+                    if (this.tilemap) {
+                        const objectLayerNames = ['オブジェクトレイヤー1', 'オブジェクトレイヤー2', 'オブジェクトレイヤー3'];
+                        
+                        console.log('[MapManager] オブジェクトレイヤー処理開始');
+                        console.log(`[MapManager] tilemap情報: 幅=${this.tilemap.width}, 高さ=${this.tilemap.height}, タイル幅=${this.tilemap.tileWidth}, タイル高さ=${this.tilemap.tileHeight}`);
+                        
+                        objectLayerNames.forEach(layerName => {
+                            const objectLayer = this.tilemap.getObjectLayer(layerName);
+                            if (objectLayer) {
+                                // オブジェクトレイヤーの寸法を正しく取得
+                                const layerWidth = objectLayer.width || this.tilemap.widthInPixels || (this.tilemap.width * this.tilemap.tileWidth) || 0;
+                                const layerHeight = objectLayer.height || this.tilemap.heightInPixels || (this.tilemap.height * this.tilemap.tileHeight) || 0;
+                                
+                                console.log(`[MapManager] オブジェクトレイヤー発見: ${layerName}, 幅: ${layerWidth}, 高さ: ${layerHeight}`);
+                                
+                                // オブジェクトレイヤーの寸法を設定
+                                objectLayer.width = layerWidth;
+                                objectLayer.height = layerHeight;
+                                
+                                this.processObjectLayer(layerName);
+                            } else {
+                                console.warn(`[MapManager] オブジェクトレイヤーが見つかりません: ${layerName}`);
+                            }
+                        });
+                    } else {
+                        console.warn('[MapManager] tilemapが存在しません');
+                    }
                     
                     // エリアデータを抽出（最初のオブジェクトレイヤーを使用）
                     if (this.tilemap && this.tilemap.layers) {
@@ -298,9 +297,12 @@ export class MapManager {
                 
             } else {
                 // 従来のタイルセット処理（stage1, stage2, stage3用）
+                /*
                 const availableTilesets = this.createTilesets();
                 this.createLayers(availableTilesets);
-            this.placeObjects();
+                this.placeObjects();
+                */
+                console.log('[MapManager] 従来のタイルセット処理は現在無効化されています');
             }
             
         } catch (error) {
@@ -308,23 +310,10 @@ export class MapManager {
         }
     }
     
-    // 利用可能なすべてのオブジェクトレイヤーを動的に処理
-    processAllAvailableObjectLayers() {
-        if (!this.tilemap || !this.tilemap.layers) {
-            console.warn('[MapManager] tilemapまたはlayersが存在しません');
-            return;
-        }
-        
-        // オブジェクトレイヤーを検出
-        const objectLayers = this.tilemap.layers.filter(layer => layer.type === 'objectgroup');
-        
-        // 各オブジェクトレイヤーを処理
-        objectLayers.forEach((layer) => {
-            this.processObjectLayer(layer.name);
-        });
-    }
+
 
     // オブジェクトレイヤーを処理
+    
     processObjectLayer(layerName) {
         try {
             if (!this.tilemap) {
@@ -343,90 +332,318 @@ export class MapManager {
                 this.objectGroup = this.scene.physics.add.staticGroup();
             }
             
-            // 各オブジェクトを処理
-            objectLayer.objects.forEach((obj, index) => {
-                // 正しい座標変換を実装
-                // TMJファイルの座標は左上が(0,0)、Phaserのadd.rectangleは中央が(0,0)
-                // そのため、座標を調整する必要がある
-                let x = obj.x || 0;
-                let y = obj.y || 0;
+            // オブジェクトレイヤー1の場合は壁専用処理を試行
+            if (layerName === 'オブジェクトレイヤー1') {
+                console.log('[MapManager] 壁レイヤー処理開始（オブジェクトレイヤー1）');
                 
-                // マップのスケールを適用（正しい取得方法）
-                const mapScale = this.tilemap.scale || this.tilemap.scaleX || 1;
-                if (mapScale !== 1) {
-                    x *= mapScale;
-                    y *= mapScale;
+                // 壁オブジェクトのみを処理
+                const wallObjects = objectLayer.objects.filter(obj => obj.type === 'wall');
+                if (wallObjects.length > 0) {
+                    console.log(`[MapManager] 壁オブジェクト ${wallObjects.length}個 を発見`);
+                    wallObjects.forEach((obj, index) => {
+                        this.createWallObject(obj, index);
+                    });
                 }
                 
-                // マップのオフセットを適用（正しい取得方法）
-                const mapOffsetX = this.tilemap.x || this.tilemap.scrollX || 0;
-                const mapOffsetY = this.tilemap.y || this.tilemap.scrollY || 0;
-                x += mapOffsetX;
-                y += mapOffsetY;
-                
-                // レイヤーのオフセットも考慮
-                if (this.mapLayer) {
-                    const layerOffsetX = this.mapLayer.x || 0;
-                    const layerOffsetY = this.mapLayer.y || 0;
-                    x += layerOffsetX;
-                    y += layerOffsetY;
+                // 壁以外のオブジェクトがある場合は警告
+                const nonWallObjects = objectLayer.objects.filter(obj => obj.type !== 'wall');
+                if (nonWallObjects.length > 0) {
+                    console.warn(`[MapManager] 壁レイヤーにwall以外のオブジェクト: ${nonWallObjects.map(obj => `${obj.type} (${obj.name})`).join(', ')}`);
                 }
                 
-                const width = obj.width || 32;
-                const height = obj.height || 32;
-                const type = obj.type || 'wall';
-                const name = obj.name || `object_${index}`;
+                // 壁レイヤーは専用処理で完了
+                return;
+            }
+            
+            // オブジェクトレイヤー2の場合はNPC専用処理を試行
+            if (layerName === 'オブジェクトレイヤー2') {
+                console.log('[MapManager] NPCレイヤー処理開始（オブジェクトレイヤー2）');
                 
-                // Phaserのadd.rectangleは中央が原点なので、左上の座標を中央座標に変換
-                const centerX = x + (width / 2);
-                const centerY = y + (height / 2);
-                
-                // テスト用：黒い矩形スプライトを作成（中央座標を使用）
-                // moveオブジェクトは特別な色で表示
-                let color = 0x000000; // デフォルトは黒
-                if (type === 'move') {
-                    color = 0x0000FF; // moveオブジェクトは青
-                }
-                const sprite = this.scene.add.rectangle(centerX, centerY, width, height, color, 0.5);
-                
-                // 物理ボディを追加
-                this.scene.physics.add.existing(sprite, true);
-                
-                // 当たり判定グループに追加
-                this.objectGroup.add(sprite);
-                
-                // オブジェクト名のテキストラベルを追加
-                const label = this.scene.add.text(centerX, centerY - height/2 - 10, `${name} (${type})`, {
-                    fontSize: '12px',
-                    fill: '#ffffff',
-                    backgroundColor: '#000000',
-                    padding: { x: 2, y: 1 }
-                });
-                label.setOrigin(0.5, 1);
-                label.setDepth(1000); // 最前面に表示
-                
-                // オブジェクトの情報を保存
-                sprite.setData('objectType', type);
-                sprite.setData('objectName', name);
-                sprite.setData('objectId', obj.id);
-                
-                // moveオブジェクトの場合は特別な設定を追加
-                if (type === 'move') {
-                    sprite.setData('moveId', name);
-                    sprite.setData('moveType', type);
-                    console.log(`[MapManager] moveオブジェクト作成: ${name}, 座標: (${centerX}, ${centerY}), サイズ: ${width}x${height}`);
+                // NPCオブジェクトのみを処理
+                const npcObjects = objectLayer.objects.filter(obj => obj.type === 'npc');
+                if (npcObjects.length > 0) {
+                    console.log(`[MapManager] NPCオブジェクト ${npcObjects.length}個 を発見`);
+                    npcObjects.forEach((obj, index) => {
+                        this.createNPCObject(obj, index);
+                    });
                 }
                 
-                // オブジェクトの情報を保存
-                sprite.setData('objectType', type);
-                sprite.setData('objectName', name);
-                sprite.setData('originalData', obj);
-            });
+                // NPC以外のオブジェクトがある場合は警告
+                const nonNPCObjects = objectLayer.objects.filter(obj => obj.type !== 'npc');
+                if (nonNPCObjects.length > 0) {
+                    console.warn(`[MapManager] NPCレイヤーにnpc以外のオブジェクト: ${nonNPCObjects.map(obj => `${obj.type} (${obj.name})`).join(', ')}`);
+                }
+                
+                // NPCレイヤーは専用処理で完了
+                return;
+            }
+            
+            // オブジェクトレイヤー3の場合は移動専用処理を試行
+            if (layerName === 'オブジェクトレイヤー3') {
+                console.log('[MapManager] 移動レイヤー処理開始（オブジェクトレイヤー3）');
+                
+                // 移動オブジェクトのみを処理
+                const moveObjects = objectLayer.objects.filter(obj => obj.type === 'move');
+                if (moveObjects.length > 0) {
+                    console.log(`[MapManager] 移動オブジェクト ${moveObjects.length}個 を発見`);
+                    moveObjects.forEach((obj, index) => {
+                        this.createMoveObject(obj, index);
+                    });
+                }
+                
+                // 移動以外のオブジェクトがある場合は警告
+                const nonMoveObjects = objectLayer.objects.filter(obj => obj.type !== 'move');
+                if (nonMoveObjects.length > 0) {
+                    console.warn(`[MapManager] 移動レイヤーにmove以外のオブジェクト: ${nonMoveObjects.map(obj => `${obj.type} (${obj.name})`).join(', ')}`);
+                }
+                
+                // 移動レイヤーは専用処理で完了
+                return;
+            }
+            
+            // 既存の処理（その他のレイヤー用）
+            this.processGenericObjects(objectLayer, layerName);
             
         } catch (error) {
             console.error('[MapManager] オブジェクトレイヤー処理エラー:', error);
         }
     }
+
+    // 壁オブジェクト作成（専用）
+    createWallObject(obj, index) {
+        const width = obj.width || 32;
+        const height = obj.height || 32;
+        const name = obj.name || `wall_${index}`;
+        
+        // 壁は黒い矩形で表示
+        const sprite = this.scene.add.rectangle(0, 0, width, height, 0x000000, 0.5);
+        
+        // 汎用処理で座標変換、物理ボディ設定、オブジェクト情報保存を実行
+        this.processGenericObjectSetup(sprite, obj, 'wall', name);
+        
+        // 当たり判定グループに追加
+        this.objectGroup.add(sprite);
+        
+        console.log(`[MapManager] 壁オブジェクト作成: ${name}, サイズ: ${width}x${height}`);
+    }
+
+    // NPCオブジェクト作成（専用）
+    createNPCObject(obj, index) {
+        const width = obj.width || 32;
+        const height = obj.height || 32;
+        const name = obj.name || `npc_${index}`;
+        
+        // NPCはスプライトとして作成（setFrameが使えるように）
+        // テクスチャが存在しない場合は代替画像を作成
+        let textureKey = 'npc_default';
+        if (!this.scene.textures.exists(textureKey)) {
+            this.createNPCTexture(textureKey, width, height);
+        }
+        
+        const sprite = this.scene.add.sprite(0, 0, textureKey);
+        sprite.setDisplaySize(width, height); // サイズを設定
+        
+        // 汎用処理で座標変換、物理ボディ設定、オブジェクト情報保存を実行
+        this.processGenericObjectSetup(sprite, obj, 'npc', name);
+        
+        // 当たり判定グループに追加（MapManager用）
+        this.objectGroup.add(sprite);
+        
+        // NPC専用の衝突グループにも追加（CollisionManager用）
+        if (this.scene.collisionManager && 
+            this.scene.collisionManager.collisionGroups && 
+            this.scene.collisionManager.collisionGroups.npcs) {
+            this.scene.collisionManager.collisionGroups.npcs.add(sprite);
+        }
+        
+        // NPCスプライトを保存
+        this.npcSprites.set(name, sprite);
+        
+        // オブジェクト名のテキストラベルを追加（座標変換後の位置に設定）
+        const label = this.scene.add.text(sprite.x, sprite.y - height/2 - 10, `${name} (npc)`, {
+            fontSize: '12px',
+            fill: '#ffffff',
+            backgroundColor: '#000000',
+            padding: { x: 2, y: 1 }
+        });
+        label.setOrigin(0.5, 1);
+        label.setDepth(1000);
+        
+        console.log(`[MapManager] NPCオブジェクト作成: ${name}, サイズ: ${width}x${height}`);
+    }
+
+    // NPC用のテクスチャを作成
+    createNPCTexture(textureKey, width, height) {
+        const graphics = this.scene.add.graphics();
+        graphics.fillStyle(0x00FF00); // 緑色
+        graphics.fillRect(0, 0, width, height);
+        graphics.lineStyle(2, 0x008000); // 濃い緑の枠線
+        graphics.strokeRect(0, 0, width, height);
+        graphics.generateTexture(textureKey, width, height);
+        graphics.destroy();
+    }
+
+    // 移動オブジェクト作成（専用）
+    createMoveObject(obj, index) {
+        const width = obj.width || 32;
+        const height = obj.height || 32;
+        const name = obj.name || `move_${index}`;
+        
+        // 移動オブジェクトは青い矩形で表示
+        const sprite = this.scene.add.rectangle(0, 0, width, height, 0x0000FF, 0.5);
+        
+        // 汎用処理で座標変換、物理ボディ設定、オブジェクト情報保存を実行
+        this.processGenericObjectSetup(sprite, obj, 'move', name);
+        
+        // 当たり判定グループに追加
+        this.objectGroup.add(sprite);
+        
+        // 移動オブジェクトの特別な設定
+        sprite.setData('moveId', name);
+        sprite.setData('moveType', 'move');
+        
+        // オブジェクト名のテキストラベルを追加（座標変換後の位置に設定）
+        const label = this.scene.add.text(sprite.x, sprite.y - height/2 - 10, `${name} (move)`, {
+            fontSize: '12px',
+            fill: '#ffffff',
+            backgroundColor: '#000000',
+            padding: { x: 2, y: 1 }
+        });
+        label.setOrigin(0.5, 1);
+        label.setDepth(1000);
+        
+        console.log(`[MapManager] moveオブジェクト作成: ${name}, サイズ: ${width}x${height}`);
+        
+        // move_3の場合は特別なログ
+        if (name === 'move_3') {
+            console.log('[MapManager] ⭐ move_3オブジェクトを発見！物理ボディ設定:', sprite.body);
+        }
+    }
+
+    // 既存の汎用処理（その他のレイヤー用）
+    processGenericObjects(objectLayer, layerName) {
+        console.log(`[MapManager] 汎用レイヤー処理: ${layerName}`);
+        
+        // 専用メソッドで処理されるオブジェクトタイプを除外
+        const excludedTypes = ['wall', 'npc', 'move'];
+        
+        objectLayer.objects.forEach((obj, index) => {
+            // 専用メソッドで処理されるオブジェクトはスキップ
+            if (excludedTypes.includes(obj.type)) {
+                console.log(`[MapManager] ${obj.type}オブジェクトは専用メソッドで処理済み: ${obj.name}`);
+                return;
+            }
+            
+            // 正しい座標変換を実装
+            // TMJファイルの座標は左上が(0,0)、Phaserのadd.rectangleは中央が(0,0)
+            // そのため、座標を調整する必要がある
+            let x = obj.x || 0;
+            let y = obj.y || 0;
+            
+            // マップのスケールを適用（正しい取得方法）
+            const mapScale = this.tilemap.scale || this.tilemap.scaleX || 1;
+            if (mapScale !== 1) {
+                x *= mapScale;
+                y *= mapScale;
+            }
+            
+            // マップのオフセットを適用（正しい取得方法）
+            const mapOffsetX = this.tilemap.x || this.tilemap.scrollX || 0;
+            const mapOffsetY = this.tilemap.y || this.tilemap.scrollY || 0;
+            x += mapOffsetX;
+            y += mapOffsetY;
+            
+            // レイヤーのオフセットも考慮
+            if (this.mapLayer) {
+                const layerOffsetX = this.mapLayer.x || 0;
+                const layerOffsetY = this.mapLayer.y || 0;
+                x += layerOffsetX;
+                y += layerOffsetY;
+            }
+            
+            const width = obj.width || 32;
+            const height = obj.height || 32;
+            const type = obj.type || 'object';
+            const name = obj.name || `object_${index}`;
+            
+            // Phaserのadd.rectangleは中央が原点なので、左上の座標を中央座標に変換
+            const centerX = x + (width / 2);
+            const centerY = y + (height / 2);
+            
+            // 汎用オブジェクト用の色設定
+            let color = 0x808080; // デフォルトはグレー
+            if (type === 'item') {
+                color = 0xFFD700; // アイテムは金色
+            } else if (type === 'enemy') {
+                color = 0xFF0000; // 敵は赤色
+            }
+            
+            const sprite = this.scene.add.rectangle(centerX, centerY, width, height, color, 0.5);
+            
+            // 物理ボディを追加
+            this.scene.physics.add.existing(sprite, true);
+            
+            // 当たり判定グループに追加
+            this.objectGroup.add(sprite);
+            
+            // オブジェクト名のテキストラベルを追加
+            const label = this.scene.add.text(centerX, centerY - height/2 - 10, `${name} (${type})`, {
+                fontSize: '12px',
+                fill: '#ffffff',
+                backgroundColor: '#000000',
+                padding: { x: 2, y: 1 }
+            });
+            label.setOrigin(0.5, 1);
+            label.setDepth(1000); // 最前面に表示
+            
+            // オブジェクトの情報を保存
+            sprite.setData('objectType', type);
+            sprite.setData('objectName', name);
+            sprite.setData('objectId', obj.id);
+            
+            console.log(`[MapManager] 汎用オブジェクト作成: ${name} (${type}), 座標: (${centerX}, ${centerY}), サイズ: ${width}x${height}`);
+        });
+    }
+
+    // 汎用オブジェクトのセットアップ（座標変換、物理ボディ、オブジェクト情報）
+    processGenericObjectSetup(sprite, obj, type, name) {
+        // 座標変換
+        let x = obj.x || 0;
+        let y = obj.y || 0;
+        const mapScale = this.tilemap.scale || this.tilemap.scaleX || 1;
+        if (mapScale !== 1) {
+            x *= mapScale;
+            y *= mapScale;
+        }
+        const mapOffsetX = this.tilemap.x || this.tilemap.scrollX || 0;
+        const mapOffsetY = this.tilemap.y || this.tilemap.scrollY || 0;
+        x += mapOffsetX;
+        y += mapOffsetY;
+        if (this.mapLayer) {
+            const layerOffsetX = this.mapLayer.x || 0;
+            const layerOffsetY = this.mapLayer.y || 0;
+            x += layerOffsetX;
+            y += layerOffsetY;
+        }
+
+        // Phaserのオブジェクトは中央が原点なので、左上の座標を中央座標に変換
+        const width = obj.width || 32;
+        const height = obj.height || 32;
+        const centerX = x + (width / 2);
+        const centerY = y + (height / 2);
+        
+        // スプライトの位置を設定
+        sprite.setPosition(centerX, centerY);
+
+        // 物理ボディ設定
+        this.scene.physics.add.existing(sprite, true);
+
+        // オブジェクト情報保存
+        sprite.setData('objectType', type);
+        sprite.setData('objectName', name);
+        sprite.setData('objectId', obj.id);
+    }
+
 
     scaleMapToScreen() {
         // スマホ画面に合わせてマップ全体を表示
@@ -657,7 +874,8 @@ export class MapManager {
         }
     }
 
-    // === 旧バージョンとの互換性メソッド ===
+    // === 旧バージョンとの互換性メソッド（現在は使用されていません） ===
+    /*
     createTilesets() {
         const availableTilesets = [];
         
@@ -869,6 +1087,7 @@ export class MapManager {
             console.error('Fallback also failed:', fallbackError);
         }
     }
+    */
 
     getObjectGroup() {
         return this.objectGroup;

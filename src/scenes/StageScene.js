@@ -92,13 +92,14 @@ export class StageScene extends Phaser.Scene {
             
             this.mapManager.currentMapKey = targetFloor.mapKey;
             
-            this.mapManager.createMap();
-            console.log('[StageScene] 基本的なマップ表示完了');
-            
-            // 当たり判定マネージャーを初期化
+            // 衝突判定マネージャーを先に初期化
             this.collisionManager = new CollisionManager(this);
             this.collisionManager.setupCollisionGroups();
             console.log('[StageScene] CollisionManager初期化完了');
+            
+            // マップ作成（NPCオブジェクト作成）
+            this.mapManager.createMap();
+            console.log('[StageScene] 基本的なマップ表示完了');
             
             // プレイヤー作成
             this.playerController = new PlayerController(this);
@@ -143,19 +144,19 @@ export class StageScene extends Phaser.Scene {
             
             // 設定からBGMを再生
             if (this.stageConfig.bgm && this.stageConfig.bgm.map) {
-                // 前のBGMを確実に停止
-                this.audioManager.stopAll();
-                if (this.scene.sound) {
-                    this.scene.sound.stopAll();
+                // 音声コンテキストの状態を確認
+                if (this.scene.sound && this.scene.sound.context) {
+                    const ctx = this.scene.sound.context;
+                    if (ctx.state === 'suspended') {
+                        console.log('[StageScene] 音声コンテキストが一時停止状態です。ユーザーインタラクションを待っています');
+                        // ユーザーインタラクションを待つ
+                        this.waitForAudioContext();
+                    } else {
+                        this.playBGM();
+                    }
+                } else {
+                    this.playBGM();
                 }
-                
-                // iOS対応：HTMLAudioの停止
-                if (this._htmlBgm) {
-                    this._htmlBgm.pause();
-                }
-                
-                // 新しいBGMを再生
-                this.audioManager.playBgm('map');
             } else {
                 console.warn('[StageScene] BGM設定が見つかりません');
             }
@@ -277,45 +278,9 @@ export class StageScene extends Phaser.Scene {
         }
     }
 
-    createFloorButtons() {
-        // 設定からフロア情報を動的に取得してボタンを作成
-        const buttonY = 50;
-        const buttonSpacing = 80;
-        
-        this.floorButtons = [];
-        
-        this.stageConfig.floors.forEach((floor, index) => {
-            const button = this.add.text(20 + buttonSpacing * index, buttonY, `${floor.number}階`, {
-                fontSize: '18px',
-                fill: '#ffffff',
-                backgroundColor: floor.implemented ? '#333333' : '#666666',
-                padding: { x: 10, y: 5 }
-            });
-            
-            if (floor.implemented) {
-                button.setInteractive();
-                button.on('pointerdown', () => this.changeFloor(floor.number));
-            }
-            
-            this.floorButtons.push(button);
-        });
-        
-        // 現在のフロアのボタンを強調表示
-        this.updateFloorButtonHighlight();
-    }
-
-
-
-    updateFloorButtonHighlight() {
-        this.floorButtons.forEach((button, index) => {
-            const floor = this.stageConfig.floors[index];
-            if (floor.number === this.currentFloor) {
-                button.setBackgroundColor('#333333');
-            } else {
-                button.setBackgroundColor(floor.implemented ? '#666666' : '#999999');
-            }
-        });
-    }
+    // フロアボタン関連のコードを削除（moveオブジェクトで十分）
+    // createFloorButtons() メソッドを削除
+    // updateFloorButtonHighlight() メソッドを削除
 
     setupTouchEvents() {
         // タッチイベントを設定

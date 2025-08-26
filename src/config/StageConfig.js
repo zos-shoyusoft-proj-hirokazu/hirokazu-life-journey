@@ -56,7 +56,31 @@ export const StageConfig = {
                     'pika_nos_in_tiles02_B',
                     'pika_nos_in_tiles02_C',
                     'pika_nos_in_tiles02_D',
-                    'pika_nos_in_tiles02_E'
+                    'pika_nos_in_tiles02_E',
+                    'pika_objset_school_01'
+                ]
+            },
+            {
+                number: 3,
+                mapKey: 'taketa_highschool_3',
+                mapFileName: 'taketa_highschool_3.tmj',
+                title: '竹田高校 3階',
+                implemented: true,
+                tilesets: [
+                    'pika_nos_tiles03_A2',
+                    'pika_nos_tiles03_A3',
+                    'pika_nos_tiles03_A5',
+                    'pika_nos_tiles03_B',
+                    'pika_nos_tiles03_C',
+                    'pika_nos_tiles03_D',
+                    'pika_nos_in_tiles02_A2',
+                    'pika_nos_in_tiles02_A4',
+                    'pika_nos_in_tiles02_A5',
+                    'pika_nos_in_tiles02_B',
+                    'pika_nos_in_tiles02_C',
+                    'pika_nos_in_tiles02_D',
+                    'pika_nos_in_tiles02_E',
+                    'pika_objset_school_01'
                 ]
             }
         ]

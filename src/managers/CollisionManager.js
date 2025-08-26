@@ -96,15 +96,30 @@ export class CollisionManager {
         const moveId = moveObject.getData('moveId');
         console.log(`[CollisionManager] 移動オブジェクトに触れました: ${moveId}`);
         
-        // 移動先のフロアを決定
-        let targetFloor = 1;
-        if (moveId === 'move') {
-            // 現在のフロアから次のフロアへ
+        // moveオブジェクトの名前に含まれる数字を解析して移動先フロアを決定
+        let targetFloor = 1; // デフォルト
+        
+        if (moveId && moveId.startsWith('move_')) {
+            // move_x の形式から数字を抽出
+            const floorNumber = parseInt(moveId.replace('move_', ''));
+            if (!isNaN(floorNumber) && floorNumber > 0 && floorNumber <= 3) {
+                targetFloor = floorNumber;
+                console.log(`[CollisionManager] moveオブジェクト ${moveId} からフロア ${targetFloor} への移動を検出`);
+            } else {
+                console.warn(`[CollisionManager] 無効なフロア番号: ${moveId} (1-3の範囲外)`);
+            }
+        } else if (moveId === 'move') {
+            // 従来の命名規則（後方互換性）
             if (this.scene.currentFloor === 1) {
                 targetFloor = 2;
             } else if (this.scene.currentFloor === 2) {
-                targetFloor = 1;
+                targetFloor = 3;
+            } else if (this.scene.currentFloor === 3) {
+                targetFloor = 2; // フロア3からフロア2に移動
             }
+            console.log(`[CollisionManager] 従来の命名規則を使用: フロア ${this.scene.currentFloor} → ${targetFloor}`);
+        } else {
+            console.warn(`[CollisionManager] 不明なmoveオブジェクト: ${moveId}`);
         }
         
         // フロア移動を実行
@@ -178,11 +193,7 @@ export class CollisionManager {
                 } else if (objectType === 'move') {
                     // moveは重なりで移動のみ
                     console.log(`[CollisionManager] moveオブジェクトの衝突判定を設定: ${objectName}`);
-                    console.log(`[CollisionManager] moveオブジェクトの座標: (${sprite.x}, ${sprite.y}), サイズ: ${sprite.width}x${sprite.height}`);
-                    console.log(`[CollisionManager] プレイヤーの初期位置: (${player.x}, ${player.y})`);
-                    console.log('[CollisionManager] moveオブジェクトの物理ボディ:', sprite.body);
-                    console.log('[CollisionManager] プレイヤーの物理ボディ:', player.body);
-                    console.log('[CollisionManager] moveオブジェクトにoverlapイベントを設定中...');
+                    
                     this.scene.physics.add.overlap(player, sprite, 
                         () => {
                             console.log(`[CollisionManager] moveオブジェクトに触れました: ${objectName}`);

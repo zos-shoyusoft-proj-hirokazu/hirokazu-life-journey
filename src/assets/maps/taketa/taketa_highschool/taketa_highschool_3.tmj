@@ -309,12 +309,89 @@
          "name":"\u30aa\u30d6\u30b8\u30a7\u30af\u30c8\u30ec\u30a4\u30e4\u30fc1",
          "objects":[
                 {
+                 "height":35.9999999999998,
+                 "id":13,
+                 "name":"wall",
+                 "rotation":0,
+                 "type":"wall",
+                 "visible":true,
+                 "width":762.333333333333,
+                 "x":337.333333333333,
+                 "y":1308
+                }, 
+                {
+                 "height":39.6666666666665,
+                 "id":16,
+                 "name":"wall",
+                 "rotation":0,
+                 "type":"wall",
+                 "visible":true,
+                 "width":47.6666666666666,
+                 "x":239,
+                 "y":1304
+                }, 
+                {
+                 "height":4.66666666666652,
+                 "id":17,
+                 "name":"wall",
+                 "rotation":0,
+                 "type":"wall",
+                 "visible":true,
+                 "width":141.666666666667,
+                 "x":193.666666666667,
+                 "y":1336
+                }, 
+                {
+                 "height":108,
+                 "id":18,
+                 "name":"wall",
+                 "rotation":0,
+                 "type":"wall",
+                 "visible":true,
+                 "width":1101.33333333333,
+                 "x":193.333333333333,
+                 "y":86.6666666666666
+                }, 
+                {
+                 "height":1442.66666666667,
+                 "id":19,
+                 "name":"wall",
+                 "rotation":0,
+                 "type":"wall",
+                 "visible":true,
+                 "width":8,
+                 "x":1289.33333333333,
+                 "y":88
+                }, 
+                {
+                 "height":196,
+                 "id":20,
+                 "name":"wall",
+                 "rotation":0,
+                 "type":"wall",
+                 "visible":true,
+                 "width":12,
+                 "x":1104,
+                 "y":1341.33333333333
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":12,
+         "name":"\u30aa\u30d6\u30b8\u30a7\u30af\u30c8\u30ec\u30a4\u30e4\u30fc2",
+         "objects":[
+                {
                  "height":0,
-                 "id":1,
+                 "id":31,
                  "name":"\u3042\u304d\u3056\u308f",
                  "point":true,
                  "rotation":0,
-                 "type":"",
+                 "type":"npc",
                  "visible":true,
                  "width":0,
                  "x":278.545075560188,
@@ -322,11 +399,11 @@
                 }, 
                 {
                  "height":0,
-                 "id":2,
+                 "id":32,
                  "name":"\u304b\u306a\u3068",
                  "point":true,
                  "rotation":0,
-                 "type":"",
+                 "type":"npc",
                  "visible":true,
                  "width":0,
                  "x":292.952579468473,
@@ -334,11 +411,11 @@
                 }, 
                 {
                  "height":0,
-                 "id":3,
+                 "id":33,
                  "name":"\u3072\u308d\u304b\u305a",
                  "point":true,
                  "rotation":0,
-                 "type":"",
+                 "type":"npc",
                  "visible":true,
                  "width":0,
                  "x":340.977592496092,
@@ -346,11 +423,11 @@
                 }, 
                 {
                  "height":0,
-                 "id":4,
+                 "id":34,
                  "name":"\u3053\u3046\u305f\u308d\u3046",
                  "point":true,
                  "rotation":0,
-                 "type":"",
+                 "type":"npc",
                  "visible":true,
                  "width":0,
                  "x":471.445544554456,
@@ -358,11 +435,11 @@
                 }, 
                 {
                  "height":0,
-                 "id":5,
+                 "id":35,
                  "name":"\u3060\u3044\u3061",
                  "point":true,
                  "rotation":0,
-                 "type":"",
+                 "type":"npc",
                  "visible":true,
                  "width":0,
                  "x":472.245961438249,
@@ -370,11 +447,11 @@
                 }, 
                 {
                  "height":0,
-                 "id":6,
+                 "id":36,
                  "name":"\u306a\u304a\u304d",
                  "point":true,
                  "rotation":0,
-                 "type":"",
+                 "type":"npc",
                  "visible":true,
                  "width":0,
                  "x":465.042209484106,
@@ -382,11 +459,11 @@
                 }, 
                 {
                  "height":0,
-                 "id":7,
+                 "id":37,
                  "name":"\u307e\u3055\u3068",
                  "point":true,
                  "rotation":0,
-                 "type":"",
+                 "type":"npc",
                  "visible":true,
                  "width":0,
                  "x":436.227201667535,
@@ -394,15 +471,49 @@
                 }, 
                 {
                  "height":0,
-                 "id":8,
+                 "id":38,
                  "name":"\u3057\u3085\u3046\u3078\u3044",
                  "point":true,
                  "rotation":0,
-                 "type":"",
+                 "type":"npc",
                  "visible":true,
                  "width":0,
                  "x":479.449713392392,
                  "y":586.70557582074
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":11,
+         "name":"\u30aa\u30d6\u30b8\u30a7\u30af\u30c8\u30ec\u30a4\u30e4\u30fc3",
+         "objects":[
+                {
+                 "height":0,
+                 "id":28,
+                 "name":"yajirushi",
+                 "point":true,
+                 "rotation":0,
+                 "type":"yajirushi",
+                 "visible":true,
+                 "width":0,
+                 "x":1197,
+                 "y":1387
+                }, 
+                {
+                 "height":25,
+                 "id":30,
+                 "name":"move",
+                 "rotation":0,
+                 "type":"move",
+                 "visible":true,
+                 "width":172,
+                 "x":1114,
+                 "y":1509
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -496,8 +607,8 @@
          "x":0,
          "y":0
         }],
- "nextlayerid":11,
- "nextobjectid":9,
+ "nextlayerid":13,
+ "nextobjectid":45,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",
@@ -540,6 +651,25 @@
          "spacing":0,
          "tilecount":256,
          "tileheight":48,
+         "tiles":[
+                {
+                 "id":24,
+                 "properties":[
+                        {
+                         "name":"colides",
+                         "type":"bool",
+                         "value":true
+                        }]
+                }, 
+                {
+                 "id":25,
+                 "properties":[
+                        {
+                         "name":"colides",
+                         "type":"bool",
+                         "value":true
+                        }]
+                }],
          "tilewidth":48
         }, 
         {
