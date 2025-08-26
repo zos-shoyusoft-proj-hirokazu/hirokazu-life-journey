@@ -52,6 +52,13 @@ export class StageScene extends Phaser.Scene {
                 playerPosition: this.playerPosition,
                 mapKey: this.mapKey
             });
+        } else {
+            // 状態復元設定がない場合
+            this.restoreState = false;
+            this.targetFloor = 1;
+            this.playerPosition = null;
+            this.mapKey = null;
+            console.log('[StageScene] 状態復元設定なし（通常起動）');
         }
     }
 
@@ -355,11 +362,32 @@ export class StageScene extends Phaser.Scene {
                 return;
             }
             
+            // 状態復元の設定をクリア（moveオブジェクトでの移動時）
+            this.restoreState = false;
+            this.targetFloor = 1;
+            this.playerPosition = null;
+            this.mapKey = null;
+            console.log('[StageScene] 状態復元設定をクリアしました（フロア変更時）');
+            
             // フロア番号を保存（Scene再起動時に使用）
             this.nextFloorNumber = floorNumber;
             
-            // Scene全体を完全に再起動（これが最も確実）
-            this.scene.restart();
+            // シーン設定もクリア（確実にするため）
+            if (this.scene.settings) {
+                this.scene.settings.restoreState = false;
+                this.scene.settings.targetFloor = null;
+                this.scene.settings.playerPosition = null;
+                this.scene.settings.mapKey = null;
+            }
+            
+            console.log(`[StageScene] フロア${floorNumber}への移動を開始（状態復元設定クリア済み）`);
+            
+            // scene.restart()ではなく、scene.start()で完全に新しいシーンを開始
+            // これにより、元のパラメータが保持されることを防ぐ
+            this.scene.stop();
+            this.scene.start(this.scene.key, {
+                nextFloorNumber: floorNumber
+            });
             
         } catch (error) {
             console.error('[StageScene] フロア変更エラー:', error);
