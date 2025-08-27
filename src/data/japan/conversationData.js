@@ -3,7 +3,7 @@ export const japanConversationData = {
     // コンピュータエリア
     'computer': {
         'background': 'test_1',
-        'bgm': 'curono',
+        'bgm': 'longing_Love',
         'conversations': [
             {
                 'speaker': 'ひろかず',
@@ -29,7 +29,7 @@ export const japanConversationData = {
     // 故障車エリア
     'breaking_car': {
         'background': 'test_1',
-        'bgm': 'curono',
+        'bgm': '紫電清霜',
         'conversations': [
             {
                 'speaker': 'ひろかず',
@@ -55,7 +55,7 @@ export const japanConversationData = {
     // 特殊詐欺エリア
     'special_scam': {
         'background': 'test_1',
-        'bgm': 'togetogetarumeiro',
+        'bgm': 'まどいの水源',
         'conversations': [
             {
                 'speaker': 'ひろかず',
@@ -699,7 +699,7 @@ export const japanConversationData = {
     // 路上の噴水エリア
     'rojyounopenki': {
         'background': 'test_1',
-        'bgm': 'curono',
+        'bgm': 'bloody_tears',
         'conversations': [
             {
                 'speaker': 'ひろかず',
@@ -725,7 +725,7 @@ export const japanConversationData = {
     // テレビ塔エリア
     'tereapo': {
         'background': 'test_1',
-        'bgm': 'curono',
+        'bgm': 'bloody_tears',
         'conversations': [
             {
                 'speaker': 'ひろかず',
@@ -751,7 +751,7 @@ export const japanConversationData = {
     // 初日の出エリア
     'first_rising_sun': {
         'background': 'test_1',
-        'bgm': 'curono',
+        'bgm': 'bloody_tears',
         'conversations': [
             {
                 'speaker': 'ひろかず',
@@ -777,7 +777,7 @@ export const japanConversationData = {
     // 荒地エリア
     'arechi': {
         'background': 'test_1',
-        'bgm': 'curono',
+        'bgm': 'bloody_tears',
         'conversations': [
             {
                 'speaker': 'ひろかず',
@@ -803,7 +803,7 @@ export const japanConversationData = {
     // グレーバイトエリア
     'gray_bytes': {
         'background': 'test_1',
-        'bgm': 'curono',
+        'bgm': 'bloody_tears',
         'conversations': [
             {
                 'speaker': 'ひろかず',

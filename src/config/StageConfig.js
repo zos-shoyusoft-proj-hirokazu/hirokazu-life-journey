@@ -27,7 +27,7 @@ export const StageConfig = {
                 fromFloor2StartY: 1000,
                 // 1階専用のBGM設定
                 bgm: {
-                    map: 'assets/audio/bgm/Pollyanna.mp3'  // 2階・3階と同じBGMを使用
+                    map: 'assets/audio/bgm/はるかなる故郷'  // 2階・3階と同じBGMを使用
                 },
                 npcs: [
                     { name: 'ひろかず_1', eventId: 'climbing_injury' },
@@ -66,7 +66,7 @@ export const StageConfig = {
                 fromFloor3StartY: 800,
                 // 2階専用のBGM設定
                 bgm: {
-                    map: 'assets/audio/bgm/Pollyanna.mp3'  // 1階と同じBGMを使用
+                    map: 'assets/audio/bgm/field_of_hopes_and_dreams.mp3'  // 1階と同じBGMを使用
                 },
                 npcs: [
                     { name: 'anndou', eventId: 'classroom_lock_incident' },

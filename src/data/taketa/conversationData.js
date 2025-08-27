@@ -3,7 +3,7 @@ export const taketaConversationData = {
     // 昼休み鬼ごっこ
     'lunch_tag': {
         'background': 'classroom',
-        'bgm': 'Fantasy',
+        'bgm': 'professor_laytons',
         'conversations': [
             {
                 'speaker': 'ひろかず',
@@ -968,7 +968,7 @@ export const taketaConversationData = {
     // 銀河の水
     'galaxy_water': {
         'background': 'galaxy',
-        'bgm': 'nightbarth',
+        'bgm': 'Fantasy',
         'conversations': [
             {
                 'character': 'narrator',
@@ -1004,7 +1004,7 @@ export const taketaConversationData = {
     // 竹田駅
     'taketa_station': {
         'background': 'station',
-        'bgm': 'nightbarth',
+        'bgm': 'Fantasy',
         'conversations': [
             {
                 'speaker': 'ひろかず',
@@ -1024,7 +1024,7 @@ export const taketaConversationData = {
     // かなとのビデオカメラを落として壊す
     'videocamera_broken': {
         'background': 'classroom',
-        'bgm': 'Fantasy',
+        'bgm': 'ON_THE_BEACH',
         'conversations': [
             {
                 'speaker': 'かなと',
@@ -1068,7 +1068,7 @@ export const taketaConversationData = {
     // 昼休みドラマ撮影クラブ（ゴスペラーズ等々）
     'drama_filming': {
         'background': 'classroom',
-        'bgm': 'nightbarth',
+        'bgm': 'Fantasy',
         'conversations': [
             {
                 'speaker': 'ひろかず',
@@ -2246,7 +2246,7 @@ export const taketaConversationData = {
     // 黒い服着てこない
     'black_clothes': {
         'background': 'classroom',
-        'bgm': 'Fantasy',
+        'bgm': 'Nagisa_Moderato',
         'conversations': [
             {
                 'speaker': 'mamicchi',
@@ -2350,7 +2350,7 @@ export const taketaConversationData = {
     // 放送
     'broadcast': {
         'background': 'classroom',
-        'bgm': 'Fantasy',
+        'bgm': 'unオーエン彼女なのか？',
         'conversations': [
             {
                 'speaker': 'ナレーション',
@@ -2634,7 +2634,7 @@ export const taketaConversationData = {
     // ワックスつける
     'wax_on': {
         'background': 'classroom',
-        'bgm': 'Fantasy',
+        'bgm': 'vitality',
         'conversations': [
             {
                 'speaker': 'おおや',
@@ -2684,7 +2684,7 @@ export const taketaConversationData = {
     // バレンタイン
     'valentine': {
         'background': 'classroom',
-        'bgm': 'Fantasy',
+        'bgm': 'Rainbow_Seeker_II',
         'conversations': [
             {
                 'speaker': 'ナレーション',
