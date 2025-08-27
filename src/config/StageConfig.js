@@ -30,9 +30,7 @@ export const StageConfig = {
                     map: 'assets/audio/bgm/Pollyanna.mp3'  // 2階・3階と同じBGMを使用
                 },
                 npcs: [
-                    { name: 'ひろかず', eventId: 'climbing_injury' },
-                    { name: 'npc_s_2', eventId: 'XXX' },
-                    { name: 'npc_s_3', eventId: 'XXX' }
+                    { name: 'ひろかず_1', eventId: 'climbing_injury' }
                 ],
                 tilesets: [
                     'pika_nos_tiles03_A2',
@@ -71,8 +69,8 @@ export const StageConfig = {
                 },
                 npcs: [
                     { name: 'anndou', eventId: 'classroom_lock_incident' },
-                    { name: 'こうたろう', eventId: 'koutarou_toilet' },
-                    { name: 'だいち', eventId: 'culture_festival_apology' }
+                    { name: 'こうたろう_2', eventId: 'koutarou_toilet' },
+                    { name: 'だいち_2', eventId: 'culture_festival_apology' }
                 ],
                 tilesets: [
                     'pika_nos_tiles03_A2',
@@ -107,10 +105,9 @@ export const StageConfig = {
                     map: 'assets/audio/bgm/Pollyanna.mp3'  // 1階と同じBGMを使用
                 },
                 npcs: [
-                    { name: 'npc_s_5', eventId: 'XXX' },
-                    { name: 'かなと', eventId: 'drama_filming' },
-                    { name: 'ひろかず', eventId: 'videocamera_broken' },
-                    { name: 'だいち', eventId: 'gospellers_song' }
+                    { name: 'かなと_3', eventId: 'drama_filming' },
+                    { name: 'ひろかず_3', eventId: 'videocamera_broken' },
+                    { name: 'だいち_3', eventId: 'gospellers_song' }
                 ],
                 tilesets: [
                     'pika_nos_tiles03_A2',

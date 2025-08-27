@@ -646,12 +646,18 @@ export function getEventConfig(eventId) {
         console.log('[EventConfig] エリア内のイベント:', Object.keys(area));
         
         if (area[eventId]) {
-            console.log('[EventConfig] イベント発見:', area[eventId]);
+            console.log(`[EventConfig] イベント発見: ${eventId} in ${areaKey}`);
+            console.log('[EventConfig] イベント詳細:', area[eventId]);
             return area[eventId];
         }
     }
     
-    console.log('[EventConfig] イベントが見つかりませんでした');
+    console.warn(`[EventConfig] イベントID "${eventId}" が見つかりませんでした`);
+    console.log('[EventConfig] 利用可能なエリア:', Object.keys(EventConfig));
+    for (const areaKey in EventConfig) {
+        const area = EventConfig[areaKey];
+        console.log(`[EventConfig] ${areaKey}エリアのイベント:`, Object.keys(area));
+    }
     return null;
 }
 

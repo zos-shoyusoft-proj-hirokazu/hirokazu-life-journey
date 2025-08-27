@@ -13,6 +13,12 @@ export class DynamicConversationScene extends Phaser.Scene {
         this.eventId = data.eventId;
         console.log('[DynamicConversationScene] init called with eventId:', this.eventId);
         
+        // 前回の会話データをクリア（再利用時の問題を防ぐ）
+        this.conversationData = null;
+        this.conversationDataLoaded = false;
+        this.resourcesLoaded = false;
+        this.eventConfig = null;
+        
         // eventConfigを即座に設定
         this.loadEventConfig();
     }
@@ -225,7 +231,18 @@ export class DynamicConversationScene extends Phaser.Scene {
                     case 'taketa':
                         import('../data/taketa/conversationData.js').then(({ taketaConversationData }) => {
                             const conversationKey = this.eventConfig.conversationDataKey;
+                            console.log('[DynamicConversationScene] taketaエリアの会話データ読み込み開始');
+                            console.log('[DynamicConversationScene] conversationKey:', conversationKey);
+                            console.log('[DynamicConversationScene] taketaConversationData:', taketaConversationData);
+                            console.log('[DynamicConversationScene] 利用可能な会話データキー:', Object.keys(taketaConversationData));
+                            
                             this.conversationData = taketaConversationData[conversationKey];
+                            console.log('[DynamicConversationScene] 読み込まれた会話データ:', this.conversationData);
+                            
+                            if (!this.conversationData) {
+                                console.error(`[DynamicConversationScene] 会話データが見つかりません: ${conversationKey}`);
+                            }
+                            
                             resolve();
                         });
                         break;

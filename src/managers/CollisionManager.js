@@ -166,6 +166,7 @@ export class CollisionManager {
         
         const currentFloor = this.scene.stageConfig?.currentFloor;
         console.log('[CollisionManager] currentFloor:', currentFloor);
+        console.log(`[CollisionManager] 現在のフロア番号: ${currentFloor?.number || 'undefined'}`);
         
         if (!currentFloor || !currentFloor.npcs) {
             console.warn('[CollisionManager] currentFloorまたはnpcsが存在しません');
@@ -173,9 +174,15 @@ export class CollisionManager {
         }
         
         console.log('[CollisionManager] npcs:', currentFloor.npcs);
+        console.log(`[CollisionManager] 検索対象のNPC名: ${npcName}`);
         
         const npc = currentFloor.npcs.find(npc => npc.name === npcName);
         console.log('[CollisionManager] 見つかったNPC:', npc);
+        
+        if (!npc) {
+            console.warn(`[CollisionManager] NPC名 "${npcName}" がフロア${currentFloor.number}で見つかりません`);
+            console.log('[CollisionManager] 利用可能なNPC名:', currentFloor.npcs.map(n => n.name));
+        }
         
         const eventId = npc ? npc.eventId : null;
         console.log(`[CollisionManager] 取得されたイベントID: ${eventId}`);
