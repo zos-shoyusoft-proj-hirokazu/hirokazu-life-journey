@@ -482,6 +482,78 @@ export const EventConfig = {
             },
             conversationDataKey: 'kannnamu_kudou',  // 必要：conversationDataのキーと一致
             areaName: 'classroom'                // 必要：エリア名の指定
+        },
+        
+        // 黒い服着てこない
+        'black_clothes': {
+            id: 'black_clothes',                 // 必要：イベントを識別するためのID
+            title: '黒い服着てこない',              // 必要：イベントのタイトル表示用
+            type: 'conversation',                // 必要：イベントの種類を指定
+            areaType: 'taketa',                  // 必要：エリアタイプを指定
+            background: 'classroom',              // 必要：conversationDataのbackgroundと一致
+            bgm: 'Fantasy',                      // 必要：conversationDataのbgmと一致
+            required: {
+                backgrounds: ['classroom'],       // 必要：背景画像の読み込みに必要
+                characters: ['mamicchi_a', 'mamicchi_c', 'classmate_a', 'narrator_a', 'daichi_a', 'hirokazu_a', 'koutarou_a', 'kanato_a', 'shuhei_a'],  // 必要：character+expressionの組み合わせ（重複除く）
+                bgm: ['Fantasy']                  // 必要：BGMファイルの読み込みに必要
+                // seセクションは不要：conversationDataにSEの指定がないため
+            },
+            conversationDataKey: 'black_clothes', // 必要：conversationDataのキーと一致
+            areaName: 'classroom'                // 必要：エリア名の指定
+        },
+        
+        // 放送
+        'broadcast': {
+            id: 'broadcast',                     // 必要：イベントを識別するためのID
+            title: '放送',                        // 必要：イベントのタイトル表示用
+            type: 'conversation',                // 必要：イベントの種類を指定
+            areaType: 'taketa',                  // 必要：エリアタイプを指定
+            background: 'classroom',              // 必要：conversationDataのbackgroundと一致
+            bgm: 'Fantasy',                      // 必要：conversationDataのbgmと一致
+            required: {
+                backgrounds: ['classroom'],       // 必要：背景画像の読み込みに必要
+                characters: ['narrator_a', 'broadcast_a', 'hirokazu_a', 'kanato_a', 'shuhei_a', 'far_class_a', 'daichi_a', 'near_class_a', 'koutarou_a', 'next_class_a', 'class1_a'],  // 必要：character+expressionの組み合わせ（重複除く）
+                bgm: ['Fantasy']                  // 必要：BGMファイルの読み込みに必要
+                // seセクションは不要：conversationDataにSEの指定がないため
+            },
+            conversationDataKey: 'broadcast',     // 必要：conversationDataのキーと一致
+            areaName: 'classroom'                // 必要：エリア名の指定
+        },
+        
+        // ワックスつける
+        'wax_on': {
+            id: 'wax_on',                        // 必要：イベントを識別するためのID
+            title: 'ワックスつける',               // 必要：イベントのタイトル表示用
+            type: 'conversation',                // 必要：イベントの種類を指定
+            areaType: 'taketa',                  // 必要：エリアタイプを指定
+            background: 'classroom',              // 必要：conversationDataのbackgroundと一致
+            bgm: 'Fantasy',                      // 必要：conversationDataのbgmと一致
+            required: {
+                backgrounds: ['classroom'],       // 必要：背景画像の読み込みに必要
+                characters: ['ooya_a', 'naoki_a'],  // 必要：character+expressionの組み合わせ（重複除く）
+                bgm: ['Fantasy']                  // 必要：BGMファイルの読み込みに必要
+                // seセクションは不要：conversationDataにSEの指定がないため
+            },
+            conversationDataKey: 'wax_on',        // 必要：conversationDataのキーと一致
+            areaName: 'classroom'                // 必要：エリア名の指定
+        },
+        
+        // バレンタイン
+        'valentine': {
+            id: 'valentine',                     // 必要：イベントを識別するためのID
+            title: 'バレンタイン',                 // 必要：イベントのタイトル表示用
+            type: 'conversation',                // 必要：イベントの種類を指定
+            areaType: 'taketa',                  // 必要：エリアタイプを指定
+            background: 'classroom',              // 必要：conversationDataのbackgroundと一致
+            bgm: 'Fantasy',                      // 必要：conversationDataのbgmと一致
+            required: {
+                backgrounds: ['classroom'],       // 必要：背景画像の読み込みに必要
+                characters: ['narrator_a', 'kanato_a', 'letter_a', 'hirokazu_a', 'koutarou_a'],  // 必要：character+expressionの組み合わせ（重複除く）
+                bgm: ['Fantasy']                  // 必要：BGMファイルの読み込みに必要
+                // seセクションは不要：conversationDataにSEの指定がないため
+            },
+            conversationDataKey: 'valentine',     // 必要：conversationDataのキーと一致
+            areaName: 'classroom'                // 必要：エリア名の指定
         }
     },
     
