@@ -42,6 +42,13 @@ export class CollisionManager {
                 // NPCクラス共通設定
                 sprite.setInteractive();
                 sprite.on('pointerdown', () => {
+                    // 会話中は新しい会話を開始しない
+                    if (this.scene.isConversationActive && this.scene.isConversationActive()) {
+                        console.log('[CollisionManager] 会話中のため、NPCクリックを無視します');
+                        return;
+                    }
+                    
+                    console.log(`[CollisionManager] NPCクリック: ${obj.name}`);
                     this.startConversation(obj.name);
                 });
                 break;
@@ -129,6 +136,7 @@ export class CollisionManager {
 
     startConversation(npcId) {
         console.log(`[CollisionManager] 会話開始: ${npcId}`);
+        console.log(`[CollisionManager] 現在の会話中フラグ: ${this.scene.isConversationActive ? this.scene.isConversationActive() : 'undefined'}`);
         
         // NPC名からイベントIDを取得
         const eventId = this.getEventIdFromNPCName(npcId);
@@ -275,5 +283,39 @@ export class CollisionManager {
         
         // シーンへの参照を削除
         this.scene = null;
+    }
+
+    setupNpcInteraction(npc) {
+        if (!npc || !npc.name) {
+            console.warn('[CollisionManager] NPC設定が不完全です:', npc);
+            return;
+        }
+
+        // 会話中は新しい会話を開始しない
+        if (this.scene.isConversationActive && this.scene.isConversationActive()) {
+            console.log('[CollisionManager] 会話中のため、NPCクリックを無視します');
+            return;
+        }
+
+        console.log(`[CollisionManager] NPC設定: ${npc.name} -> ${npc.eventId}`);
+        
+        // NPCをクリック可能にする
+        npc.setInteractive();
+        npc.on('pointerdown', () => {
+            console.log(`[CollisionManager] NPCクリック: ${npc.name}`);
+            
+            // 会話中は新しい会話を開始しない（二重チェック）
+            if (this.scene.isConversationActive && this.scene.isConversationActive()) {
+                console.log('[CollisionManager] 会話中のため、NPCクリックを無視します');
+                return;
+            }
+            
+            // 会話トリガーに処理を委譲
+            if (this.scene.conversationTrigger) {
+                this.scene.conversationTrigger.startConversation(npc.name);
+            } else {
+                console.error('[CollisionManager] ConversationTriggerが初期化されていません');
+            }
+        });
     }
 }

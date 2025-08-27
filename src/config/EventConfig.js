@@ -373,7 +373,7 @@ export const EventConfig = {
                 // seセクションは不要：conversationDataにSEの指定がないため
             },
             conversationDataKey: 'classroom_lock_incident',  // 必要：conversationDataのキーと一致
-            areaName: 'classroom_door'            // 必要：エリア名の指定
+            areaName: 'classroom'                 // 必要：エリア名の指定
         },
         
         // こうたろうのおしっこ事件

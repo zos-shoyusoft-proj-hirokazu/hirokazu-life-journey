@@ -25,8 +25,12 @@ export const StageConfig = {
                 // 2階から降りてきた時の開始位置
                 fromFloor2StartX: 750,
                 fromFloor2StartY: 1000,
+                // 1階専用のBGM設定
+                bgm: {
+                    map: 'assets/audio/bgm/Pollyanna.mp3'  // 2階・3階と同じBGMを使用
+                },
                 npcs: [
-                    { name: 'npc_s_1', eventId: 'XXX' },
+                    { name: 'ひろかず', eventId: 'climbing_injury' },
                     { name: 'npc_s_2', eventId: 'XXX' },
                     { name: 'npc_s_3', eventId: 'XXX' }
                 ],
@@ -61,8 +65,14 @@ export const StageConfig = {
                 // 3階から降りてきた時の開始位置
                 fromFloor3StartX: 1750,
                 fromFloor3StartY: 800,
+                // 2階専用のBGM設定
+                bgm: {
+                    map: 'assets/audio/bgm/Pollyanna.mp3'  // 1階と同じBGMを使用
+                },
                 npcs: [
-                    { name: 'npc_s_4', eventId: 'XXX' }
+                    { name: 'anndou', eventId: 'classroom_lock_incident' },
+                    { name: 'こうたろう', eventId: 'koutarou_toilet' },
+                    { name: 'だいち', eventId: 'culture_festival_apology' }
                 ],
                 tilesets: [
                     'pika_nos_tiles03_A2',
@@ -92,9 +102,15 @@ export const StageConfig = {
                 // 2階から上がってきた時の開始位置
                 fromFloor2StartX: 1200,
                 fromFloor2StartY: 1400,
+                // 3階専用のBGM設定
+                bgm: {
+                    map: 'assets/audio/bgm/Pollyanna.mp3'  // 1階と同じBGMを使用
+                },
                 npcs: [
                     { name: 'npc_s_5', eventId: 'XXX' },
-                    { name: 'かなと', eventId: 'drama_filming' }
+                    { name: 'かなと', eventId: 'drama_filming' },
+                    { name: 'ひろかず', eventId: 'videocamera_broken' },
+                    { name: 'だいち', eventId: 'gospellers_song' }
                 ],
                 tilesets: [
                     'pika_nos_tiles03_A2',

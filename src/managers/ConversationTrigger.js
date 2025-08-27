@@ -22,24 +22,63 @@ export class ConversationTrigger {
         console.log('[ConversationTrigger] 利用可能な会話データ:', this.conversationManager.getAvailableEvents());
     }
 
-    // 既存のCollisionManagerのstartConversationメソッドを拡張
-    startConversation(eventId) {
-        console.log(`[ConversationTrigger] 会話開始試行: ${eventId}`);
+    // NPC名からイベントIDを取得するメソッド
+    getEventIdFromNPCName(npcName) {
+        console.log(`[ConversationTrigger] NPC名からイベントID取得開始: ${npcName}`);
         
-        // 新しいギャルゲ風システムの会話データがあるかチェック
-        const conversationData = this.conversationManager.getConversation(eventId);
+        // StageSceneの現在のフロア設定からNPC情報を取得
+        const currentFloor = this.scene.stageConfig?.currentFloor;
+        console.log('[ConversationTrigger] currentFloor:', currentFloor);
         
-        console.log('[ConversationTrigger] 会話データ取得結果:', conversationData);
-        
-        if (conversationData) {
-            // 新しいギャルゲ風会話システムを使用
-            console.log(`[ConversationTrigger] ギャルゲ風会話開始: ${eventId}`);
-            this.startVisualNovelConversation(conversationData, null, eventId);
-        } else {
-            // 既存のシンプルな会話システムを使用
-            console.log(`[ConversationTrigger] シンプル会話開始: ${eventId}`);
-            this.startSimpleDialog(eventId);
+        if (!currentFloor || !currentFloor.npcs) {
+            console.warn('[ConversationTrigger] フロア設定またはNPC設定が見つかりません');
+            return null;
         }
+        
+        // NPC名に一致するイベントIDを検索
+        const npcConfig = currentFloor.npcs.find(npc => npc.name === npcName);
+        if (npcConfig) {
+            console.log('[ConversationTrigger] 見つかったNPC:', npcConfig);
+            return npcConfig.eventId;
+        }
+        
+        console.warn(`[ConversationTrigger] NPC ${npcName} の設定が見つかりません`);
+        return null;
+    }
+
+    // NPCクリック時の会話開始メソッド
+    startConversation(eventId) {
+        console.log(`[ConversationTrigger] startConversation: ${eventId}`);
+        
+        if (this.isConversationActive) {
+            console.log('[ConversationTrigger] 既に会話中です');
+            return;
+        }
+
+        this.isConversationActive = true;
+        
+        // StageSceneの会話中フラグを設定
+        if (this.scene.setConversationActive) {
+            this.scene.setConversationActive(true);
+        }
+
+        // イベントIDが直接渡されているので、そのまま使用
+        if (!eventId) {
+            console.error('[ConversationTrigger] イベントIDが渡されていません');
+            this.isConversationActive = false;
+            if (this.scene.setConversationActive) {
+                this.scene.setConversationActive(false);
+            }
+            return;
+        }
+
+        console.log(`[ConversationTrigger] イベントID: ${eventId} で会話を開始`);
+        
+        // DynamicConversationSceneを起動
+        this.scene.scene.launch('DynamicConversationScene', {
+            eventId: eventId,
+            originalSceneKey: this.scene.scene.key
+        });
     }
 
     // ギャルゲ風会話システムの開始（NPCクリック時とエリアマーカー「はい」クリック時の両方で使用）

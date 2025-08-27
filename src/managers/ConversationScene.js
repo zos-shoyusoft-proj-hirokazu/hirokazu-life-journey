@@ -81,6 +81,9 @@ export class ConversationScene extends Phaser.Scene {
         this.uiManager = new UIManager();
         this.uiManager.createConversationBackButton(this);
         
+        // 会話イベント中の背景操作を無効化
+        this.disableBackgroundInteraction();
+        
         // テキストボックスの設定（画像がない場合は黒い四角形で代替）
         if (this.textures.exists('textbox')) {
             this.textbox = this.add.image(width / 2, height - 80, 'textbox'); // Y座標を調整
@@ -1069,22 +1072,28 @@ export class ConversationScene extends Phaser.Scene {
 
     // 元のシーンに戻る
     returnToOriginalScene() {
-        try {
-            console.log('[ConversationScene] 元のシーン', this.originalSceneKey, 'に戻ります');
-            
-            if (this.originalSceneKey) {
-                // シーンの存在確認
-                const sceneManager = this.scene.manager;
-                if (sceneManager) {
-                    const existingScene = sceneManager.getScene(this.originalSceneKey);
-                    if (existingScene) {
-                        console.log('[ConversationScene] 既存のシーン', this.originalSceneKey, 'が見つかりました');
-                    } else {
-                        console.warn('[ConversationScene] シーン', this.originalSceneKey, 'が見つかりません');
-                    }
+        console.log('[ConversationScene] 元のシーンに戻ります');
+        
+        // StageSceneの会話中フラグをリセット
+        if (this.originalSceneKey === 'taketa_highschool') {
+            try {
+                const stageScene = this.scene.manager.getScene('taketa_highschool');
+                if (stageScene && stageScene.setConversationActive) {
+                    stageScene.setConversationActive(false);
+                    console.log('[ConversationScene] StageSceneの会話中フラグをリセットしました');
                 }
-                
-                // 保存された状態がある場合は、その状態で復元
+            } catch (e) {
+                console.warn('[ConversationScene] StageSceneのフラグリセットエラー:', e);
+            }
+        }
+
+        // 元のBGMを復元
+        this.restoreOriginalBgm();
+        
+        // 元のシーンに戻る
+        if (this.originalSceneKey) {
+            try {
+                // 元のシーンの状態を復元
                 if (this.currentState && this.originalSceneKey === 'taketa_highschool') {
                     console.log('[ConversationScene] 保存された状態で復元:', this.currentState);
                     this.scene.stop();
@@ -1099,22 +1108,17 @@ export class ConversationScene extends Phaser.Scene {
                     this.scene.stop();
                     this.scene.start(this.originalSceneKey);
                 }
-                console.log('[ConversationScene] シーン', this.originalSceneKey, 'を開始しました');
-                
-
-                
-            } else {
-                console.warn('[ConversationScene] 元のシーンのキーが設定されていません');
-                this.scene.stop();
-                // フォールバック: メインメニューに戻る
-                this.scene.start('TitleScene');
+            } catch (error) {
+                console.error('[ConversationScene] 元のシーン復元エラー:', error);
+                // エラーが発生した場合は、シーンキーを直接指定して復元を試行
+                this.scene.start(this.originalSceneKey);
             }
-            
-        } catch (error) {
-            console.error('[ConversationScene] Error returning to original scene:', error);
-            // エラーが発生した場合は強制的にシーンを停止
-            this.scene.stop();
+        } else {
+            console.error('[ConversationScene] 元のシーンキーが設定されていません');
         }
+        
+        // このシーンを停止
+        this.scene.stop();
     }
 
     // エリアを完了済みに設定
@@ -1305,5 +1309,28 @@ export class ConversationScene extends Phaser.Scene {
         } else {
             console.warn('[ConversationScene] AudioManagerが見つかりません:', this.audioManager);
         }
+    }
+    
+    // 背景操作を無効化するメソッド
+    disableBackgroundInteraction() {
+        // より確実な方法で背景操作を無効化
+        this.input.on('pointerdown', (pointer) => {
+            // 戻るボタン以外のクリック/タップを無効化
+            console.log('[ConversationScene] 背景クリックを検出:', pointer.x, pointer.y);
+            
+            // 戻るボタンの領域外のクリックを無効化
+            const backButtonArea = { x: 50, y: 50, width: 100, height: 50 }; // 戻るボタンの概算位置
+            if (pointer.x < backButtonArea.x || 
+                pointer.x > backButtonArea.x + backButtonArea.width ||
+                pointer.y < backButtonArea.y || 
+                pointer.y > backButtonArea.y + backButtonArea.height) {
+                
+                // 背景クリックを無効化
+                console.log('[ConversationScene] 背景クリックを無効化しました');
+                return false; // イベントを停止
+            }
+        });
+        
+        console.log('[ConversationScene] 背景操作を無効化しました');
     }
 } 

@@ -277,7 +277,7 @@ export class DynamicConversationScene extends Phaser.Scene {
                         this.eventConfig.areaName === 'classroom') {
                         originalSceneKey = 'taketa_highschool'; // 竹田高校内
                         
-                        // 竹田高校内の場合、現在の詳細な状態を取得
+                        // 竹田高校内の場合のみ、現在の詳細な状態を取得
                         try {
                             const stage = this.scene.manager.getScene('taketa_highschool');
                             if (stage) {
@@ -286,13 +286,16 @@ export class DynamicConversationScene extends Phaser.Scene {
                                     playerPosition: stage.playerController ? stage.playerController.getPosition() : { x: 100, y: 100 },
                                     mapKey: stage.mapManager ? stage.mapManager.currentMapKey : 'taketa_highschool_1'
                                 };
-                                console.log('[DynamicConversationScene] 現在の状態を取得:', currentState);
+                                console.log('[DynamicConversationScene] 竹田高校内の状態を取得:', currentState);
                             }
                         } catch (e) {
                             console.warn('[DynamicConversationScene] 状態取得エラー:', e);
                         }
                     } else {
-                        originalSceneKey = 'TaketastageStage';  // 竹田マップ
+                        // 竹田マップの場合は TaketastageStage に戻る（状態保存不要）
+                        originalSceneKey = 'TaketastageStage';
+                        currentState = null; // 状態保存をクリア
+                        console.log('[DynamicConversationScene] 竹田マップに戻ります（状態保存なし）:', this.eventConfig.areaName);
                     }
                     break;
                 case 'japan':

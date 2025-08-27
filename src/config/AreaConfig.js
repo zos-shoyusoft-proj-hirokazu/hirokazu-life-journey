@@ -91,7 +91,8 @@ export const AreaConfig = {
             { name: 'taketa_high_school', scene: 'startPhaserGame', sceneParam: 'taketa_highschool', conversationId: null },
             { name: 'galaxy_water', scene: null, conversationId: 'galaxy_water' },
             { name: 'udefuriojisann', scene: null, conversationId: 'udefuriojisann' },
-            { name: 'working_go_to_home_miemachi', scene: null, conversationId: 'working_go_to_home_miemachi' }
+            { name: 'working_go_to_home_miemachi', scene: null, conversationId: 'working_go_to_home_miemachi' },
+            { name: 'kannnamu_kudou', scene: null, conversationId: 'kannnamu_kudou' }
         ]
     },
     

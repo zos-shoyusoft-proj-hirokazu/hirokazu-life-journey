@@ -16,11 +16,8 @@ export class StageScene extends Phaser.Scene {
         super({ key: config.stageKey });
         
         // 設定を保存
-        this.stageConfig = StageConfig[config.stageKey];
-        if (!this.stageConfig) {
-            console.error(`Stage config not found for: ${config.stageKey}`);
-            return;
-        }
+        this.stageConfig = config.stageConfig;
+        this.stageKey = config.stageKey;
         
         // マネージャーの初期化
         this.mapManager = null;
@@ -29,14 +26,15 @@ export class StageScene extends Phaser.Scene {
         this.audioManager = null;
         this.conversationTrigger = null;
         
-        // 現在のフロア
+        // フロア管理
         this.currentFloor = 1;
-        
-        // 状態復元用の設定
         this.restoreState = false;
         this.targetFloor = 1;
         this.playerPosition = null;
         this.mapKey = null;
+        
+        // 会話中フラグ（マップシーンと同様）
+        this._isInConversation = false;
     }
     
     init(data) {
@@ -542,6 +540,17 @@ export class StageScene extends Phaser.Scene {
                 }
             }
         });
+    }
+
+    // 会話開始時のフラグ設定
+    setConversationActive(active) {
+        this._isInConversation = active;
+        console.log(`[StageScene] 会話中フラグを${active ? 'true' : 'false'}に設定`);
+    }
+
+    // 会話中かどうかの確認
+    isConversationActive() {
+        return this._isInConversation;
     }
 }
 
