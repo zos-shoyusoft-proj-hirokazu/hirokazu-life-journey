@@ -123,6 +123,7 @@ export class CollisionManager {
         }
         
         // フロア移動を実行
+        console.log(`[CollisionManager] (${targetFloor}) を呼び出し`);
         this.scene.changeFloor(targetFloor);
     }
 

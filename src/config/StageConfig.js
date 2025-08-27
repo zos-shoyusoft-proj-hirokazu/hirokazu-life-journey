@@ -22,6 +22,9 @@ export const StageConfig = {
                 implemented: true,
                 playerStartX: 100,
                 playerStartY: 100,
+                // 2階から降りてきた時の開始位置
+                fromFloor2StartX: 750,
+                fromFloor2StartY: 1000,
                 npcs: [
                     { name: 'npc_s_1', eventId: 'XXX' },
                     { name: 'npc_s_2', eventId: 'XXX' },
@@ -52,6 +55,12 @@ export const StageConfig = {
                 implemented: true,
                 playerStartX: 1650,
                 playerStartY: 800,
+                // 1階から上がってきた時の開始位置
+                fromFloor1StartX: 1680,
+                fromFloor1StartY: 730,
+                // 3階から降りてきた時の開始位置
+                fromFloor3StartX: 1750,
+                fromFloor3StartY: 800,
                 npcs: [
                     { name: 'npc_s_4', eventId: 'XXX' }
                 ],
@@ -80,6 +89,9 @@ export const StageConfig = {
                 implemented: true,
                 playerStartX: 1200,
                 playerStartY: 1400,
+                // 2階から上がってきた時の開始位置
+                fromFloor2StartX: 1200,
+                fromFloor2StartY: 1400,
                 npcs: [
                     { name: 'npc_s_5', eventId: 'XXX' },
                     { name: 'かなと', eventId: 'drama_filming' }

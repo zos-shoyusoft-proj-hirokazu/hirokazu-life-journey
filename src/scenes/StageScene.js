@@ -60,6 +60,18 @@ export class StageScene extends Phaser.Scene {
             this.mapKey = null;
             console.log('[StageScene] 状態復元設定なし（通常起動）');
         }
+        
+        // nextFloorNumberも受け取る
+        if (data && data.nextFloorNumber) {
+            this.nextFloorNumber = data.nextFloorNumber;
+            console.log(`[StageScene] nextFloorNumber を受け取り: ${this.nextFloorNumber}`);
+        }
+        
+        // fromFloorNumberも受け取る
+        if (data && data.fromFloorNumber) {
+            this.fromFloorNumber = data.fromFloorNumber;
+            console.log(`[StageScene] fromFloorNumber を受け取り: ${this.fromFloorNumber}`);
+        }
     }
 
     preload() {
@@ -101,6 +113,8 @@ export class StageScene extends Phaser.Scene {
         console.log('[StageScene] === create() 開始 ===');
         console.log('[StageScene] シーンキー:', this.scene.key);
         console.log('[StageScene] ステージ設定:', this.stageConfig);
+        console.log('[StageScene] デバッグ: nextFloorNumber =', this.nextFloorNumber);
+        console.log('[StageScene] デバッグ: restoreState =', this.restoreState);
         
         try {
             // 基本的なマップ表示
@@ -113,6 +127,10 @@ export class StageScene extends Phaser.Scene {
             // フロア変更から来た場合は、指定されたフロアから開始
             // 会話終了後の状態復元の場合は、保存された状態から開始
             let targetFloor;
+            console.log('[StageScene] デバッグ: フロア判定開始');
+            console.log('[StageScene] デバッグ: this.restoreState =', this.restoreState);
+            console.log('[StageScene] デバッグ: this.nextFloorNumber =', this.nextFloorNumber);
+            
             if (this.restoreState) {
                 // 会話終了後の状態復元
                 targetFloor = this.stageConfig.floors.find(f => f.number === this.targetFloor);
@@ -160,6 +178,28 @@ export class StageScene extends Phaser.Scene {
                 playerStartX = this.playerPosition.x;
                 playerStartY = this.playerPosition.y;
                 console.log(`[StageScene] 保存された位置から復元: (${playerStartX}, ${playerStartY})`);
+            } else if (this.fromFloorNumber && this.fromFloorNumber !== targetFloor.number) {
+                // 他のフロアから移動してきた場合
+                const fromFloorKey = `fromFloor${this.fromFloorNumber}Start`;
+                const fromFloorX = targetFloor[`${fromFloorKey}X`];
+                const fromFloorY = targetFloor[`${fromFloorKey}Y`];
+                
+                console.log(`[StageScene] デバッグ: 移動元フロア${this.fromFloorNumber}からフロア${targetFloor.number}への移動`);
+                console.log(`[StageScene] デバッグ: fromFloorKey = ${fromFloorKey}`);
+                console.log(`[StageScene] デバッグ: fromFloorX = ${fromFloorX}, fromFloorY = ${fromFloorY}`);
+                console.log('[StageScene] デバッグ: targetFloor設定 =', targetFloor);
+                
+                if (fromFloorX !== undefined && fromFloorY !== undefined) {
+                    // 移動元フロア専用の開始位置がある場合
+                    playerStartX = fromFloorX;
+                    playerStartY = fromFloorY;
+                    console.log(`[StageScene] フロア${this.fromFloorNumber}からフロア${targetFloor.number}に移動してきた位置: (${playerStartX}, ${playerStartY})`);
+                } else {
+                    // 移動元フロア専用の開始位置がない場合はデフォルト位置
+                    playerStartX = targetFloor.playerStartX || 100;
+                    playerStartY = targetFloor.playerStartY || 100;
+                    console.log(`[StageScene] フロア${this.fromFloorNumber}からフロア${targetFloor.number}に移動（デフォルト位置）: (${playerStartX}, ${playerStartY})`);
+                }
             } else {
                 // フロアのデフォルト位置
                 playerStartX = targetFloor.playerStartX || 100;
@@ -352,7 +392,13 @@ export class StageScene extends Phaser.Scene {
     }
 
     changeFloor(floorNumber) {
-        if (floorNumber === this.currentFloor) return;
+        console.log(`[StageScene] changeFloor(${floorNumber}) メソッド開始`);
+        console.log(`[StageScene] 現在のフロア: ${this.currentFloor}, 移動先フロア: ${floorNumber}`);
+        
+        if (floorNumber === this.currentFloor) {
+            console.log(`[StageScene] 同じフロアなので移動しない: ${floorNumber}`);
+            return;
+        }
         
         try {
             // 設定からフロア情報を取得
@@ -381,12 +427,18 @@ export class StageScene extends Phaser.Scene {
             }
             
             console.log(`[StageScene] フロア${floorNumber}への移動を開始（状態復元設定クリア済み）`);
+            console.log(`[StageScene] デバッグ: nextFloorNumber = ${this.nextFloorNumber}`);
             
-            // scene.restart()ではなく、scene.start()で完全に新しいシーンを開始
-            // これにより、元のパラメータが保持されることを防ぐ
+            // 元のシーンキーで新しいシーンを開始
+            console.log(`[StageScene] シーン再開始: ${this.scene.key} に nextFloorNumber: ${floorNumber} を渡す`);
+            
+            // 現在のシーンを停止
             this.scene.stop();
+            
+            // 元のシーンキーで新しいシーンを開始
             this.scene.start(this.scene.key, {
-                nextFloorNumber: floorNumber
+                nextFloorNumber: floorNumber,
+                fromFloorNumber: this.currentFloor  // 移動元フロアを追加
             });
             
         } catch (error) {
