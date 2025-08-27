@@ -2684,7 +2684,7 @@ export const taketaConversationData = {
     // バレンタイン
     'valentine': {
         'background': 'classroom',
-        'bgm': 'Rainbow_Seeker_II',
+        'bgm': 'rainbow_Seeker_II',
         'conversations': [
             {
                 'speaker': 'ナレーション',
