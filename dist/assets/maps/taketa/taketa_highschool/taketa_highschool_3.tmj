@@ -411,7 +411,7 @@
                 {
                  "height":0,
                  "id":32,
-                 "name":"\u304b\u306a\u3068",
+                 "name":"\u304b\u306a\u3068_3",
                  "point":true,
                  "rotation":0,
                  "type":"npc",
@@ -423,7 +423,7 @@
                 {
                  "height":0,
                  "id":33,
-                 "name":"\u3072\u308d\u304b\u305a_2",
+                 "name":"\u3072\u308d\u304b\u305a_3",
                  "point":true,
                  "rotation":0,
                  "type":"npc",
@@ -435,7 +435,7 @@
                 {
                  "height":0,
                  "id":34,
-                 "name":"\u3053\u3046\u305f\u308d\u3046",
+                 "name":"\u3053\u3046\u305f\u308d\u3046_3",
                  "point":true,
                  "rotation":0,
                  "type":"npc",
@@ -447,7 +447,7 @@
                 {
                  "height":0,
                  "id":35,
-                 "name":"\u3060\u3044\u3061_2",
+                 "name":"\u3060\u3044\u3061_3",
                  "point":true,
                  "rotation":0,
                  "type":"npc",

@@ -231,6 +231,30 @@ export class StageScene extends Phaser.Scene {
             // 戻るボタンを作成
             this.uiManager.createBackButton(this);
             
+            // DialogSystemを初期化（竹田高校用）
+            if (this.stageKey === 'taketa_highschool') {
+                console.log('[StageScene] 竹田高校用DialogSystem初期化開始');
+                import('../managers/DialogSystem.js').then(({ DialogSystem }) => {
+                    console.log('[StageScene] DialogSystemクラス読み込み完了');
+                    import('../data/taketa/dialogs.js').then(({ TaketaDialogData }) => {
+                        console.log('[StageScene] TaketaDialogData読み込み完了:', TaketaDialogData);
+                        this.dialogSystem = new DialogSystem(this, TaketaDialogData);
+                        // 使用済み会話を管理するSetを初期化
+                        this.usedConversations = new Set();
+                        console.log('[StageScene] DialogSystem初期化完了（竹田高校用）');
+                        console.log('[StageScene] 使用済み会話管理開始');
+                        console.log('[StageScene] this.dialogSystem:', this.dialogSystem);
+                        console.log('[StageScene] this.usedConversations:', this.usedConversations);
+                    }).catch(error => {
+                        console.error('[StageScene] TaketaDialogData読み込みエラー:', error);
+                    });
+                }).catch(error => {
+                    console.error('[StageScene] DialogSystemクラス読み込みエラー:', error);
+                });
+            } else {
+                console.log('[StageScene] 竹田高校以外のため、DialogSystem初期化スキップ:', this.stageKey);
+            }
+            
             // AudioManagerを初期化
             this.audioManager = new AudioManager(this);
             

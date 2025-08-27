@@ -20,6 +20,11 @@ export class DialogSystem {
         this.setupInput();
     }
 
+    // 特定のダイアログIDが存在するかをチェック
+    hasDialog(dialogId) {
+        return this.dialogs && this.dialogs[dialogId] !== undefined;
+    }
+
     setupUI() {
         // シーンが有効でない場合は処理を停止
         if (!this.scene || !this.scene.cameras || !this.scene.cameras.main) {
@@ -177,6 +182,11 @@ export class DialogSystem {
                 this.nextDialog();
             }
         });
+    }
+
+    showDialog(npcId) {
+        // showDialogはstartDialogのエイリアス
+        this.startDialog(npcId);
     }
 
     startDialog(npcId) {

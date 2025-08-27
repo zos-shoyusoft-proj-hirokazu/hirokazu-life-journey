@@ -30,7 +30,8 @@ export const StageConfig = {
                     map: 'assets/audio/bgm/Pollyanna.mp3'  // 2階・3階と同じBGMを使用
                 },
                 npcs: [
-                    { name: 'ひろかず_1', eventId: 'climbing_injury' }
+                    { name: 'ひろかず_1', eventId: 'climbing_injury' },
+                    { name: 'npc_s_3' }
                 ],
                 tilesets: [
                     'pika_nos_tiles03_A2',
