@@ -379,8 +379,8 @@
                  "rotation":0,
                  "type":"wall",
                  "visible":true,
-                 "width":136,
-                 "x":1401,
+                 "width":142,
+                 "x":1395,
                  "y":8
                 }, 
                 {
@@ -522,6 +522,18 @@
                  "width":0,
                  "x":172,
                  "y":674
+                }, 
+                {
+                 "height":0,
+                 "id":53,
+                 "name":"\u3072\u308d\u304b\u305a",
+                 "point":true,
+                 "rotation":0,
+                 "type":"npc",
+                 "visible":true,
+                 "width":0,
+                 "x":1246.66666666667,
+                 "y":189.333333333333
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -564,7 +576,7 @@
          "y":0
         }],
  "nextlayerid":14,
- "nextobjectid":53,
+ "nextobjectid":55,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",
