@@ -423,7 +423,7 @@
                 {
                  "height":0,
                  "id":33,
-                 "name":"\u3072\u308d\u304b\u305a",
+                 "name":"\u3072\u308d\u304b\u305a_2",
                  "point":true,
                  "rotation":0,
                  "type":"npc",
@@ -447,7 +447,7 @@
                 {
                  "height":0,
                  "id":35,
-                 "name":"\u3060\u3044\u3061",
+                 "name":"\u3060\u3044\u3061_2",
                  "point":true,
                  "rotation":0,
                  "type":"npc",
