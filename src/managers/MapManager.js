@@ -161,8 +161,8 @@ export class MapManager {
                 return;
             }
             
-            // 竹田高校の場合は新しいタイルセット処理を使用
-            if (mapKey && mapKey.includes('taketa_highschool')) {
+            // 竹田高校と三重中学校の場合は新しいタイルセット処理を使用
+            if (mapKey && (mapKey.includes('taketa_highschool') || mapKey.includes('mie_high_school'))) {
                 // 新しいタイルセット処理（createNewMapと同じ方法）
                 if (this.tilemap && this.tilemap.tilesets && this.tilemap.tilesets.length > 0) {
                     this.tilemap.tilesets.forEach((tiledTileset) => {

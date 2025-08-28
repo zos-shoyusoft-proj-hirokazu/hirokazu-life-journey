@@ -1,5 +1,92 @@
 // src/config/StageConfig.js
 export const StageConfig = {
+    // 三重中学校ステージ（別名）
+    mie_high_school: {
+        stageKey: 'mie_high_school',
+        stageTitle: '三重中学校',
+        folderName: 'miemachi/mie_junior_highschool',
+        mapId: 'miemachi',  // 三重マップに戻るためのID
+        bgm: {
+            map: 'assets/audio/bgm/Pollyanna.mp3'
+        },
+        se: {
+            se_touch: 'assets/audio/se/touch_7.mp3',
+            se_floor_change: 'assets/audio/se/touch_2.mp3'
+        },
+        floors: [
+            {
+                number: 1,
+                mapKey: 'mie_high_school_1',
+                mapFileName: 'mie_highshool_1.tmj',
+                title: '三重中学校 1階',
+                implemented: true,
+                playerStartX: 900,
+                playerStartY: 1600,
+                // 2階から降りてきた時の開始位置
+                fromFloor2StartX: 800,
+                fromFloor2StartY: 200,
+                // 1階専用のBGM設定
+                bgm: {
+                    map: 'assets/audio/bgm/はるかなる故郷.mp3'
+                },
+                npcs: [
+                    // 1階のNPC設定（後で追加）
+                ],
+                tilesets: [
+                    'pika_nos_tiles03_A2',
+                    'pika_nos_tiles03_A3',
+                    'pika_nos_tiles03_A5',
+                    'pika_nos_tiles03_B',
+                    'pika_nos_tiles03_C',
+                    'pika_nos_tiles03_D',
+                    'pika_nos_in_tiles02_A2',
+                    'pika_nos_in_tiles02_A4',
+                    'pika_nos_in_tiles02_A5',
+                    'pika_nos_in_tiles02_B',
+                    'pika_nos_in_tiles02_C',
+                    'pika_nos_in_tiles02_D',
+                    'pika_nos_in_tiles02_E',
+                    'pika_objset_school_01'
+                ]
+            },
+            {
+                number: 2,
+                mapKey: 'mie_high_school_2',
+                mapFileName: 'mie_highshool_2.tmj',
+                title: '三重中学校 2階',
+                implemented: true,
+                playerStartX: 1600,
+                playerStartY: 500,
+                // 1階から上がってきた時の開始位置
+                fromFloor1StartX: 1800,
+                fromFloor1StartY: 400,
+                // 2階専用のBGM設定
+                bgm: {
+                    map: 'assets/audio/bgm/field_of_hopes_and_dreams.mp3'
+                },
+                npcs: [
+                    // 2階のNPC設定（後で追加）
+                ],
+                tilesets: [
+                    'pika_nos_tiles03_A2',
+                    'pika_nos_tiles03_A3',
+                    'pika_nos_tiles03_A5',
+                    'pika_nos_tiles03_B',
+                    'pika_nos_tiles03_C',
+                    'pika_nos_tiles03_D',
+                    'pika_nos_in_tiles02_A2',
+                    'pika_nos_in_tiles02_A4',
+                    'pika_nos_in_tiles02_A5',
+                    'pika_nos_in_tiles02_B',
+                    'pika_nos_in_tiles02_C',
+                    'pika_nos_in_tiles02_D',
+                    'pika_nos_in_tiles02_E',
+                    'pika_objset_school_01'
+                ]
+            }
+        ]
+    },
+
     // 竹田高校ステージ
     taketa_highschool: {
         stageKey: 'taketa_highschool',

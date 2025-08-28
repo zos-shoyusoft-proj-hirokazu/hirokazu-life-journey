@@ -103,6 +103,7 @@ export function startPhaserGame(stageNumber) {
         case 'taketa_city': sceneClass = createMapStage('taketastage', 'TaketastageStage'); sceneKey = 'TaketastageStage'; break;
         case 'zenkoku': sceneClass = createMapStage('japanstage', 'JapanStage'); sceneKey = 'JapanStage'; break;
         case 'taketa_highschool': sceneClass = createStageScene('taketa_highschool'); sceneKey = 'taketa_highschool'; break;
+        case 'mie_high_school': sceneClass = createStageScene('mie_high_school'); sceneKey = 'mie_high_school'; break;
         
         default: 
             sceneClass = Stage1; 

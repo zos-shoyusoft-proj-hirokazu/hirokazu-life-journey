@@ -8,8 +8,8 @@ class EventCompletionManager {
     constructor() {
         this.storageKey = 'event_completed_';
         this.excludedAreas = [
-            'mie_high_school',    // 三重中学校 - Stage1へ移動
-            'taketa_high_school'  // 竹田高校 - Stage2へ移動
+            'mie_high_school',    // 三重中学校 - mie_high_schoolステージへ移動
+            'taketa_high_school'  // 竹田高校 - taketa_highschoolステージへ移動
             // 'taketa_station' を除外リストから削除（会話イベントを持つエリアのため）
         ];
     }

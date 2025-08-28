@@ -121,30 +121,37 @@ export class CollisionManager {
         const moveId = moveObject.getData('moveId');
         console.log(`[CollisionManager] 移動オブジェクトに触れました: ${moveId}`);
         
+        // 現在のステージの最大フロア数を取得
+        const maxFloor = this.scene.stageConfig?.floors?.length || 1;
+        console.log(`[CollisionManager] 現在のステージの最大フロア数: ${maxFloor}`);
+        
         // moveオブジェクトの名前に含まれる数字を解析して移動先フロアを決定
         let targetFloor = 1; // デフォルト
         
         if (moveId && moveId.startsWith('move_')) {
             // move_x の形式から数字を抽出
             const floorNumber = parseInt(moveId.replace('move_', ''));
-            if (!isNaN(floorNumber) && floorNumber > 0 && floorNumber <= 3) {
+            if (!isNaN(floorNumber) && floorNumber > 0 && floorNumber <= maxFloor) {
                 targetFloor = floorNumber;
                 console.log(`[CollisionManager] moveオブジェクト ${moveId} からフロア ${targetFloor} への移動を検出`);
             } else {
-                console.warn(`[CollisionManager] 無効なフロア番号: ${moveId} (1-3の範囲外)`);
+                console.warn(`[CollisionManager] 無効なフロア番号: ${moveId} (1-${maxFloor}の範囲外)`);
+                return; // 無効なフロア番号の場合は移動しない
             }
         } else if (moveId === 'move') {
             // 従来の命名規則（後方互換性）
             if (this.scene.currentFloor === 1) {
                 targetFloor = 2;
             } else if (this.scene.currentFloor === 2) {
-                targetFloor = 3;
+                // 2階からは1階に戻る（3階がない場合）
+                targetFloor = maxFloor >= 3 ? 3 : 1;
             } else if (this.scene.currentFloor === 3) {
                 targetFloor = 2; // フロア3からフロア2に移動
             }
             console.log(`[CollisionManager] 従来の命名規則を使用: フロア ${this.scene.currentFloor} → ${targetFloor}`);
         } else {
             console.warn(`[CollisionManager] 不明なmoveオブジェクト: ${moveId}`);
+            return; // 不明なmoveオブジェクトの場合は移動しない
         }
         
         // フロア移動を実行
@@ -355,4 +362,6 @@ export class CollisionManager {
             }
         });
     }
+
+
 }

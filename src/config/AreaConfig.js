@@ -61,7 +61,7 @@ export const AreaConfig = {
             { name: 'momoiro_jyogakuenn', scene: null, conversationId: 'momoiro_jyogakuenn' },
             { name: 'drinking_dutu', scene: null, conversationId: 'drinking_dutu' },
             { name: 'Weeds_burn', scene: null, conversationId: 'Weeds_burn' },
-            { name: 'mie_high_school', scene: 'startPhaserGame', sceneParam: 1, conversationId: null },
+            { name: 'mie_high_school', scene: 'startPhaserGame', sceneParam: 'mie_high_school', conversationId: null },
             { name: 'raizu', scene: null, conversationId: 'raizu' },
             { name: 'snack_street_night', scene: null, conversationId: 'snack_street_night' },
             { name: 'souce', scene: null, conversationId: 'souce' },
