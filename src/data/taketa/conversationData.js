@@ -519,13 +519,13 @@ export const taketaConversationData = {
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
-                'text': 'だから、おしっこしってくるわ',
+                'text': 'だから、おしっこ行ってくるわ',
                 'expression': 'b'
             },
             {
                 'speaker': 'こうたろう',
                 'character': 'koutarou',
-                'text': 'いいいや、勝手に行けよ',
+                'text': 'いや、勝手に行けよ',
                 'expression': 'b'
             },
             {
@@ -536,13 +536,13 @@ export const taketaConversationData = {
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
-                'text': 'おしっこしってくるわ',
+                'text': 'おしっこ行ってくるわ',
                 'expression': 'b'
             },
             {
                 'speaker': 'こうたろう',
                 'character': 'koutarou',
-                'text': 'いや、勝手にいっていいよ',
+                'text': 'いや、勝手に行っていいよ',
                 'expression': 'b'
             },
             {
@@ -553,13 +553,13 @@ export const taketaConversationData = {
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
-                'text': 'おしっこしってくるわ',
+                'text': 'おしっこ行ってくるわ',
                 'expression': 'b'
             },
             {
                 'speaker': 'こうたろう',
                 'character': 'koutarou',
-                'text': 'しらねーよ、報告するなよ、、',
+                'text': 'いらんよ、報告は、、',
                 'expression': 'b'
             },
             {
@@ -576,25 +576,19 @@ export const taketaConversationData = {
             {
                 'speaker': 'こうたろう',
                 'character': 'koutarou',
-                'text': '膀胱小さいんか',
-                'expression': 'b'
-            },
-            {
-                'speaker': 'こうたろう',
-                'character': 'koutarou',
-                'text': 'いちいち、報告するなよ',
+                'text': '膀胱小さいんか？',
                 'expression': 'b'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
-                'text': '水飲だ、からな',
+                'text': '水飲んだからかな',
                 'expression': 'b'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
-                'text': 'うんこも、行ってくるわ',
+                'text': 'ついでに、うんこも行ってくるわ',
                 'expression': 'b'
             },
             {
@@ -618,7 +612,13 @@ export const taketaConversationData = {
             {
                 'speaker': 'こうたろう',
                 'character': 'koutarou',
-                'text': 'いや、いたの！？',
+                'text': 'なんで？！？',
+                'expression': 'b'
+            },
+            {
+                'speaker': 'こうたろう',
+                'character': 'koutarou',
+                'text': 'いつの間に、俺膀胱でかいキャラになった？',
                 'expression': 'b'
             },
             {
@@ -635,7 +635,7 @@ export const taketaConversationData = {
             {
                 'speaker': 'こうたろう',
                 'character': 'koutarou',
-                'text': 'はやくね',
+                'text': '。。。。はやくね？',
                 'expression': 'b'
             },
             {
@@ -647,7 +647,7 @@ export const taketaConversationData = {
             {
                 'speaker': 'こうたろう',
                 'character': 'koutarou',
-                'text': 'その情報いらないわ',
+                'text': 'その情報いらんかったわ',
                 'expression': 'b'
             },
             {
@@ -718,13 +718,25 @@ export const taketaConversationData = {
             {
                 'speaker': 'こうたろう',
                 'character': 'koutarou',
-                'text': 'いや、、まぁあな',
+                'text': 'いや、、まぁな',
                 'expression': 'a'
             },
             {
                 'speaker': 'ナレーション',
                 'character': 'narrator',
-                'text': 'ひろかずのせいで、こうたろうは昼休みまでトイレにいけない縛りができた',
+                'text': '、、、、、、、、、、、、',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'ナレーション',
+                'character': 'narrator',
+                'text': 'この時から、ひろかずのせいで、',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'ナレーション',
+                'character': 'narrator',
+                'text': 'こうたろうは昼休みまでトイレにいけない縛りができた',
                 'expression': 'a'
             }
         ]
