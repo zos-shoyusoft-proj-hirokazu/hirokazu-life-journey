@@ -268,6 +268,16 @@ export class StageScene extends Phaser.Scene {
                 }
             };
             
+            // 三重町マップに戻るための関数を設定
+            window.returnToMiemachiMap = () => {
+                // 三重町マップに戻る（gameController.jsを使用）
+                if (window.startPhaserGame) {
+                    window.startPhaserGame('miemachi');
+                } else {
+                    console.error('startPhaserGame not found');
+                }
+            };
+            
             // 設定からBGMを再生
             if (this.stageConfig.bgm && this.stageConfig.bgm.map) {
                 // 音声コンテキストの状態を確認

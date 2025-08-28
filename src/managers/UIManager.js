@@ -167,6 +167,23 @@ export class UIManager {
                     }
                 };
                 try { requestAnimationFrame(() => setTimeout(backToTaketaMap, 0)); } catch (_) { backToTaketaMap(); }
+            } else if (scene.scene?.key === 'mie_high_school') {
+                // 三重中学校から三重町マップに戻る
+                
+                // BGM停止処理を追加
+                try { if (scene._htmlBgm) { scene._htmlBgm.pause(); scene._htmlBgm = null; } } catch(e) { /* ignore */ }
+                try { if (scene.audioManager && scene.audioManager.stopAll) scene.audioManager.stopAll(); } catch(e) { /* ignore */ }
+                try { if (scene.sound && scene.sound.stopAll) scene.sound.stopAll(); } catch(e) { /* ignore */ }
+                
+                const backToMiemachiMap = () => {
+                    if (window.returnToMiemachiMap) {
+                        window.returnToMiemachiMap();
+                    } else {
+                        // フォールバック：三重町マップに戻る
+                        scene.scene.start('MiemachiStage');
+                    }
+                };
+                try { requestAnimationFrame(() => setTimeout(backToMiemachiMap, 0)); } catch (_) { backToMiemachiMap(); }
             } else {
                 // その他のシーン：ステージ選択画面に戻る
                 const back = () => {
