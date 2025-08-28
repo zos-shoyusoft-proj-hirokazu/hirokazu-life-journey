@@ -27,7 +27,7 @@ export const StageConfig = {
                 fromFloor2StartY: 200,
                 // 1階専用のBGM設定
                 bgm: {
-                    map: 'assets/audio/bgm/はるかなる故郷.mp3'
+                    map: 'assets/audio/bgm/enter13.mp3'
                 },
                 npcs: [
                     // 1階のNPC設定（後で追加）
@@ -62,7 +62,7 @@ export const StageConfig = {
                 fromFloor1StartY: 400,
                 // 2階専用のBGM設定
                 bgm: {
-                    map: 'assets/audio/bgm/field_of_hopes_and_dreams.mp3'
+                    map: 'assets/audio/bgm/テクノトリス.mp3'
                 },
                 npcs: [
                     // 2階のNPC設定（後で追加）
