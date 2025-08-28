@@ -79,7 +79,20 @@ export class DynamicConversationScene extends Phaser.Scene {
             
             // AudioManagerを初期化
             if (required.bgm || required.se) {
+                console.log('[DynamicConversationScene] AudioManager初期化開始');
                 this.audioManager = new (await import('../managers/AudioManager.js')).AudioManager(this);
+                console.log('[DynamicConversationScene] AudioManager初期化完了');
+                
+                // BGM読み込み処理を追加
+                if (required.bgm) {
+                    console.log('[DynamicConversationScene] BGM読み込み処理開始:', required.bgm);
+                    required.bgm.forEach(bgmKey => {
+                        const audioKey = `bgm_${bgmKey}`;
+                        const bgmPath = `assets/audio/bgm/${bgmKey}.mp3`;
+                        console.log(`[DynamicConversationScene] BGM読み込み: ${audioKey} -> ${bgmPath}`);
+                        this.load.audio(audioKey, bgmPath);
+                    });
+                }
             }
         }
         
@@ -275,7 +288,9 @@ export class DynamicConversationScene extends Phaser.Scene {
         }
         
         // 既存のBGM管理システムを使用（_suppressMapBgmフラグ）
+        console.log('[DynamicConversationScene] BGM管理システム開始');
         this.suppressStageBGM();
+        console.log('[DynamicConversationScene] BGM管理システム完了');
         
         // リソース読み込み完了後、既存のConversationSceneを開始
         

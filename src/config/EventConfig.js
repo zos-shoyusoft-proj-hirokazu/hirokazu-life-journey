@@ -437,7 +437,7 @@ export const EventConfig = {
             type: 'conversation',                // 必要：イベントの種類を指定
             areaType: 'taketa',                  // 必要：エリアタイプを指定
             background: 'classroom',              // 必要：conversationDataのbackgroundと一致
-            bgm: 'Fantasy',                      // 必要：conversationDataのbgmと一致
+            bgm: 'ON_THE_BEACH',                      // 必要：conversationDataのbgmと一致
             required: {
                 backgrounds: ['classroom'],       // 必要：背景画像の読み込みに必要
                 characters: ['kanato_a', 'hirokazu_a', 'kanato_c', 'hirokazu_d', 'kanato_c', 'narrator_a'],  // 必要：character+expressionの組み合わせ（重複除く）
@@ -445,7 +445,7 @@ export const EventConfig = {
                 // seセクションは不要：conversationDataにSEの指定がないため
             },
             conversationDataKey: 'videocamera_broken',  // 必要：conversationDataのキーと一致
-            areaName: 'ON_THE_BEACH'                // 必要：エリア名の指定
+            areaName: 'classroom'                // 必要：エリア名の指定
         },
         
         // 昼休みドラマ撮影クラブ（ゴスペラーズ等々）

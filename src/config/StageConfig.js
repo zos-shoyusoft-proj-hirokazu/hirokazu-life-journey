@@ -71,7 +71,10 @@ export const StageConfig = {
                 npcs: [
                     { name: 'anndou', eventId: 'classroom_lock_incident' },
                     { name: 'こうたろう_2', eventId: 'koutarou_toilet' },
-                    { name: 'だいち_2', eventId: 'culture_festival_apology' }
+                    { name: 'だいち_2', eventId: 'culture_festival_apology' },
+                    { name: 'まみっち', eventId: 'black_clothes' },
+                    { name: 'ひろかず_2', eventId: 'broadcast' },
+                    { name: 'かなと_2', eventId: 'valentine' }
                 ],
                 tilesets: [
                     'pika_nos_tiles03_A2',

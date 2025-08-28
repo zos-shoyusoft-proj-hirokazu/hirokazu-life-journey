@@ -12,7 +12,7 @@ export const miemachiConversationData = {
     // 出生エピソード
     'oreno_koto': {
         'background': 'orenokoto',
-        'bgm': 'ON_THE_BEACH',
+        'bgm': 'Fantasy',
         'conversations': [
             {
                 'speaker': 'ひろかず',
@@ -110,7 +110,7 @@ export const miemachiConversationData = {
     // 志学エピソード
     'raizu': {
         'background': 'raizu',
-        'bgm': 'Spain',
+        'bgm': 'metoroido',
         'conversations': [
             {
                 'speaker': 'ひろかず',
@@ -201,7 +201,7 @@ export const miemachiConversationData = {
     // チーム醤油飲み会
     'souce': {
         'background': 'souce',
-        'bgm': 'africa',
+        'bgm': 'pokémon_Theme',
         'conversations': [
             {
                 'speaker': 'ひろかず',
@@ -613,7 +613,7 @@ export const miemachiConversationData = {
     // 川で火をつけたエピソード
     'Weeds_burn': {
         'background': 'Fire',
-        'bgm': 'professor_laytons',
+        'bgm': 'bloody_tears',
         'conversations': [
             {
                 'speaker': 'だいち少年',
@@ -859,7 +859,7 @@ export const miemachiConversationData = {
     // こうたろうポテト
     'koutaroupoteto': {
         'background': 'koutaroupoteto',
-        'bgm': 'dragostea_din_tei',
+        'bgm': 'Nagisa_Moderato',
         'conversations': [
             {
                 'speaker': 'だいち',
@@ -903,7 +903,7 @@ export const miemachiConversationData = {
     // アンタレス
     'antares': {
         'background': 'test_1',
-        'bgm': 'blinding_lights',
+        'bgm': 'Nagisa_Moderato',
         'conversations': [
             {
                 'speaker': 'ひろかず',
@@ -959,7 +959,7 @@ export const miemachiConversationData = {
     // ドンキの謎酒"ずつ"
     'drinking_dutu': {
         'background': 'dutu',
-        'bgm': 'pokémon_Theme',
+        'bgm': 'africa',
         'conversations': [
             {
                 'speaker': 'ひろかず',
@@ -1148,7 +1148,7 @@ export const miemachiConversationData = {
     // スナック街の夜
     'snack_street_night': {
         'background': 'miemachimae',
-        'bgm': 'vitality',
+        'bgm': 'nightbarth',
         'conversations': [
             {
                 'speaker': 'ひろかず',
@@ -1497,7 +1497,7 @@ export const miemachiConversationData = {
     // おかがみとの会話
     'okagami_conversation': {
         'background': 'test_1',
-        'bgm': 'vitality',
+        'bgm': 'Fantasy',
         'conversations': [
             {
                 'speaker': 'おかがみ',
@@ -1547,7 +1547,7 @@ export const miemachiConversationData = {
     // だいちとの会話
     'daichi_conversation': {
         'background': 'test_1',
-        'bgm': 'Rainbow_Seeker_II',
+        'bgm': 'Fantasy',
         'conversations': [
             {
                 'speaker': 'だいち',

@@ -887,6 +887,30 @@
                  "width":0,
                  "x":741,
                  "y":299
+                }, 
+                {
+                 "height":0,
+                 "id":37,
+                 "name":"\u3072\u308d\u304b\u305a_2",
+                 "point":true,
+                 "rotation":0,
+                 "type":"npc",
+                 "visible":true,
+                 "width":0,
+                 "x":446,
+                 "y":229.333333333333
+                }, 
+                {
+                 "height":0,
+                 "id":38,
+                 "name":"\u304b\u306a\u3068_2",
+                 "point":true,
+                 "rotation":0,
+                 "type":"npc",
+                 "visible":true,
+                 "width":0,
+                 "x":256,
+                 "y":208
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -952,7 +976,7 @@
          "y":0
         }],
  "nextlayerid":34,
- "nextobjectid":37,
+ "nextobjectid":39,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",

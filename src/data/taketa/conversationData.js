@@ -247,7 +247,7 @@ export const taketaConversationData = {
     // クライミング指怪我事件
     'climbing_injury': {
         'background': 'classroom',
-        'bgm': 'Fantasy',
+        'bgm': 'blinding_lights',
         'conversations': [
             {
                 'speaker': 'かなと',
@@ -508,7 +508,7 @@ export const taketaConversationData = {
     // こうたろうのおしっこ事件
     'koutarou_toilet': {
         'background': 'classroom',
-        'bgm': 'Fantasy',
+        'bgm': 'metoroido',
         'conversations': [
             {
                 'speaker': 'ひろかず',
@@ -733,7 +733,7 @@ export const taketaConversationData = {
     // 文化祭後の謝罪
     'culture_festival_apology': {
         'background': 'classroom',
-        'bgm': 'Nagisa_Moderato',
+        'bgm': 'Spain',
         'conversations': [
             {
                 'character': 'narrator',
@@ -952,7 +952,7 @@ export const taketaConversationData = {
     // 電車ないうんこおじさん事件
     'train_no_poop_man': {
         'background': 'station',
-        'bgm': 'Nagisa_Moderato',
+        'bgm': 'Fantasy',
         'conversations': [
             {
                 'speaker': 'ひろかず',
@@ -968,7 +968,7 @@ export const taketaConversationData = {
     // 銀河の水
     'galaxy_water': {
         'background': 'galaxy',
-        'bgm': 'Fantasy',
+        'bgm': 'vitality',
         'conversations': [
             {
                 'character': 'narrator',
@@ -1004,7 +1004,7 @@ export const taketaConversationData = {
     // 竹田駅
     'taketa_station': {
         'background': 'station',
-        'bgm': 'Fantasy',
+        'bgm': 'nightbarth',
         'conversations': [
             {
                 'speaker': 'ひろかず',
@@ -1068,7 +1068,7 @@ export const taketaConversationData = {
     // 昼休みドラマ撮影クラブ（ゴスペラーズ等々）
     'drama_filming': {
         'background': 'classroom',
-        'bgm': 'Fantasy',
+        'bgm': 'nightbarth',
         'conversations': [
             {
                 'speaker': 'ひろかず',
@@ -1450,7 +1450,7 @@ export const taketaConversationData = {
     // めっちゃ腕振って歩く人
     'udefuriojisann': {
         'background': 'street',
-        'bgm': 'Fantasy',
+        'bgm': '主題_opening_theme',
         'conversations': [
             {
                 'speaker': 'ひろかず',
@@ -1494,7 +1494,7 @@ export const taketaConversationData = {
     // 竹田から三重まで歩いて帰る
     'working_go_to_home_miemachi': {
         'background': 'street',
-        'bgm': 'Nagisa_Moderato',
+        'bgm': 'dragostea_din_tei',
         'conversations': [
             {
                 'speaker': 'かなと',
