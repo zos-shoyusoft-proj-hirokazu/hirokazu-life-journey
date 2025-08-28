@@ -27,7 +27,7 @@ export const StageConfig = {
                 fromFloor2StartY: 1000,
                 // 1階専用のBGM設定
                 bgm: {
-                    map: 'assets/audio/bgm/はるかなる故郷'  // 2階・3階と同じBGMを使用
+                    map: 'assets/audio/bgm/はるかなる故郷.mp3'  // 2階・3階と同じBGMを使用
                 },
                 npcs: [
                     { name: 'ひろかず_1', eventId: 'climbing_injury' },

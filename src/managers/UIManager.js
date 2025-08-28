@@ -152,6 +152,12 @@ export class UIManager {
                 try { requestAnimationFrame(() => setTimeout(backToSelect, 0)); } catch (_) { backToSelect(); }
             } else if (scene.scene?.key === 'taketa_highschool') {
                 // 竹田高校から竹田マップに戻る
+                
+                // BGM停止処理を追加
+                try { if (scene._htmlBgm) { scene._htmlBgm.pause(); scene._htmlBgm = null; } } catch(e) { /* ignore */ }
+                try { if (scene.audioManager && scene.audioManager.stopAll) scene.audioManager.stopAll(); } catch(e) { /* ignore */ }
+                try { if (scene.sound && scene.sound.stopAll) scene.sound.stopAll(); } catch(e) { /* ignore */ }
+                
                 const backToTaketaMap = () => {
                     if (window.returnToTaketaMap) {
                         window.returnToTaketaMap();

@@ -330,6 +330,14 @@ export class StageScene extends Phaser.Scene {
         console.log('[StageScene] shutdown() メソッド実行開始');
         
         try {
+            // HTMLAudioのBGM停止
+            if (this._htmlBgm) {
+                this._htmlBgm.pause();
+                this._htmlBgm.currentTime = 0;
+                this._htmlBgm = null;
+                console.log('[StageScene] HTMLAudio BGM停止完了');
+            }
+            
             // 音声システムのクリーンアップ
             if (this.audioManager) {
                 this.audioManager.stopAll();
@@ -538,11 +546,31 @@ export class StageScene extends Phaser.Scene {
                 this._htmlBgm.pause();
             }
             
-            // 新しいBGMを再生
-            this.audioManager.playBgm('map');
-            console.log('[StageScene] BGM再生開始');
+            // 現在の階のBGM設定を取得
+            const currentFloorConfig = this.stageConfig.floors.find(f => f.number === this.currentFloor);
+            if (currentFloorConfig && currentFloorConfig.bgm && currentFloorConfig.bgm.map) {
+                // 階固有のBGMを再生
+                const bgmPath = currentFloorConfig.bgm.map;
+                console.log(`[StageScene] 階${this.currentFloor}のBGM再生: ${bgmPath}`);
+                
+                // HTMLAudioを使用してBGMを再生
+                this._htmlBgm = new Audio(bgmPath);
+                this._htmlBgm.loop = true;
+                this._htmlBgm.volume = 0.3;
+                this._htmlBgm.play().catch(error => {
+                    console.error(`[StageScene] BGM再生エラー: ${bgmPath}`, error);
+                    // フォールバック: デフォルトBGMを再生
+                    this.audioManager.playBgm('map');
+                });
+            } else {
+                // フォールバック: デフォルトBGMを再生
+                this.audioManager.playBgm('map');
+                console.log('[StageScene] デフォルトBGM再生開始');
+            }
         } catch (error) {
             console.error('[StageScene] BGM再生エラー:', error);
+            // エラー時もフォールバック
+            this.audioManager.playBgm('map');
         }
     }
     
