@@ -932,8 +932,18 @@
             console.log('[初期化] 画面サイズ:', window.innerWidth, 'x', window.innerHeight);
             console.log('[初期化] デバイスピクセル比:', window.devicePixelRatio);
             
-            // 初期ローディング画面を表示
-            if (window.LoadingManager) {
+            // スマホ対応：DOMContentLoadedも待つ
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', initializeGame);
+            } else {
+                initializeGame();
+            }
+            
+            function initializeGame() {
+                console.log('[初期化] ゲーム初期化開始');
+                
+                // 初期ローディング画面を表示
+                if (window.LoadingManager) {
                 window.LoadingManager.show('ゲームを初期化中...', 0);
                 
                 // 初期化処理をシミュレート（安全装置付き）
@@ -1000,6 +1010,7 @@
                     showMainMenu();
                 }
             }
+        }
         });
         
         // メインメニューを表示する関数
