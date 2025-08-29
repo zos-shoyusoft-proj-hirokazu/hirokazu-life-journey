@@ -36,123 +36,123 @@
          "objects":[
                 {
                  "ellipse":true,
-                 "height":236,
+                 "height":208,
                  "id":20,
                  "name":"oreno_koto",
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":208,
-                 "x":1418,
-                 "y":32
+                 "x":1328,
+                 "y":46
                 }, 
                 {
                  "ellipse":true,
-                 "height":149.878369492703,
+                 "height":190.096982501257,
                  "id":21,
                  "name":"momoiro_jyogakuenn",
                  "rotation":321.98807688785,
                  "type":"",
                  "visible":true,
-                 "width":226.545661420172,
-                 "x":1624.51819975476,
-                 "y":169.999116061545
+                 "width":194.975855316956,
+                 "x":1586.91839608519,
+                 "y":227.9965894675
                 }, 
                 {
                  "ellipse":true,
-                 "height":230,
+                 "height":348,
                  "id":22,
                  "name":"drinking_dutu",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":222,
-                 "x":1228,
-                 "y":382
+                 "width":152,
+                 "x":1298,
+                 "y":321
                 }, 
                 {
                  "ellipse":true,
-                 "height":172,
+                 "height":205.106341158689,
                  "id":25,
                  "name":"Weeds_burn",
-                 "rotation":0,
+                 "rotation":358.840574388595,
                  "type":"",
                  "visible":true,
-                 "width":200,
-                 "x":1246,
-                 "y":750
+                 "width":254.34123825498,
+                 "x":1319.28031412371,
+                 "y":784.04104868908
                 }, 
                 {
                  "ellipse":true,
-                 "height":208,
+                 "height":190,
                  "id":26,
                  "name":"mie_high_school",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":256,
-                 "x":616,
-                 "y":744
+                 "width":323,
+                 "x":648,
+                 "y":751
                 }, 
                 {
                  "ellipse":true,
-                 "height":216,
+                 "height":313,
                  "id":27,
                  "name":"raizu",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":184,
-                 "x":240,
-                 "y":658
+                 "width":291,
+                 "x":237,
+                 "y":594
                 }, 
                 {
                  "ellipse":true,
-                 "height":210,
+                 "height":221,
                  "id":28,
                  "name":"snack_street_night",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":118,
-                 "x":324,
-                 "y":282
+                 "width":129,
+                 "x":355,
+                 "y":240
                 }, 
                 {
                  "ellipse":true,
-                 "height":198,
+                 "height":246,
                  "id":29,
                  "name":"souce",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":182,
-                 "x":94,
-                 "y":248
+                 "width":138,
+                 "x":132,
+                 "y":172
                 }, 
                 {
                  "ellipse":true,
-                 "height":204,
+                 "height":238,
                  "id":30,
                  "name":"koutaroupoteto",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":116,
-                 "x":404,
-                 "y":500
+                 "width":141,
+                 "x":550,
+                 "y":456
                 }, 
                 {
                  "ellipse":true,
-                 "height":151.515151515152,
+                 "height":273.515151515152,
                  "id":32,
                  "name":"seven",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":169.69696969697,
-                 "x":718.181818181818,
-                 "y":351.515151515152
+                 "width":237.69696969697,
+                 "x":900.181818181818,
+                 "y":221.515151515152
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -170,7 +170,7 @@
         {
          "columns":30,
          "firstgid":1,
-         "image":"..\/taild\/\u3082\u3068\/miemachi\/miemachi.png",
+         "image":"..\/miemachi.png",
          "imageheight":1080,
          "imagewidth":1924,
          "margin":0,
