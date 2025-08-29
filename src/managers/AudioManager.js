@@ -839,13 +839,18 @@ export class AudioManager {
             
             // 会話用BGMを再生
             console.log(`[AudioManager] BGM再生試行: ${audioKey}, loadedSounds確認:`, this.loadedSounds.has(audioKey));
+            console.log(`[AudioManager] loadedSoundsの内容:`, Array.from(this.loadedSounds));
             if (this.loadedSounds.has(audioKey)) {
                 try {
                     // HTMLAudioを直接使用（Phaserの問題を回避）
                     const bgmPath = `assets/audio/bgm/${bgmKey}.mp3`;
                     
+                    // ファイル名に特殊文字が含まれる場合はURLエンコード
+                    const encodedPath = encodeURI(bgmPath);
+                    console.log(`[AudioManager] BGM再生パス: ${bgmKey} -> ${encodedPath}`);
+                    
                     // HTMLAudio要素を作成
-                    this.bgm = new Audio(bgmPath);
+                    this.bgm = new Audio(encodedPath);
                     this.bgm.loop = true;
                     this.bgm.volume = fadeIn ? 0 : volume;
                     

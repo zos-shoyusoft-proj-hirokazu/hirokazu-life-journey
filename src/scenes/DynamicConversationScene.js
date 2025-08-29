@@ -35,12 +35,41 @@ export class DynamicConversationScene extends Phaser.Scene {
 
     async preload() {
         // 読み込み処理
+        console.log('[DynamicConversationScene] preload開始');
         
-        // リソース読み込み完了イベントを設定
-        this.load.on('complete', () => {
+        // eventConfigが設定されるまで待つ
+        while (!this.eventConfig) {
+            await new Promise(resolve => setTimeout(resolve, 10));
+        }
+        
+        // 必要なリソースを動的に読み込み
+        await this.loadRequiredResources();
+        
+        // リソース読み込み完了イベントを設定（start()の前に設定）
+        this.load.once('complete', () => {
             // リソース読み込み完了
             this.resourcesLoaded = true;
-            console.log('[DynamicConversationScene] リソース読み込み完了');
+            console.log('[DynamicConversationScene] preload complete - リソース読み込み完了');
+            
+            // AudioManagerのloadedSoundsに追加
+            if (this.audioManager && this.requiredResources) {
+                console.log('[DynamicConversationScene] AudioManager loadedSounds更新開始');
+                if (this.requiredResources.bgm) {
+                    this.requiredResources.bgm.forEach(bgmKey => {
+                        const audioKey = `bgm_${bgmKey}`;
+                        this.audioManager.loadedSounds.add(audioKey);
+                        console.log(`[DynamicConversationScene] preload complete - BGMをloadedSoundsに追加: ${audioKey}`);
+                    });
+                }
+                if (this.requiredResources.se) {
+                    this.requiredResources.se.forEach(seKey => {
+                        const audioKey = `se_${seKey}`;
+                        this.audioManager.loadedSounds.add(audioKey);
+                        console.log(`[DynamicConversationScene] preload complete - SEをloadedSoundsに追加: ${audioKey}`);
+                    });
+                }
+                console.log('[DynamicConversationScene] AudioManager loadedSounds更新完了:', Array.from(this.audioManager.loadedSounds));
+            }
         });
         
         this.load.on('error', (file) => {
@@ -55,13 +84,9 @@ export class DynamicConversationScene extends Phaser.Scene {
             }
         });
         
-        // eventConfigが設定されるまで待つ
-        while (!this.eventConfig) {
-            await new Promise(resolve => setTimeout(resolve, 10));
-        }
-        
-        // 必要なリソースを動的に読み込み（完了を待つ）
-        await this.loadRequiredResources();
+        // 読み込みを開始
+        console.log('[DynamicConversationScene] preload - this.load.start()を実行');
+        this.load.start();
     }
 
     // 必要なリソースを動的に読み込み
@@ -75,6 +100,9 @@ export class DynamicConversationScene extends Phaser.Scene {
         
         const required = getRequiredResources(this.eventId);
         console.log('[DynamicConversationScene] required:', required);
+        
+        // リソースを保持
+        this.requiredResources = required;
         
         if (required) {
             // 背景画像
@@ -92,6 +120,7 @@ export class DynamicConversationScene extends Phaser.Scene {
                 console.log('[DynamicConversationScene] AudioManager初期化開始');
                 this.audioManager = new (await import('../managers/AudioManager.js')).AudioManager(this);
                 console.log('[DynamicConversationScene] AudioManager初期化完了');
+                console.log('[DynamicConversationScene] AudioManager loadedSounds初期状態:', Array.from(this.audioManager.loadedSounds));
                 
                 // BGM読み込み処理を追加
                 if (required.bgm) {
@@ -100,7 +129,20 @@ export class DynamicConversationScene extends Phaser.Scene {
                         const audioKey = `bgm_${bgmKey}`;
                         const bgmPath = `assets/audio/bgm/${bgmKey}.mp3`;
                         console.log(`[DynamicConversationScene] BGM読み込み: ${audioKey} -> ${bgmPath}`);
-                        this.load.audio(audioKey, bgmPath);
+                        
+                        // ファイル名に特殊文字が含まれる場合はURLエンコード
+                        const encodedPath = encodeURI(bgmPath);
+                        console.log(`[DynamicConversationScene] エンコードされたパス: ${encodedPath}`);
+                        
+                        // エラーハンドリングを追加
+                        this.load.audio(audioKey, encodedPath);
+                        console.log(`[DynamicConversationScene] BGM読み込みキューに追加: ${audioKey}`);
+                        
+                        this.load.on('loaderror', (file) => {
+                            if (file.key === audioKey) {
+                                console.error(`[DynamicConversationScene] BGMファイル読み込みエラー: ${audioKey} -> ${encodedPath}`);
+                            }
+                        });
                     });
                 }
             }
@@ -109,31 +151,6 @@ export class DynamicConversationScene extends Phaser.Scene {
         // 既存のconversationDataを取得
         await this.loadConversationData();
         this.conversationDataLoaded = true;
-        
-        // Phaserのloaderの完了を待つ
-        if (required && (required.backgrounds || required.characters || required.bgm || required.se)) {
-            await new Promise(resolve => {
-                this.load.on('complete', () => {
-                    // 音声ファイルの読み込み完了後、loadedSoundsに追加
-                    if (this.audioManager && (required.bgm || required.se)) {
-                        if (required.bgm) {
-                            required.bgm.forEach(bgmKey => {
-                                const audioKey = `bgm_${bgmKey}`;
-                                this.audioManager.loadedSounds.add(audioKey);
-                            });
-                        }
-                        if (required.se) {
-                            required.se.forEach(seKey => {
-                                const audioKey = `se_${seKey}`;
-                                this.audioManager.loadedSounds.add(audioKey);
-                            });
-                        }
-                    }
-                    resolve();
-                });
-                this.load.start();
-            });
-        }
         
         // リソース読み込み完了フラグを設定（preloadのcompleteイベントで実際に設定される）
         console.log('[DynamicConversationScene] loadRequiredResources完了');
@@ -301,9 +318,8 @@ export class DynamicConversationScene extends Phaser.Scene {
             return;
         }
         
-        // 読み込み完了フラグを確実に設定
-        this.resourcesLoaded = true;
-        console.log('[DynamicConversationScene] create実行：読み込み完了フラグを設定');
+        // 読み込み完了フラグを確認（preloadで設定されるはず）
+        console.log('[DynamicConversationScene] create実行：読み込み完了フラグ確認');
         
         // 既存のBGM管理システムを使用（_suppressMapBgmフラグ）
         console.log('[DynamicConversationScene] BGM管理システム開始');
