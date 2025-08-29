@@ -8,11 +8,35 @@ export class EndingScene extends Phaser.Scene {
     }
 
     preload() {
+        console.log('[EndingScene] preload開始');
+        
         // エンディング用のBGMを読み込み
         this.load.audio('ending_bgm', 'assets/audio/bgm/ending.mp3');
+        
+        // 読み込み完了イベントを設定
+        this.load.once('complete', () => {
+            console.log('[EndingScene] preload完了');
+        });
+        
+        // 読み込みエラーイベントを設定
+        this.load.on('error', (file) => {
+            console.error('[EndingScene] アセット読み込みエラー:', file);
+        });
+        
+        // 読み込みを開始
+        console.log('[EndingScene] preload - this.load.start()を実行');
+        this.load.start();
     }
 
     create() {
+        console.log('[EndingScene] create開始');
+        console.log('[EndingScene] 画面サイズ:', this.sys.game.canvas.width, 'x', this.sys.game.canvas.height);
+        console.log('[EndingScene] ユーザーエージェント:', navigator.userAgent);
+        console.log('[EndingScene] ゲームインスタンス:', window.game);
+        console.log('[EndingScene] シーンマネージャー:', this.scene.manager);
+        console.log('[EndingScene] 現在のシーンキー:', this.scene.key);
+        console.log('[EndingScene] シーンがアクティブか:', this.scene.isActive());
+        
         // ChoiceManagerを初期化
         this.choiceManager = new ChoiceManager();
         console.log('[EndingScene] ChoiceManager初期化完了');
@@ -24,12 +48,20 @@ export class EndingScene extends Phaser.Scene {
         
         // 背景色を設定
         this.cameras.main.setBackgroundColor('#000000');
+        console.log('[EndingScene] 背景色設定完了');
         
         // エンディングBGMを再生
-        this.sound.play('ending_bgm', { loop: true, volume: 0.5 });
+        try {
+            this.sound.play('ending_bgm', { loop: true, volume: 0.5 });
+            console.log('[EndingScene] BGM再生開始');
+        } catch (error) {
+            console.error('[EndingScene] BGM再生エラー:', error);
+        }
         
         // エンディングテキストを表示
+        console.log('[EndingScene] showEndingContent呼び出し開始');
         this.showEndingContent();
+        console.log('[EndingScene] showEndingContent呼び出し完了');
     }
 
     showEndingContent() {
@@ -59,8 +91,10 @@ export class EndingScene extends Phaser.Scene {
         // YouTube動画ボタンはshowEndingContent内で直接表示する
         
         // ボタンコンテナ（良い選択の場合のみ）
+        let buttonContainer = null; // 外側で宣言
+        
         if (correctRate >= 80) {
-            const buttonContainer = this.add.container(width / 2, height * 3 / 4);
+            buttonContainer = this.add.container(width / 2, height * 3 / 4);
             
             // ボタン背景
             const background = this.add.graphics();
@@ -97,7 +131,7 @@ export class EndingScene extends Phaser.Scene {
             });
         } else {
             // 悪い選択の場合は「タイトルに戻る」ボタンを表示
-            const buttonContainer = this.add.container(width / 2, height * 3 / 4);
+            buttonContainer = this.add.container(width / 2, height * 3 / 4);
             
             // ボタン背景
             const background = this.add.graphics();
@@ -134,9 +168,14 @@ export class EndingScene extends Phaser.Scene {
             });
         }
         
-        // フェードイン効果
+        // フェードイン効果（存在する要素のみ）
+        const fadeTargets = [title, message];
+        if (buttonContainer) {
+            fadeTargets.push(buttonContainer);
+        }
+        
         this.tweens.add({
-            targets: [title, message, buttonContainer],
+            targets: fadeTargets,
             alpha: { from: 0, to: 1 },
             duration: 2000,
             ease: 'Power2'
@@ -193,7 +232,14 @@ export class EndingScene extends Phaser.Scene {
         // オープニング動画と同じ動画IDを使用
         const videoId = 'P2KXyM27XK4';
         
-        if (window.showYouTubeVideo) {
+        // GitHub Pages対応：HTTPSを強制
+        const isHttps = window.location.protocol === 'https:';
+        const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+        
+        console.log('[EndingScene] プロトコル確認:', window.location.protocol);
+        console.log('[EndingScene] ホスト名確認:', window.location.hostname);
+        
+        if (window.showYouTubeVideo && (isHttps || isLocalhost)) {
             // 既存のYouTube動画表示関数を使用
             window.showYouTubeVideo(videoId);
             console.log('[EndingScene] YouTube動画表示関数を呼び出し:', videoId);

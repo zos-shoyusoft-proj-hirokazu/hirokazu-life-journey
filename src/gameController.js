@@ -165,22 +165,24 @@ export function startPhaserGame(stageNumber) {
         }
     } catch (e) { /* ignore */ }
     // ローディング画面を表示（ステージ読み込み時）
-    if (window.LoadingManager && stageNumber !== 'ending') {
+    if (window.LoadingManager) {
         const stageNames = {
             'miemachi': '三重シティ',
             'taketa': '竹田シティ',
             'japan': '全国',
             'taketa_highschool': '竹田高校',
-            'mie_high_school': '三重中学校'
+            'mie_high_school': '三重中学校',
+            'ending': 'エンディング'
         };
         const stageName = stageNames[stageNumber] || 'ゲーム';
         window.LoadingManager.show(`${stageName}を読み込み中...`, 0);
     }
     
     const newScene = game.scene.add(sceneKey, sceneClass, true);
+    console.log(`[gameController] シーン追加完了: ${sceneKey}`, newScene);
     
     // 実際の読み込み完了を待つ
-    if (window.LoadingManager && stageNumber !== 'ending' && newScene) {
+    if (window.LoadingManager && newScene) {
         console.log('[gameController] ローディング監視開始');
         
         // マップ選択画面の場合は実際の読み込みを待つ
@@ -216,6 +218,43 @@ export function startPhaserGame(stageNumber) {
                         }, 500);
                     }
                 }, 2000);
+            }
+            return;
+        }
+        
+        // エンディングシーンの場合は特別な処理
+        if (stageNumber === 'ending') {
+            console.log('[gameController] エンディングシーンの読み込み監視開始');
+            
+            // シーンの読み込みイベントを監視
+            if (newScene.load && newScene.load.on) {
+                newScene.load.on('progress', (progress) => {
+                    console.log('[gameController] エンディング読み込み進捗:', progress);
+                    if (window.LoadingManager) {
+                        window.LoadingManager.updateProgress(progress * 100);
+                    }
+                });
+                
+                newScene.load.once('complete', () => {
+                    console.log('[gameController] エンディング読み込み完了');
+                    if (window.LoadingManager) {
+                        window.LoadingManager.updateProgress(100, '完了！');
+                        setTimeout(() => {
+                            window.LoadingManager.hide();
+                        }, 500);
+                    }
+                });
+            } else {
+                console.log('[gameController] エンディングシーンでloadイベントが利用できないため、タイマーフォールバックを使用');
+                // loadイベントが利用できない場合はタイマーフォールバック
+                setTimeout(() => {
+                    if (window.LoadingManager) {
+                        window.LoadingManager.updateProgress(100, '完了！');
+                        setTimeout(() => {
+                            window.LoadingManager.hide();
+                        }, 500);
+                    }
+                }, 1000); // エンディングは軽いので1秒
             }
             return;
         }

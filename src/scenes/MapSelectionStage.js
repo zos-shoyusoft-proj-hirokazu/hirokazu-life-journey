@@ -159,6 +159,12 @@ export class MapSelectionStage extends Phaser.Scene {
     checkAndShowEndingButton() {
         console.log('[MapSelectionStage] エンディングボタンの表示条件をチェック中...');
         
+        // リセット直後の場合は表示しない
+        if (window.__justReset) {
+            console.log('[MapSelectionStage] リセット直後のため、エンディングボタンの表示をスキップします');
+            return;
+        }
+        
         if (!this.choiceManager) {
             console.log('[MapSelectionStage] ChoiceManagerが初期化されていません');
             return;
@@ -175,9 +181,11 @@ export class MapSelectionStage extends Phaser.Scene {
         console.log('[MapSelectionStage] エンディング条件達成:', endingConditionMet);
         
         if (endingConditionMet) {
+            console.log('[MapSelectionStage] エンディングボタンを表示します');
             this.showEndingButton();
         } else {
             console.log('[MapSelectionStage] エンディング条件未達成のため、ボタンを表示しません');
+            console.log('[MapSelectionStage] 現在の選択データ:', this.choiceManager.choices);
         }
     }
     
@@ -186,18 +194,27 @@ export class MapSelectionStage extends Phaser.Scene {
         const width = this.sys.game.canvas.width;
         const height = this.sys.game.canvas.height;
         
+        // 右下に配置（マージン: 20px）
+        const buttonWidth = 200;
+        const buttonHeight = 50;
+        const margin = 20;
+        const x = width - buttonWidth / 2 - margin;
+        const y = height - buttonHeight / 2 - margin;
+        
+        console.log(`[MapSelectionStage] エンディングボタン配置: x=${x}, y=${y}, 画面サイズ=${width}x${height}`);
+        
         // エンディングボタンを作成
-        const buttonContainer = this.add.container(width / 2, height - 100);
+        const buttonContainer = this.add.container(x, y);
         
         // ボタン背景
         const background = this.add.graphics();
         background.fillStyle(0x8B4513, 0.9); // 茶色の背景
-        background.fillRoundedRect(-150, -30, 300, 60, 10);
+        background.fillRoundedRect(-buttonWidth / 2, -buttonHeight / 2, buttonWidth, buttonHeight, 10);
         buttonContainer.add(background);
         
         // ボタンテキスト
         const text = this.add.text(0, 0, 'エンディング', {
-            fontSize: '24px',
+            fontSize: '20px',
             fill: '#FFFFFF',
             fontFamily: 'Arial',
             fontStyle: 'bold'
@@ -205,26 +222,27 @@ export class MapSelectionStage extends Phaser.Scene {
         buttonContainer.add(text);
         
         // インタラクティブ設定
-        buttonContainer.setInteractive(new Phaser.Geom.Rectangle(-150, -30, 300, 60), Phaser.Geom.Rectangle.Contains);
+        buttonContainer.setInteractive(new Phaser.Geom.Rectangle(-buttonWidth / 2, -buttonHeight / 2, buttonWidth, buttonHeight), Phaser.Geom.Rectangle.Contains);
         
         // クリックイベント
         buttonContainer.on('pointerdown', () => {
+            console.log('[MapSelectionStage] エンディングボタンがクリックされました');
             this.startEnding();
         });
         
         // ホバー効果
         buttonContainer.on('pointerover', () => {
             background.fillStyle(0xA0522D, 0.9); // 明るい茶色
-            background.fillRoundedRect(-150, -30, 300, 60, 10);
+            background.fillRoundedRect(-buttonWidth / 2, -buttonHeight / 2, buttonWidth, buttonHeight, 10);
         });
         
         buttonContainer.on('pointerout', () => {
             background.fillStyle(0x8B4513, 0.9); // 元の茶色
-            background.fillRoundedRect(-150, -30, 300, 60, 10);
+            background.fillRoundedRect(-buttonWidth / 2, -buttonHeight / 2, buttonWidth, buttonHeight, 10);
         });
         
         this.endingButton = buttonContainer;
-        console.log('[MapSelectionStage] エンディングボタンを表示しました');
+        console.log(`[MapSelectionStage] エンディングボタンを右下に表示しました: 位置(${x}, ${y})`);
     }
     
     // エンディングを開始
@@ -483,8 +501,13 @@ export class MapSelectionStage extends Phaser.Scene {
             this.checkAndApplyCompletedAreas();
             
             // エンディングボタンを遅延表示（選択データの読み込み完了を待つ）
+            // リセット直後は表示しない
             this.time.delayedCall(100, () => {
-                this.checkAndShowEndingButton();
+                if (!window.__justReset) {
+                    this.checkAndShowEndingButton();
+                } else {
+                    console.log('[MapSelectionStage] リセット直後のため、エンディングボタンの表示をスキップします');
+                }
             });
             
             // AudioManagerを初期化し、iOSのロックを考慮してBGMを開始

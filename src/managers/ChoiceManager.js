@@ -56,33 +56,32 @@ export class ChoiceManager {
     
     // エンディング条件をチェック
     checkEndingCondition() {
-        // エンディング条件：tereapoエリアで何らかの選択をした場合
-        const requiredChoices = {
-            'tereapo': {
-                'tv_tower_choice': 'any'  // どんな選択でもエンディングボタンを表示
-            }
-            // gray_bytesはエンディング条件から除外
-            // 他の会話の正解選択も追加可能
-        };
+        console.log('[ChoiceManager] エンディング条件チェック開始');
+        console.log('[ChoiceManager] 現在の選択データ:', this.choices);
         
-        for (const [convId, choices] of Object.entries(requiredChoices)) {
-            for (const [choiceId, expectedValue] of Object.entries(choices)) {
-                const actualChoice = this.choices[convId]?.[choiceId];
-                if (expectedValue === 'any') {
-                    // どんな選択でもOK（選択さえしていれば）
-                    if (!actualChoice) {
-                        console.log(`[ChoiceManager] エンディング条件未達成: ${convId}.${choiceId} が選択されていません`);
-                        return false;
-                    }
-                } else if (actualChoice !== expectedValue) {
-                    console.log(`[ChoiceManager] エンディング条件未達成: ${convId}.${choiceId}`);
-                    return false;
-                }
-            }
+        // リセット直後の場合はエンディング条件を満たさない
+        if (window.__justReset) {
+            console.log('[ChoiceManager] リセット直後のため、エンディング条件を満たしません');
+            return false;
         }
         
-        console.log('[ChoiceManager] エンディング条件達成！');
-        return true;
+        // 選択データが空の場合はエンディング条件を満たさない
+        if (Object.keys(this.choices).length === 0) {
+            console.log('[ChoiceManager] 選択データが空のため、エンディング条件を満たしません');
+            return false;
+        }
+        
+        // エンディング条件：何らかの選択をした場合（現在は選択データがあるかどうかのみチェック）
+        
+        // 代替条件：何らかの選択があればエンディングボタンを表示
+        const hasAnyChoice = Object.keys(this.choices).length > 0;
+        if (hasAnyChoice) {
+            console.log('[ChoiceManager] 代替条件達成：何らかの選択が存在します');
+            return true;
+        }
+        
+        console.log('[ChoiceManager] 選択データがないため、エンディング条件を満たしません');
+        return false;
     }
     
     // 全選択データをリセット

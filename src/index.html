@@ -24,6 +24,21 @@
     <meta name="msapplication-TileColor" content="#000000">
     
     <title>Hirokazu Life Journey</title>
+    
+    <!-- GitHub Pages対応：SPAルーティング -->
+    <script>
+        // GitHub Pages対応：URLの正規化
+        (function(l) {
+            if (l.search[1] === '/') {
+                var decoded = l.search.slice(1).split('&').map(function(s) { 
+                    return s.replace(/~and~/g, '&')
+                }).join('?');
+                window.history.replaceState(null, null,
+                    l.pathname.slice(0, -1) + decoded + l.hash
+                );
+            }
+        }(window.location))
+    </script>
     <link rel="stylesheet" href="./css/stageSelect.css">
     <link rel="stylesheet" href="./css/mainMenu.css">
     <link rel="stylesheet" href="./css/install-banner.css">
@@ -270,6 +285,114 @@
             transition: width 0.3s ease;
         }
         
+        /* モーダルダイアログのスタイル */
+        .modal-dialog {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .modal-dialog.show {
+            opacity: 1;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            max-width: 400px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transform: scale(0.8);
+            transition: transform 0.3s ease;
+        }
+        
+        .modal-dialog.show .modal-content {
+            transform: scale(1);
+        }
+        
+        .modal-header {
+            padding: 20px 20px 0 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .modal-header h3 {
+            margin: 0;
+            color: #333;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .modal-body {
+            padding: 20px;
+        }
+        
+        .modal-body p {
+            margin: 10px 0;
+            color: #555;
+            line-height: 1.5;
+        }
+        
+        .modal-body ul {
+            margin: 15px 0;
+            padding-left: 20px;
+        }
+        
+        .modal-body li {
+            margin: 8px 0;
+            color: #666;
+        }
+        
+        .modal-footer {
+            padding: 0 20px 20px 20px;
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+        
+        .modal-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .modal-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .modal-btn-danger {
+            background: linear-gradient(135deg, #ff4757, #ff3742);
+            color: white;
+        }
+        
+        .modal-btn-danger:hover {
+            background: linear-gradient(135deg, #ff3742, #ff2f3a);
+        }
+        
+        .modal-btn-secondary {
+            background: linear-gradient(135deg, #f1f2f6, #dfe4ea);
+            color: #2f3542;
+        }
+        
+        .modal-btn-secondary:hover {
+            background: linear-gradient(135deg, #dfe4ea, #ced6e0);
+        }
+        
 
         
 
@@ -377,7 +500,30 @@
     </div>
     
     <!-- ゲームリセット（常に画面の右下に固定。初期は非表示） -->
-    <button id="game-reset-btn" class="game-reset-button" style="display: none;">ゲームリセット</button>
+            <button id="game-reset-btn" class="game-reset-button" style="display: none;">ゲームリセット</button>
+        
+        <!-- ゲームリセット確認ダイアログ -->
+        <div id="reset-confirm-dialog" class="modal-dialog" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>ゲームリセット確認</h3>
+                </div>
+                <div class="modal-body">
+                    <p>ゲームをリセットしますか？</p>
+                    <p>この操作により、以下のデータが削除されます：</p>
+                    <ul>
+                        <li>全ての進行状況</li>
+                        <li>選択データ</li>
+                        <li>完了状態</li>
+                    </ul>
+                    <p><strong>この操作は取り消すことができません。</strong></p>
+                </div>
+                <div class="modal-footer">
+                    <button id="reset-confirm-yes" class="modal-btn modal-btn-danger">はい、リセットします</button>
+                    <button id="reset-confirm-no" class="modal-btn modal-btn-secondary">いいえ、キャンセル</button>
+                </div>
+            </div>
+        </div>
     
     <!-- ローディング画面 -->
     <div id="loading-screen" class="loading-screen" style="display: none;">
@@ -714,9 +860,59 @@
             const resetButton = document.getElementById('game-reset-btn');
             if (resetButton && !resetButton.__handlerAttached) {
                 resetButton.addEventListener('click', function() {
+                    console.log('[ゲームリセット] ボタンがクリックされました');
                     playSE('assets/audio/se/touch_1.mp3');
                     this.style.transform = 'scale(0.95)';
                     setTimeout(() => { this.style.transform = ''; }, 150);
+                    
+                    // カスタム確認ダイアログを表示
+                    showResetConfirmDialog();
+                });
+                resetButton.__handlerAttached = true;
+            }
+        });
+        
+        // リセット確認ダイアログの表示
+        function showResetConfirmDialog() {
+            console.log('[リセット確認] ダイアログ表示開始');
+            const dialog = document.getElementById('reset-confirm-dialog');
+            if (dialog) {
+                console.log('[リセット確認] ダイアログ要素を発見');
+                dialog.style.display = 'flex';
+                setTimeout(() => {
+                    dialog.classList.add('show');
+                    console.log('[リセット確認] ダイアログ表示完了');
+                }, 10);
+            } else {
+                console.error('[リセット確認] ダイアログ要素が見つかりません');
+            }
+        }
+        
+        // リセット確認ダイアログの非表示
+        function hideResetConfirmDialog() {
+            console.log('[リセット確認] ダイアログ非表示開始');
+            const dialog = document.getElementById('reset-confirm-dialog');
+            if (dialog) {
+                dialog.classList.remove('show');
+                setTimeout(() => {
+                    dialog.style.display = 'none';
+                    console.log('[リセット確認] ダイアログ非表示完了');
+                }, 300);
+            }
+        }
+        
+        // リセット確認ダイアログの初期化
+        function initializeResetDialog() {
+            console.log('[リセット確認] ダイアログ初期化開始');
+            
+            // リセット確認ダイアログのボタンイベント設定
+            const resetYesBtn = document.getElementById('reset-confirm-yes');
+            const resetNoBtn = document.getElementById('reset-confirm-no');
+            
+            if (resetYesBtn && !resetYesBtn.__handlerAttached) {
+                resetYesBtn.addEventListener('click', function() {
+                    console.log('ゲームリセットを実行します');
+                    
                     // 完了状態をリセット
                     if (window.resetAllCompletions) {
                         window.resetAllCompletions();
@@ -728,15 +924,74 @@
                     // 選択データもリセット
                     localStorage.removeItem('game_choices');
                     console.log('選択データをリセットしました');
-                    // ステージ選択を再表示
-                    showStageSelect();
+                    
+                    // ChoiceManagerもリセット
+                    if (window.ChoiceManager) {
+                        const choiceManager = new window.ChoiceManager();
+                        choiceManager.resetChoices();
+                        console.log('ChoiceManagerをリセットしました');
+                    }
+                    
+                    // ダイアログを非表示
+                    hideResetConfirmDialog();
+                    
+                    // リセット完了メッセージ
+                    setTimeout(() => {
+                        alert('ゲームをリセットしました。');
+                        // ステージ選択を再表示（エンディングボタンなし）
+                        showStageSelectAfterReset();
+                    }, 350);
                 });
-                resetButton.__handlerAttached = true;
+                resetYesBtn.__handlerAttached = true;
+                console.log('[リセット確認] はいボタンのイベント設定完了');
             }
-        });
+            
+            if (resetNoBtn && !resetNoBtn.__handlerAttached) {
+                resetNoBtn.addEventListener('click', function() {
+                    console.log('ゲームリセットをキャンセルしました');
+                    hideResetConfirmDialog();
+                });
+                resetNoBtn.__handlerAttached = true;
+                console.log('[リセット確認] いいえボタンのイベント設定完了');
+            }
+            
+            // ダイアログ外クリックでキャンセル
+            const dialog = document.getElementById('reset-confirm-dialog');
+            if (dialog && !dialog.__handlerAttached) {
+                dialog.addEventListener('click', function(e) {
+                    if (e.target === dialog) {
+                        hideResetConfirmDialog();
+                    }
+                });
+                dialog.__handlerAttached = true;
+                console.log('[リセット確認] ダイアログ外クリックイベント設定完了');
+            }
+            
+            console.log('[リセット確認] ダイアログ初期化完了');
+        }
+        
+        // リセット後のステージ選択画面表示（エンディングボタンなし）
+        function showStageSelectAfterReset() {
+            console.log('[リセット後] ステージ選択画面を表示します（エンディングボタンなし）');
+            
+            // リセットフラグを設定
+            window.__justReset = true;
+            
+            // 通常のステージ選択画面表示
+            showStageSelect();
+            
+            // リセットフラグをクリア
+            setTimeout(() => {
+                window.__justReset = false;
+                console.log('[リセット後] リセットフラグをクリアしました');
+            }, 1000);
+        }
         
         // ステージ選択画面のボタン設定
         function setupStageSelectButtons() {
+            // リセット確認ダイアログを初期化
+            initializeResetDialog();
+            
             const miemachi = document.getElementById('miemachi');
             const taketa = document.getElementById('taketa');
             const zenkoku = document.getElementById('zenkoku');
@@ -801,6 +1056,8 @@
         function showStageSelect() {
             const mainMenu = document.getElementById('main-menu');
             const stageSelect = document.getElementById('stage-select');
+            
+            console.log('[showStageSelect] リセットフラグ:', window.__justReset);
             
             // インストールポップアップを非表示にする
             if (window.pwaManager) {
@@ -1057,8 +1314,23 @@
 
         // ページ読み込み時の処理
         window.addEventListener('load', function() {
-            // 初期ローディング画面を表示
-            if (window.LoadingManager) {
+            console.log('[初期化] ページ読み込み完了');
+            console.log('[初期化] ユーザーエージェント:', navigator.userAgent);
+            console.log('[初期化] 画面サイズ:', window.innerWidth, 'x', window.innerHeight);
+            console.log('[初期化] デバイスピクセル比:', window.devicePixelRatio);
+            
+            // スマホ対応：DOMContentLoadedも待つ
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', initializeGame);
+            } else {
+                initializeGame();
+            }
+            
+            function initializeGame() {
+                console.log('[初期化] ゲーム初期化開始');
+                
+                // 初期ローディング画面を表示
+                if (window.LoadingManager) {
                 window.LoadingManager.show('ゲームを初期化中...', 0);
                 
                 // 初期化処理をシミュレート（安全装置付き）
@@ -1095,6 +1367,16 @@
                             } else {
                                 showMainMenu();
                             }
+                            
+                            // リセット確認ダイアログを初期化
+                            setTimeout(() => {
+                                if (typeof initializeResetDialog === 'function') {
+                                    console.log('[初期化] リセット確認ダイアログを初期化します');
+                                    initializeResetDialog();
+                                } else {
+                                    console.error('[初期化] initializeResetDialog関数が見つかりません');
+                                }
+                            }, 100);
                         }, 500);
                     }
                 }, 500);
@@ -1124,7 +1406,18 @@
                 } else {
                     showMainMenu();
                 }
+                
+                // リセット確認ダイアログを初期化
+                setTimeout(() => {
+                    if (typeof initializeResetDialog === 'function') {
+                        console.log('[初期化] リセット確認ダイアログを初期化します');
+                        initializeResetDialog();
+                    } else {
+                        console.error('[初期化] initializeResetDialog関数が見つかりません');
+                    }
+                }, 100);
             }
+        }
         });
         
         // メインメニューを表示する関数
