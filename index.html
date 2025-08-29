@@ -692,6 +692,7 @@
             const resetButton = document.getElementById('game-reset-btn');
             if (resetButton && !resetButton.__handlerAttached) {
                 resetButton.addEventListener('click', function() {
+                    console.log('[ゲームリセット] ボタンがクリックされました');
                     playSE('assets/audio/se/touch_1.mp3');
                     this.style.transform = 'scale(0.95)';
                     setTimeout(() => { this.style.transform = ''; }, 150);
@@ -701,28 +702,40 @@
                 });
                 resetButton.__handlerAttached = true;
             }
-            
-            // リセット確認ダイアログの表示
-            function showResetConfirmDialog() {
-                const dialog = document.getElementById('reset-confirm-dialog');
-                if (dialog) {
-                    dialog.style.display = 'flex';
-                    setTimeout(() => {
-                        dialog.classList.add('show');
-                    }, 10);
-                }
+        });
+        
+        // リセット確認ダイアログの表示
+        function showResetConfirmDialog() {
+            console.log('[リセット確認] ダイアログ表示開始');
+            const dialog = document.getElementById('reset-confirm-dialog');
+            if (dialog) {
+                console.log('[リセット確認] ダイアログ要素を発見');
+                dialog.style.display = 'flex';
+                setTimeout(() => {
+                    dialog.classList.add('show');
+                    console.log('[リセット確認] ダイアログ表示完了');
+                }, 10);
+            } else {
+                console.error('[リセット確認] ダイアログ要素が見つかりません');
             }
-            
-            // リセット確認ダイアログの非表示
-            function hideResetConfirmDialog() {
-                const dialog = document.getElementById('reset-confirm-dialog');
-                if (dialog) {
-                    dialog.classList.remove('show');
-                    setTimeout(() => {
-                        dialog.style.display = 'none';
-                    }, 300);
-                }
+        }
+        
+        // リセット確認ダイアログの非表示
+        function hideResetConfirmDialog() {
+            console.log('[リセット確認] ダイアログ非表示開始');
+            const dialog = document.getElementById('reset-confirm-dialog');
+            if (dialog) {
+                dialog.classList.remove('show');
+                setTimeout(() => {
+                    dialog.style.display = 'none';
+                    console.log('[リセット確認] ダイアログ非表示完了');
+                }, 300);
             }
+        }
+        
+        // リセット確認ダイアログの初期化
+        function initializeResetDialog() {
+            console.log('[リセット確認] ダイアログ初期化開始');
             
             // リセット確認ダイアログのボタンイベント設定
             const resetYesBtn = document.getElementById('reset-confirm-yes');
@@ -744,17 +757,25 @@
                     localStorage.removeItem('game_choices');
                     console.log('選択データをリセットしました');
                     
+                    // ChoiceManagerもリセット
+                    if (window.ChoiceManager) {
+                        const choiceManager = new window.ChoiceManager();
+                        choiceManager.resetChoices();
+                        console.log('ChoiceManagerをリセットしました');
+                    }
+                    
                     // ダイアログを非表示
                     hideResetConfirmDialog();
                     
                     // リセット完了メッセージ
                     setTimeout(() => {
                         alert('ゲームをリセットしました。');
-                        // ステージ選択を再表示
-                        showStageSelect();
+                        // ステージ選択を再表示（エンディングボタンなし）
+                        showStageSelectAfterReset();
                     }, 350);
                 });
                 resetYesBtn.__handlerAttached = true;
+                console.log('[リセット確認] はいボタンのイベント設定完了');
             }
             
             if (resetNoBtn && !resetNoBtn.__handlerAttached) {
@@ -763,22 +784,46 @@
                     hideResetConfirmDialog();
                 });
                 resetNoBtn.__handlerAttached = true;
+                console.log('[リセット確認] いいえボタンのイベント設定完了');
             }
             
-                                      // ダイアログ外クリックでキャンセル
-             const dialog = document.getElementById('reset-confirm-dialog');
-             if (dialog && !dialog.__handlerAttached) {
-                 dialog.addEventListener('click', function(e) {
-                     if (e.target === dialog) {
-                         hideResetConfirmDialog();
-                     }
-                 });
-                 dialog.__handlerAttached = true;
-             }
-        });
+            // ダイアログ外クリックでキャンセル
+            const dialog = document.getElementById('reset-confirm-dialog');
+            if (dialog && !dialog.__handlerAttached) {
+                dialog.addEventListener('click', function(e) {
+                    if (e.target === dialog) {
+                        hideResetConfirmDialog();
+                    }
+                });
+                dialog.__handlerAttached = true;
+                console.log('[リセット確認] ダイアログ外クリックイベント設定完了');
+            }
+            
+            console.log('[リセット確認] ダイアログ初期化完了');
+        }
+        
+        // リセット後のステージ選択画面表示（エンディングボタンなし）
+        function showStageSelectAfterReset() {
+            console.log('[リセット後] ステージ選択画面を表示します（エンディングボタンなし）');
+            
+            // リセットフラグを設定
+            window.__justReset = true;
+            
+            // 通常のステージ選択画面表示
+            showStageSelect();
+            
+            // リセットフラグをクリア
+            setTimeout(() => {
+                window.__justReset = false;
+                console.log('[リセット後] リセットフラグをクリアしました');
+            }, 1000);
+        }
         
         // ステージ選択画面のボタン設定
         function setupStageSelectButtons() {
+            // リセット確認ダイアログを初期化
+            initializeResetDialog();
+            
             const miemachi = document.getElementById('miemachi');
             const taketa = document.getElementById('taketa');
             const zenkoku = document.getElementById('zenkoku');
@@ -843,6 +888,8 @@
         function showStageSelect() {
             const mainMenu = document.getElementById('main-menu');
             const stageSelect = document.getElementById('stage-select');
+            
+            console.log('[showStageSelect] リセットフラグ:', window.__justReset);
             
             // インストールポップアップを非表示にする
             if (window.pwaManager) {
@@ -1152,6 +1199,16 @@
                             } else {
                                 showMainMenu();
                             }
+                            
+                            // リセット確認ダイアログを初期化
+                            setTimeout(() => {
+                                if (typeof initializeResetDialog === 'function') {
+                                    console.log('[初期化] リセット確認ダイアログを初期化します');
+                                    initializeResetDialog();
+                                } else {
+                                    console.error('[初期化] initializeResetDialog関数が見つかりません');
+                                }
+                            }, 100);
                         }, 500);
                     }
                 }, 500);
@@ -1181,6 +1238,16 @@
                 } else {
                     showMainMenu();
                 }
+                
+                // リセット確認ダイアログを初期化
+                setTimeout(() => {
+                    if (typeof initializeResetDialog === 'function') {
+                        console.log('[初期化] リセット確認ダイアログを初期化します');
+                        initializeResetDialog();
+                    } else {
+                        console.error('[初期化] initializeResetDialog関数が見つかりません');
+                    }
+                }, 100);
             }
         }
         });
