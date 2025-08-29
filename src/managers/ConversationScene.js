@@ -16,6 +16,9 @@ export class ConversationScene extends Phaser.Scene {
         this._originalBgmKey = null;
         this._eventHtmlBgm = null;
         this._pausedHtmlMapBgm = false;
+        
+        // 選択肢ボタン配列を初期化
+        this.currentChoiceButtons = [];
     }
 
     init(data) {
@@ -179,6 +182,11 @@ export class ConversationScene extends Phaser.Scene {
         // クリックでテキスト進行（多重登録防止）
         this.input.removeAllListeners('pointerdown');
         this.input.on('pointerdown', () => {
+            // 選択肢表示中は会話を進めない
+            if (this.currentChoiceButtons && this.currentChoiceButtons.length > 0) {
+                console.log('[ConversationScene] 選択肢表示中: 背景クリックで会話を進めません');
+                return;
+            }
             this.nextDialog();
         });
         
@@ -432,6 +440,13 @@ export class ConversationScene extends Phaser.Scene {
             this.completeTextAnimation();
             return;
         }
+        
+        // 選択肢表示中は会話を進めない
+        if (this.currentChoiceButtons && this.currentChoiceButtons.length > 0) {
+            console.log('[ConversationScene] 選択肢表示中: 会話を進めません');
+            return;
+        }
+        
         this.currentConversationIndex++;
         if (this.currentConversationIndex < this.currentConversation.conversations.length) {
             this.showDialog();
@@ -497,6 +512,11 @@ export class ConversationScene extends Phaser.Scene {
         // SE再生処理を追加
         if (dialog.se) {
             this.playDialogSE(dialog.se);
+        }
+        
+        // 選択肢処理を追加
+        if (dialog.type === 'choice') {
+            this.showChoices(dialog.choices, dialog.choiceId);
         }
     }
 
@@ -1272,12 +1292,49 @@ export class ConversationScene extends Phaser.Scene {
             }
         }
         
+        // 選択肢ボタンのリサイズ
+        if (this.currentChoiceButtons && this.currentChoiceButtons.length > 0) {
+            this.repositionChoiceButtons(width, height);
+        }
+        
         // キャラクター位置は現状のままで問題ないため、リサイズ時に再レイアウトしない
         // this.layoutVisibleCharacters();
     }
     
     // キャラクタースプライトの位置調整
     repositionCharacterSprites() { this.layoutVisibleCharacters(); }
+    
+    // 選択肢ボタンの位置調整
+    repositionChoiceButtons(width, height) {
+        if (!this.currentChoiceButtons || this.currentChoiceButtons.length === 0) {
+            return;
+        }
+        
+        const isPortrait = height > width;
+        const choiceCount = this.currentChoiceButtons.length;
+        
+        // 縦向きの時は50px上に、3つ以上の選択肢の時はさらに30px上に（調整済み）
+        let verticalOffset = isPortrait ? 50 : 0;
+        if (choiceCount >= 3) {
+            verticalOffset += 30;
+        }
+        
+        this.currentChoiceButtons.forEach((button, index) => {
+            if (button && button.setPosition) {
+                const buttonX = width / 2;
+                // 3つ以上の選択肢の時は、より上から開始して間隔を広げる
+                let buttonY;
+                if (choiceCount >= 3) {
+                    buttonY = height - 250 + (index * 70) - verticalOffset; // 間隔を70pxに調整
+                } else {
+                    buttonY = height - 200 + (index * 60) - verticalOffset; // 通常の間隔
+                }
+                button.setPosition(buttonX, buttonY);
+            }
+        });
+        
+        console.log('[ConversationScene] 選択肢ボタンの位置を調整しました');
+    }
 
     // 会話ボックス上辺に名前ボックスを揃える（縦横共通）
     _repositionNamebox(width, height) {
@@ -1318,6 +1375,29 @@ export class ConversationScene extends Phaser.Scene {
             // 戻るボタン以外のクリック/タップを無効化
             console.log('[ConversationScene] 背景クリックを検出:', pointer.x, pointer.y);
             
+            // 選択肢ボタンがある場合は、選択肢ボタンの領域外のクリックを無効化
+            if (this.currentChoiceButtons && this.currentChoiceButtons.length > 0) {
+                console.log('[ConversationScene] 選択肢表示中: 選択肢ボタン領域外のクリックを無効化');
+                
+                // 選択肢ボタンの領域をチェック
+                const isInChoiceButtonArea = this.currentChoiceButtons.some(button => {
+                    if (button && button.getBounds) {
+                        const bounds = button.getBounds();
+                        return pointer.x >= bounds.x && 
+                               pointer.x <= bounds.x + bounds.width &&
+                               pointer.y >= bounds.y && 
+                               pointer.y <= bounds.y + bounds.height;
+                    }
+                    return false;
+                });
+                
+                // 選択肢ボタンの領域外の場合はクリックを無効化
+                if (!isInChoiceButtonArea) {
+                    console.log('[ConversationScene] 選択肢ボタン領域外のクリックを無効化');
+                    return false; // イベントを停止
+                }
+            }
+            
             // 戻るボタンの領域外のクリックを無効化
             const backButtonArea = { x: 50, y: 50, width: 100, height: 50 }; // 戻るボタンの概算位置
             if (pointer.x < backButtonArea.x || 
@@ -1333,4 +1413,222 @@ export class ConversationScene extends Phaser.Scene {
         
         console.log('[ConversationScene] 背景操作を無効化しました');
     }
+    
+    // 選択肢を表示
+    showChoices(choices, choiceId) {
+        console.log('[ConversationScene] 選択肢を表示:', choices);
+        
+        // 既存の選択肢ボタンをクリア
+        this.clearChoiceButtons();
+        
+        // 選択肢の数を記録
+        const totalChoices = choices.length;
+        console.log(`[ConversationScene] 選択肢数: ${totalChoices}`);
+        
+        // 重複チェック
+        if (this.currentChoiceButtons.length > 0) {
+            console.warn('[ConversationScene] 警告: 選択肢ボタンが既に存在します');
+            this.clearChoiceButtons();
+        }
+        
+        choices.forEach((choice, index) => {
+            const button = this.createChoiceButton(choice, choiceId, index, totalChoices);
+            this.currentChoiceButtons.push(button);
+        });
+        
+        console.log(`[ConversationScene] 選択肢ボタン作成完了: ${this.currentChoiceButtons.length}個`);
+    }
+    
+    // 選択肢ボタンを作成
+    createChoiceButton(choice, choiceId, index, totalChoices) {
+        const width = this.sys?.game?.canvas?.width || this.sys?.game?.config?.width || 800;
+        const height = this.sys?.game?.canvas?.height || this.sys?.game?.config?.height || 600;
+        
+        const isPortrait = height > width;
+        
+        // 選択肢の数を直接受け取る
+        const choiceCount = totalChoices || 1;
+        
+        // 縦向きの時は50px上に、3つ以上の選択肢の時はさらに30px上に（調整済み）
+        let verticalOffset = isPortrait ? 50 : 0;
+        if (choiceCount >= 3) {
+            verticalOffset += 30;
+        }
+        
+        console.log(`[ConversationScene] 選択肢ボタン作成: choiceCount=${choiceCount}, verticalOffset=${verticalOffset}, index=${index}`);
+        
+        const buttonX = width / 2;
+        // 3つ以上の選択肢の時は、より上から開始して間隔を広げる
+        let buttonY;
+        if (choiceCount >= 3) {
+            buttonY = height - 250 + (index * 70) - verticalOffset; // 間隔を70pxに調整
+        } else {
+            buttonY = height - 200 + (index * 60) - verticalOffset; // 通常の間隔
+        }
+        
+        const button = this.add.container(buttonX, buttonY);
+        
+        // ボタン背景
+        const background = this.add.graphics();
+        background.fillStyle(0x2a2a2a, 0.9);
+        background.fillRoundedRect(-100, -25, 200, 50, 8);
+        button.add(background);
+        
+        // ボタンテキスト
+        const text = this.add.text(0, 0, choice.text, {
+            fontSize: '16px',
+            fill: '#ffffff',
+            fontFamily: 'Arial'
+        }).setOrigin(0.5);
+        button.add(text);
+        
+        // インタラクティブ設定
+        button.setInteractive(new Phaser.Geom.Rectangle(-100, -25, 200, 50), Phaser.Geom.Rectangle.Contains);
+        
+        // クリックイベント
+        button.on('pointerdown', () => {
+            this.handleChoice(choice, choiceId);
+        });
+        
+        // ホバー効果
+        button.on('pointerover', () => {
+            background.fillStyle(0x4a4a4a, 0.9);
+            background.fillRoundedRect(-100, -25, 200, 50, 8);
+        });
+        
+        button.on('pointerout', () => {
+            background.fillStyle(0x2a2a2a, 0.9);
+            background.fillRoundedRect(-100, -25, 200, 50, 8);
+        });
+        
+        return button;
+    }
+    
+    // 選択を処理
+    handleChoice(choice) {
+        console.log('[ConversationScene] 選択:', choice.id, choice.result);
+        
+        // 選択肢ボタンを非表示
+        this.clearChoiceButtons();
+        
+        // 選択に応じたメッセージを表示
+        if (choice.nextMessages) {
+            this.showChoiceMessages(choice.nextMessages);
+        }
+        
+        // 選択後のメッセージを表示してから次の会話に進む
+        // nextDialog()は呼び出さない（showChoiceMessagesで自動的に次の会話に進む）
+    }
+    
+    // 選択後のメッセージを表示
+    showChoiceMessages(messages) {
+        // 選択後のメッセージを順番に表示してから、共通会話に進む
+        this.displayChoiceMessagesSequentially(messages, 0);
+    }
+    
+    // 選択後のメッセージを順番に表示
+    displayChoiceMessagesSequentially(messages, index) {
+        if (index >= messages.length) {
+            // 全ての選択後メッセージが表示されたら、共通会話に進む
+            this.skipToCommonDialog();
+            return;
+        }
+        
+        // 現在のメッセージを表示
+        const message = messages[index];
+        this.displaySingleMessage(message);
+        
+        // 次のメッセージを表示する準備
+        this.input.once('pointerdown', () => {
+            this.displayChoiceMessagesSequentially(messages, index + 1);
+        });
+    }
+    
+    // 単一メッセージを表示
+    displaySingleMessage(message) {
+        // 立ち絵の表示/非表示制御
+        if (!message.speaker || message.character === 'narrator') {
+            // ナレーション時は全立ち絵を一時的に隠す
+            if (this.characterSprites) {
+                Object.values(this.characterSprites).forEach(sprite => {
+                    if (sprite && sprite.setVisible) {
+                        sprite.setVisible(false);
+                    }
+                });
+            }
+        } else {
+            // 通常発話時は全立ち絵を表示状態に戻す
+            if (this.characterSprites) {
+                Object.values(this.characterSprites).forEach(sprite => {
+                    if (sprite && sprite.setVisible) {
+                        sprite.setVisible(true);
+                    }
+                });
+            }
+            this.updateCharacterSprite(message.character, message.expression);
+            this.layoutVisibleCharacters();
+        }
+
+        // 名前の表示（ナレーション時は非表示）
+        if (!message.speaker || message.character === 'narrator') {
+            this.nameText.setText('');
+            if (this.namebox) this.namebox.setVisible(false);
+            if (this.nameText) this.nameText.setVisible(false);
+            if (this.nameboxDecoFrame) this.nameboxDecoFrame.setVisible(false);
+            if (this.nameboxDecoShine) this.nameboxDecoShine.setVisible(false);
+        } else {
+            if (this.namebox) this.namebox.setVisible(true);
+            if (this.nameText) this.nameText.setVisible(true);
+            this.nameText.setText(message.speaker || '');
+            if (message.speaker) {
+                this.adjustNameboxWidth(message.speaker);
+            }
+        }
+        
+        // テキストのアニメーション表示
+        this.animateText(message.text);
+        
+        // 背景変更処理
+        if (message.background) {
+            this.updateBackground(message.background);
+        }
+        
+        // SE再生処理
+        if (message.se) {
+            this.playDialogSE(message.se);
+        }
+    }
+    
+    // 共通会話にスキップ
+    skipToCommonDialog() {
+        const currentConversations = this.currentConversation.conversations;
+        let commonDialogIndex = this.currentConversationIndex;
+        
+        // 共通会話（選択肢後の会話）を見つける
+        while (commonDialogIndex < currentConversations.length) {
+            const dialog = currentConversations[commonDialogIndex];
+            if (dialog.type !== 'choice' && !dialog.choiceId) {
+                break;
+            }
+            commonDialogIndex++;
+        }
+        
+        // 共通会話から開始
+        this.currentConversationIndex = commonDialogIndex;
+        this.showDialog();
+    }
+    
+    // 選択肢ボタンをクリア
+    clearChoiceButtons() {
+        if (this.currentChoiceButtons) {
+            this.currentChoiceButtons.forEach(button => {
+                if (button && button.destroy) {
+                    button.destroy();
+                }
+            });
+        }
+        this.currentChoiceButtons = [];
+        console.log('[ConversationScene] 選択肢ボタンをクリアしました');
+    }
+    
 } 

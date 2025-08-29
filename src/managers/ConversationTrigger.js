@@ -1,5 +1,6 @@
 import { ConversationManager } from '../data/stage1/conversationData.js';
 import { TaketaConversationManager } from '../data/taketa/conversationData.js';
+import { ChoiceManager } from './ChoiceManager.js';
 
 export class ConversationTrigger {
     constructor(scene) {
@@ -14,8 +15,13 @@ export class ConversationTrigger {
             console.log('[ConversationTrigger] 通常の会話データマネージャーを初期化');
         }
         
+        // 選択肢管理システムを初期化
+        this.choiceManager = new ChoiceManager();
+        
         this.isConversationActive = false;
         this.triggeredEvents = new Set(); // 発動済みイベントを記録
+        this.currentConversationId = null;
+        this.currentChoiceButtons = [];
         
         // デバッグ: 利用可能な会話データを確認
         console.log('[ConversationTrigger] 初期化完了');
@@ -261,5 +267,114 @@ export class ConversationTrigger {
         if (this.conversationManager) {
             this.conversationManager = null;
         }
+    }
+    
+    // 選択肢を表示
+    showChoices(choices, choiceId) {
+        console.log('[ConversationTrigger] 選択肢を表示:', choices);
+        
+        // 既存の選択肢ボタンをクリア
+        this.clearChoiceButtons();
+        
+        choices.forEach((choice, index) => {
+            const button = this.createChoiceButton(choice, choiceId, index);
+            this.currentChoiceButtons.push(button);
+        });
+    }
+    
+    // 選択肢ボタンを作成
+    createChoiceButton(choice, choiceId, index) {
+        const buttonX = this.scene.cameras.main.centerX;
+        const buttonY = this.scene.cameras.main.centerY + 100 + (index * 60);
+        
+        const button = this.scene.add.container(buttonX, buttonY);
+        
+        // ボタン背景
+        const background = this.scene.add.graphics();
+        background.fillStyle(0x2a2a2a, 0.9);
+        background.fillRoundedRect(-100, -25, 200, 50, 8);
+        button.add(background);
+        
+        // ボタンテキスト
+        const text = this.scene.add.text(0, 0, choice.text, {
+            fontSize: '16px',
+            fill: '#ffffff',
+            fontFamily: 'Arial'
+        }).setOrigin(0.5);
+        button.add(text);
+        
+        // インタラクティブ設定
+        button.setInteractive(new Phaser.Geom.Rectangle(-100, -25, 200, 50), Phaser.Geom.Rectangle.Contains);
+        
+        // クリックイベント
+        button.on('pointerdown', () => {
+            this.handleChoice(choice, choiceId);
+        });
+        
+        // ホバー効果
+        button.on('pointerover', () => {
+            background.fillStyle(0x4a4a4a, 0.9);
+            background.fillRoundedRect(-100, -25, 200, 50, 8);
+        });
+        
+        button.on('pointerout', () => {
+            background.fillStyle(0x2a2a2a, 0.9);
+            background.fillRoundedRect(-100, -25, 200, 50, 8);
+        });
+        
+        return button;
+    }
+    
+    // 選択を処理
+    handleChoice(choice, choiceId) {
+        console.log('[ConversationTrigger] 選択:', choice.id, choice.result);
+        
+        // 選択を保存
+        this.choiceManager.saveChoice(
+            this.currentConversationId, 
+            choiceId, 
+            choice.result
+        );
+        
+        // 選択肢ボタンを非表示
+        this.clearChoiceButtons();
+        
+        // 選択に応じたメッセージを表示
+        if (choice.nextMessages) {
+            this.showChoiceMessages(choice.nextMessages);
+        }
+        
+        // エンディング条件をチェック
+        if (this.choiceManager.checkEndingCondition()) {
+            console.log('[ConversationTrigger] エンディング条件達成！');
+            // エンディングフラグを設定（後でエンディングボタン表示に使用）
+            this.scene.endingUnlocked = true;
+        }
+    }
+    
+    // 選択後のメッセージを表示
+    showChoiceMessages(messages) {
+        // DynamicConversationSceneに選択後のメッセージを渡す
+        if (this.scene.scene.isActive('DynamicConversationScene')) {
+            const conversationScene = this.scene.scene.get('DynamicConversationScene');
+            if (conversationScene && conversationScene.showMessages) {
+                conversationScene.showMessages(messages);
+            }
+        }
+    }
+    
+    // 選択肢ボタンをクリア
+    clearChoiceButtons() {
+        this.currentChoiceButtons.forEach(button => {
+            if (button && button.destroy) {
+                button.destroy();
+            }
+        });
+        this.currentChoiceButtons = [];
+    }
+    
+    // エンディング条件をチェック
+    checkEndingCondition() {
+        return this.choiceManager.checkEndingCondition();
     }
 } 
