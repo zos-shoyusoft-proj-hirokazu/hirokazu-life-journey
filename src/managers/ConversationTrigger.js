@@ -80,6 +80,10 @@ export class ConversationTrigger {
 
         console.log(`[ConversationTrigger] イベントID: ${eventId} で会話を開始`);
         
+        // 現在の会話IDを設定
+        this.currentConversationId = eventId;
+        console.log('[ConversationTrigger] 会話IDを設定:', this.currentConversationId);
+        
         // DynamicConversationSceneを起動
         this.scene.scene.launch('DynamicConversationScene', {
             eventId: eventId,
@@ -94,6 +98,10 @@ export class ConversationTrigger {
             console.warn('[ConversationTrigger] Scene is not available for conversation');
             return;
         }
+        
+        // 現在の会話IDを設定
+        this.currentConversationId = eventId || areaName;
+        console.log('[ConversationTrigger] 会話IDを設定:', this.currentConversationId);
         
         // 既に会話が起動中の場合は停止
         if (this.isConversationActive) {
@@ -272,6 +280,9 @@ export class ConversationTrigger {
     // 選択肢を表示
     showChoices(choices, choiceId) {
         console.log('[ConversationTrigger] 選択肢を表示:', choices);
+        console.log('[ConversationTrigger] 選択肢ID:', choiceId);
+        console.log('[ConversationTrigger] 現在の会話ID:', this.currentConversationId);
+        console.log('[ConversationTrigger] 選択肢の数:', choices.length);
         
         // 既存の選択肢ボタンをクリア
         this.clearChoiceButtons();
@@ -328,6 +339,8 @@ export class ConversationTrigger {
     // 選択を処理
     handleChoice(choice, choiceId) {
         console.log('[ConversationTrigger] 選択:', choice.id, choice.result);
+        console.log('[ConversationTrigger] 会話ID:', this.currentConversationId);
+        console.log('[ConversationTrigger] 選択肢ID:', choiceId);
         
         // 選択を保存
         this.choiceManager.saveChoice(
@@ -335,6 +348,9 @@ export class ConversationTrigger {
             choiceId, 
             choice.result
         );
+        
+        // 保存後の選択データを確認
+        console.log('[ConversationTrigger] 保存後の選択データ:', this.choiceManager.choices);
         
         // 選択肢ボタンを非表示
         this.clearChoiceButtons();

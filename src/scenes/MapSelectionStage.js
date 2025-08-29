@@ -7,6 +7,7 @@ import { AreaConfig } from '../config/AreaConfig.js';
 import { VisualFeedbackManager } from '../managers/VisualFeedbackManager.js';
 import { ConversationTrigger } from '../managers/ConversationTrigger.js';
 import { ConversationScene } from '../managers/ConversationScene.js';
+import { ChoiceManager } from '../managers/ChoiceManager.js';
 
 
 export class MapSelectionStage extends Phaser.Scene {
@@ -40,6 +41,10 @@ export class MapSelectionStage extends Phaser.Scene {
         this._bgmRetry = null;
         // 会話中フラグ
         this._isInConversation = false;
+        
+        // エンディングシステム
+        this.choiceManager = null;
+        this.endingButton = null;
     }
 
     preload() {
@@ -128,6 +133,168 @@ export class MapSelectionStage extends Phaser.Scene {
         });
     }
 
+    // エンディングボタンをチェックして表示
+    checkAndShowEndingButton() {
+        console.log('[MapSelectionStage] エンディングボタンの表示条件をチェック中...');
+        
+        if (!this.choiceManager) {
+            console.log('[MapSelectionStage] ChoiceManagerが初期化されていません');
+            return;
+        }
+        
+        // 選択データを再読み込み（ローカルストレージから最新のデータを取得）
+        this.choiceManager.choices = this.choiceManager.loadChoices();
+        console.log('[MapSelectionStage] 選択データを再読み込みしました');
+        
+        // 現在の選択データをデバッグ表示
+        this.choiceManager.debugChoices();
+        
+        const endingConditionMet = this.choiceManager.checkEndingCondition();
+        console.log('[MapSelectionStage] エンディング条件達成:', endingConditionMet);
+        
+        if (endingConditionMet) {
+            this.showEndingButton();
+        } else {
+            console.log('[MapSelectionStage] エンディング条件未達成のため、ボタンを表示しません');
+        }
+    }
+    
+    // エンディングボタンを表示
+    showEndingButton() {
+        const width = this.sys.game.canvas.width;
+        const height = this.sys.game.canvas.height;
+        
+        // エンディングボタンを作成
+        const buttonContainer = this.add.container(width / 2, height - 100);
+        
+        // ボタン背景
+        const background = this.add.graphics();
+        background.fillStyle(0x8B4513, 0.9); // 茶色の背景
+        background.fillRoundedRect(-150, -30, 300, 60, 10);
+        buttonContainer.add(background);
+        
+        // ボタンテキスト
+        const text = this.add.text(0, 0, 'エンディング', {
+            fontSize: '24px',
+            fill: '#FFFFFF',
+            fontFamily: 'Arial',
+            fontStyle: 'bold'
+        }).setOrigin(0.5);
+        buttonContainer.add(text);
+        
+        // インタラクティブ設定
+        buttonContainer.setInteractive(new Phaser.Geom.Rectangle(-150, -30, 300, 60), Phaser.Geom.Rectangle.Contains);
+        
+        // クリックイベント
+        buttonContainer.on('pointerdown', () => {
+            this.startEnding();
+        });
+        
+        // ホバー効果
+        buttonContainer.on('pointerover', () => {
+            background.fillStyle(0xA0522D, 0.9); // 明るい茶色
+            background.fillRoundedRect(-150, -30, 300, 60, 10);
+        });
+        
+        buttonContainer.on('pointerout', () => {
+            background.fillStyle(0x8B4513, 0.9); // 元の茶色
+            background.fillRoundedRect(-150, -30, 300, 60, 10);
+        });
+        
+        this.endingButton = buttonContainer;
+        console.log('[MapSelectionStage] エンディングボタンを表示しました');
+    }
+    
+    // エンディングを開始
+    startEnding() {
+        console.log('[MapSelectionStage] エンディングを開始します');
+        
+        // エンディング開始時にBGMを停止
+        console.log('[MapSelectionStage] BGM停止開始');
+        
+        // 現在のシーンのBGMを停止
+        if (this.sound && this.sound.stopAll) {
+            this.sound.stopAll();
+        }
+        if (this._htmlBgm) {
+            this._htmlBgm.pause();
+            this._htmlBgm = null;
+        }
+        if (this._eventHtmlBgm) {
+            this._eventHtmlBgm.pause();
+            this._eventHtmlBgm = null;
+        }
+        
+        // グローバルのサウンドを停止
+        if (window.game && window.game.sound) {
+            window.game.sound.stopAll();
+        }
+        
+        // すべてのシーンのBGMを停止
+        if (window.game && window.game.scene && window.game.scene.getScenes) {
+            const scenes = window.game.scene.getScenes(false) || [];
+            console.log('[MapSelectionStage] 全シーンのBGM停止開始');
+            scenes.forEach((scene, index) => {
+                try {
+                    console.log(`[MapSelectionStage] シーン${index}のBGM停止:`, scene.scene?.key);
+                    if (scene.sound && scene.sound.stopAll) {
+                        scene.sound.stopAll();
+                    }
+                    if (scene._htmlBgm) {
+                        scene._htmlBgm.pause();
+                        scene._htmlBgm = null;
+                    }
+                    if (scene._eventHtmlBgm) {
+                        scene._eventHtmlBgm.pause();
+                        scene._eventHtmlBgm = null;
+                    }
+                } catch (e) {
+                    console.error(`[MapSelectionStage] シーン${index}のBGM停止エラー:`, e);
+                }
+            });
+            console.log('[MapSelectionStage] 全シーンのBGM停止完了');
+        }
+        
+        // AudioManagerのBGMも停止
+        try {
+            if (window.audioManager) {
+                console.log('[MapSelectionStage] AudioManagerのBGM停止開始');
+                if (window.audioManager.stopAll) {
+                    window.audioManager.stopAll();
+                }
+                if (window.audioManager.stopBgm) {
+                    window.audioManager.stopBgm();
+                }
+                console.log('[MapSelectionStage] AudioManagerのBGM停止完了');
+            }
+        } catch (e) {
+            console.error('[MapSelectionStage] AudioManagerのBGM停止エラー:', e);
+        }
+        
+        // すべてのaudio要素を強制停止
+        try {
+            const allAudios = document.querySelectorAll('audio');
+            console.log('[MapSelectionStage] 検出されたaudio要素数:', allAudios.length);
+            allAudios.forEach((audio, index) => {
+                console.log(`[MapSelectionStage] audio要素${index}を停止`);
+                audio.pause();
+                audio.currentTime = 0;
+                audio.src = '';
+            });
+        } catch (e) {
+            console.error('[MapSelectionStage] BGM強制停止エラー:', e);
+        }
+        
+        console.log('[MapSelectionStage] BGM停止完了');
+        
+        // エンディングシーンに遷移（gameController経由）
+        if (window.startPhaserGame) {
+            window.startPhaserGame('ending');
+        } else {
+            console.error('[MapSelectionStage] startPhaserGameが見つかりません');
+        }
+    }
+    
     // 削除済み：BGMファイルを動的に読み込む（不要）
     // loadBgmFiles() {
     //     
@@ -225,6 +392,9 @@ export class MapSelectionStage extends Phaser.Scene {
             // 視覚的フィードバックマネージャーを初期化
             this.visualFeedbackManager = new VisualFeedbackManager(this);
             
+            // エンディングシステムを初期化
+            this.choiceManager = new ChoiceManager();
+            
             // 竹田ステージ、三重町ステージ、日本ステージの場合は会話システムを初期化
             if (this.mapConfig.mapKey === 'taketa' || this.mapConfig.mapKey === 'miemachi' || this.mapConfig.mapKey === 'japan') {
                 this.conversationTrigger = new ConversationTrigger(this);
@@ -289,6 +459,11 @@ export class MapSelectionStage extends Phaser.Scene {
             
             // 完了状態をチェックして適用
             this.checkAndApplyCompletedAreas();
+            
+            // エンディングボタンを遅延表示（選択データの読み込み完了を待つ）
+            this.time.delayedCall(100, () => {
+                this.checkAndShowEndingButton();
+            });
             
             // AudioManagerを初期化し、iOSのロックを考慮してBGMを開始
             try {

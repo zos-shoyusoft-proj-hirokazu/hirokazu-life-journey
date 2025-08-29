@@ -898,55 +898,6 @@ export const japanConversationData = {
                 'character': 'hirokazu',
                 'text': '調査してみるか？',
                 'expression': 'c'
-            },
-            {
-                'type': 'choice',
-                'choiceId': 'investigation_choice',
-                'choices': [
-                    { 'id': 'investigate', 'text': '調査する', 'result': 'correct', 'nextMessages': [
-                        {
-                            'speaker': 'ひろかず',
-                            'character': 'hirokazu',
-                            'text': '詳しく調査してみよう',
-                            'expression': 'a'
-                        }
-                    ]},
-                    { 'id': 'ignore', 'text': '無視する', 'result': 'wrong', 'nextMessages': [
-                        {
-                            'speaker': 'ひろかず',
-                            'character': 'hirokazu',
-                            'text': 'まあ、いいか',
-                            'expression': 'b'
-                        }
-                    ]},
-                    { 'id': 'observe', 'text': '様子を見る', 'result': 'neutral', 'nextMessages': [
-                        {
-                            'speaker': 'ひろかず',
-                            'character': 'hirokazu',
-                            'text': 'しばらく様子を見てみよう',
-                            'expression': 'c'
-                        }
-                    ]}
-                ]
-            },
-            // 選択肢後の共通会話
-            {
-                'speaker': 'ナレーター',
-                'character': 'narrator',
-                'text': 'しばらく時間が経った',
-                'expression': 'a'
-            },
-            {
-                'speaker': 'ひろかず',
-                'character': 'hirokazu',
-                'text': '結果はどうだったかな',
-                'expression': 'a'
-            },
-            {
-                'speaker': 'ひろかず',
-                'character': 'hirokazu',
-                'text': '次に何をしようか',
-                'expression': 'b'
             }
         ]
     }

@@ -18,12 +18,20 @@ export class ChoiceManager {
     
     // 選択を保存
     saveChoice(conversationId, choiceId, selectedOption) {
+        console.log(`[ChoiceManager] saveChoice呼び出し: conversationId=${conversationId}, choiceId=${choiceId}, selectedOption=${selectedOption}`);
+        
+        if (!conversationId) {
+            console.error('[ChoiceManager] conversationIdが未定義です！');
+            return;
+        }
+        
         if (!this.choices[conversationId]) {
             this.choices[conversationId] = {};
         }
         this.choices[conversationId][choiceId] = selectedOption;
         this.saveToStorage();
         console.log(`[ChoiceManager] 選択を保存: ${conversationId}.${choiceId} = ${selectedOption}`);
+        console.log('[ChoiceManager] 保存後の全選択データ:', this.choices);
     }
     
     // ローカルストレージに保存
@@ -48,20 +56,25 @@ export class ChoiceManager {
     
     // エンディング条件をチェック
     checkEndingCondition() {
+        // エンディング条件：tereapoエリアで何らかの選択をした場合
         const requiredChoices = {
-            'gray_bytes': {
-                'investigation_choice': 'correct',
-                'trust_choice': 'correct'
-            },
             'tereapo': {
-                'tv_tower_choice': 'correct'
+                'tv_tower_choice': 'any'  // どんな選択でもエンディングボタンを表示
             }
+            // gray_bytesはエンディング条件から除外
             // 他の会話の正解選択も追加可能
         };
         
         for (const [convId, choices] of Object.entries(requiredChoices)) {
-            for (const [choiceId, correctAnswer] of Object.entries(choices)) {
-                if (this.choices[convId]?.[choiceId] !== correctAnswer) {
+            for (const [choiceId, expectedValue] of Object.entries(choices)) {
+                const actualChoice = this.choices[convId]?.[choiceId];
+                if (expectedValue === 'any') {
+                    // どんな選択でもOK（選択さえしていれば）
+                    if (!actualChoice) {
+                        console.log(`[ChoiceManager] エンディング条件未達成: ${convId}.${choiceId} が選択されていません`);
+                        return false;
+                    }
+                } else if (actualChoice !== expectedValue) {
                     console.log(`[ChoiceManager] エンディング条件未達成: ${convId}.${choiceId}`);
                     return false;
                 }
@@ -83,4 +96,9 @@ export class ChoiceManager {
     debugChoices() {
         console.log('[ChoiceManager] 現在の選択データ:', this.choices);
     }
+}
+
+// グローバルに公開（動的インポートの問題を回避）
+if (typeof window !== 'undefined') {
+    window.ChoiceManager = ChoiceManager;
 }

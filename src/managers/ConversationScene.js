@@ -37,6 +37,9 @@ export class ConversationScene extends Phaser.Scene {
         // 現在の状態を受け取る（フロア、位置、マップ状態）
         this.currentState = data && data.currentState ? data.currentState : null;
         
+        // 会話IDを受け取る
+        this.conversationId = data && data.conversationId ? data.conversationId : null;
+        
         // シーンキーを正規化（スペースを除去）
         if (this.originalSceneKey) {
             this.originalSceneKey = this.originalSceneKey.replace(/\s+/g, '');
@@ -48,6 +51,7 @@ export class ConversationScene extends Phaser.Scene {
         console.log('[ConversationScene] _pendingConversation set to:', this._pendingConversation);
         console.log('[ConversationScene] originalSceneKey:', this.originalSceneKey);
         console.log('[ConversationScene] areaName:', this.areaName);
+        console.log('[ConversationScene] conversationId:', this.conversationId);
     }
 
 
@@ -1505,8 +1509,36 @@ export class ConversationScene extends Phaser.Scene {
     }
     
     // 選択を処理
-    handleChoice(choice) {
+    handleChoice(choice, choiceId) {
         console.log('[ConversationScene] 選択:', choice.id, choice.result);
+        console.log('[ConversationScene] 会話ID:', this.conversationId);
+        console.log('[ConversationScene] 選択肢ID:', choiceId);
+        
+        // 選択を保存（ChoiceManagerを使用）
+        if (this.conversationId) {
+            // ChoiceManagerを直接使用（動的インポートを避ける）
+            try {
+                // グローバルにChoiceManagerが利用可能かチェック
+                if (window.ChoiceManager) {
+                    const choiceManager = new window.ChoiceManager();
+                    choiceManager.saveChoice(this.conversationId, choiceId, choice.result);
+                    console.log('[ConversationScene] 選択を保存しました:', this.conversationId, choiceId, choice.result);
+                } else {
+                    // フォールバック：動的インポート
+                    import('./ChoiceManager.js').then(({ ChoiceManager }) => {
+                        const choiceManager = new ChoiceManager();
+                        choiceManager.saveChoice(this.conversationId, choiceId, choice.result);
+                        console.log('[ConversationScene] 選択を保存しました（動的インポート）:', this.conversationId, choiceId, choice.result);
+                    }).catch(error => {
+                        console.error('[ConversationScene] ChoiceManagerのインポートエラー:', error);
+                    });
+                }
+            } catch (error) {
+                console.error('[ConversationScene] 選択保存エラー:', error);
+            }
+        } else {
+            console.warn('[ConversationScene] conversationIdが設定されていません');
+        }
         
         // 選択肢ボタンを非表示
         this.clearChoiceButtons();

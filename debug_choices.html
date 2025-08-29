@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>選択データデバッグ</title>
+    <meta charset="utf-8">
+</head>
+<body>
+    <h1>選択データデバッグ</h1>
+    
+    <h2>現在の選択データ</h2>
+    <div id="current-choices"></div>
+    
+    <h2>エンディング条件チェック</h2>
+    <div id="ending-check"></div>
+    
+    <h2>正解率計算</h2>
+    <div id="correct-rate"></div>
+    
+    <h2>操作</h2>
+    <button onclick="clearChoices()">選択データをクリア</button>
+    <button onclick="setCorrectChoice()">正解選択を設定（テスト用）</button>
+    <button onclick="refreshDisplay()">表示を更新</button>
+    
+    <script>
+        function displayChoices() {
+            const choices = JSON.parse(localStorage.getItem('game_choices') || '{}');
+            document.getElementById('current-choices').innerHTML = 
+                '<pre>' + JSON.stringify(choices, null, 2) + '</pre>';
+            
+            // エンディング条件チェック
+            const requiredChoices = {
+                'tereapo': {
+                    'tv_tower_choice': 'correct'
+                }
+            };
+            
+            let endingConditionMet = true;
+            for (const [convId, choices] of Object.entries(requiredChoices)) {
+                for (const [choiceId, correctAnswer] of Object.entries(choices)) {
+                    if (choices[choiceId] !== correctAnswer) {
+                        endingConditionMet = false;
+                        break;
+                    }
+                }
+            }
+            
+            document.getElementById('ending-check').innerHTML = 
+                `<p>エンディング条件達成: <strong>${endingConditionMet}</strong></p>`;
+            
+            // 正解率計算
+            let totalChoices = 0;
+            let correctChoices = 0;
+            
+            for (const conversationId in choices) {
+                for (const choiceId in choices[conversationId]) {
+                    totalChoices++;
+                    if (choices[conversationId][choiceId] === 'correct') {
+                        correctChoices++;
+                    }
+                }
+            }
+            
+            const correctRate = totalChoices > 0 ? (correctChoices / totalChoices) * 100 : 0;
+            document.getElementById('correct-rate').innerHTML = 
+                `<p>総選択数: ${totalChoices}, 正解数: ${correctChoices}, 正解率: ${correctRate.toFixed(1)}%</p>`;
+        }
+        
+        function clearChoices() {
+            localStorage.removeItem('game_choices');
+            alert('選択データをクリアしました');
+            refreshDisplay();
+        }
+        
+        function setCorrectChoice() {
+            const choices = {
+                'tereapo': {
+                    'tv_tower_choice': 'correct'
+                }
+            };
+            localStorage.setItem('game_choices', JSON.stringify(choices));
+            alert('正解選択を設定しました（テスト用）');
+            refreshDisplay();
+        }
+        
+        function refreshDisplay() {
+            displayChoices();
+        }
+        
+        // 初期表示
+        displayChoices();
+    </script>
+</body>
+</html>

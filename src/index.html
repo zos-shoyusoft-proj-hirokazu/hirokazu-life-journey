@@ -636,6 +636,10 @@
                         Object.keys(localStorage).forEach(key => { if (key.startsWith('event_completed_')) localStorage.removeItem(key); });
                         console.log('完了状態をリセットしました');
                     }
+                    
+                    // 選択データもリセット
+                    localStorage.removeItem('game_choices');
+                    console.log('選択データをリセットしました');
                     // ステージ選択を再表示
                     showStageSelect();
                 });
