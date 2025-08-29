@@ -67,8 +67,21 @@ export class MapSelectionStage extends Phaser.Scene {
             console.log(`[MapSelectionStage] ファイル読み込み成功: ${file.key}, type: ${file.type}`);
         });
         
+        // 読み込み進捗を表示
+        this.load.on('progress', (progress) => {
+            console.log(`[MapSelectionStage] 読み込み進捗: ${(progress * 100).toFixed(1)}%`);
+            if (window.LoadingManager) {
+                window.LoadingManager.updateProgress(progress * 100);
+            }
+        });
+        
         this.load.on('loaderror', (file) => {
             console.error(`[MapSelectionStage] ファイル読み込みエラー: ${file.key}, error:`, file);
+            // エラーが発生した場合でもローディング画面を終了
+            if (window.LoadingManager) {
+                console.log('[MapSelectionStage] エラー発生によりローディング画面を強制終了');
+                window.LoadingManager.hide();
+            }
         });
         
         // UI要素とアイコン
@@ -103,6 +116,15 @@ export class MapSelectionStage extends Phaser.Scene {
                 }
             } catch (error) {
                 console.warn('[MapSelectionStage] キャッシュ情報の取得に失敗:', error);
+            }
+            
+            // ローディング画面を強制終了（デバッグ用）
+            if (window.LoadingManager) {
+                console.log('[MapSelectionStage] ローディング画面を強制終了');
+                window.LoadingManager.updateProgress(100, '完了！');
+                setTimeout(() => {
+                    window.LoadingManager.hide();
+                }, 500);
             }
             
             // マップ作成

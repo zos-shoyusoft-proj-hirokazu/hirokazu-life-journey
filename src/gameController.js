@@ -164,7 +164,101 @@ export function startPhaserGame(stageNumber) {
             game.scene.remove('ConversationScene');
         }
     } catch (e) { /* ignore */ }
-    game.scene.add(sceneKey, sceneClass, true);
+    // ローディング画面を表示（ステージ読み込み時）
+    if (window.LoadingManager && stageNumber !== 'ending') {
+        const stageNames = {
+            'miemachi': '三重シティ',
+            'taketa': '竹田シティ',
+            'japan': '全国',
+            'taketa_highschool': '竹田高校',
+            'mie_high_school': '三重中学校'
+        };
+        const stageName = stageNames[stageNumber] || 'ゲーム';
+        window.LoadingManager.show(`${stageName}を読み込み中...`, 0);
+    }
+    
+    const newScene = game.scene.add(sceneKey, sceneClass, true);
+    
+    // 実際の読み込み完了を待つ
+    if (window.LoadingManager && stageNumber !== 'ending' && newScene) {
+        console.log('[gameController] ローディング監視開始');
+        
+        // マップ選択画面の場合は実際の読み込みを待つ
+        if (stageNumber === 'miemachi' || stageNumber === 'taketa' || stageNumber === 'japan') {
+            console.log('[gameController] マップ選択画面の読み込み監視開始');
+            
+            // シーンの読み込みイベントを監視
+            if (newScene.load && newScene.load.on) {
+                newScene.load.on('progress', (progress) => {
+                    console.log('[gameController] マップ読み込み進捗:', progress);
+                    if (window.LoadingManager) {
+                        window.LoadingManager.updateProgress(progress * 100);
+                    }
+                });
+                
+                newScene.load.once('complete', () => {
+                    console.log('[gameController] マップ読み込み完了');
+                    if (window.LoadingManager) {
+                        window.LoadingManager.updateProgress(100, '完了！');
+                        setTimeout(() => {
+                            window.LoadingManager.hide();
+                        }, 500);
+                    }
+                });
+            } else {
+                console.log('[gameController] マップ選択画面でloadイベントが利用できないため、タイマーフォールバックを使用');
+                // loadイベントが利用できない場合はタイマーフォールバック
+                setTimeout(() => {
+                    if (window.LoadingManager) {
+                        window.LoadingManager.updateProgress(100, '完了！');
+                        setTimeout(() => {
+                            window.LoadingManager.hide();
+                        }, 500);
+                    }
+                }, 2000);
+            }
+            return;
+        }
+        
+        // シーンの読み込みイベントを監視
+        if (newScene.load && newScene.load.on) {
+            newScene.load.on('progress', (progress) => {
+                console.log('[gameController] 読み込み進捗:', progress);
+                if (window.LoadingManager) {
+                    window.LoadingManager.updateProgress(progress * 100);
+                }
+            });
+            
+            newScene.load.once('complete', () => {
+                console.log('[gameController] 読み込み完了');
+                if (window.LoadingManager) {
+                    window.LoadingManager.updateProgress(100, '完了！');
+                    setTimeout(() => {
+                        window.LoadingManager.hide();
+                    }, 500);
+                }
+            });
+        } else {
+            console.log('[gameController] loadイベントが利用できないため、タイマーフォールバックを使用');
+            // loadイベントが利用できない場合はタイマーフォールバック
+            setTimeout(() => {
+                if (window.LoadingManager) {
+                    window.LoadingManager.updateProgress(100, '完了！');
+                    setTimeout(() => {
+                        window.LoadingManager.hide();
+                    }, 500);
+                }
+            }, 2000);
+        }
+        
+        // 安全装置：5秒後に強制的にローディング画面を非表示
+        setTimeout(() => {
+            console.log('[gameController] 安全装置発動：ローディング画面を強制非表示');
+            if (window.LoadingManager) {
+                window.LoadingManager.hide();
+            }
+        }, 5000);
+    }
 }
 
 // グローバル関数として公開

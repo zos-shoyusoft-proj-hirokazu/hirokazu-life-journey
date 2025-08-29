@@ -456,6 +456,11 @@ export class EndingScene extends Phaser.Scene {
         // メインメニュー画面に戻る
         console.log('[EndingScene] 戻る処理開始');
         
+        // ローディング画面を表示
+        if (window.LoadingManager) {
+            window.LoadingManager.show('メインメニューに戻っています...', 50);
+        }
+        
         try {
             // 直接DOM操作でメインメニュー画面に遷移
             const mainMenu = document.getElementById('main-menu');
@@ -471,12 +476,27 @@ export class EndingScene extends Phaser.Scene {
                     window.playBGM('assets/audio/bgm/zelda_menu_select.mp3');
                     console.log('[EndingScene] メインメニューBGMを再生しました');
                 }
+                
+                // ローディング画面を非表示
+                setTimeout(() => {
+                    if (window.LoadingManager) {
+                        window.LoadingManager.updateProgress(100, '完了！');
+                        setTimeout(() => {
+                            window.LoadingManager.hide();
+                        }, 500);
+                    }
+                }, 1000);
             } else {
                 console.error('[EndingScene] メインメニュー要素が見つかりません');
                 // フォールバック：showStageSelectを使用
                 if (window.showStageSelect) {
                     window.showStageSelect();
                     console.log('[EndingScene] フォールバック：showStageSelectを使用しました');
+                }
+                
+                // ローディング画面を非表示
+                if (window.LoadingManager) {
+                    window.LoadingManager.hide();
                 }
             }
         } catch (error) {
@@ -485,6 +505,11 @@ export class EndingScene extends Phaser.Scene {
             if (window.showStageSelect) {
                 window.showStageSelect();
                 console.log('[EndingScene] フォールバック：showStageSelectを使用しました');
+            }
+            
+            // ローディング画面を非表示
+            if (window.LoadingManager) {
+                window.LoadingManager.hide();
             }
         }
     }

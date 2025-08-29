@@ -61,6 +61,11 @@ export class ConversationTrigger {
             return;
         }
 
+        // ローディング画面を表示（会話開始時）
+        if (window.LoadingManager) {
+            window.LoadingManager.show('会話を読み込み中...', 0);
+        }
+
         this.isConversationActive = true;
         
         // StageSceneの会話中フラグを設定
@@ -89,6 +94,38 @@ export class ConversationTrigger {
             eventId: eventId,
             originalSceneKey: this.scene.scene.key
         });
+        
+        // 会話シーンの読み込み完了を監視
+        if (window.LoadingManager) {
+            console.log('[ConversationTrigger] 会話ローディング監視開始');
+            let checkCount = 0;
+            const maxChecks = 200; // 最大20秒（100ms × 200回）
+            
+            const checkScene = () => {
+                checkCount++;
+                console.log(`[ConversationTrigger] 会話読み込みチェック ${checkCount}/${maxChecks}`);
+                
+                const scene = this.scene.scene.get('DynamicConversationScene');
+                if (scene && scene.resourcesLoaded) {
+                    console.log('[ConversationTrigger] 会話読み込み完了');
+                    window.LoadingManager.updateProgress(100, '完了！');
+                    setTimeout(() => {
+                        window.LoadingManager.hide();
+                    }, 300);
+                    return;
+                }
+                
+                // 最大チェック回数に達した場合は強制終了
+                if (checkCount >= maxChecks) {
+                    console.log('[ConversationTrigger] 最大チェック回数に達したため、ローディング画面を強制非表示');
+                    window.LoadingManager.hide();
+                    return;
+                }
+                
+                setTimeout(checkScene, 100);
+            };
+            checkScene();
+        }
     }
 
     // ギャルゲ風会話システムの開始（NPCクリック時とエリアマーカー「はい」クリック時の両方で使用）

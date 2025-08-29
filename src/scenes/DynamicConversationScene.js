@@ -39,10 +39,20 @@ export class DynamicConversationScene extends Phaser.Scene {
         // リソース読み込み完了イベントを設定
         this.load.on('complete', () => {
             // リソース読み込み完了
+            this.resourcesLoaded = true;
+            console.log('[DynamicConversationScene] リソース読み込み完了');
         });
         
         this.load.on('error', (file) => {
             console.error('[DynamicConversationScene] リソース読み込みエラー:', file);
+        });
+        
+        this.load.on('progress', (progress) => {
+            // ローディング進捗を更新
+            console.log('[DynamicConversationScene] 読み込み進捗:', progress);
+            if (window.LoadingManager) {
+                window.LoadingManager.updateProgress(progress * 100);
+            }
         });
         
         // eventConfigが設定されるまで待つ
@@ -125,8 +135,8 @@ export class DynamicConversationScene extends Phaser.Scene {
             });
         }
         
-        // リソース読み込み完了
-        this.resourcesLoaded = true;
+        // リソース読み込み完了フラグを設定（preloadのcompleteイベントで実際に設定される）
+        console.log('[DynamicConversationScene] loadRequiredResources完了');
     }
     
     // 既存のBGM管理システムと直接的なBGM停止を併用
@@ -277,15 +287,23 @@ export class DynamicConversationScene extends Phaser.Scene {
 
     create() {
         // 作成処理
+        console.log('[DynamicConversationScene] create開始');
+        console.log('[DynamicConversationScene] resourcesLoaded:', this.resourcesLoaded);
+        console.log('[DynamicConversationScene] conversationDataLoaded:', this.conversationDataLoaded);
         
         // リソース読み込みとconversationData読み込みが完了しているかチェック
         if (!this.resourcesLoaded || !this.conversationDataLoaded) {
+            console.log('[DynamicConversationScene] 読み込み未完了のため、100ms後に再試行');
             // 100ms後に再チェック
             this.time.delayedCall(100, () => {
                 this.create();
             });
             return;
         }
+        
+        // 読み込み完了フラグを確実に設定
+        this.resourcesLoaded = true;
+        console.log('[DynamicConversationScene] create実行：読み込み完了フラグを設定');
         
         // 既存のBGM管理システムを使用（_suppressMapBgmフラグ）
         console.log('[DynamicConversationScene] BGM管理システム開始');
