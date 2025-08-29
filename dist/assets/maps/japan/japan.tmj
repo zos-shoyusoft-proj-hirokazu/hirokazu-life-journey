@@ -36,87 +36,87 @@
          "objects":[
                 {
                  "ellipse":true,
-                 "height":272.727272727273,
+                 "height":225.727272727273,
                  "id":1,
                  "name":"computer",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":306.060606060606,
-                 "x":1312.12121212121,
-                 "y":515.151515151515
+                 "width":265.060606060606,
+                 "x":1294.12121212121,
+                 "y":554.151515151515
                 }, 
                 {
                  "ellipse":true,
-                 "height":236.363636363636,
+                 "height":204.363636363636,
                  "id":2,
                  "name":"breaking_car",
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":357.575757575758,
-                 "x":445.454545454545,
-                 "y":66.6666666666667
+                 "x":509.454545454545,
+                 "y":225.666666666667
                 }, 
                 {
                  "ellipse":true,
-                 "height":221.212121212121,
+                 "height":207.212121212121,
                  "id":3,
                  "name":"special_scam",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":242.424242424242,
-                 "x":1181.81818181818,
-                 "y":112.121212121212
+                 "width":202.424242424242,
+                 "x":1118.81818181818,
+                 "y":73.121212121212
                 }, 
                 {
                  "ellipse":true,
-                 "height":221.212121212121,
+                 "height":365.212121212121,
                  "id":4,
                  "name":"rojyounopenki",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":275.757575757576,
-                 "x":1530.30303030303,
-                 "y":239.393939393939
+                 "width":173.757575757576,
+                 "x":1651.30303030303,
+                 "y":270.393939393939
                 }, 
                 {
                  "ellipse":true,
-                 "height":275.757575757576,
+                 "height":218.757575757576,
                  "id":5,
                  "name":"tereapo",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":400,
-                 "x":430.30303030303,
-                 "y":421.212121212121
+                 "width":296,
+                 "x":492.30303030303,
+                 "y":563.212121212121
                 }, 
                 {
                  "ellipse":true,
-                 "height":251.515151515152,
+                 "height":171.515151515152,
                  "id":6,
                  "name":"first_rising_sun",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":312.121212121212,
-                 "x":936.363636363637,
-                 "y":748.484848484849
+                 "width":267.121212121212,
+                 "x":957.363636363637,
+                 "y":828.484848484849
                 }, 
                 {
                  "ellipse":true,
-                 "height":115.151515151515,
+                 "height":227.464317974106,
                  "id":7,
                  "name":"arechi",
-                 "rotation":0,
+                 "rotation":2.51528501154338,
                  "type":"",
                  "visible":true,
-                 "width":130.30303030303,
-                 "x":75.7575757575758,
-                 "y":833.333333333333
+                 "width":262.35920896247,
+                 "x":119.347110282243,
+                 "y":783.529571475707
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -134,7 +134,7 @@
         {
          "columns":30,
          "firstgid":1,
-         "image":"..\/taild\/\u3082\u3068\/\u5168\u56fd\/japan.png",
+         "image":"..\/japan.png",
          "imageheight":1080,
          "imagewidth":1924,
          "margin":0,

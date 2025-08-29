@@ -86,7 +86,7 @@ export const gameConfig = {
     },
     // レンダリング最適化
     render: {
-        antialias: false,  // スマホではアンチエイリアシング無効
+        antialias: true,  // アンチエイリアシング有効（画質向上）
         pixelArt: false,
         clearBeforeRender: true,
         preserveDrawingBuffer: false,

@@ -120,8 +120,7 @@ export const AreaConfig = {
             { name: 'rojyounopenki', scene: null, conversationId: 'rojyounopenki' },
             { name: 'tereapo', scene: null, conversationId: 'tereapo' },
             { name: 'first_rising_sun', scene: null, conversationId: 'first_rising_sun' },
-            { name: 'arechi', scene: null, conversationId: 'arechi' },
-            { name: 'gray_bytes', scene: null, conversationId: 'gray_bytes' }
+            { name: 'arechi', scene: null, conversationId: 'arechi' }
         ]
     }
 }; 

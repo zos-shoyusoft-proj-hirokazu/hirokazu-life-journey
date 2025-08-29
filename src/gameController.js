@@ -1,7 +1,5 @@
 import { gameConfig } from './config/gameConfig.js';
-import { Stage1 } from './scenes/stage1.js';
-import { Stage2 } from './scenes/stage2.js';
-import { Stage3 } from './scenes/stage3.js';
+
 import { createMapStage } from './scenes/MapSelectionStage.js';
 import { createStageScene } from './scenes/StageScene.js';
 import { EndingScene } from './scenes/EndingScene.js';
@@ -93,9 +91,6 @@ export function startPhaserGame(stageNumber) {
 
     let sceneClass, sceneKey;
     switch(stageNumber) {
-        case 1: sceneClass = Stage1; sceneKey = 'Stage1Scene'; break;
-        case 2: sceneClass = Stage2; sceneKey = 'Stage2Scene'; break;
-        case 3: sceneClass = Stage3; sceneKey = 'Stage3Scene'; break;
         case 'miemachi': sceneClass = createMapStage('miemachistage', 'MiemachiStage'); sceneKey = 'MiemachiStage'; break;
         case 'taketa': sceneClass = createMapStage('taketastage', 'TaketastageStage'); sceneKey = 'TaketastageStage'; break;
         case 'japan': sceneClass = createMapStage('japanstage', 'JapanStage'); sceneKey = 'JapanStage'; break;
@@ -108,8 +103,8 @@ export function startPhaserGame(stageNumber) {
         case 'mie_high_school': sceneClass = createStageScene('mie_high_school'); sceneKey = 'mie_high_school'; break;
         
         default: 
-            sceneClass = Stage1; 
-            sceneKey = 'Stage1Scene';
+            sceneClass = createMapStage('miemachistage', 'MiemachiStage'); 
+            sceneKey = 'MiemachiStage';
     }
     // 追加前に全サウンド停止＆既存シーン停止（多重再生・リソース競合防止）
     try {
@@ -179,27 +174,20 @@ export function startPhaserGame(stageNumber) {
     }
     
     const newScene = game.scene.add(sceneKey, sceneClass, true);
-    console.log(`[gameController] シーン追加完了: ${sceneKey}`, newScene);
     
     // 実際の読み込み完了を待つ
     if (window.LoadingManager && newScene) {
-        console.log('[gameController] ローディング監視開始');
-        
         // マップ選択画面の場合は実際の読み込みを待つ
         if (stageNumber === 'miemachi' || stageNumber === 'taketa' || stageNumber === 'japan') {
-            console.log('[gameController] マップ選択画面の読み込み監視開始');
-            
             // シーンの読み込みイベントを監視
             if (newScene.load && newScene.load.on) {
                 newScene.load.on('progress', (progress) => {
-                    console.log('[gameController] マップ読み込み進捗:', progress);
                     if (window.LoadingManager) {
                         window.LoadingManager.updateProgress(progress * 100);
                     }
                 });
                 
                 newScene.load.once('complete', () => {
-                    console.log('[gameController] マップ読み込み完了');
                     if (window.LoadingManager) {
                         window.LoadingManager.updateProgress(100, '完了！');
                         setTimeout(() => {
@@ -208,7 +196,6 @@ export function startPhaserGame(stageNumber) {
                     }
                 });
             } else {
-                console.log('[gameController] マップ選択画面でloadイベントが利用できないため、タイマーフォールバックを使用');
                 // loadイベントが利用できない場合はタイマーフォールバック
                 setTimeout(() => {
                     if (window.LoadingManager) {
@@ -224,19 +211,15 @@ export function startPhaserGame(stageNumber) {
         
         // エンディングシーンの場合は特別な処理
         if (stageNumber === 'ending') {
-            console.log('[gameController] エンディングシーンの読み込み監視開始');
-            
             // シーンの読み込みイベントを監視
             if (newScene.load && newScene.load.on) {
                 newScene.load.on('progress', (progress) => {
-                    console.log('[gameController] エンディング読み込み進捗:', progress);
                     if (window.LoadingManager) {
                         window.LoadingManager.updateProgress(progress * 100);
                     }
                 });
                 
                 newScene.load.once('complete', () => {
-                    console.log('[gameController] エンディング読み込み完了');
                     if (window.LoadingManager) {
                         window.LoadingManager.updateProgress(100, '完了！');
                         setTimeout(() => {
@@ -245,7 +228,6 @@ export function startPhaserGame(stageNumber) {
                     }
                 });
             } else {
-                console.log('[gameController] エンディングシーンでloadイベントが利用できないため、タイマーフォールバックを使用');
                 // loadイベントが利用できない場合はタイマーフォールバック
                 setTimeout(() => {
                     if (window.LoadingManager) {
@@ -262,14 +244,12 @@ export function startPhaserGame(stageNumber) {
         // シーンの読み込みイベントを監視
         if (newScene.load && newScene.load.on) {
             newScene.load.on('progress', (progress) => {
-                console.log('[gameController] 読み込み進捗:', progress);
                 if (window.LoadingManager) {
                     window.LoadingManager.updateProgress(progress * 100);
                 }
             });
             
             newScene.load.once('complete', () => {
-                console.log('[gameController] 読み込み完了');
                 if (window.LoadingManager) {
                     window.LoadingManager.updateProgress(100, '完了！');
                     setTimeout(() => {
@@ -278,7 +258,6 @@ export function startPhaserGame(stageNumber) {
                 }
             });
         } else {
-            console.log('[gameController] loadイベントが利用できないため、タイマーフォールバックを使用');
             // loadイベントが利用できない場合はタイマーフォールバック
             setTimeout(() => {
                 if (window.LoadingManager) {
@@ -292,7 +271,6 @@ export function startPhaserGame(stageNumber) {
         
         // 安全装置：5秒後に強制的にローディング画面を非表示
         setTimeout(() => {
-            console.log('[gameController] 安全装置発動：ローディング画面を強制非表示');
             if (window.LoadingManager) {
                 window.LoadingManager.hide();
             }

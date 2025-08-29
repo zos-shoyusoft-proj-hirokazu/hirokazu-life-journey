@@ -62,14 +62,8 @@ export class MapSelectionStage extends Phaser.Scene {
             console.error(`File not found: ${file.key}, path: ${file.url}`);
         });
         
-        // ファイル読み込みの詳細ログ
-        this.load.on('load', (file) => {
-            console.log(`[MapSelectionStage] ファイル読み込み成功: ${file.key}, type: ${file.type}`);
-        });
-        
         // 読み込み進捗を表示
         this.load.on('progress', (progress) => {
-            console.log(`[MapSelectionStage] 読み込み進捗: ${(progress * 100).toFixed(1)}%`);
             if (window.LoadingManager) {
                 window.LoadingManager.updateProgress(progress * 100);
             }
@@ -79,7 +73,6 @@ export class MapSelectionStage extends Phaser.Scene {
             console.error(`[MapSelectionStage] ファイル読み込みエラー: ${file.key}, error:`, file);
             // エラーが発生した場合でもローディング画面を終了
             if (window.LoadingManager) {
-                console.log('[MapSelectionStage] エラー発生によりローディング画面を強制終了');
                 window.LoadingManager.hide();
             }
         });
@@ -97,30 +90,8 @@ export class MapSelectionStage extends Phaser.Scene {
         
         // デバッグ用
         this.load.on('complete', () => {
-            console.log(`[MapSelectionStage] リソース読み込み完了: ${this.mapId}`);
-            console.log(`[MapSelectionStage] マップファイル: ${this.mapConfig.mapKey}`);
-            console.log(`[MapSelectionStage] タイルセット: ${this.mapConfig.tilesetKey}`);
-            
-            // 読み込まれたリソースの詳細を確認
-            try {
-                if (this.cache.tilemap && this.cache.tilemap.entries) {
-                    console.log('[MapSelectionStage] 読み込まれたリソース:', this.cache.tilemap.entries);
-                } else {
-                    console.log('[MapSelectionStage] タイルマップキャッシュが利用できません');
-                }
-                
-                if (this.cache.image && this.cache.image.entries) {
-                    console.log('[MapSelectionStage] 読み込まれた画像:', this.cache.image.entries);
-                } else {
-                    console.log('[MapSelectionStage] 画像キャッシュが利用できません');
-                }
-            } catch (error) {
-                console.warn('[MapSelectionStage] キャッシュ情報の取得に失敗:', error);
-            }
-            
             // ローディング画面を強制終了（デバッグ用）
             if (window.LoadingManager) {
-                console.log('[MapSelectionStage] ローディング画面を強制終了');
                 window.LoadingManager.updateProgress(100, '完了！');
                 setTimeout(() => {
                     window.LoadingManager.hide();
@@ -141,17 +112,14 @@ export class MapSelectionStage extends Phaser.Scene {
         // 注意：個別シーン内で動作するため、このイベントは受信されない可能性
         this.events.on('conversationStarted', () => {
             this._isInConversation = true;
-            console.log('[MapSelectionStage] 会話開始: 他のエリアをタップできません');
         });
         
         this.events.on('conversationEnded', () => {
             this._isInConversation = false;
-            console.log('[MapSelectionStage] 会話終了: 他のエリアをタップできます');
         });
         
         this.events.on('conversationInterrupted', () => {
             this._isInConversation = false;
-            console.log('[MapSelectionStage] 会話中断: 他のエリアをタップできます');
         });
     }
 
@@ -201,8 +169,6 @@ export class MapSelectionStage extends Phaser.Scene {
         const x = width - buttonWidth / 2 - margin;
         const y = height - buttonHeight / 2 - margin;
         
-        console.log(`[MapSelectionStage] エンディングボタン配置: x=${x}, y=${y}, 画面サイズ=${width}x${height}`);
-        
         // エンディングボタンを作成
         const buttonContainer = this.add.container(x, y);
         
@@ -226,7 +192,6 @@ export class MapSelectionStage extends Phaser.Scene {
         
         // クリックイベント
         buttonContainer.on('pointerdown', () => {
-            console.log('[MapSelectionStage] エンディングボタンがクリックされました');
             this.startEnding();
         });
         
@@ -242,15 +207,10 @@ export class MapSelectionStage extends Phaser.Scene {
         });
         
         this.endingButton = buttonContainer;
-        console.log(`[MapSelectionStage] エンディングボタンを右下に表示しました: 位置(${x}, ${y})`);
     }
     
     // エンディングを開始
     startEnding() {
-        console.log('[MapSelectionStage] エンディングを開始します');
-        
-        // エンディング開始時にBGMを停止
-        console.log('[MapSelectionStage] BGM停止開始');
         
         // 現在のシーンのBGMを停止
         if (this.sound && this.sound.stopAll) {
@@ -273,10 +233,8 @@ export class MapSelectionStage extends Phaser.Scene {
         // すべてのシーンのBGMを停止
         if (window.game && window.game.scene && window.game.scene.getScenes) {
             const scenes = window.game.scene.getScenes(false) || [];
-            console.log('[MapSelectionStage] 全シーンのBGM停止開始');
             scenes.forEach((scene, index) => {
                 try {
-                    console.log(`[MapSelectionStage] シーン${index}のBGM停止:`, scene.scene?.key);
                     if (scene.sound && scene.sound.stopAll) {
                         scene.sound.stopAll();
                     }
@@ -366,7 +324,6 @@ export class MapSelectionStage extends Phaser.Scene {
     // 最小限のリソースのみ読み込み（会話イベント用は後で動的読み込み）
     loadMinimalResources() {
         // マップ表示に必要な最小限のリソースのみ
-        console.log('[MapSelectionStage] 最小限リソース読み込み開始');
         
         // 基本的なSE（マップ操作用のみ）
         this.loadMapSeFiles();
@@ -376,11 +333,8 @@ export class MapSelectionStage extends Phaser.Scene {
             const mainBgm = Object.keys(this.mapConfig.bgm)[0]; // 最初のBGMのみ
             if (mainBgm) {
                 this.load.audio(`bgm_${mainBgm}`, this.mapConfig.bgm[mainBgm]);
-                console.log(`[MapSelectionStage] 基本BGM読み込み: ${mainBgm}`);
             }
         }
-        
-        console.log('[MapSelectionStage] 最小限リソース読み込み完了');
     }
     
     // マップ操作用のSEのみ読み込み
@@ -391,7 +345,6 @@ export class MapSelectionStage extends Phaser.Scene {
             mapSeKeys.forEach(seKey => {
                 if (this.mapConfig.se[seKey]) {
                     const sePath = this.mapConfig.se[seKey];
-                    console.log(`[MapSelectionStage] マップSE読み込み: ${seKey} -> ${sePath}`);
                     this.load.audio(seKey, sePath);
                 }
             });
@@ -416,10 +369,8 @@ export class MapSelectionStage extends Phaser.Scene {
             this.cameraManager.setBackgroundColor('#87CEEB');
             
             // マップマネージャーを初期化
-            console.log('[MapSelectionStage] マップ作成開始: mapKey=\'' + this.mapConfig.mapKey + '\', tilesetKey=\'' + this.mapConfig.tilesetKey + '\'');
             this.mapManager = new MapManager(this);
             this.mapManager.createMap(this.mapConfig.mapKey, this.mapConfig.tilesetKey);
-            console.log('[MapSelectionStage] マップ作成完了');
             
             // 初期スケールを全体表示に設定（カメラ設定より先に実行）
             this.mapManager.scaleMapToScreen();

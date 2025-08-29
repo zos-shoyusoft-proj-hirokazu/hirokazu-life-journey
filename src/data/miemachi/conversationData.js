@@ -1625,12 +1625,9 @@ export class MiemachiConversationManager {
         }
         
         try {
-            console.log(`三重町マップ「${mapName}」を読み込み中...`);
-            
             // 基本データのみ読み込み（重いリソースは除外）
             await this.resourceManager.loadMapResources(mapName);
             
-            console.log(`三重町マップ「${mapName}」の読み込み完了`);
             return true;
         } catch (error) {
             console.error('マップ読み込みエラー:', error);

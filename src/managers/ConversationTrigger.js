@@ -1,4 +1,3 @@
-import { ConversationManager } from '../data/stage1/conversationData.js';
 import { TaketaConversationManager } from '../data/taketa/conversationData.js';
 import { ChoiceManager } from './ChoiceManager.js';
 
@@ -9,10 +8,9 @@ export class ConversationTrigger {
         // ステージに応じて会話データの取得先を動的に選択
         if (this.scene.scene.key === 'taketa_highschool') {
             this.conversationManager = new TaketaConversationManager();
-            console.log('[ConversationTrigger] 竹田高校用の会話データマネージャーを初期化');
         } else {
-            this.conversationManager = new ConversationManager();
-            console.log('[ConversationTrigger] 通常の会話データマネージャーを初期化');
+            // Stage1が削除されたため、デフォルトは竹田用を使用
+            this.conversationManager = new TaketaConversationManager();
         }
         
         // 選択肢管理システムを初期化
@@ -22,19 +20,12 @@ export class ConversationTrigger {
         this.triggeredEvents = new Set(); // 発動済みイベントを記録
         this.currentConversationId = null;
         this.currentChoiceButtons = [];
-        
-        // デバッグ: 利用可能な会話データを確認
-        console.log('[ConversationTrigger] 初期化完了');
-        console.log('[ConversationTrigger] 利用可能な会話データ:', this.conversationManager.getAvailableEvents());
     }
 
     // NPC名からイベントIDを取得するメソッド
     getEventIdFromNPCName(npcName) {
-        console.log(`[ConversationTrigger] NPC名からイベントID取得開始: ${npcName}`);
-        
         // StageSceneの現在のフロア設定からNPC情報を取得
         const currentFloor = this.scene.stageConfig?.currentFloor;
-        console.log('[ConversationTrigger] currentFloor:', currentFloor);
         
         if (!currentFloor || !currentFloor.npcs) {
             console.warn('[ConversationTrigger] フロア設定またはNPC設定が見つかりません');
@@ -44,7 +35,6 @@ export class ConversationTrigger {
         // NPC名に一致するイベントIDを検索
         const npcConfig = currentFloor.npcs.find(npc => npc.name === npcName);
         if (npcConfig) {
-            console.log('[ConversationTrigger] 見つかったNPC:', npcConfig);
             return npcConfig.eventId;
         }
         
@@ -54,10 +44,7 @@ export class ConversationTrigger {
 
     // NPCクリック時の会話開始メソッド
     startConversation(eventId) {
-        console.log(`[ConversationTrigger] startConversation: ${eventId}`);
-        
         if (this.isConversationActive) {
-            console.log('[ConversationTrigger] 既に会話中です');
             return;
         }
 
@@ -83,11 +70,8 @@ export class ConversationTrigger {
             return;
         }
 
-        console.log(`[ConversationTrigger] イベントID: ${eventId} で会話を開始`);
-        
         // 現在の会話IDを設定
         this.currentConversationId = eventId;
-        console.log('[ConversationTrigger] 会話IDを設定:', this.currentConversationId);
         
         // DynamicConversationSceneを起動
         this.scene.scene.launch('DynamicConversationScene', {
@@ -117,7 +101,6 @@ export class ConversationTrigger {
                 
                 // 最大チェック回数に達した場合は強制終了
                 if (checkCount >= maxChecks) {
-                    console.log('[ConversationTrigger] 最大チェック回数に達したため、ローディング画面を強制非表示');
                     window.LoadingManager.hide();
                     return;
                 }
@@ -138,11 +121,9 @@ export class ConversationTrigger {
         
         // 現在の会話IDを設定
         this.currentConversationId = eventId || areaName;
-        console.log('[ConversationTrigger] 会話IDを設定:', this.currentConversationId);
         
         // 既に会話が起動中の場合は停止
         if (this.isConversationActive) {
-            console.log('[ConversationTrigger] 既存の会話を停止して新しい会話を開始');
             this.scene.scene.stop('ConversationScene');
             this.isConversationActive = false;
         }
@@ -171,13 +152,6 @@ export class ConversationTrigger {
             }
 
             if (!cs.scene.isActive()) {
-                // conversationDataの構造を確認
-                console.log('[ConversationTrigger] conversationData構造確認:');
-                console.log('[ConversationTrigger] conversationData:', conversationData);
-                console.log('[ConversationTrigger] conversationData.eventId:', conversationData.eventId);
-                console.log('[ConversationTrigger] conversationData.id:', conversationData.id);
-                console.log('[ConversationTrigger] conversationDataの全プロパティ:', Object.keys(conversationData));
-                
                 // DynamicConversationSceneを起動（会話処理はDynamicConversationSceneに任せる）
                 // eventIdパラメータを使用（conversationDataにはeventIdプロパティがない）
                 this.scene.scene.launch('DynamicConversationScene', { eventId: eventId });
@@ -198,14 +172,12 @@ export class ConversationTrigger {
                 cs.events.once('conversationEnded', () => {
                     try { scenePlugin.stop('ConversationScene'); } catch(e) { /* ignore */ }
                     this.isConversationActive = false;
-                    console.log('[ConversationTrigger] 会話終了: isConversationActive = false');
                 });
                 
                 // 会話中断時の後片付けも追加
                 cs.events.once('conversationInterrupted', () => {
                     try { scenePlugin.stop('ConversationScene'); } catch(e) { /* ignore */ }
                     this.isConversationActive = false;
-                    console.log('[ConversationTrigger] 会話中断: isConversationActive = false');
                 });
             } catch(e) { /* ignore */ }
         } catch (error) {
@@ -224,16 +196,10 @@ export class ConversationTrigger {
 
     // NPCクリック時の処理（エリアマーカー「はい」クリック時と同じ会話システムを使用）
     setupNpcClickHandler(sprite, npcId) {
-        console.log(`[ConversationTrigger] setupNpcClickHandler: sprite=${sprite.name || 'unnamed'}, npcId=${npcId}`);
-        
         sprite.setInteractive();
         sprite.on('pointerdown', () => {
-            console.log(`[ConversationTrigger] NPCクリック: ${sprite.name || 'unnamed'} -> ${npcId}`);
-            
             if (!this.isConversationActive) {
                 this.startConversation(npcId);
-            } else {
-                console.log('[ConversationTrigger] 会話中、新しい会話を開始しません');
             }
         });
     }
@@ -316,11 +282,6 @@ export class ConversationTrigger {
     
     // 選択肢を表示
     showChoices(choices, choiceId) {
-        console.log('[ConversationTrigger] 選択肢を表示:', choices);
-        console.log('[ConversationTrigger] 選択肢ID:', choiceId);
-        console.log('[ConversationTrigger] 現在の会話ID:', this.currentConversationId);
-        console.log('[ConversationTrigger] 選択肢の数:', choices.length);
-        
         // 既存の選択肢ボタンをクリア
         this.clearChoiceButtons();
         
@@ -375,19 +336,12 @@ export class ConversationTrigger {
     
     // 選択を処理
     handleChoice(choice, choiceId) {
-        console.log('[ConversationTrigger] 選択:', choice.id, choice.result);
-        console.log('[ConversationTrigger] 会話ID:', this.currentConversationId);
-        console.log('[ConversationTrigger] 選択肢ID:', choiceId);
-        
         // 選択を保存
         this.choiceManager.saveChoice(
             this.currentConversationId, 
             choiceId, 
             choice.result
         );
-        
-        // 保存後の選択データを確認
-        console.log('[ConversationTrigger] 保存後の選択データ:', this.choiceManager.choices);
         
         // 選択肢ボタンを非表示
         this.clearChoiceButtons();
@@ -399,7 +353,6 @@ export class ConversationTrigger {
         
         // エンディング条件をチェック
         if (this.choiceManager.checkEndingCondition()) {
-            console.log('[ConversationTrigger] エンディング条件達成！');
             // エンディングフラグを設定（後でエンディングボタン表示に使用）
             this.scene.endingUnlocked = true;
         }

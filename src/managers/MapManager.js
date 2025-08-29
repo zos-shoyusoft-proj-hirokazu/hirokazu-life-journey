@@ -738,6 +738,8 @@ export class MapManager {
             objectLayerName = this.getObjectLayerName(mapKey);
         }
         
+        console.log('[MapManager] extractAreaData開始: mapKey=' + this.scene.mapConfig?.mapKey + ', objectLayerName=' + objectLayerName);
+        
         // objectLayerNameがundefinedの場合は処理をスキップ
         if (!objectLayerName) {
             console.warn(`MapManager: No object layer name found for mapKey '${this.scene.mapConfig?.mapKey}'`);
@@ -746,15 +748,23 @@ export class MapManager {
         
         // Tiledのオブジェクトレイヤーを取得（tilelayerとは別 API）
         let objectLayer = null;
+        
+        console.log('[MapManager] 利用可能なレイヤー:', this.tilemap.layers.map(l => ({ name: l.name, type: l.type })));
+        
         try {
             if (typeof this.tilemap.getObjectLayer === 'function') {
                 objectLayer = this.tilemap.getObjectLayer(objectLayerName);
+                console.log('[MapManager] getObjectLayer結果:', objectLayer);
             }
-        } catch (_) { /* ignore */ }
+        } catch (error) {
+            console.error('[MapManager] getObjectLayerエラー:', error);
+        }
 
         // 互換: tilemap.objects からの直接検索
         if (!objectLayer && Array.isArray(this.tilemap.objects)) {
+            console.log('[MapManager] tilemap.objects:', this.tilemap.objects);
             objectLayer = this.tilemap.objects.find(l => l && l.name === objectLayerName);
+            console.log('[MapManager] tilemap.objects検索結果:', objectLayer);
         }
         
         // オブジェクトレイヤーが見つからない場合の詳細調査
@@ -763,6 +773,8 @@ export class MapManager {
         }
         
         if (objectLayer && objectLayer.objects) {
+            console.log('[MapManager] オブジェクトレイヤー発見: ' + objectLayerName + ', オブジェクト数: ' + objectLayer.objects.length);
+            
             // 既存のエリアをクリア
             this.areas = [];
             
@@ -781,6 +793,8 @@ export class MapManager {
                 rotation: obj.rotation || 0,
                 type: obj.type || 'location'
             }));
+            
+            console.log('[MapManager] エリアデータ抽出完了: ' + this.areas.length + '個');
             
         } else {
             console.warn(`[MapManager] Object layer '${objectLayerName}' not found or has no objects`);

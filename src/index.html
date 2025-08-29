@@ -681,21 +681,21 @@
             currentBGM = new Audio(audioPath);
             currentBGM.loop = true;
             currentBGM.volume = 0.5;
-            currentBGM.play().catch(e => console.log('BGM再生エラー:', e));
+                            currentBGM.play().catch(e => console.error('BGM再生エラー:', e));
         }
         
         // SE再生関数（簡素化）
         function playSE(audioPath) {
             const se = new Audio(audioPath);
             se.volume = 0.3;
-            se.play().catch(e => console.log('SE再生エラー:', e));
+                            se.play().catch(e => console.error('SE再生エラー:', e));
         }
         
 
         
         // フルスクリーン機能の切り替え
         function toggleFullscreen() {
-            console.log('全画面ボタンがクリックされました');
+            
             
             // 全画面ボタンクリックフラグを設定
             window.fullscreenButtonRecentlyClicked = true;
@@ -706,7 +706,7 @@
             // 全画面ボタンを押した時にオープニング動画が表示されないようにする
             const openingVideo = document.getElementById('opening-video');
             if (openingVideo && openingVideo.style.display !== 'none') {
-                console.log('全画面ボタンクリック時にオープニング動画を強制非表示にします');
+    
                 openingVideo.style.display = 'none';
                 
                 // ステージ選択画面を再表示
@@ -825,7 +825,7 @@
                     window.youtubePlayer.stopVideo();
                 }
             } catch (error) {
-                console.log('YouTube player stopVideo error:', error);
+                // YouTube player stopVideo error
             }
             
             iframe.src = '';
@@ -860,7 +860,7 @@
             const resetButton = document.getElementById('game-reset-btn');
             if (resetButton && !resetButton.__handlerAttached) {
                 resetButton.addEventListener('click', function() {
-                    console.log('[ゲームリセット] ボタンがクリックされました');
+    
                     playSE('assets/audio/se/touch_1.mp3');
                     this.style.transform = 'scale(0.95)';
                     setTimeout(() => { this.style.transform = ''; }, 150);
@@ -874,14 +874,11 @@
         
         // リセット確認ダイアログの表示
         function showResetConfirmDialog() {
-            console.log('[リセット確認] ダイアログ表示開始');
             const dialog = document.getElementById('reset-confirm-dialog');
             if (dialog) {
-                console.log('[リセット確認] ダイアログ要素を発見');
                 dialog.style.display = 'flex';
                 setTimeout(() => {
                     dialog.classList.add('show');
-                    console.log('[リセット確認] ダイアログ表示完了');
                 }, 10);
             } else {
                 console.error('[リセット確認] ダイアログ要素が見つかりません');
@@ -890,20 +887,17 @@
         
         // リセット確認ダイアログの非表示
         function hideResetConfirmDialog() {
-            console.log('[リセット確認] ダイアログ非表示開始');
             const dialog = document.getElementById('reset-confirm-dialog');
             if (dialog) {
                 dialog.classList.remove('show');
                 setTimeout(() => {
                     dialog.style.display = 'none';
-                    console.log('[リセット確認] ダイアログ非表示完了');
                 }, 300);
             }
         }
         
         // リセット確認ダイアログの初期化
         function initializeResetDialog() {
-            console.log('[リセット確認] ダイアログ初期化開始');
             
             // リセット確認ダイアログのボタンイベント設定
             const resetYesBtn = document.getElementById('reset-confirm-yes');
@@ -918,18 +912,15 @@
                         window.resetAllCompletions();
                     } else {
                         Object.keys(localStorage).forEach(key => { if (key.startsWith('event_completed_')) localStorage.removeItem(key); });
-                        console.log('完了状態をリセットしました');
                     }
                     
                     // 選択データもリセット
                     localStorage.removeItem('game_choices');
-                    console.log('選択データをリセットしました');
                     
                     // ChoiceManagerもリセット
                     if (window.ChoiceManager) {
                         const choiceManager = new window.ChoiceManager();
                         choiceManager.resetChoices();
-                        console.log('ChoiceManagerをリセットしました');
                     }
                     
                     // ダイアログを非表示
@@ -943,16 +934,13 @@
                     }, 350);
                 });
                 resetYesBtn.__handlerAttached = true;
-                console.log('[リセット確認] はいボタンのイベント設定完了');
             }
             
             if (resetNoBtn && !resetNoBtn.__handlerAttached) {
                 resetNoBtn.addEventListener('click', function() {
-                    console.log('ゲームリセットをキャンセルしました');
                     hideResetConfirmDialog();
                 });
                 resetNoBtn.__handlerAttached = true;
-                console.log('[リセット確認] いいえボタンのイベント設定完了');
             }
             
             // ダイアログ外クリックでキャンセル
@@ -964,16 +952,11 @@
                     }
                 });
                 dialog.__handlerAttached = true;
-                console.log('[リセット確認] ダイアログ外クリックイベント設定完了');
             }
-            
-            console.log('[リセット確認] ダイアログ初期化完了');
         }
         
         // リセット後のステージ選択画面表示（エンディングボタンなし）
         function showStageSelectAfterReset() {
-            console.log('[リセット後] ステージ選択画面を表示します（エンディングボタンなし）');
-            
             // リセットフラグを設定
             window.__justReset = true;
             
@@ -983,7 +966,6 @@
             // リセットフラグをクリア
             setTimeout(() => {
                 window.__justReset = false;
-                console.log('[リセット後] リセットフラグをクリアしました');
             }, 1000);
         }
         

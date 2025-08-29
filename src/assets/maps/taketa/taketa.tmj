@@ -36,27 +36,27 @@
          "objects":[
                 {
                  "ellipse":true,
-                 "height":230.666666666667,
+                 "height":246.666666666667,
                  "id":1,
                  "name":"taketa_station",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":270.666666666667,
-                 "x":360,
-                 "y":668
+                 "width":316.666666666667,
+                 "x":288,
+                 "y":734
                 }, 
                 {
                  "ellipse":true,
-                 "height":364,
+                 "height":316,
                  "id":3,
                  "name":"udefuriojisann",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":168,
-                 "x":294.666666666667,
-                 "y":204
+                 "width":154,
+                 "x":268.666666666667,
+                 "y":228
                 }, 
                 {
                  "ellipse":true,
@@ -66,21 +66,21 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":475.666666666667,
-                 "x":729.333333333333,
-                 "y":381.666666666667
+                 "width":521.666666666667,
+                 "x":673.333333333333,
+                 "y":417.666666666667
                 }, 
                 {
                  "ellipse":true,
-                 "height":254.666666666667,
+                 "height":270.666666666667,
                  "id":7,
                  "name":"galaxy_water",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":129.333333333333,
-                 "x":1681.33333333333,
-                 "y":284
+                 "width":167.333333333333,
+                 "x":965.33333333333,
+                 "y":742
                 }, 
                 {
                  "ellipse":true,
@@ -90,9 +90,9 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":209,
-                 "x":662,
-                 "y":106
+                 "width":331,
+                 "x":654,
+                 "y":114
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -110,11 +110,11 @@
         {
          "columns":30,
          "firstgid":1,
-         "image":"..\/taild\/\u3082\u3068\/\u7af9\u7530\/taketa_map.png",
+         "image":"..\/taketa.png",
          "imageheight":1080,
          "imagewidth":1924,
          "margin":0,
-         "name":"taketa_map",
+         "name":"taketa",
          "spacing":0,
          "tilecount":480,
          "tileheight":64,
