@@ -927,6 +927,11 @@
 
         // ページ読み込み時の処理
         window.addEventListener('load', function() {
+            console.log('[初期化] ページ読み込み完了');
+            console.log('[初期化] ユーザーエージェント:', navigator.userAgent);
+            console.log('[初期化] 画面サイズ:', window.innerWidth, 'x', window.innerHeight);
+            console.log('[初期化] デバイスピクセル比:', window.devicePixelRatio);
+            
             // 初期ローディング画面を表示
             if (window.LoadingManager) {
                 window.LoadingManager.show('ゲームを初期化中...', 0);
