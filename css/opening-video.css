@@ -24,7 +24,7 @@
     border: none;
 }
 
-/* エンディング動画関連のスタイル */
+/* エンディング動画関連のスタイル（OP動画と同じ構造） */
 #ending-video {
     position: fixed;
     top: 0;
@@ -36,18 +36,6 @@
     display: flex;
     justify-content: center;
     align-items: center;
-}
-
-#ending-video-container {
-    position: relative;
-    width: 100%;
-    height: 100%;
-}
-
-#ending-youtube-video {
-    width: 100%;
-    height: 100%;
-    border: none;
 }
 
 .skip-button {
