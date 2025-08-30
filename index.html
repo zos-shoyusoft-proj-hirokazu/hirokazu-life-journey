@@ -622,7 +622,7 @@
                 videoContainer.style.display = 'block';
             }
             
-            const videoId = 'P2KXyM27XK4';
+            const videoId = 'tOOHuhwmdng';
             const iframe = document.getElementById('youtube-video');
             if (iframe) {
                 iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&showinfo=0&controls=1&playsinline=1&enablejsapi=1&origin=${window.location.origin}`;
@@ -861,6 +861,8 @@
                     setTimeout(() => {
                         this.style.transform = '';
                     }, 150);
+                    // OPボタンクリック時は強制表示フラグを設定
+                    localStorage.setItem('forceShowOpening', 'true');
                     showOpeningVideo();
                 });
             }
@@ -1133,6 +1135,8 @@
             console.log('[初期化] 画面サイズ:', window.innerWidth, 'x', window.innerHeight);
             console.log('[初期化] デバイスピクセル比:', window.devicePixelRatio);
             
+
+            
             // スマホ対応：DOMContentLoadedも待つ
             if (document.readyState === 'loading') {
                 document.addEventListener('DOMContentLoaded', initializeGame);
@@ -1161,39 +1165,38 @@
                         window.LoadingManager.updateProgress(75, '設定を読み込み中...');
                     } else if (initStep === 4) {
                         window.LoadingManager.updateProgress(100, '完了！');
+                        // 即座にOP表示判定を行う（500ms待機を削除）
+                        window.LoadingManager.hide();
+                        clearInterval(initInterval);
+                        
+                        // 初期化完了後の処理
+                        const stageSelect = document.getElementById('stage-select');
+                        const mainMenu = document.getElementById('main-menu');
+                        
+                        const isStageSelectVisible = stageSelect && (stageSelect.style.display === 'flex' || stageSelect.style.display === '');
+                        
+                        if (isStageSelectVisible) {
+                            return;
+                        }
+                        
+                        if (!localStorage.getItem('openingVideoShown')) {
+                            showOpeningVideo();
+                            localStorage.setItem('openingVideoShown', 'true');
+                        } else {
+                            showMainMenu();
+                        }
+                        
+                        // リセット確認ダイアログを初期化
                         setTimeout(() => {
-                            window.LoadingManager.hide();
-                            clearInterval(initInterval);
-                            
-                            // 初期化完了後の処理
-                            const stageSelect = document.getElementById('stage-select');
-                            const mainMenu = document.getElementById('main-menu');
-                            
-                            const isStageSelectVisible = stageSelect && (stageSelect.style.display === 'flex' || stageSelect.style.display === '');
-                            
-                            if (isStageSelectVisible) {
-                                return;
-                            }
-                            
-                            if (!localStorage.getItem('openingVideoShown')) {
-                                showOpeningVideo();
-                                localStorage.setItem('openingVideoShown', 'true');
+                            if (typeof initializeResetDialog === 'function') {
+                                console.log('[初期化] リセット確認ダイアログを初期化します');
+                                initializeResetDialog();
                             } else {
-                                showMainMenu();
+                                console.error('[初期化] initializeResetDialog関数が見つかりません');
                             }
-                            
-                            // リセット確認ダイアログを初期化
-                            setTimeout(() => {
-                                if (typeof initializeResetDialog === 'function') {
-                                    console.log('[初期化] リセット確認ダイアログを初期化します');
-                                    initializeResetDialog();
-                                } else {
-                                    console.error('[初期化] initializeResetDialog関数が見つかりません');
-                                }
-                            }, 100);
-                        }, 500);
+                        }, 100);
                     }
-                }, 500);
+                }, 100); // 500msから100msに短縮
                 
                 // 安全装置：10秒後に強制終了
                 setTimeout(() => {
