@@ -110,7 +110,7 @@ export const EventConfig = {
             background: 'Fire',                  // 必要：conversationDataのbackgroundと一致
             bgm: 'bloody_tears',                    // 必要：conversationDataのbgmと一致
             required: {
-                backgrounds: ['Fire'],           // 必要：背景画像の読み込みに必要
+                backgrounds: ['Fire', 'moeru', 'moeato'],           // 必要：背景画像の読み込みに必要
                 characters: ['daichi_young_a', 'daichi_young_c', 'daichi_young_d', 'daichi_young_e', 'hirokazu_young_g', 'hirokazu_young_b', 'narrator_a'],  // 必要：character+expressionの組み合わせ（重複除く）
                 bgm: ['bloody_tears'],              // 必要：BGMファイルの読み込みに必要
                 se: ['sei_ge_matti_tukeru01', 'takibi_tan', 'wind2']  // 必要：conversationDataで使用されるSE
@@ -709,27 +709,17 @@ export const EventConfig = {
 
 // イベントIDからイベント設定を取得
 export function getEventConfig(eventId) {
-    console.log('[EventConfig] getEventConfig呼び出し, eventId:', eventId);
-    console.log('[EventConfig] EventConfig:', EventConfig);
+
     
     for (const areaKey in EventConfig) {
-        console.log('[EventConfig] エリア確認:', areaKey);
         const area = EventConfig[areaKey];
-        console.log('[EventConfig] エリア内のイベント:', Object.keys(area));
         
         if (area[eventId]) {
-            console.log(`[EventConfig] イベント発見: ${eventId} in ${areaKey}`);
-            console.log('[EventConfig] イベント詳細:', area[eventId]);
             return area[eventId];
         }
     }
     
     console.warn(`[EventConfig] イベントID "${eventId}" が見つかりませんでした`);
-    console.log('[EventConfig] 利用可能なエリア:', Object.keys(EventConfig));
-    for (const areaKey in EventConfig) {
-        const area = EventConfig[areaKey];
-        console.log(`[EventConfig] ${areaKey}エリアのイベント:`, Object.keys(area));
-    }
     return null;
 }
 
