@@ -151,8 +151,8 @@ export const EventConfig = {
             required: {
                 backgrounds: ['souce'],          // 必要：背景画像の読み込みに必要
                 characters: ['hirokazu_e', 'hirokazu_b', 'hirokazu_d', 'hirokazu_l', 'koutarou_a', 'koutarou_e', 'koutarou_g', 'kanato_c', 'kanato_b', 'kanato_d', 'daichi_e', 'daichi_f', 'daichi_b', 'naoki_a', 'naoki_c', 'naoki_b', 'narrator_a', 'line_group_syouyu'],  // 必要：character+expressionの組み合わせ（重複除く）
-                bgm: ['pokémon_Theme']              // 必要：BGMファイルの読み込みに必要
-                // seセクションは不要：conversationDataにSEの指定がないため
+                bgm: ['pokémon_Theme'],              // 必要：BGMファイルの読み込みに必要
+                se: ['wadodon']  // 必要：conversationDataで使用されるSE
             },
             conversationDataKey: 'souce',        // 必要：conversationDataのキーと一致
             areaName: 'souce'                   // 必要：エリア名の指定

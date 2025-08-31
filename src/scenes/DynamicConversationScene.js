@@ -165,7 +165,7 @@ export class DynamicConversationScene extends Phaser.Scene {
             const sceneManager = this.scene.manager;
             if (sceneManager) {
                 // 現在アクティブなステージシーンの_suppressMapBgmフラグを設定
-                const stageScenes = ['taketa_highschool', 'miemachi_highschool', 'japan_highschool', 'Stage1Scene', 'Stage2Scene', 'Stage3Scene'];
+                const stageScenes = ['taketa_highschool', 'miemachi_highschool', 'japan_highschool'];
                 
                 for (const sceneKey of stageScenes) {
                     try {

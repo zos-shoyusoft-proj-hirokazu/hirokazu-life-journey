@@ -280,19 +280,25 @@ export const miemachiConversationData = {
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
-                'text': 'お盆で暇だな、喜久でちょっと飲もうか',
+                'text': 'お盆で暇だな、喜久でちょっと飲むか？',
                 'expression': 'e'
             },
             {
                 'speaker': 'こうたろう',
                 'character': 'koutarou',
-                'text': 'まぁ、ええよ、せっかくそろったしな',
+                'text': 'ええよ、せっかくそろったしな',
                 'expression': 'a'
             },
             {
                 'speaker': 'かなと',
                 'character': 'kanato',
-                'text': 'えーと、ね、あの、うーん、えっとね',
+                'text': 'あーーーーーーー、、、、、',
+                'expression': 'c'
+            },
+            {
+                'speaker': 'かなと',
+                'character': 'kanato',
+                'text': 'と、、、、',
                 'expression': 'c'
             },
             {
@@ -310,13 +316,14 @@ export const miemachiConversationData = {
             {
                 'speaker': 'かなと',
                 'character': 'kanato',
-                'text': 'おれら、実は喜久、出禁になったんよね、、',
+                'text': '俺ら、実は喜久、出禁になったんよね、、',
                 'expression': 'c'
             },
             {
                 'speaker': 'ひろかず、こうたろう',
                 'character': 'hirokazu',
                 'text': '！？',
+                'se': 'wadodon',
                 'expression': 'e'
             },
             {
@@ -328,31 +335,32 @@ export const miemachiConversationData = {
             {
                 'speaker': 'ひろかず、こうたろう',
                 'character': 'hirokazu',
-                'text': 'まったく、おれら心当たりはないんだが？',
+                'text': '全く、俺たち、心当たりはないんだが？',
                 'expression': 'e'
             },
             {
                 'speaker': 'だいち',
                 'character': 'daichi',
-                'text': 'いや、説明すると、この前、「かなと、俺、なおき」その他のメンバーで飲みに行ったんやけど、',
+                'text': '説明すると、この前「かなと、俺、なおき」その他のメンバーで喜久に飲みに行ったんやけど、',
                 'expression': 'e'
             },
             {
                 'speaker': 'だいち',
                 'character': 'daichi',
-                'text': 'その時に来た、日本酒のお酒の中になぜか日本酒と醤油が混ざってたんよ',
+                'text': 'その時に来てた、日本酒のお酒の中になぜか日本酒と醤油が混ざってたんよ',
                 'expression': 'e'
-            },
-            {
-                'speaker': 'かなと',
-                'character': 'kanato',
-                'text': 'もちろん、俺らがいれたわけではないよ',
-                'expression': 'c'
             },
             {
                 'speaker': 'だいち',
                 'character': 'daichi',
-                'text': 'で、俺らもさすがに飲めないから、何もいわずにテーブルの上において帰ったんだけど',
+                'text': 'マスターのミスかなぁと思って',
+                'expression': 'e'
+            },
+
+            {
+                'speaker': 'だいち',
+                'character': 'daichi',
+                'text': '、何もいわずにテーブルの上において帰ったんだけど',
                 'expression': 'e'
             },
             {
@@ -360,17 +368,29 @@ export const miemachiConversationData = {
                 'character': 'daichi',
                 'text': 'それを、俺らがいたずらで入れたって話になって冤罪で出禁になりました。',
                 'expression': 'e'
-            },            
+            },   
             {
                 'speaker': 'かなと',
                 'character': 'kanato',
-                'text': '一応、次の日に謝りにいったけど門前払いを食らいました。',
+                'text': 'もちろん、俺らがいれたわけじゃないけど、、、、、',
                 'expression': 'c'
+            },         
+            {
+                'speaker': 'なおき',
+                'character': 'naoki',
+                'text': '一応、次の日に謝りにいったけど門前払いを食らったで',
+                'expression': 'b'
             },            
             {
                 'speaker': 'かなと',
                 'character': 'kanato',
-                'text': 'ぶっちゃけ、俺ら何も悪いことしてないから何を反省していいのかわからんかったけど',
+                'text': '俺ら何も、悪いことしてないから、何を反省していいのかわからんけど',
+                'expression': 'b'
+            },
+            {
+                'speaker': 'ひろかず,功太郎',
+                'character': 'hirokazu,koutarou',
+                'text': '、、、、、、、、、、、、、、、、',
                 'expression': 'b'
             },
             {
@@ -406,19 +426,20 @@ export const miemachiConversationData = {
             {
                 'speaker': 'だいち',
                 'character': 'daichi',
-                'text': 'ｗｗｗｗｗｗｗｗｗｗｗ',
+                'text': '残念だなｗ',
                 'expression': 'f'
             },
             {
                 'speaker': 'こうたろう',
                 'character': 'koutarou',
-                'text': 'どうすんだよ、、、どこでのむよ',
+                'text': 'どこでのむよ、、、俺らの聖地なくなったぞ',
                 'expression': 'g'
             },
             {
                 'speaker': 'なおき',
                 'character': 'naoki',
                 'text': '「かくれんぼ」、ならいけるとおもうぞ',
+                'se': 'wadodon',
                 'expression': 'a'
             },
             {
@@ -460,32 +481,44 @@ export const miemachiConversationData = {
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
-                'text': 'もう、おれらのグループ名しょうゆにするか',
+                'text': 'もう、おれらのグループ名『しょうゆ』にするか',
                 'expression': 'l'
             },
             {
                 'speaker': 'だいち',
                 'character': 'daichi',
-                'text': '、、、するか、、、、醤油に',
+                'text': 'するか、、、、「しょうゆ』に',
                 'expression': 'b'
             },
             {
                 'speaker': 'かなと',
                 'character': 'kanato',
-                'text': 'じゃあ、ＬＩＮＥのグループ名は醤油にしときます',
+                'text': '仕方ないから、ＬＩＮＥのグループ名は『しょうゆ』にしときます',
                 'expression': 'd'
             },
             {
                 'speaker': 'こうたろう',
                 'character': 'koutarou',
-                'text': '醤油か、、、、、おれは関係ないけど',
+                'text': '『しょうゆ』か、、、、、',
+                'expression': 'c'
+            },
+            {
+                'speaker': 'ひろかず',
+                'character': 'hirokazu',
+                'text': 'とばっちりだなぁ、、、',
                 'expression': 'c'
             },
             {
                 'speaker': 'だいち',
                 'character': 'daichi',
-                'text': '決定だ',
+                'text': 'んんんん、、、、、、、決定だやな',
                 'expression': 'a'
+            },
+            {
+                'speaker': 'narrator',
+                'character': 'narrator',
+                'text': '、、、、、、、、、、、、、',
+                'expression': 'a',
             },
             {
                 'character': 'line_group_syouyu',
