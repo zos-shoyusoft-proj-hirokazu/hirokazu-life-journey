@@ -2,7 +2,7 @@
 export const taketaConversationData = {
     // 昼休み鬼ごっこ
     'lunch_tag': {
-        'background': 'classroom',
+        'background': 'nichijyou_b',
         'bgm': 'professor_laytons',
         'conversations': [
             {
@@ -190,7 +190,7 @@ export const taketaConversationData = {
     
     // ゴスペラーズの歌
     'gospellers_song': {
-        'background': 'classroom',
+        'background': 'nichijyou_b',
         'bgm': 'Fantasy',
         'conversations': [
             {
@@ -246,7 +246,7 @@ export const taketaConversationData = {
     
     // クライミング指怪我事件
     'climbing_injury': {
-        'background': 'classroom',
+        'background': 'craimming_a',
         'bgm': 'blinding_lights',
         'conversations': [
             {
@@ -259,14 +259,14 @@ export const taketaConversationData = {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'クライミングでケガした',
-                'expression': 'i'
+                'expression': 'j'
             }
         ]
     },
     
     // 教室の入り口鍵かけ事件
     'classroom_lock_incident': {
-        'background': 'classroom_door',
+        'background': 'kudou_back',
         'bgm': 'Jounetsu_Tairiku',
         'conversations': [
             {
@@ -468,7 +468,7 @@ export const taketaConversationData = {
     
     // こうたろうのおしっこ事件
     'koutarou_toilet': {
-        'background': 'classroom',
+        'background': 'nichijyou_3',
         'bgm': 'metoroido',
         'conversations': [
             {
@@ -705,7 +705,7 @@ export const taketaConversationData = {
     
     // 文化祭後の謝罪
     'culture_festival_apology': {
-        'background': 'classroom',
+        'background': 'kyoushitu_a',
         'bgm': 'Spain',
         'conversations': [
             {
@@ -934,7 +934,7 @@ export const taketaConversationData = {
     
     // 電車ないうんこおじさん事件
     'train_no_poop_man': {
-        'background': 'station',
+        'background': 'kannnamu',
         'bgm': 'Fantasy',
         'conversations': [
             {
@@ -1050,7 +1050,7 @@ export const taketaConversationData = {
     
     // かなとのビデオカメラを落として壊す
     'videocamera_broken': {
-        'background': 'classroom',
+        'background': 'nichijyou_d',
         'bgm': 'ON_THE_BEACH',
         'conversations': [
             {
@@ -1118,7 +1118,7 @@ export const taketaConversationData = {
     
     // 昼休みドラマ撮影クラブ（ゴスペラーズ等々）
     'drama_filming': {
-        'background': 'classroom',
+        'background': 'nichijyou_b',
         'bgm': 'nightbarth',
         'conversations': [
             {
@@ -2296,7 +2296,7 @@ export const taketaConversationData = {
     
     // 黒い服着てこない
     'black_clothes': {
-        'background': 'classroom',
+        'background': 'kyoushitu_a',
         'bgm': 'Nagisa_Moderato',
         'conversations': [
             {
@@ -2400,7 +2400,7 @@ export const taketaConversationData = {
     
     // 放送
     'broadcast': {
-        'background': 'classroom',
+        'background': 'kyoushitu_a',
         'bgm': 'unオーエン彼女なのか？',
         'conversations': [
             {
@@ -2684,7 +2684,7 @@ export const taketaConversationData = {
     
     // ワックスつける
     'wax_on': {
-        'background': 'classroom',
+        'background': 'kudou_a',
         'bgm': 'vitality',
         'conversations': [
             {
@@ -2734,7 +2734,7 @@ export const taketaConversationData = {
     
     // バレンタイン
     'valentine': {
-        'background': 'classroom',
+        'background': 'nichijyou_d',
         'bgm': 'rainbow_Seeker_II',
         'conversations': [
             {

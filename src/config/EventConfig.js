@@ -239,10 +239,10 @@ export const EventConfig = {
             title: '昼休み鬼ごっこ',                // 必要：イベントのタイトル表示用
             type: 'conversation',                // 必要：イベントの種類を指定
             areaType: 'taketa',                  // 必要：エリアタイプを指定
-            background: 'classroom',              // 必要：conversationDataのbackgroundと一致
+            background: 'nichijyou_b',              // 必要：conversationDataのbackgroundと一致
             bgm: 'professor_laytons',                      // 必要：conversationDataのbgmと一致
             required: {
-                backgrounds: ['classroom'],       // 必要：背景画像の読み込みに必要
+                backgrounds: ['nichijyou_b'],       // 必要：背景画像の読み込みに必要
                 characters: [
                     'hirokazu_a', 
                     'daichi_a', 
@@ -263,10 +263,10 @@ export const EventConfig = {
             title: '竹田駅',                      // 必要：イベントのタイトル表示用
             type: 'conversation',                // 必要：イベントの種類を指定
             areaType: 'taketa',                  // 必要：エリアタイプを指定
-            background: 'station',                // 必要：conversationDataのbackgroundと一致
+            background: 'kannnamu',                // 必要：conversationDataのbackgroundと一致
             bgm: 'nightbarth',                   // 必要：conversationDataのbgmと一致
             required: {
-                backgrounds: ['station'],         // 必要：背景画像の読み込みに必要
+                backgrounds: ['kannnamu'],         // 必要：背景画像の読み込みに必要
                 characters: ['hirokazu_a', 'daichi_a', 'koutarou_b'],  // 必要：character+expressionの組み合わせ
                 bgm: ['nightbarth']               // 必要：BGMファイルの読み込みに必要
                 // seセクションは不要：conversationDataにSEの指定がないため
@@ -348,10 +348,10 @@ export const EventConfig = {
             title: 'ゴスペラーズの歌',               // 必要：イベントのタイトル表示用
             type: 'conversation',                // 必要：イベントの種類を指定
             areaType: 'taketa',                  // 必要：エリアタイプを指定
-            background: 'classroom',              // 必要：conversationDataのbackgroundと一致
+            background: 'nichijyou_b',              // 必要：conversationDataのbackgroundと一致
             bgm: 'Fantasy',                      // 必要：conversationDataのbgmと一致
             required: {
-                backgrounds: ['classroom'],       // 必要：背景画像の読み込みに必要
+                backgrounds: ['nichijyou_b'],       // 必要：背景画像の読み込みに必要
                 characters: ['hirokazu_a', 'daichi_a', 'kanato_a','koutarou_b'],  // 必要：character+expressionの組み合わせ（重複除く）
                 bgm: ['Fantasy']                  // 必要：BGMファイルの読み込みに必要
                 // seセクションは不要：conversationDataにSEの指定がないため（hitoriは1箇所のみ）
@@ -366,11 +366,11 @@ export const EventConfig = {
             title: 'クライミング指怪我事件',          // 必要：イベントのタイトル表示用
             type: 'conversation',                // 必要：イベントの種類を指定
             areaType: 'taketa',                  // 必要：エリアタイプを指定
-            background: 'classroom',              // 必要：conversationDataのbackgroundと一致
+            background: 'craimming_a',              // 必要：conversationDataのbackgroundと一致
             bgm: 'blinding_lights',                      // 必要：conversationDataのbgmと一致
             required: {
-                backgrounds: ['classroom'],       // 必要：背景画像の読み込みに必要
-                characters: ['kanato_a', 'hirokazu_i'],  // 必要：character+expressionの組み合わせ（重複除く）
+                backgrounds: ['craimming_a'],       // 必要：背景画像の読み込みに必要
+                characters: ['kanato_a', 'hirokazu_j'],  // 必要：character+expressionの組み合わせ（重複除く）
                 bgm: ['blinding_lights']                  // 必要：BGMファイルの読み込みに必要
                 // seセクションは不要：conversationDataにSEの指定がないため
             },
@@ -384,10 +384,10 @@ export const EventConfig = {
             title: '教室の入り口鍵かけ事件',          // 必要：イベントのタイトル表示用
             type: 'conversation',                // 必要：イベントの種類を指定
             areaType: 'taketa',                  // 必要：エリアタイプを指定
-            background: 'classroom_door',         // 必要：conversationDataのbackgroundと一致
+            background: 'kudou_back',         // 必要：conversationDataのbackgroundと一致
             bgm: 'Jounetsu_Tairiku',             // 必要：conversationDataのbgmと一致
             required: {
-                backgrounds: ['classroom_door'],   // 必要：背景画像の読み込みに必要
+                backgrounds: ['kudou_back'],   // 必要：背景画像の読み込みに必要
                 characters: [
                     'hirokazu_a',
                     'kudou_b',
@@ -407,10 +407,10 @@ export const EventConfig = {
             title: 'こうたろうのおしっこ事件',        // 必要：イベントのタイトル表示用
             type: 'conversation',                // 必要：イベントの種類を指定
             areaType: 'taketa',                  // 必要：エリアタイプを指定
-            background: 'classroom',              // 必要：conversationDataのbackgroundと一致
+            background: 'nichijyou_3',              // 必要：conversationDataのbackgroundと一致
             bgm: 'metoroido',                      // 必要：conversationDataのbgmと一致
             required: {
-                backgrounds: ['classroom'],       // 必要：背景画像の読み込みに必要
+                backgrounds: ['nichijyou_3'],       // 必要：背景画像の読み込みに必要
                 characters: [
                     'koutarou_b',
                     'hirokazu_a',
@@ -429,10 +429,10 @@ export const EventConfig = {
             title: '文化祭後の謝罪',                // 必要：イベントのタイトル表示用
             type: 'conversation',                // 必要：イベントの種類を指定
             areaType: 'taketa',                  // 必要：エリアタイプを指定
-            background: 'classroom',              // 必要：conversationDataのbackgroundと一致
+            background: 'kyoushitu_a',              // 必要：conversationDataのbackgroundと一致
             bgm: 'Spain',                      // 必要：conversationDataのbgmと一致
             required: {
-                backgrounds: ['classroom'],       // 必要：背景画像の読み込みに必要
+                backgrounds: ['kyoushitu_a'],       // 必要：背景画像の読み込みに必要
                 characters: [
                     'mamicchi_a',
                     'hirokazu_a',
@@ -454,10 +454,10 @@ export const EventConfig = {
             title: '電車ないうんこおじさん事件',      // 必要：イベントのタイトル表示用
             type: 'conversation',                // 必要：イベントの種類を指定
             areaType: 'taketa',                  // 必要：エリアタイプを指定
-            background: 'classroom',              // 必要：conversationDataのbackgroundと一致
+            background: 'kannnamu',              // 必要：conversationDataのbackgroundと一致
             bgm: 'Fantasy',                      // 必要：conversationDataのbgmと一致
             required: {
-                backgrounds: ['classroom'],       // 必要：背景画像の読み込みに必要
+                backgrounds: ['kannnamu'],       // 必要：背景画像の読み込みに必要
                 characters: [
                     'hirokazu_a',
                     'daichi_a',
@@ -476,10 +476,10 @@ export const EventConfig = {
             title: 'かなとのビデオカメラを落として壊す',  // 必要：イベントのタイトル表示用
             type: 'conversation',                // 必要：イベントの種類を指定
             areaType: 'taketa',                  // 必要：エリアタイプを指定
-            background: 'classroom',              // 必要：conversationDataのbackgroundと一致
+            background: 'nichijyou_d',              // 必要：conversationDataのbackgroundと一致
             bgm: 'ON_THE_BEACH',                      // 必要：conversationDataのbgmと一致
             required: {
-                backgrounds: ['classroom'],       // 必要：背景画像の読み込みに必要
+                backgrounds: ['nichijyou_d'],       // 必要：背景画像の読み込みに必要
                 characters: ['kanato_a', 'hirokazu_a', 'kanato_c', 'narrator_a'],  // 必要：character+expressionの組み合わせ（重複除く）
                 bgm: ['ON_THE_BEACH']                  // 必要：BGMファイルの読み込みに必要
                 // seセクションは不要：conversationDataにSEの指定がないため
@@ -494,10 +494,10 @@ export const EventConfig = {
             title: '昼休みドラマ撮影クラブ（ゴスペラーズ等々）',  // 必要：イベントのタイトル表示用
             type: 'conversation',                // 必要：イベントの種類を指定
             areaType: 'taketa',                  // 必要：エリアタイプを指定
-            background: 'classroom',              // 必要：conversationDataのbackgroundと一致
+            background: 'nichijyou_b',              // 必要：conversationDataのbackgroundと一致
             bgm: 'nightbarth',                   // 必要：conversationDataのbgmと一致
             required: {
-                backgrounds: ['classroom'],       // 必要：背景画像の読み込みに必要
+                backgrounds: ['nichijyou_b'],       // 必要：背景画像の読み込みに必要
                 characters: [
                     'hirokazu_a', 
                     'kanato_a', 
@@ -537,10 +537,10 @@ export const EventConfig = {
             title: '黒い服着てこない',              // 必要：イベントのタイトル表示用
             type: 'conversation',                // 必要：イベントの種類を指定
             areaType: 'taketa',                  // 必要：エリアタイプを指定
-            background: 'classroom',              // 必要：conversationDataのbackgroundと一致
+            background: 'kyoushitu_a',              // 必要：conversationDataのbackgroundと一致
             bgm: 'Nagisa_Moderato',                      // 必要：conversationDataのbgmと一致
             required: {
-                backgrounds: ['classroom'],       // 必要：背景画像の読み込みに必要
+                backgrounds: ['kyoushitu_a'],       // 必要：背景画像の読み込みに必要
                 characters: [
                     'mamicchi_a',
                     'classmate_a', 
@@ -564,10 +564,10 @@ export const EventConfig = {
             title: '放送',                        // 必要：イベントのタイトル表示用
             type: 'conversation',                // 必要：イベントの種類を指定
             areaType: 'taketa',                  // 必要：エリアタイプを指定
-            background: 'classroom',              // 必要：conversationDataのbackgroundと一致
+            background: 'kyoushitu_a',              // 必要：conversationDataのbackgroundと一致
             bgm: 'unオーエン彼女なのか？',                      // 必要：conversationDataのbgmと一致
             required: {
-                backgrounds: ['classroom'],       // 必要：背景画像の読み込みに必要
+                backgrounds: ['kyoushitu_a'],       // 必要：背景画像の読み込みに必要
                 characters: [
                     'narrator_a', 
                     'broadcast_a', 
@@ -594,10 +594,10 @@ export const EventConfig = {
             title: 'ワックスつける',               // 必要：イベントのタイトル表示用
             type: 'conversation',                // 必要：イベントの種類を指定
             areaType: 'taketa',                  // 必要：エリアタイプを指定
-            background: 'classroom',              // 必要：conversationDataのbackgroundと一致
+            background: 'kudou_back',              // 必要：conversationDataのbackgroundと一致
             bgm: 'vitality',                      // 必要：conversationDataのbgmと一致
             required: {
-                backgrounds: ['classroom'],       // 必要：背景画像の読み込みに必要
+                backgrounds: ['kudou_back'],       // 必要：背景画像の読み込みに必要
                 characters: ['ooya_a', 'naoki_a'],  // 必要：character+expressionの組み合わせ（重複除く）
                 bgm: ['vitality']                  // 必要：BGMファイルの読み込みに必要
                 // seセクションは不要：conversationDataにSEの指定がないため
@@ -612,10 +612,10 @@ export const EventConfig = {
             title: 'バレンタイン',                 // 必要：イベントのタイトル表示用
             type: 'conversation',                // 必要：イベントの種類を指定
             areaType: 'taketa',                  // 必要：エリアタイプを指定
-            background: 'classroom',              // 必要：conversationDataのbackgroundと一致
+            background: 'nichijyou_d',              // 必要：conversationDataのbackgroundと一致
             bgm: 'rainbow_Seeker_II',                      // 必要：conversationDataのbgmと一致
             required: {
-                backgrounds: ['classroom'],       // 必要：背景画像の読み込みに必要
+                backgrounds: ['nichijyou_d'],       // 必要：背景画像の読み込みに必要
                 characters: [
                     'narrator_a', 
                     'kanato_a', 
