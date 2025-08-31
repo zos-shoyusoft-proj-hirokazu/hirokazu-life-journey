@@ -577,7 +577,8 @@ export const miemachiConversationData = {
                 'speaker': 'ナレーション',
                 'character': 'narrator',
                 'text': '移動中',
-                'expression': 'a'
+                'expression': 'a',
+                'background': 'seven_1'
             },
             {
                 'speaker': 'こうたろう',
@@ -691,241 +692,241 @@ export const miemachiConversationData = {
         'conversations': [
             {
                 'speaker': 'だいち少年',
-                'character': 'daichi_young',
+                'character': 'syounenndaichi',
                 'text': '火遊びしたいな',
-                'expression': 'a'
+                'expression': '1'
             },
             {
                 'speaker': 'ひろかず少年',
-                'character': 'hirokazu_young',
+                'character': 'syounennhirokazu',
                 'text': 'これを使えば、火遊びできるよ',
-                'expression': 'g'
+                'expression': '1'
             },
             {
                 'speaker': 'だいち少年',
-                'character': 'daichi_young',
+                'character': 'syounenndaichi',
                 'text': 'よし！いけ！',
-                'expression': 'c'
+                'expression': '1'
             },
             {
                 'speaker': 'ひろかず少年',
-                'character': 'hirokazu_young',
+                'character': 'syounennhirokazu',
                 'text': 'いや、まてさすがにここでは周りに火が付きそうなものがおおい',
-                'expression': 'g'
+                'expression': '1'
             },
             {
                 'speaker': 'ひろかず少年',
-                'character': 'hirokazu_young',
+                'character': 'syounennhirokazu',
                 'text': 'なので、距離をおいて火をつけよう',
-                'expression': 'g'
+                'expression': '1'
             },
             {
                 'speaker': 'だいち少年',
-                'character': 'daichi_young',
+                'character': 'syounenndaichi',
                 'text': 'ここなら大丈夫だろ、この川の別れて、陸みたいになってるとこ！！！',
-                'expression': 'c'
+                'expression': '1'
             },
             {
                 'speaker': 'だいち少年',
-                'character': 'daichi_young',
+                'character': 'syounenndaichi',
                 'text': '新大陸だ！！！！',
-                'expression': 'c'
+                'expression': '1'
             },
             {
                 'speaker': 'ひろかず少年',
-                'character': 'hirokazu_young',
+                'character': 'syounennhirokazu',
                 'text': 'ここならいける！！！！',
-                'expression': 'g'
+                'expression': '1'
             },
             {
                 'speaker': 'だいち少年',
-                'character': 'daichi_young',
+                'character': 'syounenndaichi',
                 'text': 'よし、やるんだ！！！',
-                'expression': 'c'
+                'expression': '1'
             },
             {
                 'speaker': 'ナレーター',
                 'character': 'narrator',
                 'se': 'sei_ge_matti_tukeru01',
-                'expression': 'a'
+                'expression': '1'
             },
             {
                 'speaker': 'ナレーター',
                 'character': 'narrator',
                 'text': 'パチパチっ、、、',
-                'se': 'takibi_tan',
-                'expression': 'a'
+                'se': '焚き火短',
+                'expression': '1'
             },
             {
                 'speaker': 'ダイチ少年',
-                'character': 'daichi_young',
+                'character': 'syounenndaichi',
                 'text': '火ついたな、、、',
-                'expression': 'd'
+                'expression': '1'
             },
             {
                 'speaker': 'ひろかず少年',
-                'character': 'hirokazu_young',
+                'character': 'syounennhirokazu',
                 'text': 'おおっ、、あたたけぇ、、、',
-                'expression': 'b'
+                'expression': '1'
             },
             {
                 'speaker': 'ダイチ少年',
-                'character': 'daichi_young',
+                'character': 'syounenndaichi',
                 'text': 'ええな、、、、',
-                'expression': 'e'
+                'expression': '1'
             },
             {
                 'speaker': 'ナレーター',
                 'character': 'narrator',
                 'text': 'びゅぅぅぅぅ、、。',
                 'se': 'wind2',
-                'expression': 'a'
+                'expression': '1'
             },
             {
                 'speaker': 'ダイチ少年',
-                'character': 'daichi_young',
+                'character': 'syounenndaichi',
                 'text': 'なんか風が、、、なぁ、、、！？！？！！！！！？！？！？',
-                'expression': 'e'
+                'expression': '1'
             },
             {
                 'speaker': 'ダイチ少年',
-                'character': 'daichi_young',
+                'character': 'syounenndaichi',
                 'text': 'もえた、物が、、、、、風に飛んで、、',
-                'expression': 'e'
+                'expression': '1'
             },
             {
                 'speaker': 'ダイチ少年、ひろかず少年',
-                'character': 'daichi_young',
+                'character': 'syounenndaichi',
                 'text': 'あっっっ！！！！！！！！！！！！！！！！',
-                'se': 'takibi_tan',
+                'se': '焚き火短',
                 'background': 'moeru',
-                'expression': 'g,g'
+                'expression': '1,1'
             },
             {
                 'speaker': 'ダイチ少年',
-                'character': 'daichi_young',
+                'character': 'syounenndaichi',
                 'text': 'えっと、なんかやばくね',
-                'expression': 'g'
+                'expression': '1'
             },
             {
                 'speaker': 'ダイチ少年',
-                'character': 'daichi_young',
+                'character': 'syounenndaichi',
                 'text': 'やばくね？なんかやばくね？？？？？',
-                'expression': 'g'
+                'expression': '1'
             },
             {
                 'speaker': 'ひろかず少年',
-                'character': 'hirokazu_young',
+                'character': 'syounennhirokazu',
                 'text': '、、、、、けせーーーーーーーー！、水かけろ！！！！',
-                'expression': 'g'
+                'expression': '1'
             },
             {
                 'speaker': 'ダイチ少年',
-                'character': 'daichi_young',
+                'character': 'syounenndaichi',
                 'text': 'まずいまずいまずいまずいまずいまずいまずいまずい！！！！！！！',
-                'expression': 'I'
+                'expression': '1'
             },
             {
                 'speaker': 'ひろかず少年',
-                'character': 'hirokazu_young',
+                'character': 'syounennhirokazu',
                 'text': 'みっ、、、水をかけるんだ！！！はやく！！！！',
-                'expression': 'g'
+                'expression': '1'
             },
             {
                 'speaker': 'ダイチ少年',
-                'character': 'daichi_young',
+                'character': 'syounenndaichi',
                 'text': 'ダメだ！！！！！火の勢いが強い',
-                'expression': 'K'
+                'expression': '1'
             },
             {
                 'speaker': 'ひろかず少年',
-                'character': 'daichi_young',
+                'character': 'syounennhirokazu',
                 'text': 'つっっつち！！！！',
-                'expression': 'g'
+                'expression': '1'
             },
             {
                 'speaker': 'ひろかず少年',
-                'character': 'daichi_young',
+                'character': 'syounennhirokazu',
                 'text': '土をなげろぉーーーーーーーーーー！！！！！',
-                'expression': 'g'
+                'expression': '1'
             },
             {
                 'speaker': 'ダイチ少年',
-                'character': 'daichi_young',
+                'character': 'syounenndaichi',
                 'text': '泥しかないです！！！',
-                'expression': 'K'
+                'expression': '1'
             },
             {
                 'speaker': 'ダイチ少年',
-                'character': 'daichi_young',
+                'character': 'syounenndaichi',
                 'text': 'なんでもいいから、なげろぉぉおぉ！！！',
-                'expression': 'K'
+                'expression': '1'
             },
             {
                 'speaker': 'ダイチ少年',
-                'character': 'daichi_young',
+                'character': 'syounenndaichi',
                 'text': '火がぁぁぁ！つよい！！！',
-                'expression': 'K'
+                'expression': '1'
             },
             {
                 'speaker': 'ひろかず少年',
-                'character': 'hirokazu_young',
+                'character': 'syounennhirokazu',
                 'text': 'あきらめるな！！！早くけせーーーーーーーー！！！',
-                'expression': 'g'
+                'expression': '1'
             },
             {
                 'text': '３０分後',
-                'expression': 'a'
+                'expression': '1'
             },
             {
                 'speaker': 'ダイチ少年',
-                'character': 'daichi_young',
+                'character': 'syounenndaichi',
                 'text': 'やったか？、、、',
-                'expression': 'M'
+                'expression': '1'
             },
             {
                 'speaker': 'ナレーター',
                 'character': 'narrator',
                 'se': 'sei_ge_matti_tukeru01',
-                'expression': 'a'
+                'expression': '1'
             },
             {
                 'speaker': 'ひろかず少年',
-                'character': 'hirokazu_young',
+                'character': 'syounennhirokazu',
                 'text': '早くけせーーーーーーーー！！！',
-                'expression': 'g'
+                'expression': '1'
             },
             {
                 'speaker': 'ナレーター',
                 'character': 'narrator',
                 'text': '、、、',
                 'se': 'sei_ge_matti_tukeru01',
-                'expression': 'a'
+                'expression': '1'
             },
             {
                 'speaker': 'ナレーター',
                 'character': 'narrator',
                 'text': '、、、、、',
-                'expression': 'a'
+                'expression': '1'
             },
             {
                 'speaker': 'ナレーター',
                 'character': 'narrator',
                 'text': '、、、、、、、、、、、、',
-                'expression': 'a'
+                'expression': '1'
             },
             {
                 'speaker': 'ダイチ少年',
-                'character': 'daichi_young',
+                'character': 'syounenndaichi',
                 'text': 'なっ、、、何とかきえたぞ、、、、',
                 'background': 'moeato',
-                'expression': 'M'
+                'expression': '1'
             },
             {
                 'speaker': 'ひろかず少年',
-                'character': 'hirokazu_young',
+                'character': 'syounennhirokazu',
                 'text': 'やばかった、焦ったわ、、、、、',
-                'expression': 'g'
+                'expression': '1'
             }
         ]
     },
@@ -1162,6 +1163,7 @@ export const miemachiConversationData = {
                 'speaker': 'ひろかず・だいち・こうたろう',
                 'character': 'all',
                 'text': '「「「ゴクゴクゴッ…オロロロロロ✨」」」',
+                'se': 'outo',
                 'expression': 'c'
             },
             {
@@ -1186,12 +1188,14 @@ export const miemachiConversationData = {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'オロロロロロ✨',
+                'se': 'outo',
                 'expression': 'c'
             },
             {
                 'speaker': 'こうたろう',
                 'character': 'koutarou',
                 'text': 'オロロロロロ…',
+                'se': 'outo',
                 'expression': 'c'
             },
             {
@@ -1204,6 +1208,7 @@ export const miemachiConversationData = {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': '木の下に吐こオロロロロロ✨',
+                'se': 'outo',
                 'expression': 'c'
             },
             {
@@ -1216,6 +1221,7 @@ export const miemachiConversationData = {
                 'speaker': 'だいち',
                 'character': 'daichi',
                 'text': 'オロロロロロ✨',
+                'se': 'outo',
                 'expression': 'c'
             },
             {

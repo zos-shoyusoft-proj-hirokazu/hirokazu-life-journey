@@ -94,7 +94,8 @@ export const EventConfig = {
             required: {
                 backgrounds: ['dutu','omiki','yorumofuketa'],           // 必要：背景画像の読み込みに必要
                 characters: ['hirokazu_a', 'hirokazu_b', 'koutarou_a', 'koutarou_c', 'daichi_b', 'daichi_a', 'dutu'],  // 必要：character+expressionの組み合わせ（重複除く）
-                bgm: ['africa']              // 必要：BGMファイルの読み込みに必要
+                bgm: ['africa']  ,
+                se: ['don', 'wadodon','outou']               // 必要：BGMファイルの読み込みに必要
                 // seセクションは不要：conversationDataにSEの指定がないため（taiko_2renは1箇所のみ）
             },
             conversationDataKey: 'drinking_dutu',   // 必要：conversationDataのキーと一致
@@ -111,9 +112,9 @@ export const EventConfig = {
             bgm: 'bloody_tears',                    // 必要：conversationDataのbgmと一致
             required: {
                 backgrounds: ['Fire', 'moeru', 'moeato'],           // 必要：背景画像の読み込みに必要
-                characters: ['daichi_young_a', 'daichi_young_c', 'daichi_young_d', 'daichi_young_e', 'hirokazu_young_g', 'hirokazu_young_b', 'narrator_a'],  // 必要：character+expressionの組み合わせ（重複除く）
+                characters: ['syounenndaichi_1', 'syounennhirokazu_1', 'narrator_1'],  // 必要：character+expressionの組み合わせ（重複除く）
                 bgm: ['bloody_tears'],              // 必要：BGMファイルの読み込みに必要
-                se: ['sei_ge_matti_tukeru01', 'takibi_tan', 'wind2']  // 必要：conversationDataで使用されるSE
+                se: ['sei_ge_matti_tukeru01', '焚き火短', 'wind2']  // 必要：conversationDataで使用されるSE
             },
             conversationDataKey: 'Weeds_burn',    // 必要：conversationDataのキーと一致
             areaName: 'Weeds_burn'               // 必要：エリア名の指定
@@ -184,7 +185,7 @@ export const EventConfig = {
             background: 'seven',                 // 必要：conversationDataのbackgroundと一致
             bgm: 'Last_Summer_In_Rio',          // 必要：conversationDataのbgmと一致
             required: {
-                backgrounds: ['seven'],          // 必要：背景画像の読み込みに必要
+                backgrounds: ['seven','seven_1'],          // 必要：背景画像の読み込みに必要
                 characters: ['hirokazu_e', 'daichi_e', 'kanato_c', 'naoki_c', 'koutarou_a', 'koutarou_N', 'narrator_a'],  // 必要：character+expressionの組み合わせ（重複除く）
                 bgm: ['Last_Summer_In_Rio']     // 必要：BGMファイルの読み込みに必要
                 // seセクションは不要：conversationDataにSEの指定がないため（dededonは1箇所のみ）
