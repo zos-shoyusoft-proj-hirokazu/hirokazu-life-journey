@@ -515,30 +515,6 @@
                 }, 
                 {
                  "height":0,
-                 "id":16,
-                 "name":"npc_10",
-                 "point":true,
-                 "rotation":0,
-                 "type":"npc",
-                 "visible":true,
-                 "width":0,
-                 "x":501.333333333333,
-                 "y":332
-                }, 
-                {
-                 "height":0,
-                 "id":17,
-                 "name":"npc_9",
-                 "point":true,
-                 "rotation":0,
-                 "type":"npc",
-                 "visible":true,
-                 "width":0,
-                 "x":341.333333333333,
-                 "y":473.333333333333
-                }, 
-                {
-                 "height":0,
                  "id":18,
                  "name":"npc_8",
                  "point":true,
@@ -666,8 +642,8 @@
                  "type":"npc",
                  "visible":true,
                  "width":0,
-                 "x":72,
-                 "y":428
+                 "x":513.333333333333,
+                 "y":369.333333333333
                 }, 
                 {
                  "height":0,
@@ -678,8 +654,8 @@
                  "type":"npc",
                  "visible":true,
                  "width":0,
-                 "x":150.666666666667,
-                 "y":429.333333333333
+                 "x":404,
+                 "y":442.666666666666
                 }, 
                 {
                  "height":0,
