@@ -230,166 +230,85 @@ export class EndingScene extends Phaser.Scene {
         console.log('[EndingScene] YouTube動画表示開始');
         
         // オープニング動画と同じ動画IDを使用
-        const videoId = 'P2KXyM27XK4';
+        const videoId = 'mIBAvillNOg';
         
-        // GitHub Pages対応：HTTPSを強制
-        const isHttps = window.location.protocol === 'https:';
-        const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+        console.log('[EndingScene] エンディング動画表示開始');
         
-        console.log('[EndingScene] プロトコル確認:', window.location.protocol);
-        console.log('[EndingScene] ホスト名確認:', window.location.hostname);
+                // 既存のHTML要素を使用してエンディング動画を表示
+        console.log('[EndingScene] 既存のHTML要素でエンディング動画を表示します');
         
-        if (window.showYouTubeVideo && (isHttps || isLocalhost)) {
-            // 既存のYouTube動画表示関数を使用
-            window.showYouTubeVideo(videoId);
-            console.log('[EndingScene] YouTube動画表示関数を呼び出し:', videoId);
+        try {
+            const endingVideo = document.getElementById('ending-video');
+            const endingIframe = document.getElementById('ending-youtube-video');
             
-            // 既存の動画プレイヤーに戻るボタンを追加
-            setTimeout(() => {
-                const videoContainer = document.getElementById('video-container');
-                if (videoContainer && !videoContainer.querySelector('.ending-back-button')) {
-                    const backButton = document.createElement('button');
-                    backButton.className = 'ending-back-button';
-                    backButton.textContent = 'タイトルに戻る';
-                    backButton.style.cssText = `
-                        position: absolute;
-                        top: 20px;
-                        right: 20px;
-                        padding: 10px 20px;
-                        background: #4A90E2;
-                        color: white;
-                        border: none;
-                        border-radius: 5px;
-                        font-size: 16px;
-                        cursor: pointer;
-                        z-index: 10000;
-                    `;
-                    
-                    // ホバー効果
-                    backButton.addEventListener('mouseenter', () => {
-                        backButton.style.background = '#5BA0F2';
-                    });
-                    backButton.addEventListener('mouseleave', () => {
-                        backButton.style.background = '#4A90E2';
-                    });
-                    
-                    // 戻るボタンのクリックイベント
-                    backButton.addEventListener('click', () => {
-                        console.log('[EndingScene] 既存動画プレイヤーから戻るボタンがクリックされました');
-                        // エンディングシーンに戻る
-                        if (window.game && window.game.scene && window.game.scene.getScene) {
-                            const endingScene = window.game.scene.getScene('EndingScene');
-                            if (endingScene) {
-                                endingScene.returnToTitle();
-                            }
-                        }
-                    });
-                    
-                    videoContainer.appendChild(backButton);
+            console.log('[EndingScene] 要素の状態確認:');
+            console.log('- endingVideo:', endingVideo);
+            console.log('- endingIframe:', endingIframe);
+            console.log('- endingVideo.style.display:', endingVideo ? endingVideo.style.display : 'null');
+            console.log('- endingIframe.src:', endingIframe ? endingIframe.src : 'null');
+            
+            if (endingVideo && endingIframe) {
+                // OP動画と同じ方式で動画を設定
+                endingIframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&showinfo=0&controls=1&playsinline=1&enablejsapi=1&origin=${window.location.origin}&modestbranding=1&iv_load_policy=3&cc_load_policy=0&fs=1&disablekb=0`;
+                endingIframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+                
+                // OP動画と同じ表示方法
+                endingVideo.style.display = 'flex';
+                
+                // コンテナも表示
+                const videoContainer = document.getElementById('ending-video-container');
+                if (videoContainer) {
+                    videoContainer.style.display = 'block';
                 }
-            }, 1000);
-        } else {
-            console.log('[EndingScene] YouTube動画表示機能が利用できません');
-            
-            // フォールバック：iframeを直接作成して表示
-            try {
-                const videoContainer = document.createElement('div');
-                videoContainer.id = 'ending-video-container';
-                videoContainer.style.cssText = `
-                    position: fixed;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
-                    z-index: 9999;
-                    background: rgba(0, 0, 0, 0.9);
-                    display: flex;
-                    flex-direction: column;
-                    justify-content: center;
-                    align-items: center;
-                `;
                 
-                // 戻るボタンを作成
-                const backButton = document.createElement('button');
-                backButton.textContent = 'タイトルに戻る';
-                backButton.style.cssText = `
-                    position: absolute;
-                    top: 20px;
-                    right: 20px;
-                    padding: 10px 20px;
-                    background: #4A90E2;
-                    color: white;
-                    border: none;
-                    border-radius: 5px;
-                    font-size: 16px;
-                    cursor: pointer;
-                    z-index: 10000;
-                `;
+                console.log('[EndingScene] エンディング動画表示完了');
                 
-                // ホバー効果
-                backButton.addEventListener('mouseenter', () => {
-                    backButton.style.background = '#5BA0F2';
-                });
-                backButton.addEventListener('mouseleave', () => {
-                    backButton.style.background = '#4A90E2';
-                });
-                
-                // 戻るボタンのクリックイベント
-                backButton.addEventListener('click', () => {
-                    console.log('[EndingScene] 動画コンテナから戻るボタンがクリックされました');
-                    document.body.removeChild(videoContainer);
-                    // エンディングシーンに戻る
-                    if (window.game && window.game.scene && window.game.scene.getScene) {
-                        const endingScene = window.game.scene.getScene('EndingScene');
-                        if (endingScene) {
-                            endingScene.returnToTitle();
-                        }
+                // 動画の読み込み状態を監視
+                const checkVideoLoad = setInterval(() => {
+                    if (endingIframe.contentDocument && endingIframe.contentDocument.readyState === 'complete') {
+                        console.log('[EndingScene] 動画の読み込み完了を確認');
+                        clearInterval(checkVideoLoad);
                     }
-                });
+                }, 100);
                 
-                const iframe = document.createElement('iframe');
-                iframe.width = '800';
-                iframe.height = '450';
-                iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&showinfo=0&controls=1&playsinline=1&enablejsapi=1&origin=${window.location.origin}`;
-                iframe.style.border = 'none';
+                // 10秒後にタイムアウト
+                setTimeout(() => {
+                    clearInterval(checkVideoLoad);
+                    console.log('[EndingScene] 動画読み込み監視タイムアウト');
+                }, 10000);
                 
-                videoContainer.appendChild(backButton);
-                videoContainer.appendChild(iframe);
-                document.body.appendChild(videoContainer);
+                // スキップボタンのイベントを設定
+                const skipButton = document.getElementById('skip-ending-video');
+                if (skipButton) {
+                    skipButton.onclick = () => {
+                        console.log('[EndingScene] エンディング動画をスキップ');
+                        endingVideo.style.display = 'none';
+                        endingIframe.src = '';
+                        this.returnToTitle();
+                    };
+                }
                 
-                console.log('[EndingScene] エンディング動画を直接表示:', videoId);
+                console.log('[EndingScene] エンディング動画を表示:', videoId);
                 
                 // 動画終了を検知（簡単な方法）
                 setTimeout(() => {
                     // 動画の長さを想定してタイムアウトを設定（1分58秒 + 余裕）
                     setTimeout(() => {
                         console.log('[EndingScene] 動画終了タイムアウト');
-                        // 動画終了後に戻るボタンを目立たせる
-                        backButton.style.background = '#FF6B6B';
-                        backButton.textContent = '🎬 動画終了 - タイトルに戻る';
+                        // 動画終了後にスキップボタンを目立たせる
+                        if (skipButton) {
+                            skipButton.style.background = '#FF6B6B';
+                            skipButton.textContent = '🎬 動画終了 - スキップ';
+                        }
                     }, 120000); // 2分後
                 }, 1000);
                 
-            } catch (error) {
-                console.error('[EndingScene] YouTube動画表示エラー:', error);
-                
-                // エラー時はシンプルなメッセージを追加
-                const videoMessage = this.add.text(this.sys.game.canvas.width / 2, this.sys.game.canvas.height * 0.7, 
-                    '🎬 素晴らしいエンディング動画が再生されます！', {
-                    fontSize: '20px',
-                    fill: '#FFD700',
-                    fontFamily: 'Arial',
-                    fontStyle: 'bold'
-                }).setOrigin(0.5);
-                
-                // フェードイン効果
-                this.tweens.add({
-                    targets: videoMessage,
-                    alpha: { from: 0, to: 1 },
-                    duration: 1000,
-                    ease: 'Power2'
-                });
+            } else {
+                console.error('[EndingScene] エンディング動画用のHTML要素が見つかりません');
             }
+            
+        } catch (error) {
+            console.error('[EndingScene] エンディング動画表示エラー:', error);
         }
     }
 

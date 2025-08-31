@@ -89,3 +89,29 @@
 .watch-again-button:hover {
     background: #1976D2;
 }
+
+/* エンディング動画関連のスタイル（OP動画と同じ構造） */
+#ending-video {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    z-index: 2000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#ending-video-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+#ending-youtube-video {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
