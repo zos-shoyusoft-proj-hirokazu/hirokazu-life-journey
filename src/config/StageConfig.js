@@ -198,7 +198,8 @@ export const StageConfig = {
                 npcs: [
                     { name: 'かなと_3', eventId: 'drama_filming' },
                     { name: 'ひろかず_3', eventId: 'videocamera_broken' },
-                    { name: 'だいち_3', eventId: 'gospellers_song' }
+                    { name: 'だいち_3', eventId: 'gospellers_song' },
+                    { name: 'こうたろう_3', eventId: 'lunch_tag' }
                 ],
                 tilesets: [
                     'pika_nos_tiles03_A2',
