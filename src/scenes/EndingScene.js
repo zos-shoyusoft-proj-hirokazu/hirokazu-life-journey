@@ -234,81 +234,135 @@ export class EndingScene extends Phaser.Scene {
         
         console.log('[EndingScene] エンディング動画表示開始');
         
-                // 既存のHTML要素を使用してエンディング動画を表示
-        console.log('[EndingScene] 既存のHTML要素でエンディング動画を表示します');
+                // 直接YouTubeを開く方式に変更
+        console.log('[EndingScene] 直接YouTubeを開く方式でエンディング動画を表示します');
         
         try {
-            const endingVideo = document.getElementById('ending-video');
-            const endingIframe = document.getElementById('ending-youtube-video');
+            // 既存の包括的なBGM停止処理を使用
+            console.log('[EndingScene] 包括的なBGM停止処理を開始');
             
-            console.log('[EndingScene] 要素の状態確認:');
-            console.log('- endingVideo:', endingVideo);
-            console.log('- endingIframe:', endingIframe);
-            console.log('- endingVideo.style.display:', endingVideo ? endingVideo.style.display : 'null');
-            console.log('- endingIframe.src:', endingIframe ? endingIframe.src : 'null');
+            // Phaserのサウンドを停止
+            this.sound.stopAll();
             
-            if (endingVideo && endingIframe) {
-                // OP動画と同じ方式で動画を設定
-                endingIframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&showinfo=0&controls=1&playsinline=1&enablejsapi=1&origin=${window.location.origin}&modestbranding=1&iv_load_policy=3&cc_load_policy=0&fs=1&disablekb=0`;
-                endingIframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
-                
-                // OP動画と同じ表示方法
-                endingVideo.style.display = 'flex';
-                
-                // コンテナも表示
-                const videoContainer = document.getElementById('ending-video-container');
-                if (videoContainer) {
-                    videoContainer.style.display = 'block';
-                }
-                
-                console.log('[EndingScene] エンディング動画表示完了');
-                
-                // 動画の読み込み状態を監視
-                const checkVideoLoad = setInterval(() => {
-                    if (endingIframe.contentDocument && endingIframe.contentDocument.readyState === 'complete') {
-                        console.log('[EndingScene] 動画の読み込み完了を確認');
-                        clearInterval(checkVideoLoad);
-                    }
-                }, 100);
-                
-                // 10秒後にタイムアウト
-                setTimeout(() => {
-                    clearInterval(checkVideoLoad);
-                    console.log('[EndingScene] 動画読み込み監視タイムアウト');
-                }, 10000);
-                
-                // スキップボタンのイベントを設定
-                const skipButton = document.getElementById('skip-ending-video');
-                if (skipButton) {
-                    skipButton.onclick = () => {
-                        console.log('[EndingScene] エンディング動画をスキップ');
-                        endingVideo.style.display = 'none';
-                        endingIframe.src = '';
-                        this.returnToTitle();
-                    };
-                }
-                
-                console.log('[EndingScene] エンディング動画を表示:', videoId);
-                
-                // 動画終了を検知（簡単な方法）
-                setTimeout(() => {
-                    // 動画の長さを想定してタイムアウトを設定（1分58秒 + 余裕）
-                    setTimeout(() => {
-                        console.log('[EndingScene] 動画終了タイムアウト');
-                        // 動画終了後にスキップボタンを目立たせる
-                        if (skipButton) {
-                            skipButton.style.background = '#FF6B6B';
-                            skipButton.textContent = '🎬 動画終了 - スキップ';
-                        }
-                    }, 120000); // 2分後
-                }, 1000);
-                
-            } else {
-                console.error('[EndingScene] エンディング動画用のHTML要素が見つかりません');
+            // HTMLAudioのBGMも停止
+            if (this._htmlBgm) {
+                this._htmlBgm.pause();
+                this._htmlBgm = null;
             }
             
+            // グローバルのBGMも停止
+            if (window.game && window.game.sound) {
+                window.game.sound.stopAll();
+            }
+            
+            // AudioManagerのBGMも停止
+            try {
+                if (window.audioManager) {
+                    console.log('[EndingScene] AudioManagerのBGM停止開始');
+                    if (window.audioManager.stopAll) {
+                        window.audioManager.stopAll();
+                    }
+                    if (window.audioManager.stopBgm) {
+                        window.audioManager.stopBgm();
+                    }
+                    console.log('[EndingScene] AudioManagerのBGM停止完了');
+                }
+            } catch (e) {
+                console.error('[EndingScene] AudioManagerのBGM停止エラー:', e);
+            }
+            
+            // 他のシーンのBGMも停止
+            if (window.game && window.game.scene && window.game.scene.getScenes) {
+                const scenes = window.game.scene.getScenes(false) || [];
+                scenes.forEach(scene => {
+                    try {
+                        if (scene.sound && scene.sound.stopAll) {
+                            scene.sound.stopAll();
+                        }
+                        if (scene._htmlBgm) {
+                            scene._htmlBgm.pause();
+                            scene._htmlBgm = null;
+                        }
+                        if (scene._eventHtmlBgm) {
+                            scene._eventHtmlBgm.pause();
+                            scene._eventHtmlBgm = null;
+                        }
+                    } catch (e) {
+                        // ignore
+                    }
+                });
+            }
+            
+            // 全国マップ（japanステージ）のBGMを特に停止
+            try {
+                if (window.game && window.game.scene && window.game.scene.getScene) {
+                    const japanScene = window.game.scene.getScene('JapanStage');
+                    if (japanScene) {
+                        console.log('[EndingScene] JapanStageのBGM停止開始');
+                        if (japanScene.sound && japanScene.sound.stopAll) {
+                            japanScene.sound.stopAll();
+                        }
+                        if (japanScene._htmlBgm) {
+                            japanScene._htmlBgm.pause();
+                            japanScene._htmlBgm = null;
+                        }
+                        if (japanScene._eventHtmlBgm) {
+                            japanScene._eventHtmlBgm.pause();
+                            japanScene._eventHtmlBgm = null;
+                        }
+                        console.log('[EndingScene] JapanStageのBGM停止完了');
+                    }
+                }
+            } catch (e) {
+                console.error('[EndingScene] JapanStageのBGM停止エラー:', e);
+            }
+            
+            // 強制的にすべての音声を停止
+            try {
+                // すべてのaudio要素を停止
+                const allAudios = document.querySelectorAll('audio');
+                console.log('[EndingScene] 検出されたaudio要素数:', allAudios.length);
+                allAudios.forEach((audio, index) => {
+                    console.log(`[EndingScene] audio要素${index}を停止`);
+                    audio.pause();
+                    audio.currentTime = 0;
+                    audio.src = '';
+                });
+                
+                // すべてのvideo要素も停止
+                const allVideos = document.querySelectorAll('video');
+                console.log('[EndingScene] 検出されたvideo要素数:', allVideos.length);
+                allVideos.forEach((video, index) => {
+                    console.log(`[EndingScene] video要素${index}を停止`);
+                    video.pause();
+                    video.currentTime = 0;
+                });
+            } catch (e) {
+                console.error('[EndingScene] 音声要素停止エラー:', e);
+            }
+            
+            console.log('[EndingScene] 包括的なBGM停止処理完了');
+            
+            // 新しいタブでYouTubeを直接開く
+            const youtubeUrl = `https://youtu.be/${videoId}`;
+            console.log('[EndingScene] YouTubeを開きます:', youtubeUrl);
+            
+            // 新しいタブでYouTubeを開く
+            window.open(youtubeUrl, '_blank');
+            
+            console.log('[EndingScene] エンディング動画（YouTube）を開きました');
+            
+            // BGM再開は行わない（ユーザーが動画を見ている間はBGMを停止したまま）
+            console.log('[EndingScene] BGMは再開しません（動画視聴中）');
+            
+            // 少し待ってからタイトルに戻る
+            setTimeout(() => {
+                console.log('[EndingScene] タイトルに戻ります');
+                this.returnToTitle();
+            }, 3000);
+            
         } catch (error) {
-            console.error('[EndingScene] エンディング動画表示エラー:', error);
+            console.error('[EndingScene] YouTubeを開く際のエラー:', error);
         }
     }
 
@@ -436,11 +490,8 @@ export class EndingScene extends Phaser.Scene {
                 mainMenu.style.display = 'flex';
                 console.log('[EndingScene] メインメニュー画面に直接遷移しました');
                 
-                // メインメニュー画面でBGMを再生
-                if (window.playBGM) {
-                    window.playBGM('assets/audio/bgm/zelda_menu_select.mp3');
-                    console.log('[EndingScene] メインメニューBGMを再生しました');
-                }
+                // BGMは再生しない（動画視聴中は静寂を保つ）
+                console.log('[EndingScene] メインメニューBGMは再生しません（動画視聴中）');
                 
                 // ローディング画面を非表示
                 setTimeout(() => {
