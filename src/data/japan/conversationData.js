@@ -900,6 +900,588 @@ export const japanConversationData = {
                 'expression': 'c'
             }
         ]
+    },
+    
+    // テレアポ
+    'telephone_appointment': {
+        'background': 'test_1',
+        'bgm': 'curono',
+        'conversations': [
+            {
+                'speaker': 'ひろかず',
+                'character': 'hirokazu',
+                'text': 'なぁ、めっちゃ時給いいバイト見つけたわ',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'イワカワ',
+                'character': 'iwakawa',
+                'text': 'どんな？',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'ひろかず',
+                'character': 'hirokazu',
+                'text': '太陽光発電のテレアポ！一緒にやろうぜ',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'イワカワ',
+                'character': 'iwakawa',
+                'text': 'ほーん、まあやってみるか',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'ひろかず',
+                'character': 'hirokazu',
+                'text': 'じゃあ連絡してみるわ！',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'ナレーター',
+                'character': 'narrator',
+                'text': '──（バイトを始めて数日）──',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'イワカワ',
+                'character': 'iwakawa',
+                'text': '…なぁ、なんかこの会社、色々やばくね？',
+                'expression': 'b'
+            },
+            {
+                'speaker': 'ひろかず',
+                'character': 'hirokazu',
+                'text': 'そうか？',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'イワカワ',
+                'character': 'iwakawa',
+                'text': 'まず社長の名前。ググったら"詐欺師"って出てきたぞ',
+                'expression': 'b'
+            },
+            {
+                'speaker': 'ひろかず',
+                'character': 'hirokazu',
+                'text': 'ネットの噂じゃん、気にすんな',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'イワカワ',
+                'character': 'iwakawa',
+                'text': 'そうかなぁ…？',
+                'expression': 'b'
+            },
+            {
+                'speaker': 'ひろかず',
+                'character': 'hirokazu',
+                'text': 'まあ時給いいから！',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'イワカワ',
+                'character': 'iwakawa',
+                'text': 'あと、会社名も半年ごとに変わってるみたいだし',
+                'expression': 'b'
+            },
+            {
+                'speaker': 'ひろかず',
+                'character': 'hirokazu',
+                'text': 'イメチェン大事だろ',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'イワカワ',
+                'character': 'iwakawa',
+                'text': 'いや怪しいだろ',
+                'expression': 'b'
+            },
+            {
+                'speaker': 'ひろかず',
+                'character': 'hirokazu',
+                'text': 'でも時給いいから！',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'イワカワ',
+                'character': 'iwakawa',
+                'text': 'つか、折り返し電話が嫌だから"番号の下1桁わざと間違えて教える"ルールとか、もうアウトだろ',
+                'expression': 'b'
+            },
+            {
+                'speaker': 'ひろかず',
+                'character': 'hirokazu',
+                'text': 'うん、でも時給いいから！',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'イワカワ',
+                'character': 'iwakawa',
+                'text': '魔法の言葉かよそれ',
+                'expression': 'b'
+            },
+            {
+                'speaker': 'ナレーター',
+                'character': 'narrator',
+                'text': '──（数週間後）──',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'イワカワ',
+                'character': 'iwakawa',
+                'text': '…あれ？河室のアポ件数、俺の3分の1じゃん',
+                'expression': 'b'
+            },
+            {
+                'speaker': 'ひろかず',
+                'character': 'hirokazu',
+                'text': 'よーし、今日もバリバリ取ったで！',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'イワカワ',
+                'character': 'iwakawa',
+                'text': '…あれだけポジティブなのに向いてないんかい…',
+                'expression': 'b'
+            },
+            {
+                'speaker': 'ナレーター',
+                'character': 'narrator',
+                'text': '──（また数週間後）──',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'ひろかず',
+                'character': 'hirokazu',
+                'text': 'そうだ！俺ちょっとフィリピン行って語学留学してくるわ！',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'イワカワ',
+                'character': 'iwakawa',
+                'text': 'は？え？まじで？',
+                'expression': 'b'
+            },
+            {
+                'speaker': 'ひろかず',
+                'character': 'hirokazu',
+                'text': 'うん！そういうことだから、バイト辞めます！',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'イワカワ',
+                'character': 'iwakawa',
+                'text': '……',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'イワカワ',
+                'character': 'iwakawa',
+                'text': '…結局俺だけ残るんかい',
+                'expression': 'b'
+            }
+        ]
+    },
+    
+    // 路上のペンキ
+    'road_paint': {
+        'background': 'test_1',
+        'bgm': 'curono',
+        'conversations': [
+            {
+                'speaker': 'ひろかず',
+                'character': 'hirokazu',
+                'text': 'よし…今日から俺の画家活動、『路上のペンキ』としてのデビューだ！路上で活動するのが売りだからな、早速売っていくぞ〜',
+                'expression': 'a'
+            },
+            {
+                'speaker': '河室',
+                'character': 'kawamuro',
+                'text': 'この駅前なら人通りも多いし、みんなに見てもらえるな。さて、けろけろけろっぴのシートを敷いて、作品を並べてっと…',
+                'expression': 'a'
+            },
+            {
+                'speaker': '警察',
+                'character': 'police',
+                'text': 'すいませんお兄さん。ここでの物の陳列、許可は取ってますか？',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'ひろかず',
+                'character': 'hirokazu',
+                'text': 'は、え、誰、許可…？',
+                'expression': 'b'
+            },
+            {
+                'speaker': '警察',
+                'character': 'police',
+                'text': '警察署のものです。路上での物販行為は許可が必要なんですよ',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'ひろかず',
+                'character': 'hirokazu',
+                'text': 'いや、あのー…あ！販売じゃなくて展示です！',
+                'expression': 'b'
+            },
+            {
+                'speaker': '警察',
+                'character': 'police',
+                'text': '展示でも、路上で物を並べる行為は物販扱いなので許可が必要です',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'ひろかず',
+                'character': 'hirokazu',
+                'text': 'は、はぁ…物販扱い…？いや、でも、ほら見てくださいよ、この色のグラデーション…！',
+                'expression': 'a'
+            },
+            {
+                'speaker': '警察',
+                'character': 'police',
+                'text': 'グラデーションは関係ありません。規則ですので、撤収してください',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'ひろかず',
+                'character': 'hirokazu',
+                'text': 'いや、その、あの俺、今日がデビューで…名前も『路上のペンキ』って言って…',
+                'expression': 'b'
+            },
+            {
+                'speaker': '警察',
+                'character': 'police',
+                'text': '名前も関係ありません。今度から許可取ってくださいね',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'ひろかず',
+                'character': 'hirokazu',
+                'text': '見てもらうだけなんです！無料です！無料アートです！',
+                'expression': 'b'
+            },
+            {
+                'speaker': '警察',
+                'character': 'police',
+                'text': '無料でも同じですよ。路上に物を並べてるでしょ。撤収をお願いします',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'ひろかず',
+                'character': 'hirokazu',
+                'text': 'いや、でも、見てくださいよ！この色の重なりとか、光の反射とか…ほら！',
+                'expression': 'a'
+            },
+            {
+                'speaker': '警察',
+                'character': 'police',
+                'text': '色の説明はいいですから',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'ひろかず',
+                'character': 'hirokazu',
+                'text': 'じゃあ…ほら、指でなぞって色の感触だけでも…。あと絵の具の香りも…',
+                'expression': 'b'
+            },
+            {
+                'speaker': '警察',
+                'character': 'police',
+                'text': 'いや感触も香りも知りませんよ。早く撤収してください',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'ひろかず',
+                'character': 'hirokazu',
+                'text': '…はい…',
+                'expression': 'b'
+            },
+            {
+                'speaker': 'ひろかず',
+                'character': 'hirokazu',
+                'text': 'はぁ…路上のペンキ、開始数分で散る…',
+                'expression': 'b'
+            },
+            {
+                'speaker': 'ひろかず',
+                'character': 'hirokazu',
+                'text': 'でも、これが始まりだ……！俺の戦いはこれからだ！',
+                'expression': 'a'
+            },
+            {
+                'speaker': '警察',
+                'character': 'police',
+                'text': 'うん、わかったから早く撤収して',
+                'expression': 'a'
+            }
+        ]
+    },
+    
+    // 初日の出
+    'first_sunrise': {
+        'background': 'test_1',
+        'bgm': 'curono',
+        'conversations': [
+            {
+                'speaker': 'ひろかず',
+                'character': 'hirokazu',
+                'text': '初日の出を見にくるのも毎年恒例になってるけど、成功率ゼロって珍しいよな',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'こうたろう',
+                'character': 'koutarou',
+                'text': '一回もちゃんと見れてないの面白すぎる',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'ひろかず',
+                'character': 'hirokazu',
+                'text': '見にくるメンバーも年々減っちゃったし…。色々あったな…',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'ナレーター',
+                'character': 'narrator',
+                'text': 'ーー1年目',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'ひろかず',
+                'character': 'hirokazu',
+                'text': '…地元の丘なら楽勝だろうって言ったの誰でしたっけ',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'かなと',
+                'character': 'kanato',
+                'text': 'すいません、正直舐めてました',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'だいち',
+                'character': 'daichi',
+                'text': '完全に目の前の林に隠れてるじゃねえか',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'こうたろう',
+                'character': 'koutarou',
+                'text': 'もう周り明るいんだけど。ちゃんとした朝じゃん',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'なおき',
+                'character': 'naoki',
+                'text': 'てか寒すぎる…。一旦車戻ろうぜ',
+                'expression': 'a'
+            },
+            {
+                'speaker': '全員',
+                'character': 'all',
+                'text': 'そうだな…',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'ナレーター',
+                'character': 'narrator',
+                'text': '（車に戻ろうと全員後ろを向く）',
+                'expression': 'a'
+            },
+            {
+                'speaker': '太陽',
+                'character': 'sun',
+                'text': 'ピカーーーー！！！！',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'なおき',
+                'character': 'naoki',
+                'text': '……え、ちょっと待って！この影、もう出てね！？',
+                'expression': 'b'
+            },
+            {
+                'speaker': 'だいち',
+                'character': 'daichi',
+                'text': 'うわ、ほんとだ！',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'こうたろう',
+                'character': 'koutarou',
+                'text': 'このタイミングで出るんかい！見逃したわ！',
+                'expression': 'a'
+            },
+            {
+                'speaker': '全員',
+                'character': 'all',
+                'text': '……',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'ひろかず',
+                'character': 'hirokazu',
+                'text': '…帰るか…',
+                'expression': 'b'
+            },
+            {
+                'speaker': 'ナレーター',
+                'character': 'narrator',
+                'text': 'ーー2年目',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'ひろかず',
+                'character': 'hirokazu',
+                'text': '海なら絶対大丈夫、って自信満々だったんだけどな',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'かなと',
+                'character': 'kanato',
+                'text': 'あの水平線から見える予定だったんだけど…',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'ナレーター',
+                'character': 'narrator',
+                'text': '（水平線、日の出の位置にピンポイントで雲）',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'こうたろう',
+                'character': 'koutarou',
+                'text': 'こんなに晴れてるのに、あの位置だけピンポイントで雲かかるってありえる？',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'だいち',
+                'character': 'daichi',
+                'text': 'ここまできたら面白い',
+                'expression': 'a'
+            },
+            {
+                'speaker': '太陽',
+                'character': 'sun',
+                'text': '（雲の隙間からチラッ）',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'ひろかず',
+                'character': 'hirokazu',
+                'text': '…あ！出た！太陽出たぞ！初日の出だ！',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'かなと',
+                'character': 'kanato',
+                'text': 'ありがたや……',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'だいち',
+                'character': 'daichi',
+                'text': 'よし、初日の出見れたな！これが初日の出だ！終了！帰宅！',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'こうたろう',
+                'character': 'koutarou',
+                'text': 'これでいいのか…？',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'ナレーター',
+                'character': 'narrator',
+                'text': 'ーー3年目',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'ひろかず',
+                'character': 'hirokazu',
+                'text': '今年こそ完璧だ。高い山、雲なし、視界良好',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'こうたろう',
+                'character': 'koutarou',
+                'text': '……で、ここは？',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'かなと',
+                'character': 'kanato',
+                'text': '車の中',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'ひろかず',
+                'character': 'hirokazu',
+                'text': '時間潰しのカラオケが楽しすぎました。完全に遅刻です',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'かなと',
+                'character': 'kanato',
+                'text': 'ここまでくると才能だろ',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'こうたろう',
+                'character': 'koutarou',
+                'text': 'もうわざと見逃しにいってるとこある',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'ナレーター',
+                'character': 'narrator',
+                'text': 'ーー数年後',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'ひろかず',
+                'character': 'hirokazu',
+                'text': '…やっとちゃんと見れたな',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'こうたろう',
+                'character': 'koutarou',
+                'text': '正直、感動よりもノルマ達成感の方が強いな。なんだかんだ来れるメンバーも減ってきたし…',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'ひろかず',
+                'character': 'hirokazu',
+                'text': '確かに。わざわざ眠い思いして見るほどじゃなかった',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'こうたろう',
+                'character': 'koutarou',
+                'text': '結局、太陽なんて毎日昇ってるんだよな',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'ひろかず',
+                'character': 'hirokazu',
+                'text': '…腹減ったし、ジョイフルで朝飯食うか',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'ナレーター',
+                'character': 'narrator',
+                'text': '（帰り道の車内、静寂）',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'ひろかず',
+                'character': 'hirokazu',
+                'text': '…でもまあ、このくだらなさも、あと何回やれるんだろうな',
+                'expression': 'a'
+            }
+        ]
     }
 };
 

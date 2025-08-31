@@ -973,37 +973,37 @@ export const miemachiConversationData = {
                 'speaker': 'だいち',
                 'character': 'daichi',
                 'text': 'ここのポテトうまいな、、',
-                'expression': 'a'
+                'expression': 'g'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'ここは三重町で有名なポテト屋ですよ',
-                'expression': 'a'
+                'expression': 'n'
             },
             {
                 'speaker': 'だいち',
                 'character': 'daichi',
                 'text': '１００円で、この量はお得でうまいな',
-                'expression': 'a'
+                'expression': 'h'
             },
             {
                 'speaker': 'だいち',
                 'character': 'daichi',
                 'text': 'まぁ、いいけど、一週間ずっと、来てるやん、、、',
-                'expression': 'a'
+                'expression': 'h'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'うまいからいいんだよ',
-                'expression': 'a'
+                'expression': 'm'
             },
             {
                 'speaker': 'だいち',
                 'character': 'daichi',
                 'text': 'あっ、、、はい',
-                'expression': 'a'
+                'expression': 'h'
             },
         ]
     },
@@ -1458,7 +1458,7 @@ export const miemachiConversationData = {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'やっぱスナックのあとに、コンビニで3次会するのが最高なんだよな〜',
-                'background': 'seven',
+                'background': 'seven2',
                 'expression': 'a'
             },
             {

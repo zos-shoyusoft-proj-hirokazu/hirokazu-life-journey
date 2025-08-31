@@ -131,8 +131,8 @@ export const EventConfig = {
             background: 'miemachimae',           // 必要：conversationDataのbackgroundと一致
             bgm: 'nightbarth',                   // 必要：conversationDataのbgmと一致
             required: {
-                backgrounds: ['miemachimae', 'jewelry', 'doll', 'secret', 'hanaichiba', 'joelyn', 'sunakku_sa', 'cool', 'seven'],  // 必要：conversationDataで使用される背景画像
-                characters: ['hirokazu_d', 'hirokazu_e', 'hirokazu_a', 'kanato_c', 'koutarou_a', 'naoki_c', 'daichi_e', 'narrator_a', 'yabajinn_a'],  // 必要：character+expressionの組み合わせ（重複除く）
+                backgrounds: ['miemachimae', 'jewelry', 'doll', 'secret', 'hanaichiba', 'joelyn', 'sunakku_sa', 'cool', 'seven', 'seven2'],  // 必要：conversationDataで使用される背景画像
+                characters: ['hirokazu_d', 'hirokazu_e', 'kanato_c', 'koutarou_a', 'naoki_c', 'daichi_e', 'narrator_a'],  // 必要：character+expressionの組み合わせ（重複除く）
                 bgm: ['nightbarth'],             // 必要：BGMファイルの読み込みに必要
                 se: ['taiko_2ren', 'don']        // 必要：conversationDataで使用されるSE
             },
@@ -168,7 +168,7 @@ export const EventConfig = {
             bgm: 'Nagisa_Moderato',              // 必要：conversationDataのbgmと一致
             required: {
                 backgrounds: ['koutaroupoteto'], // 必要：背景画像の読み込みに必要
-                characters: ['daichi_a', 'hirokazu_a'],  // 必要：character+expressionの組み合わせ（重複除く）
+                characters: ['daichi_g', 'daichi_h', 'hirokazu_n', 'hirokazu_m'],  // 必要：character+expressionの組み合わせ（重複除く）
                 bgm: ['Nagisa_Moderato']         // 必要：BGMファイルの読み込みに必要
                 // seセクションは不要：conversationDataにSEの指定がないため
             },
