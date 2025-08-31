@@ -1714,6 +1714,132 @@ export const miemachiConversationData = {
             }
         ]
     },
+    
+    // 大塚先輩
+    'otsuka_senpai': {
+        'background': 'taiikukann',
+        'bgm': 'curono',
+        'conversations': [
+            {
+                'speaker': '大塚先輩',
+                'character': 'otsuka',
+                'text': 'あそこの階段で隠れてると女の子のパ◯ツが見れるってことをお前だけに教えてやる',
+                'expression': 'a'
+            },
+            {
+                'speaker': '大塚先輩',
+                'character': 'otsuka',
+                'text': '感謝してくれて良いよ',
+                'expression': 'a'
+            },
+            {
+                'speaker': '大塚先輩',
+                'character': 'otsuka',
+                'text': 'さて、俺はこれにて体育館の倉庫でサボるわ..',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'ひろかず',
+                'character': 'hirokazu',
+                'text': '一生ついていきます！',
+                'expression': 'a'
+            }
+        ]
+    },
+    
+    // たつはる
+    'tatsuharu': {
+        'background': 'taiikukann',
+        'bgm': 'curono',
+        'conversations': [
+            {
+                'speaker': 'たつはる',
+                'character': 'tatsuharu',
+                'text': '俺この前、スラムダンク読んだわ',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'たつはる',
+                'character': 'tatsuharu',
+                'text': '俺は',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'たつはる',
+                'character': 'tatsuharu',
+                'text': '俺は強くなる...!',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'たつはる',
+                'character': 'tatsuharu',
+                'text': 'ところでバス釣り行かね？',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'ひろかず',
+                'character': 'hirokazu',
+                'text': 'バス釣りは毎週行ってるだろ',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'ひろかず',
+                'character': 'hirokazu',
+                'text': 'そんなに焦るなよ笑',
+                'expression': 'a'
+            }
+        ]
+    },
+    
+    // だいち副リーダー
+    'daichi_vice_leader': {
+        'background': 'taiikukann',
+        'bgm': 'curono',
+        'conversations': [
+            {
+                'speaker': 'だいち',
+                'character': 'daichi',
+                'text': '副リーダーとかいうの嫌すぎるな',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'だいち',
+                'character': 'daichi',
+                'text': 'どっかでサボろうぜ',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'だいち',
+                'character': 'daichi',
+                'text': 'またおかがみに怒られるだけかもだけど...',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'ひろかず',
+                'character': 'hirokazu',
+                'text': 'だいちはいっつも冷めてるよな',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'ひろかず',
+                'character': 'hirokazu',
+                'text': 'まあ、いいやチョロQ持ってきてるからこれで遊ぶぞ',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'ひろかず',
+                'character': 'hirokazu',
+                'text': 'それか、このバス釣りの雑誌みんなで見ようぜ',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'だいち',
+                'character': 'daichi',
+                'text': 'いつもの流れだけど、これが一番楽しいよな笑',
+                'expression': 'a'
+            }
+        ]
+    }
 };
 
 // 三重町ステージ会話データを管理するクラス

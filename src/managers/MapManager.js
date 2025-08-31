@@ -363,6 +363,7 @@ export class MapManager {
                 const npcObjects = objectLayer.objects.filter(obj => obj.type === 'npc');
                 if (npcObjects.length > 0) {
                     console.log(`[MapManager] NPCオブジェクト ${npcObjects.length}個 を発見`);
+                    console.log('[MapManager] NPCオブジェクトの詳細:', npcObjects.map(obj => ({ name: obj.name, type: obj.type, x: obj.x, y: obj.y })));
                     npcObjects.forEach((obj, index) => {
                         this.createNPCObject(obj, index);
                     });

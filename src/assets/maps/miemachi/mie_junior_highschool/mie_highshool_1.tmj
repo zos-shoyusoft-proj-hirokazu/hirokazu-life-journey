@@ -926,6 +926,18 @@
                  "width":0,
                  "x":824,
                  "y":1017.33333333333
+                }, 
+                {
+                 "height":0,
+                 "id":46,
+                 "name":"tatuharu",
+                 "point":true,
+                 "rotation":0,
+                 "type":"npc",
+                 "visible":true,
+                 "width":0,
+                 "x":312,
+                 "y":654.666666666667
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -968,7 +980,7 @@
          "y":0
         }],
  "nextlayerid":15,
- "nextobjectid":46,
+ "nextobjectid":47,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",

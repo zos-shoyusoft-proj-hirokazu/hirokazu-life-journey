@@ -1,30 +1,84 @@
 // Stage1専用の会話データ
 export const Stage1DialogData = {
-    'uchida_conversation': {
+    'uchida': {
         name: '内田',
+        displayName: '内田先輩',
+        character: 'uchida',
         messages: [
-            '俺さ、ヤンキーじゃん？',
-            'だからさ、部活とか適当なんよ かっこよくね？',
-            'そ、そうですね....'
+            {
+                speaker: '内田先輩',
+                text: '俺さ、ヤンキーじゃん？',
+                expression: 'a'
+            },
+            {
+                speaker: '内田先輩',
+                text: 'だからさ、部活とか適当なんよ かっこよくね？',
+                expression: 'a'
+            },
+            {
+                speaker: 'ひろかず',
+                text: 'そ、そうですね....',
+                expression: 'a'
+            }
         ]
     },
-    'otsuka_conversation': {
+    'ootuka': {
         name: '大塚',
+        displayName: '大塚先輩',
+        character: 'ootuka',
         messages: [
-            'あそこの階段で隠れてると女の子のパンツが見れるってことをお前だけに教えてやる',
-            '感謝してくれて良いよ',
-            'さて、俺はこれにて体育館の倉庫でサボるわ..',
-            '一生ついていきます！'
+            {
+                speaker: '大塚先輩',
+                text: 'あそこの階段で隠れてると女の子のパンツが見れるってことをお前だけに教えてやる',
+                expression: 'a'
+            },
+            {
+                speaker: '大塚先輩',
+                text: '感謝してくれて良いよ',
+                expression: 'a'
+            },
+            {
+                speaker: '大塚先輩',
+                text: 'さて、俺はこれにて体育館の倉庫でサボるわ..',
+                expression: 'a'
+            },
+            {
+                speaker: 'ひろかず',
+                text: '一生ついていきます！',
+                expression: 'a'
+            }
         ]
     },
-    'tatsuharu_conversation': {
+    'tatuharu': {
         name: 'たつはる',
+        displayName: 'たつはる',
+        character: 'tatuharu',
         messages: [
-            'スラムダンクの漫画を読み',
-            '俺は強くなる...!',
-            'ところでバス釣り行かね？',
-            'バス釣りは毎週行ってるだろ',
-            'そんなに焦るなよ笑'
+            {
+                speaker: 'たつはる',
+                text: '俺この前、スラムダンク読んだわ',
+                expression: 'a'
+            },
+            {
+                speaker: 'たつはる',
+                text: '俺は強くなる...!',
+                expression: 'a'
+            },
+            {
+                speaker: 'たつはる',
+                text: 'ところでバス釣り行かね？',
+                expression: 'a'
+            },
+            {
+                speaker: 'ひろかず',
+                text: 'バス釣りは毎週行ってるだろ',
+                expression: 'a'
+            },
+            {
+                speaker: 'ひろかず',
+                text: 'そんなに焦るなよ笑',
+                expression: 'a'
+            }
         ]
     },
 };

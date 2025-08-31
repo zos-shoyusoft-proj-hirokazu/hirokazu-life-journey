@@ -109,6 +109,12 @@ export class StageScene extends Phaser.Scene {
 
     create() {
         try {
+            console.log('[StageScene] create() 開始');
+            console.log('[StageScene] this.stageKey:', this.stageKey);
+            console.log('[StageScene] this.stageConfig:', this.stageConfig);
+            console.log('[StageScene] this.stageConfig.stageKey:', this.stageConfig.stageKey);
+            console.log('[StageScene] this.stageKey === this.stageConfig.stageKey:', this.stageKey === this.stageConfig.stageKey);
+            
             // 基本的なマップ表示
             this.mapManager = new MapManager(this);
             
@@ -185,7 +191,11 @@ export class StageScene extends Phaser.Scene {
             
 
             
-            // DialogSystemを初期化（竹田高校用）
+            // DialogSystemを初期化（竹田高校・三重中学校用）
+            console.log('[StageScene] 現在のstageKey:', this.stageKey);
+            console.log('[StageScene] stageKey === taketa_highschool:', this.stageKey === 'taketa_highschool');
+            console.log('[StageScene] stageKey === mie_high_school:', this.stageKey === 'mie_high_school');
+            
             if (this.stageKey === 'taketa_highschool') {
                 console.log('[StageScene] 竹田高校用DialogSystem初期化開始');
                 import('../managers/DialogSystem.js').then(({ DialogSystem }) => {
@@ -205,8 +215,32 @@ export class StageScene extends Phaser.Scene {
                 }).catch(error => {
                     console.error('[StageScene] DialogSystemクラス読み込みエラー:', error);
                 });
+            } else if (this.stageKey === 'mie_high_school') {
+                console.log('[StageScene] 三重中学校用DialogSystem初期化開始');
+                console.log('[StageScene] mie_high_school 条件に一致しました！');
+                import('../managers/DialogSystem.js').then(({ DialogSystem }) => {
+                    console.log('[StageScene] DialogSystemクラス読み込み完了');
+                    import('../data/miemachi/dialogs.js').then(({ Stage1DialogData }) => {
+                        console.log('[StageScene] Stage1DialogData読み込み完了:', Stage1DialogData);
+                        console.log('[StageScene] Stage1DialogDataの内容:', Stage1DialogData);
+                        this.dialogSystem = new DialogSystem(this, Stage1DialogData);
+                        // 使用済み会話を管理するSetを初期化
+                        this.usedConversations = new Set();
+                        console.log('[StageScene] DialogSystem初期化完了（三重中学校用）');
+                        console.log('[StageScene] 使用済み会話管理開始');
+                        console.log('[StageScene] this.dialogSystem:', this.dialogSystem);
+                        console.log('[StageScene] this.usedConversations:', this.usedConversations);
+                    }).catch(error => {
+                        console.error('[StageScene] Stage1DialogData読み込みエラー:', error);
+                        console.error('[StageScene] エラーの詳細:', error.message);
+                    });
+                }).catch(error => {
+                    console.error('[StageScene] DialogSystemクラス読み込みエラー:', error);
+                    console.error('[StageScene] エラーの詳細:', error.message);
+                });
             } else {
-                console.log('[StageScene] 竹田高校以外のため、DialogSystem初期化スキップ:', this.stageKey);
+                console.log('[StageScene] 竹田高校・三重中学校以外のため、DialogSystem初期化スキップ:', this.stageKey);
+                console.log('[StageScene] スキップされたstageKeyの詳細:', this.stageKey);
             }
             
             // AudioManagerを初期化

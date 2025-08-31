@@ -62,10 +62,25 @@ export class DialogSystem {
         );
         // bg.setStrokeStyle(2, 0xffffff); // 枠線を削除
 
+        // 名前ボックスを作成
+        this.nameBox = this.scene.add.text(
+            30,                            // コンテナ内でのX座標
+            dialogY + 15,                  // 名前ボックスのY座標
+            '',                            // 空の文字列
+            {
+                fontSize: '16px',
+                fill: '#ffff00',           // 黄色
+                backgroundColor: '#000000',
+                padding: { x: 10, y: 5 }
+            }
+        );
+        this.nameBox.setOrigin(0, 0);     // 左上を基準点に
+        this.nameBox.setDepth(10001);     // より高い深度を設定
+        
         // テキストをコンテナ内の相対座標で作成
         this.dialogText = this.scene.add.text(
             30,                            // コンテナ内でのX座標
-            dialogY + dialogHeight / 2,    // コンテナ内でのY座標
+            dialogY + 45,                  // 名前ボックスの下に配置
             '', 
             {
                 fontSize: '18px',
@@ -78,7 +93,8 @@ export class DialogSystem {
                 wordWrap: { width: gameWidth - 60 }
             }
         );
-        this.dialogText.setOrigin(0, 0.5); // 左中央を基準点に
+        this.dialogText.setOrigin(0, 0); // 左上を基準点に
+        this.dialogText.setDepth(10001);  // より高い深度を設定
 
         // スマホ対応：続行インジケーター
         this.continueIndicator = this.scene.add.text(
@@ -103,7 +119,7 @@ export class DialogSystem {
         });
 
         // 5. オブジェクト作成後、即座にコンテナに追加
-        this.dialogContainer.add([bg, this.dialogText, this.continueIndicator]);
+        this.dialogContainer.add([bg, this.nameBox, this.dialogText, this.continueIndicator]);
         
         // イベントリスナー重複問題の解決
         bg.removeAllListeners();
@@ -214,12 +230,26 @@ export class DialogSystem {
             this.endDialog();
             return;
         }
-        const message = this.currentDialog.messages[this.currentTextIndex];
+        
+        const messageData = this.currentDialog.messages[this.currentTextIndex];
+        const message = typeof messageData === 'string' ? messageData : messageData.text;
+        const speaker = typeof messageData === 'string' ? this.currentDialog.name : messageData.speaker;
+        
         console.log('[DialogSystem] showMessage', {
             index: this.currentTextIndex,
             name: this.currentDialog.name,
+            speaker: speaker,
             text: message
         });
+        
+        // 名前ボックスを更新
+        if (this.nameBox) {
+            this.nameBox.setText(speaker);
+        } else {
+            console.warn('[DialogSystem] 名前ボックスが存在しません');
+        }
+        
+        // メッセージテキストを更新
         this.dialogText.setText(message);
     }
 
@@ -253,6 +283,12 @@ export class DialogSystem {
         if (this.dialogContainer) {
             this.dialogContainer.destroy();
             this.dialogContainer = null;
+        }
+        
+        // 名前ボックスを破棄
+        if (this.nameBox) {
+            this.nameBox.destroy();
+            this.nameBox = null;
         }
         
         // ダイアログテキストを破棄

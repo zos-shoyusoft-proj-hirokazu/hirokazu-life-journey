@@ -30,7 +30,7 @@ export const StageConfig = {
                     map: 'assets/audio/bgm/enter13.mp3'
                 },
                 npcs: [
-                    // 1階のNPC設定（後で追加）
+                    { name: 'tatuharu' }
                 ],
                 tilesets: [
                     'pika_nos_tiles03_A2',
@@ -65,7 +65,8 @@ export const StageConfig = {
                     map: 'assets/audio/bgm/テクノトリス.mp3'
                 },
                 npcs: [
-                    // 2階のNPC設定（後で追加）
+                    { name: 'uchida' },
+                    { name: 'ootuka' }
                 ],
                 tilesets: [
                     'pika_nos_tiles03_A2',
