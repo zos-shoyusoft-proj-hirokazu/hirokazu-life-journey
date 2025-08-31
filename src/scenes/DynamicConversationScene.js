@@ -165,7 +165,7 @@ export class DynamicConversationScene extends Phaser.Scene {
             const sceneManager = this.scene.manager;
             if (sceneManager) {
                 // 現在アクティブなステージシーンの_suppressMapBgmフラグを設定
-                const stageScenes = ['taketa_highschool', 'miemachi_highschool', 'japan_highschool'];
+                const stageScenes = ['taketa_highschool', 'mie_high_school'];
                 
                 for (const sceneKey of stageScenes) {
                     try {
@@ -335,7 +335,30 @@ export class DynamicConversationScene extends Phaser.Scene {
         if (this.eventConfig && this.eventConfig.areaType) {
             switch (this.eventConfig.areaType) {
                 case 'miemachi':
-                    originalSceneKey = 'MiemachiStage';
+                    // エリア名で判定して適切なシーンに戻る
+                    if (this.eventConfig.areaName === 'mie_high_school') {
+                        originalSceneKey = 'mie_high_school'; // 三重中学校内
+                        
+                        // 三重中学校内の場合のみ、現在の詳細な状態を取得
+                        try {
+                            const stage = this.scene.manager.getScene('mie_high_school');
+                            if (stage) {
+                                currentState = {
+                                    floor: stage.currentFloor || 1,
+                                    playerPosition: stage.playerController ? stage.playerController.getPosition() : { x: 100, y: 100 },
+                                    mapKey: stage.mapManager ? stage.mapManager.currentMapKey : 'mie_high_school_1'
+                                };
+                                console.log('[DynamicConversationScene] 三重中学校内の状態を取得:', currentState);
+                            }
+                        } catch (e) {
+                            console.warn('[DynamicConversationScene] 状態取得エラー:', e);
+                        }
+                    } else {
+                        // 三重町マップの場合は MiemachiStage に戻る（状態保存不要）
+                        originalSceneKey = 'MiemachiStage';
+                        currentState = null; // 状態保存をクリア
+                        console.log('[DynamicConversationScene] 三重町マップに戻ります（状態保存なし）:', this.eventConfig.areaName);
+                    }
                     break;
                 case 'taketa':
                     // エリア名で判定して適切なシーンに戻る

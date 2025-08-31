@@ -30,7 +30,7 @@ export const StageConfig = {
                     map: 'assets/audio/bgm/enter13.mp3'
                 },
                 npcs: [
-                    { name: 'tatuharu' }
+                    { name: 'tatuharu', eventId: 'tatuharu' }
                 ],
                 tilesets: [
                     'pika_nos_tiles03_A2',
@@ -66,7 +66,9 @@ export const StageConfig = {
                 },
                 npcs: [
                     { name: 'uchida' },
-                    { name: 'ootuka' }
+                    { name: 'ootuka', eventId: 'otsuka_senpai' },
+                    { name: 'okagami' },
+                    { name: 'だいち_2', eventId: 'daichi_conversation' }
                 ],
                 tilesets: [
                     'pika_nos_tiles03_A2',

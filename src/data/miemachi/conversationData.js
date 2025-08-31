@@ -1615,102 +1615,52 @@ export const miemachiConversationData = {
         ]
     },
     
-    // おかがみとの会話
-    'okagami_conversation': {
-        'background': 'test_1',
-        'bgm': 'Fantasy',
-        'conversations': [
-            {
-                'speaker': 'おかがみ',
-                'character': 'okagami',
-                'text': 'タバコが切れた...',
-                'expression': 'c'
-            },
-            {
-                'speaker': 'おかがみ',
-                'character': 'okagami',
-                'text': '集合！！',
-                'expression': 'a'
-            },
-            {
-                'speaker': 'おかがみ',
-                'character': 'okagami',
-                'text': '釘宮！お前はまじでダメ！やる気が足りない！サボるな！',
-                'expression': 'a'
-            },
-            {
-                'speaker': 'おかがみ',
-                'character': 'okagami',
-                'text': '河室！なんだその髪の毛は桜木花道じゃねえか！',
-                'expression': 'a'
-            },
-            {
-                'speaker': 'おかがみ',
-                'character': 'okagami',
-                'text': 'ボコっ！ (殴る音)',
-                'expression': 'a'
-            },
-            {
-                'speaker': '自分',
-                'character': 'player',
-                'text': '俺らの時代だからまだ許されてる感あるよな....',
-                'expression': 'c'
-            },
-            {
-                'speaker': '自分',
-                'character': 'player',
-                'text': 'まじで痛えな...',
-                'expression': 'c'
-            }
-        ]
-    },
-    
     // だいちとの会話
     'daichi_conversation': {
-        'background': 'test_1',
+        'background': 'taiikukann',
         'bgm': 'Fantasy',
         'conversations': [
             {
                 'speaker': 'だいち',
                 'character': 'daichi',
                 'text': '副リーダーとかいうの嫌すぎるな',
-                'expression': 'c'
+                'expression': 'i'
             },
             {
                 'speaker': 'だいち',
                 'character': 'daichi',
                 'text': 'どっかでサボろうぜ',
-                'expression': 'a'
+                'expression': 'i'
             },
             {
                 'speaker': 'だいち',
                 'character': 'daichi',
                 'text': 'またおかがみに怒られるだけかもだけど...',
-                'expression': 'c'
+                'expression': 'i'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'だいちはいっつも冷めてるよな',
-                'expression': 'b'
+                'expression': 'o'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'まあ、いいやチョロQ持ってきてるからこれで遊ぶぞ',
-                'expression': 'a'
+                'expression': 'o'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'それか、このバス釣りの雑誌みんなで見ようぜ',
-                'expression': 'a'
+                'expression': 'o'
             },
             {
                 'speaker': 'だいち',
                 'character': 'daichi',
                 'text': 'いつもの流れだけど、これが一番楽しいよな笑',
-                'expression': 'a'
+                'expression': 'i'
             }
         ]
     },
@@ -1722,19 +1672,19 @@ export const miemachiConversationData = {
         'conversations': [
             {
                 'speaker': '大塚先輩',
-                'character': 'otsuka',
+                'character': 'ootuka',
                 'text': 'あそこの階段で隠れてると女の子のパ◯ツが見れるってことをお前だけに教えてやる',
                 'expression': 'a'
             },
             {
                 'speaker': '大塚先輩',
-                'character': 'otsuka',
+                'character': 'ootuka',
                 'text': '感謝してくれて良いよ',
                 'expression': 'a'
             },
             {
                 'speaker': '大塚先輩',
-                'character': 'otsuka',
+                'character': 'ootuka',
                 'text': 'さて、俺はこれにて体育館の倉庫でサボるわ..',
                 'expression': 'a'
             },
@@ -1742,13 +1692,13 @@ export const miemachiConversationData = {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': '一生ついていきます！',
-                'expression': 'a'
+                'expression': 'o'
             }
         ]
     },
     
     // たつはる
-    'tatsuharu': {
+    'tatuharu': {
         'background': 'taiikukann',
         'bgm': 'curono',
         'conversations': [
@@ -1780,66 +1730,16 @@ export const miemachiConversationData = {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'バス釣りは毎週行ってるだろ',
-                'expression': 'a'
+                'expression': 'o'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'そんなに焦るなよ笑',
-                'expression': 'a'
+                'expression': 'o'
             }
         ]
     },
-    
-    // だいち副リーダー
-    'daichi_vice_leader': {
-        'background': 'taiikukann',
-        'bgm': 'curono',
-        'conversations': [
-            {
-                'speaker': 'だいち',
-                'character': 'daichi',
-                'text': '副リーダーとかいうの嫌すぎるな',
-                'expression': 'a'
-            },
-            {
-                'speaker': 'だいち',
-                'character': 'daichi',
-                'text': 'どっかでサボろうぜ',
-                'expression': 'a'
-            },
-            {
-                'speaker': 'だいち',
-                'character': 'daichi',
-                'text': 'またおかがみに怒られるだけかもだけど...',
-                'expression': 'a'
-            },
-            {
-                'speaker': 'ひろかず',
-                'character': 'hirokazu',
-                'text': 'だいちはいっつも冷めてるよな',
-                'expression': 'a'
-            },
-            {
-                'speaker': 'ひろかず',
-                'character': 'hirokazu',
-                'text': 'まあ、いいやチョロQ持ってきてるからこれで遊ぶぞ',
-                'expression': 'a'
-            },
-            {
-                'speaker': 'ひろかず',
-                'character': 'hirokazu',
-                'text': 'それか、このバス釣りの雑誌みんなで見ようぜ',
-                'expression': 'a'
-            },
-            {
-                'speaker': 'だいち',
-                'character': 'daichi',
-                'text': 'いつもの流れだけど、これが一番楽しいよな笑',
-                'expression': 'a'
-            }
-        ]
-    }
 };
 
 // 三重町ステージ会話データを管理するクラス

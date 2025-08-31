@@ -408,7 +408,7 @@ export class ConversationScene extends Phaser.Scene {
         
         // 現在再生中のBGMキーを覚える（会話終了後に復元するため）
         try {
-            const mainScene = this.scene.get('MiemachiStage') || this.scene.get('TaketastageStage') || this.scene.get('JapanStage');
+            const mainScene = this.scene.get('mie_high_school') || this.scene.get('TaketastageStage') || this.scene.get('JapanStage');
             if (mainScene && mainScene.audioManager && mainScene.audioManager.bgm) {
                 this._originalBgmKey = mainScene.audioManager.bgm.key;
                 console.log(`[ConversationScene] 元のBGMキーを記憶: ${this._originalBgmKey}`);
@@ -430,7 +430,7 @@ export class ConversationScene extends Phaser.Scene {
 
         // マップBGMの自動再開を抑制（MapSelectionStage側のリトライを止める）
         try {
-            const mapScene = this.scene.get('MiemachiStage') || this.scene.get('TaketastageStage') || this.scene.get('JapanStage');
+            const mapScene = this.scene.get('mie_high_school') || this.scene.get('TaketastageStage') || this.scene.get('JapanStage');
             if (mapScene) {
                 mapScene._suppressMapBgm = true;
                 if (mapScene._bgmRetry && mapScene._bgmRetry.remove) {
@@ -1116,7 +1116,7 @@ export class ConversationScene extends Phaser.Scene {
                 }
             } else {
                 // フォールバック: 従来の方法
-                const mainScene = this.scene.get('Stage1Scene') || this.scene.get('Stage2Scene') || this.scene.get('Stage3Scene') || this.scene.get('MiemachiStage') || this.scene.get('TaketastageStage') || this.scene.get('JapanStage') || this.scene.get('taketa_highschool');
+                const mainScene = this.scene.get('Stage1Scene') || this.scene.get('Stage2Scene') || this.scene.get('Stage3Scene') || this.scene.get('MiemachiStage') || this.scene.get('TaketastageStage') || this.scene.get('JapanStage') || this.scene.get('taketa_highschool') || this.scene.get('mie_high_school');
                 if (mainScene && mainScene.audioManager) {
                     // マップBGMを再開
                     try { 
@@ -1204,6 +1204,16 @@ export class ConversationScene extends Phaser.Scene {
             } catch (e) {
                 console.warn('[ConversationScene] StageSceneのフラグリセットエラー:', e);
             }
+        } else if (this.originalSceneKey === 'mie_high_school') {
+            try {
+                const stageScene = this.scene.manager.getScene('mie_high_school');
+                if (stageScene && stageScene.setConversationActive) {
+                    stageScene.setConversationActive(false);
+                    console.log('[ConversationScene] StageSceneの会話中フラグをリセットしました（三重町）');
+                }
+            } catch (e) {
+                console.warn('[ConversationScene] StageSceneのフラグリセットエラー（三重町）:', e);
+            }
         }
 
         // 元のBGMを復元
@@ -1213,7 +1223,7 @@ export class ConversationScene extends Phaser.Scene {
         if (this.originalSceneKey) {
             try {
                 // 元のシーンの状態を復元
-                if (this.currentState && this.originalSceneKey === 'taketa_highschool') {
+                if (this.currentState && (this.originalSceneKey === 'taketa_highschool' || this.originalSceneKey === 'mie_high_school')) {
                     console.log('[ConversationScene] 保存された状態で復元:', this.currentState);
                     this.scene.stop();
                     this.scene.start(this.originalSceneKey, {

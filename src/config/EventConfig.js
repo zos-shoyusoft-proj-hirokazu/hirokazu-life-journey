@@ -194,40 +194,22 @@ export const EventConfig = {
             areaName: 'seven'                   // 必要：エリア名の指定
         },
         
-        // おかがみとの会話
-        'okagami_conversation': {
-            id: 'okagami_conversation',          // 必要：イベントを識別するためのID
-            title: 'おかがみとの会話',              // 必要：イベントのタイトル表示用
-            type: 'conversation',                // 必要：イベントの種類を指定
-            areaType: 'miemachi',                // 必要：エリアタイプを指定
-            background: 'test_1',                // 必要：conversationDataのbackgroundと一致
-            bgm: 'Fantasy',                      // 必要：conversationDataのbgmと一致
-            required: {
-                backgrounds: ['test_1'],         // 必要：背景画像の読み込みに必要
-                characters: ['okagami_c', 'okagami_a', 'player_c'],  // 必要：character+expressionの組み合わせ（重複除く）
-                bgm: ['Fantasy']                 // 必要：BGMファイルの読み込みに必要
-                // seセクションは不要：conversationDataにSEの指定がないため
-            },
-            conversationDataKey: 'okagami_conversation',  // 必要：conversationDataのキーと一致
-            areaName: 'test_1'                  // 必要：エリア名の指定
-        },
-        
         // だいちとの会話
         'daichi_conversation': {
             id: 'daichi_conversation',           // 必要：イベントを識別するためのID
             title: 'だいちとの会話',               // 必要：イベントのタイトル表示用
             type: 'conversation',                // 必要：イベントの種類を指定
             areaType: 'miemachi',                // 必要：エリアタイプを指定
-            background: 'test_1',                // 必要：conversationDataのbackgroundと一致
+            background: 'taiikukann',                // 必要：conversationDataのbackgroundと一致
             bgm: 'Fantasy',                      // 必要：conversationDataのbgmと一致
             required: {
-                backgrounds: ['test_1'],         // 必要：背景画像の読み込みに必要
-                characters: ['daichi_c', 'daichi_a', 'hirokazu_b', 'hirokazu_a'],  // 必要：character+expressionの組み合わせ（重複除く）
+                backgrounds: ['taiikukann'],         // 必要：背景画像の読み込みに必要
+                characters: ['daichi_i', 'hirokazu_o'],  // 必要：character+expressionの組み合わせ（重複除く）
                 bgm: ['Fantasy']                 // 必要：BGMファイルの読み込みに必要
                 // seセクションは不要：conversationDataにSEの指定がないため
             },
             conversationDataKey: 'daichi_conversation',  // 必要：conversationDataのキーと一致
-            areaName: 'test_1'                  // 必要：エリア名の指定
+            areaName: 'mie_high_school'                  // 必要：エリア名の指定
         },
         
         // 大塚先輩
@@ -237,52 +219,34 @@ export const EventConfig = {
             type: 'conversation',                // 必要：イベントの種類を指定
             areaType: 'miemachi',                // 必要：エリアタイプを指定
             background: 'taiikukann',            // 必要：conversationDataのbackgroundと一致
-            bgm: 'curono',                       // 必要：conversationDataのbgmと一致
+            bgm: 'megarovania',                       // 必要：conversationDataのbgmと一致
             required: {
                 backgrounds: ['taiikukann'],      // 必要：背景画像の読み込みに必要
-                characters: ['otsuka_a', 'player_a'],  // 必要：character+expressionの組み合わせ（重複除く）
-                bgm: ['curono']                   // 必要：BGMファイルの読み込みに必要
+                characters: ['ootuka_a', 'hirokazu_o'],  // 必要：character+expressionの組み合わせ（重複除く）
+                bgm: ['megarovania']                   // 必要：BGMファイルの読み込みに必要
                 // seセクションは不要：conversationDataにSEの指定がないため
             },
             conversationDataKey: 'otsuka_senpai', // 必要：conversationDataのキーと一致
-            areaName: 'otsuka_senpai'            // 必要：エリア名の指定
+            areaName: 'mie_high_school'          // 必要：エリア名の指定
         },
         
         // たつはる
-        'tatsuharu': {
-            id: 'tatsuharu',                     // 必要：イベントを識別するためのID
+        'tatuharu': {
+            id: 'tatuharu',                      // 必要：イベントを識別するためのID
             title: 'たつはる',                     // 必要：イベントのタイトル表示用
             type: 'conversation',                // 必要：イベントの種類を指定
             areaType: 'miemachi',                // 必要：エリアタイプを指定
             background: 'taiikukann',            // 必要：conversationDataのbackgroundと一致
-            bgm: 'curono',                       // 必要：conversationDataのbgmと一致
+            bgm: 'unオーエン彼女なのか？',                       // 必要：conversationDataのbgmと一致
             required: {
                 backgrounds: ['taiikukann'],      // 必要：背景画像の読み込みに必要
-                characters: ['tatsuharu_a', 'player_a'],  // 必要：character+expressionの組み合わせ（重複除く）
-                bgm: ['curono']                   // 必要：BGMファイルの読み込みに必要
+                characters: ['tatsuharu_a', 'hirokazu_o'],   // 必要：character+expressionの組み合わせ（重複除く）
+                bgm: ['unオーエン彼女なのか？']                   // 必要：BGMファイルの読み込みに必要
                 // seセクションは不要：conversationDataにSEの指定がないため
             },
-            conversationDataKey: 'tatsuharu',     // 必要：conversationDataのキーと一致
-            areaName: 'tatsuharu'                // 必要：エリア名の指定
+            conversationDataKey: 'tatuharu',      // 必要：conversationDataのキーと一致
+            areaName: 'mie_high_school'          // 必要：エリア名の指定
         },
-        
-        // だいち副リーダー
-        'daichi_vice_leader': {
-            id: 'daichi_vice_leader',            // 必要：イベントを識別するためのID
-            title: 'だいち副リーダー',              // 必要：イベントのタイトル表示用
-            type: 'conversation',                // 必要：イベントの種類を指定
-            areaType: 'miemachi',                // 必要：エリアタイプを指定
-            background: 'taiikukann',            // 必要：conversationDataのbackgroundと一致
-            bgm: 'curono',                       // 必要：conversationDataのbgmと一致
-            required: {
-                backgrounds: ['taiikukann'],      // 必要：背景画像の読み込みに必要
-                characters: ['daichi_a', 'player_a'],  // 必要：character+expressionの組み合わせ（重複除く）
-                bgm: ['curono']                   // 必要：BGMファイルの読み込みに必要
-                // seセクションは不要：conversationDataにSEの指定がないため
-            },
-            conversationDataKey: 'daichi_vice_leader',  // 必要：conversationDataのキーと一致
-            areaName: 'daichi_vice_leader'       // 必要：エリア名の指定
-        }
     },
     
     // 竹田エリアのイベント設定

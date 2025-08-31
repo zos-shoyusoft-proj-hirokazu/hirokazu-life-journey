@@ -7,77 +7,50 @@ export const Stage1DialogData = {
         messages: [
             {
                 speaker: '内田先輩',
-                text: '俺さ、ヤンキーじゃん？',
-                expression: 'a'
+                text: '俺さ、ヤンキーじゃん？'
             },
             {
                 speaker: '内田先輩',
-                text: 'だからさ、部活とか適当なんよ かっこよくね？',
-                expression: 'a'
+                text: 'だからさ、部活とか適当なんよ かっこよくね？'
             },
             {
                 speaker: 'ひろかず',
-                text: 'そ、そうですね....',
-                expression: 'a'
+                text: 'そ、そうですね....'
             }
         ]
     },
-    'ootuka': {
-        name: '大塚',
-        displayName: '大塚先輩',
-        character: 'ootuka',
+    'okagami': {
+        name: 'おかがみ',
+        displayName: 'おかがみ',
+        character: 'okagami',
         messages: [
             {
-                speaker: '大塚先輩',
-                text: 'あそこの階段で隠れてると女の子のパンツが見れるってことをお前だけに教えてやる',
-                expression: 'a'
+                speaker: 'おかがみ',
+                text: 'タバコが切れた...'
             },
             {
-                speaker: '大塚先輩',
-                text: '感謝してくれて良いよ',
-                expression: 'a'
+                speaker: 'おかがみ',
+                text: '集合！！'
             },
             {
-                speaker: '大塚先輩',
-                text: 'さて、俺はこれにて体育館の倉庫でサボるわ..',
-                expression: 'a'
+                speaker: 'おかがみ',
+                text: '釘宮！お前はまじでダメ！やる気が足りない！サボるな！'
             },
             {
-                speaker: 'ひろかず',
-                text: '一生ついていきます！',
-                expression: 'a'
-            }
-        ]
-    },
-    'tatuharu': {
-        name: 'たつはる',
-        displayName: 'たつはる',
-        character: 'tatuharu',
-        messages: [
-            {
-                speaker: 'たつはる',
-                text: '俺この前、スラムダンク読んだわ',
-                expression: 'a'
+                speaker: 'おかがみ',
+                text: '河室！なんだその髪の毛は桜木花道じゃねえか！'
             },
             {
-                speaker: 'たつはる',
-                text: '俺は強くなる...!',
-                expression: 'a'
-            },
-            {
-                speaker: 'たつはる',
-                text: 'ところでバス釣り行かね？',
-                expression: 'a'
+                speaker: 'おかがみ',
+                text: 'ボコっ！ (殴る音)'
             },
             {
                 speaker: 'ひろかず',
-                text: 'バス釣りは毎週行ってるだろ',
-                expression: 'a'
+                text: '俺らの時代だからまだ許されてる感あるよな....'
             },
             {
                 speaker: 'ひろかず',
-                text: 'そんなに焦るなよ笑',
-                expression: 'a'
+                text: 'まじで痛えな...'
             }
         ]
     },

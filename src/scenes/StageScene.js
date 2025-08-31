@@ -209,6 +209,12 @@ export class StageScene extends Phaser.Scene {
                         console.log('[StageScene] 使用済み会話管理開始');
                         console.log('[StageScene] this.dialogSystem:', this.dialogSystem);
                         console.log('[StageScene] this.usedConversations:', this.usedConversations);
+                        
+                        // DialogSystem初期化後、CollisionManagerに参照を設定
+                        if (this.collisionManager) {
+                            this.collisionManager.setDialogSystem(this.dialogSystem);
+                            console.log('[StageScene] CollisionManagerにDialogSystem参照を設定完了（竹田高校用）');
+                        }
                     }).catch(error => {
                         console.error('[StageScene] TaketaDialogData読み込みエラー:', error);
                     });
@@ -230,6 +236,12 @@ export class StageScene extends Phaser.Scene {
                         console.log('[StageScene] 使用済み会話管理開始');
                         console.log('[StageScene] this.dialogSystem:', this.dialogSystem);
                         console.log('[StageScene] this.usedConversations:', this.usedConversations);
+                        
+                        // DialogSystem初期化後、CollisionManagerに参照を設定
+                        if (this.collisionManager) {
+                            this.collisionManager.setDialogSystem(this.dialogSystem);
+                            console.log('[StageScene] CollisionManagerにDialogSystem参照を設定完了（三重中学校用）');
+                        }
                     }).catch(error => {
                         console.error('[StageScene] Stage1DialogData読み込みエラー:', error);
                         console.error('[StageScene] エラーの詳細:', error.message);
