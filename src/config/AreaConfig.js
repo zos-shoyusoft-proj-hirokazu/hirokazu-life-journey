@@ -87,7 +87,7 @@ export const AreaConfig = {
             se_map_touch: 'assets/audio/se/touch_2.mp3' // マップ専用タッチSE
         },
         areas: [
-            { name: 'taketa_station', scene: null, conversationId: 'taketa_station' },
+            { name: 'train_no_poop_man', scene: null, conversationId: 'train_no_poop_man' },
             { name: 'taketa_high_school', scene: 'startPhaserGame', sceneParam: 'taketa_highschool', conversationId: null },
             { name: 'galaxy_water', scene: null, conversationId: 'galaxy_water' },
             { name: 'udefuriojisann', scene: null, conversationId: 'udefuriojisann' },

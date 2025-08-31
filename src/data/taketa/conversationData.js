@@ -2,7 +2,7 @@
 export const taketaConversationData = {
     // 昼休み鬼ごっこ
     'lunch_tag': {
-        'background': 'nichijyou_b',
+        'background': 'nichijyou_d',
         'bgm': 'professor_laytons',
         'conversations': [
             {
@@ -767,6 +767,7 @@ export const taketaConversationData = {
                 'expression': 'a'
             },
             {
+                'speaker': 'reset',
                 'character': 'narrator',
                 'text': 'しばらくして、、',
                 'expression': 'a'
@@ -994,7 +995,7 @@ export const taketaConversationData = {
     
     // 銀河の水
     'galaxy_water': {
-        'background': 'galaxy',
+        'background': 'galaxywater',
         'bgm': 'vitality',
         'conversations': [
             {
@@ -1024,26 +1025,6 @@ export const taketaConversationData = {
                 'character': 'kanato',
                 'text': 'なんか、店員でてきてなかった？？？',
                 'expression': 'a'
-            }
-        ]
-    },
-    
-    // 竹田駅
-    'taketa_station': {
-        'background': 'station',
-        'bgm': 'nightbarth',
-        'conversations': [
-            {
-                'speaker': 'ひろかず',
-                'character': 'hirokazu',
-                'text': '竹田駅だ',
-                'expression': 'a'
-            },
-            {
-                'speaker': 'ひろかず',
-                'character': 'hirokazu',
-                'text': '電車で来たな',
-                'expression': 'b'
             }
         ]
     },
@@ -1408,7 +1389,7 @@ export const taketaConversationData = {
     
     // 電車の工藤くん
     'kannnamu_kudou': {
-        'background': 'kkannnamu',
+        'background': 'kannnamu',
         'bgm': 'Fantasy',
         'conversations': [
             {
@@ -1476,7 +1457,7 @@ export const taketaConversationData = {
     
     // めっちゃ腕振って歩く人
     'udefuriojisann': {
-        'background': 'street',
+        'background': 'taketamachi',
         'bgm': '主題_opening_theme',
         'conversations': [
             {
@@ -1520,7 +1501,7 @@ export const taketaConversationData = {
     
     // 竹田から三重まで歩いて帰る
     'working_go_to_home_miemachi': {
-        'background': 'street',
+        'background': 'nomiaruki_1',
         'bgm': 'dragostea_din_tei',
         'conversations': [
             {
@@ -1617,7 +1598,8 @@ export const taketaConversationData = {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': '歩いて帰るぞ！！！',
-                'expression': 'd'
+                'expression': 'd',
+                'background': 'taketamachi'
             },
             {
                 'speaker': 'だいち',
@@ -1701,7 +1683,8 @@ export const taketaConversationData = {
                 'speaker': 'ナレーション',
                 'character': 'narrator',
                 'text': '１時間後',
-                'expression': 'a'
+                'expression': 'a',
+                'background': 'nomiaruki_4'
             },
             {
                 'speaker': 'ひろかず',
@@ -1833,7 +1816,8 @@ export const taketaConversationData = {
                 'speaker': 'ナレーション',
                 'character': 'narrator',
                 'text': '４時間後',
-                'expression': 'a'
+                'expression': 'a',
+                'background': 'nomiaruki_3'
             },
             {
                 'speaker': 'かなと',
@@ -2172,10 +2156,10 @@ export const taketaConversationData = {
                 'expression': 'b'
             },
             {
-                'speaker': 'ナレーション',
                 'character': 'narrator',
                 'text': 'ジョイフル到着',
-                'expression': 'a'
+                'expression': 'a',
+                'background': 'nomiaruki_5'
             },
             {
                 'speaker': 'かなと',
@@ -2262,7 +2246,6 @@ export const taketaConversationData = {
                 'expression': 'b'
             },
             {
-                'speaker': 'ナレーション',
                 'character': 'narrator',
                 'text': 'やっぱり、歩いて帰ったほうが、高くついたのは知らないほうがよかった話',
                 'expression': 'a'
@@ -2434,16 +2417,18 @@ export const taketaConversationData = {
                 'expression': 'a'
             },
             {
-                'speaker': '放送',
-                'character': 'broadcast',
+                'speaker': 'reset',
+                'character': 'doragon',
                 'text': '２位、真柴先生',
-                'expression': 'a'
+                'expression': 'b',
+                'se': 'don'
             },
             {
-                'speaker': '放送',
-                'character': 'broadcast',
+                'speaker': 'reset',
+                'character': 'kannda',
                 'text': '１位、神田先生',
-                'expression': 'a'
+                'expression': 'a',
+                'se': 'don'
             },
             {
                 'speaker': '遠くのクラス',
@@ -2464,16 +2449,18 @@ export const taketaConversationData = {
                 'expression': 'a'
             },
             {
-                'speaker': '放送',
-                'character': 'broadcast',
+                'speaker': 'reset',
+                'character': 'turuturu',
                 'text': '２位、鶴原先生',
-                'expression': 'a'
+                'expression': 'a',
+                'se': 'don'
             },
             {
-                'speaker': '放送',
-                'character': 'broadcast',
+                'speaker': 'reset',
+                'character': 'washio',
                 'text': '１位、鷲尾先生です',
-                'expression': 'a'
+                'expression': 'a',
+                'se': 'don'
             },
             {
                 'speaker': '遠くのクラス',
@@ -2488,16 +2475,18 @@ export const taketaConversationData = {
                 'expression': 'a'
             },
             {
-                'speaker': '放送',
-                'character': 'broadcast',
+                'speaker': 'reset',
+                'character': 'gotoujyunnji',
                 'text': '２位、後藤先生',
-                'expression': 'a'
+                'expression': 'a',
+                'se': 'don'
             },
             {
-                'speaker': '放送',
-                'character': 'broadcast',
+                'speaker': 'reset',
+                'character': 'anndou',
                 'text': '１位、安藤先生です',
-                'expression': 'a'
+                'expression': 'a',
+                'se': 'don'
             },
             {
                 'speaker': '近くのクラス',
@@ -2518,21 +2507,29 @@ export const taketaConversationData = {
                 'expression': 'a'
             },
             {
-                'speaker': '放送',
-                'character': 'broadcast',
+                'speaker': 'reset',
+                'character': 'yamazaki',
                 'text': '２位、山崎先生',
-                'expression': 'a'
+                'expression': 'a',
+                'se': 'don'
             },
             {
-                'speaker': '放送',
-                'character': 'broadcast',
+                'speaker': 'reset',
+                'character': 'honngou',
                 'text': '１位、本郷先生です',
-                'expression': 'a'
+                'expression': 'a',
+                'se': 'don'
             },
             {
                 'speaker': '隣のクラス',
                 'character': 'next_class',
                 'text': 'わーーーーーー！！！！',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'reset',
+                'character': 'narrator',
+                'text': '',
                 'expression': 'a'
             },
             {
@@ -2572,10 +2569,11 @@ export const taketaConversationData = {
                 'expression': 'a'
             },
             {
-                'speaker': '放送',
-                'character': 'broadcast',
+                'speaker': 'reset',
+                'character': 'sciencemother',
                 'text': 'サっ、、サイエンスマザー先生、、、',
-                'expression': 'a'
+                'expression': 'a',
+                'se': 'don'
             },
             {
                 'speaker': '１組のみなさん',
@@ -2590,15 +2588,22 @@ export const taketaConversationData = {
                 'expression': 'a'
             },
             {
-                'speaker': '放送',
-                'character': 'broadcast',
+                'speaker': 'reset',
+                'character': 'doragon',
                 'text': 'ドっ、、、ドラゴン先生です',
-                'expression': 'a'
+                'expression': 'b',
+                'se': 'don'
             },
             {
                 'speaker': '１組のみなさん',
                 'character': 'class1',
                 'text': '、、、、、、、、、、',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'reset',
+                'character': 'narrator',
+                'text': '、、、、、、、、、',
                 'expression': 'a'
             },
             {

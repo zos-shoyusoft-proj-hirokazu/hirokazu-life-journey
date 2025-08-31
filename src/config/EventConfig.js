@@ -258,10 +258,10 @@ export const EventConfig = {
             title: '昼休み鬼ごっこ',                // 必要：イベントのタイトル表示用
             type: 'conversation',                // 必要：イベントの種類を指定
             areaType: 'taketa',                  // 必要：エリアタイプを指定
-            background: 'kyoushitu_b',              // 必要：conversationDataのbackgroundと一致
+            background: 'nichijyou_d',              // 必要：conversationDataのbackgroundと一致
             bgm: 'professor_laytons',                      // 必要：conversationDataのbgmと一致
             required: {
-                backgrounds: ['kyoushitu_b'],       // 必要：背景画像の読み込みに必要
+                backgrounds: ['nichijyou_d'],       // 必要：背景画像の読み込みに必要
                 characters: [
                     'hirokazu_a', 
                     'daichi_a', 
@@ -276,34 +276,16 @@ export const EventConfig = {
             areaName: 'classroom'                // 必要：エリア名の指定
         },
         
-        // 竹田駅
-        'taketa_station': {
-            id: 'taketa_station',                // 必要：イベントを識別するためのID
-            title: '竹田駅',                      // 必要：イベントのタイトル表示用
-            type: 'conversation',                // 必要：イベントの種類を指定
-            areaType: 'taketa',                  // 必要：エリアタイプを指定
-            background: 'kannnamu',                // 必要：conversationDataのbackgroundと一致
-            bgm: 'nightbarth',                   // 必要：conversationDataのbgmと一致
-            required: {
-                backgrounds: ['kannnamu'],         // 必要：背景画像の読み込みに必要
-                characters: ['hirokazu_a', 'daichi_a', 'koutarou_b'],  // 必要：character+expressionの組み合わせ
-                bgm: ['nightbarth']               // 必要：BGMファイルの読み込みに必要
-                // seセクションは不要：conversationDataにSEの指定がないため
-            },
-            conversationDataKey: 'train_no_poop_man',  // 必要：conversationDataのキーと一致
-            areaName: 'station'                   // 必要：エリア名の指定
-        },
-        
         // 銀河の水
         'galaxy_water': {
             id: 'galaxy_water',                  // 必要：イベントを識別するためのID
             title: '銀河の水',                     // 必要：イベントのタイトル表示用
             type: 'conversation',                // 必要：イベントの種類を指定
             areaType: 'taketa',                  // 必要：エリアタイプを指定
-            background: 'galaxy',                // 必要：conversationDataのbackgroundと一致
+            background: 'galaxywater',                // 必要：conversationDataのbackgroundと一致
             bgm: 'vitality',                   // 必要：conversationDataのbgmと一致
             required: {
-                backgrounds: ['galaxy'],          // 必要：背景画像の読み込みに必要
+                backgrounds: ['galaxywater'],          // 必要：背景画像の読み込みに必要
                 characters: ['daichi_a','kanato_a'],         // 必要：character+expressionの組み合わせ
                 bgm: ['vitality']               // 必要：BGMファイルの読み込みに必要
                 // seセクションは不要：conversationDataにSEの指定がないため
@@ -318,10 +300,10 @@ export const EventConfig = {
             title: '腕振りおじさん',               // 必要：イベントのタイトル表示用
             type: 'conversation',                // 必要：イベントの種類を指定
             areaType: 'taketa',                  // 必要：エリアタイプを指定
-            background: 'street',                // 必要：conversationDataのbackgroundと一致
+            background: 'taketamachi',                // 必要：conversationDataのbackgroundと一致
             bgm: '主題_opening_theme',                      // 必要：conversationDataのbgmと一致
             required: {
-                backgrounds: ['street'],          // 必要：背景画像の読み込みに必要
+                backgrounds: ['taketamachi'],          // 必要：背景画像の読み込みに必要
                 characters: ['hirokazu_a', 'daichi_a', 'kanato_a'],  // 必要：character+expressionの組み合わせ（重複除く）
                 bgm: ['主題_opening_theme']                  // 必要：BGMファイルの読み込みに必要
                 // seセクションは不要：conversationDataにSEの指定がないため
@@ -339,7 +321,7 @@ export const EventConfig = {
             background: 'street',                // 必要：conversationDataのbackgroundと一致
             bgm: 'dragostea_din_tei',              // 必要：conversationDataのbgmと一致
             required: {
-                backgrounds: ['street'],          // 必要：背景画像の読み込みに必要
+                backgrounds: ['nomiaruki_1', 'taketamachi', 'nomiaruki_4', 'nomiaruki_3', 'nomiaruki_5'],         // 必要：背景画像の読み込みに必要
                 characters: [
                     'kanato_b', 
                     'kanato_c', 
@@ -473,7 +455,7 @@ export const EventConfig = {
             title: '電車ないうんこおじさん事件',      // 必要：イベントのタイトル表示用
             type: 'conversation',                // 必要：イベントの種類を指定
             areaType: 'taketa',                  // 必要：エリアタイプを指定
-            background: 'ktaketaeki',              // 必要：conversationDataのbackgroundと一致
+            background: 'taketaeki',              // 必要：conversationDataのbackgroundと一致
             bgm: 'Fantasy',                      // 必要：conversationDataのbgmと一致
             required: {
                 backgrounds: ['taketaeki'],       // 必要：背景画像の読み込みに必要
@@ -486,7 +468,7 @@ export const EventConfig = {
                 // seセクションは不要：conversationDataにSEの指定がないため
             },
             conversationDataKey: 'train_no_poop_man',  // 必要：conversationDataのキーと一致
-            areaName: 'classroom'                // 必要：エリア名の指定
+            areaName: 'train_no_poop_man'                  // 必要：エリア名の指定
         },
         
         // かなとのビデオカメラを落として壊す
@@ -538,16 +520,16 @@ export const EventConfig = {
             title: '電車の工藤くん',                // 必要：イベントのタイトル表示用
             type: 'conversation',                // 必要：イベントの種類を指定
             areaType: 'taketa',                  // 必要：エリアタイプを指定
-            background: 'classroom',              // 必要：conversationDataのbackgroundと一致
+            background: 'kannnamu',              // 必要：conversationDataのbackgroundと一致
             bgm: 'Fantasy',                      // 必要：conversationDataのbgmと一致
             required: {
-                backgrounds: ['classroom'],       // 必要：背景画像の読み込みに必要
-                characters: ['hirokazu_a', 'hirokazu_b', 'hirokazu_c', 'hirokazu_d', 'hirokazu_e', 'hirokazu_f', 'hirokazu_g', 'hirokazu_h', 'hirokazu_i', 'hirokazu_j', 'hirokazu_k', 'hirokazu_l', 'hirokazu_m', 'hirokazu_n', 'hirokazu_o', 'hirokazu_p', 'hirokazu_q', 'hirokazu_r', 'hirokazu_s', 'hirokazu_t', 'hirokazu_u', 'hirokazu_v', 'hirokazu_w', 'hirokazu_x', 'hirokazu_y', 'hirokazu_z'],  // 必要：character+expressionの組み合わせ（重複除く）
+                backgrounds: ['kannnamu'],       // 必要：背景画像の読み込みに必要
+                characters: ['hirokazu_a', 'kudou_a', 'naoki_a', 'kanato_b', 'daichi_c'],  // 必要：character+expressionの組み合わせ（重複除く）
                 bgm: ['Fantasy']                  // 必要：BGMファイルの読み込みに必要
                 // seセクションは不要：conversationDataにSEの指定がないため
             },
             conversationDataKey: 'kannnamu_kudou',  // 必要：conversationDataのキーと一致
-            areaName: 'classroom'                // 必要：エリア名の指定
+            areaName: 'kannnamu_kudou'                // 必要：エリア名の指定
         },
         
         // 黒い服着てこない
@@ -596,12 +578,23 @@ export const EventConfig = {
                     'far_class_a', 
                     'daichi_a', 
                     'near_class_a', 
+                    'koutarou_a',
                     'koutarou_b', 
                     'next_class_a', 
-                    'class1_a'
+                    'class1_a',
+                    'doragon_a',
+                    'doragon_b',
+                    'kannda_a',
+                    'turuturu_a',
+                    'washio_a',
+                    'gotoujyunnji_a',
+                    'anndou_a',
+                    'yamazaki_a',
+                    'honngou_a',
+                    'sciencemother_a'
                 ],  // 必要：character+expressionの組み合わせ（重複除く）
-                bgm: ['unオーエン彼女なのか？']                  // 必要：BGMファイルの読み込みに必要
-                // seセクションは不要：conversationDataにSEの指定がないため
+                bgm: ['unオーエン彼女なのか？'],                  // 必要：BGMファイルの読み込みに必要
+                se: ['don']                  // 必要：SEファイルの読み込みに必要
             },
             conversationDataKey: 'broadcast',     // 必要：conversationDataのキーと一致
             areaName: 'classroom'                // 必要：エリア名の指定

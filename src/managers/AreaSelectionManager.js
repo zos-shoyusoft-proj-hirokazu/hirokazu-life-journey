@@ -122,8 +122,24 @@ export class AreaSelectionManager {
         
         console.log('[AreaSelectionManager] マーカー作成完了: ' + this.areaSprites.length + '個のマーカー');
         
+        // train_no_poop_manがareaSpritesに含まれているかチェック
+        const trainNoPoopManMarker = this.areaSprites.find(marker => 
+            marker && marker.getData('areaName') === 'train_no_poop_man'
+        );
+        if (trainNoPoopManMarker) {
+            console.log('[AreaSelectionManager] train_no_poop_man マーカー発見:', trainNoPoopManMarker);
+        } else {
+            console.warn('[AreaSelectionManager] train_no_poop_man マーカーが見つかりません！');
+            console.log('[AreaSelectionManager] areaSpritesの内容:', this.areaSprites.map(marker => 
+                marker ? marker.getData('areaName') : 'null'
+            ));
+        }
+        
         // インタラクションイベントを設定
         this.setupInteractionEvents();
+        
+        // デバッグログ：setupAreas完了
+        console.log('[AreaSelectionManager] setupAreas完了');
     }
 
 
@@ -144,7 +160,8 @@ export class AreaSelectionManager {
             'koutaroupoteto': 'こうたろうポテト',
             'seven': 'セブン',
             // 竹田ステージのエリア説明
-            'taketa_station': '竹田駅',
+            'train_no_poop_man': '電車ないうんこおじさん事件',
+            'kannnamu_kudou': '電車の工藤くん',
             'taketa_high_school': '竹田高校',
             'galaxy_water': '銀河の水',
             'udefuriojisann': 'ウデフリオジサン',
@@ -186,6 +203,19 @@ export class AreaSelectionManager {
         });
         
         console.log(`[AreaSelectionManager] createAreaMarkers完了: 作成されたマーカー数=${this.areaSprites.length}`);
+        
+        // train_no_poop_manがareaSpritesに含まれているかチェック
+        const trainNoPoopManMarker = this.areaSprites.find(marker => 
+            marker && marker.getData('areaName') === 'train_no_poop_man'
+        );
+        if (trainNoPoopManMarker) {
+            console.log('[AreaSelectionManager] train_no_poop_man マーカー発見:', trainNoPoopManMarker);
+        } else {
+            console.warn('[AreaSelectionManager] train_no_poop_man マーカーが見つかりません！');
+            console.log('[AreaSelectionManager] areaSpritesの内容:', this.areaSprites.map(marker => 
+                marker ? marker.getData('areaName') : 'null'
+            ));
+        }
     }
 
     createAreaMarker(area) {
@@ -215,6 +245,12 @@ export class AreaSelectionManager {
         
         // 完了状態をチェック
         const isCompleted = this.completionManager.isAreaCompleted(area.name);
+        
+        // train_no_poop_manの完了状態をデバッグ
+        if (area.name === 'train_no_poop_man') {
+            console.log(`[AreaSelectionManager] train_no_poop_man 完了状態: ${isCompleted}`);
+            console.log(`[AreaSelectionManager] train_no_poop_man excludedAreas: ${this.completionManager.excludedAreas.includes(area.name)}`);
+        }
         
 
         
@@ -683,8 +719,11 @@ export class AreaSelectionManager {
         } else {
             // エリア名に基づいて会話イベントを決定（フォールバック）
             switch (area.name) {
-                case 'taketa_station':
-                    eventId = 'taketa_station';
+                case 'train_no_poop_man':
+                    eventId = 'train_no_poop_man';
+                    break;
+                case 'kannnamu_kudou':
+                    eventId = 'kannnamu_kudou';
                     break;
                 case 'galaxy_water':
                     eventId = 'galaxy_water';
@@ -1067,6 +1106,9 @@ export class AreaSelectionManager {
 
     // 完了状態の表示を更新
     updateAreaCompletionDisplay(areaName) {
+        console.log(`[AreaSelectionManager] updateAreaCompletionDisplay開始: ${areaName}`);
+        console.log(`[AreaSelectionManager] areaSprites数: ${this.areaSprites.length}`);
+        
         // 該当エリアのマーカーを見つけて更新
         this.areaSprites.forEach(marker => {
             if (marker && marker.getData('areaName') === areaName) {

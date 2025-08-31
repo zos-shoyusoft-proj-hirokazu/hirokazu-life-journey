@@ -587,6 +587,27 @@ export class ConversationScene extends Phaser.Scene {
             this.updateBackground(dialog.background);
         }
         
+        // 立ち絵リセット機能を追加
+        if (dialog.speaker === 'reset') {
+            console.log('[ConversationScene] 立ち絵リセット実行');
+            console.log('[ConversationScene] reset character:', dialog.character, 'expression:', dialog.expression);
+            this.cleanupCharacterSprites();
+            // リセット後にキャラクターを表示
+            if (dialog.character && dialog.expression) {
+                console.log('[ConversationScene] reset後、キャラクター表示開始');
+                this.updateCharacterSprite(dialog.character, dialog.expression);
+                if (this.characterContainer) {
+                    this.characterContainer.setVisible(true);
+                    console.log('[ConversationScene] characterContainer表示設定完了');
+                } else {
+                    console.warn('[ConversationScene] characterContainerがnullです');
+                }
+            } else {
+                console.warn('[ConversationScene] reset後、characterまたはexpressionが指定されていません');
+            }
+            // returnを削除して、SE再生処理も実行されるようにする
+        }
+        
         // 立ち絵の表示/非表示を制御
         if (dialog.speaker === 'narrator') {
             // narratorの場合は立ち絵を非表示（背景画像だけを表示）
