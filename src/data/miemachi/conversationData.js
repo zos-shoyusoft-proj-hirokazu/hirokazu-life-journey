@@ -75,34 +75,108 @@ export const miemachiConversationData = {
                 'expression': 'g'
             },
             {
-                'speaker': '自信作の漫画',
-                'character': 'mannga',
-                'expression': 'a'
+                'speaker': 'narrator',
+                'character': 'narrator',
+                'text': '',
+                'expression': 'a',
+                'se': 'don',
+                'background': 'mannga_a'
             },
             {
-                'speaker': '自信作の漫画',
-                'character': 'mannga',
-                'expression': 'b'
+                'speaker': 'narrator',
+                'character': 'narrator',
+                'text': '',
+                'expression': 'a',
+                'se': 'don',
+                'background': 'mannga_b'
             },
             {
-                'speaker': '自信作の漫画',
-                'character': 'mannga',
-                'expression': 'c'
+                'speaker': 'narrator',
+                'character': 'narrator',
+                'text': '',
+                'expression': 'a',
+                'se': 'don',
+                'background': 'mannga_c'
             },
             {
-                'speaker': '自信作の漫画',
-                'character': 'mannga',
-                'expression': 'd'
+                'speaker': 'narrator',
+                'character': 'narrator',
+                'text': '',
+                'expression': 'a',
+                'se': 'don',
+                'background': 'mannga_d'
             },
             {
-                'speaker': '自信作の漫画',
-                'character': 'mannga',
-                'expression': 'e'
+                'speaker': 'narrator',
+                'character': 'narrator',
+                'text': '',
+                'expression': 'a',
+                'se': 'don',
+                'background': 'mannga_e'
             },
             {
-                'speaker': '自信作の漫画',
-                'character': 'mannga',
-                'expression': 'f'
+                'speaker': 'narrator',
+                'character': 'narrator',
+                'text': '',
+                'expression': 'a',
+                'se': 'don',
+                'background': 'mannga_f'
+            },
+            {
+                'speaker': 'narrator',
+                'character': 'narrator',
+                'text': '',
+                'expression': 'a',
+                'se': 'don',
+                'background': 'mannga_g'
+            },
+            {
+                'speaker': 'narrator',
+                'character': 'narrator',
+                'text': '',
+                'expression': 'a',
+                'se': 'don',
+                'background': 'mannga_h'
+            },
+            {
+                'speaker': 'narrator',
+                'character': 'narrator',
+                'text': '',
+                'expression': 'a',
+                'se': 'don',
+                'background': 'mannga_i'
+            },
+            {
+                'speaker': 'narrator',
+                'character': 'narrator',
+                'text': '',
+                'expression': 'a',
+                'se': 'don',
+                'background': 'mannga_j'
+            },
+            {
+                'speaker': 'narrator',
+                'character': 'narrator',
+                'text': '',
+                'expression': 'a',
+                'se': 'don',
+                'background': 'mannga_k'
+            },
+            {
+                'speaker': 'narrator',
+                'character': 'narrator',
+                'text': '',
+                'expression': 'a',
+                'se': 'don',
+                'background': 'mannga_l'
+            },
+            {
+                'speaker': 'ひろかず',
+                'character': 'hirokazu',
+                'text': '自信はあるぜ☆',
+                'expression': 'g',
+                'se': 'wadodon',
+                'background': 'orenokoto'
             },
         ]
     },
@@ -980,8 +1054,12 @@ export const miemachiConversationData = {
                 'expression': 'b'
             },
             {
-                'character': 'dutu',
+                'speaker': 'narrator',
+                'character': 'narrator',
+                'text': '',
+                'expression': 'a',
                 'se': 'taiko_2ren',
+                'background': 'omiki'
             },
             {
                 'speaker': 'ひろかず',
@@ -1038,7 +1116,11 @@ export const miemachiConversationData = {
                 'expression': 'a'
             },
             {
-                'text': '、、、夜、、、',
+                'speaker': 'narrator',
+                'character': 'narrator',
+                'text': '夜',
+                'expression': 'a',
+                'background': 'yorumofuketa'
             },
             {
                 'speaker': 'ひろかず',

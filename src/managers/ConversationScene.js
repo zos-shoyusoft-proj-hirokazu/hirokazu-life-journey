@@ -1,4 +1,4 @@
-import { UIManager } from './UIManager.js';
+
 
 export class ConversationScene extends Phaser.Scene {
     constructor() {
@@ -19,6 +19,9 @@ export class ConversationScene extends Phaser.Scene {
         
         // 選択肢ボタン配列を初期化
         this.currentChoiceButtons = [];
+        
+        // UIManagerを初期化
+        this.uiManager = null;
     }
 
     init(data) {
@@ -84,9 +87,14 @@ export class ConversationScene extends Phaser.Scene {
         // 立ち絵用のコンテナ
         this.characterContainer = this.add.container(0, 0);
         
-        // UIManagerから戻るボタンを作成
-        this.uiManager = new UIManager();
-        this.uiManager.createConversationBackButton(this);
+        // UIManagerを初期化して会話終了ボタンを作成
+        import('../managers/UIManager.js').then(({ UIManager }) => {
+            this.uiManager = new UIManager(this);
+            this.uiManager.createConversationBackButton(this);
+            console.log('[ConversationScene] UIManager初期化完了、会話終了ボタン作成完了');
+        }).catch(error => {
+            console.error('[ConversationScene] UIManager初期化エラー:', error);
+        });
         
         // 会話イベント中の背景操作を無効化
         this.disableBackgroundInteraction();
@@ -264,7 +272,7 @@ export class ConversationScene extends Phaser.Scene {
             
             // ConversationTriggerのフラグもリセット
             try {
-                const mainScene = this.scene.get('Stage1Scene') || this.scene.get('Stage2Scene') || this.scene.get('Stage3Scene') || this.scene.get('MiemachiStage') || this.scene.get('TaketastageStage') || this.scene.get('JapanStage');
+                const mainScene = this.scene.get('MiemachiStage') || this.scene.get('TaketastageStage') || this.scene.get('JapanStage');
                 if (mainScene && mainScene.conversationTrigger) {
                     mainScene.conversationTrigger.isConversationActive = false;
                     console.log('[ConversationScene] ConversationTriggerのフラグをリセット');
@@ -400,7 +408,7 @@ export class ConversationScene extends Phaser.Scene {
         
         // 現在再生中のBGMキーを覚える（会話終了後に復元するため）
         try {
-            const mainScene = this.scene.get('Stage1Scene') || this.scene.get('Stage2Scene') || this.scene.get('Stage3Scene') || this.scene.get('MiemachiStage') || this.scene.get('TaketastageStage') || this.scene.get('JapanStage');
+            const mainScene = this.scene.get('MiemachiStage') || this.scene.get('TaketastageStage') || this.scene.get('JapanStage');
             if (mainScene && mainScene.audioManager && mainScene.audioManager.bgm) {
                 this._originalBgmKey = mainScene.audioManager.bgm.key;
                 console.log(`[ConversationScene] 元のBGMキーを記憶: ${this._originalBgmKey}`);
@@ -505,12 +513,97 @@ export class ConversationScene extends Phaser.Scene {
                 this.adjustNameboxWidth(dialog.speaker);
             }
         }
-        // テキストのアニメーション表示
-        this.animateText(dialog.text);
+        // テキストのアニメーション表示（テキストが空の場合は非表示）
+        if (dialog.text && dialog.text.trim() !== '') {
+            this.animateText(dialog.text);
+            // テキストボックスを表示
+            if (this.textbox) {
+                this.textbox.setVisible(true);
+                // 枠線を復活
+                this.textbox.setStrokeStyle(2, 0xFFFFFF, 1.0);
+            }
+            if (this.dialogText) {
+                this.dialogText.setVisible(true);
+            }
+            // 名前ボックスも表示
+            if (this.namebox) {
+                this.namebox.setVisible(true);
+                // 枠線を復活
+                this.namebox.setStrokeStyle(2, 0x888888, 0.8);
+            }
+            if (this.nameText) {
+                this.nameText.setVisible(true);
+            }
+            
+            // 装飾（青とピンクの枠線）も表示
+            if (this.textboxDecoFrame) {
+                this.textboxDecoFrame.setVisible(true);
+            }
+            if (this.textboxDecoShine) {
+                this.textboxDecoShine.setVisible(true);
+            }
+            if (this.nameboxDecoFrame) {
+                this.nameboxDecoFrame.setVisible(true);
+            }
+            if (this.nameboxDecoShine) {
+                this.nameboxDecoShine.setVisible(true);
+            }
+        } else {
+            // テキストが空の場合はテキストボックスと名前ボックスを非表示
+            if (this.textbox) {
+                this.textbox.setVisible(false);
+                // 枠線も削除
+                this.textbox.setStrokeStyle(0, 0x000000, 0);
+            }
+            if (this.dialogText) {
+                this.dialogText.setVisible(false);
+            }
+            if (this.namebox) {
+                this.namebox.setVisible(false);
+                // 枠線も削除
+                this.namebox.setStrokeStyle(0, 0x000000, 0);
+            }
+            if (this.nameText) {
+                this.nameText.setVisible(false);
+            }
+            
+            // 装飾（青とピンクの枠線）も非表示
+            if (this.textboxDecoFrame) {
+                this.textboxDecoFrame.setVisible(false);
+            }
+            if (this.textboxDecoShine) {
+                this.textboxDecoShine.setVisible(false);
+            }
+            if (this.nameboxDecoFrame) {
+                this.nameboxDecoFrame.setVisible(false);
+            }
+            if (this.nameboxDecoShine) {
+                this.nameboxDecoShine.setVisible(false);
+            }
+        }
         
         // 背景変更処理を追加
         if (dialog.background) {
             this.updateBackground(dialog.background);
+        }
+        
+        // 立ち絵の表示/非表示を制御
+        if (dialog.speaker === 'narrator') {
+            // narratorの場合は立ち絵を非表示（背景画像だけを表示）
+            if (this.characterContainer) {
+                this.characterContainer.setVisible(false);
+            }
+        } else if (dialog.character && dialog.expression) {
+            // キャラクターと表情が指定されている場合は立ち絵を表示
+            this.updateCharacterSprite(dialog.character, dialog.expression);
+            if (this.characterContainer) {
+                this.characterContainer.setVisible(true);
+            }
+        } else {
+            // その他の場合は立ち絵を表示
+            if (this.characterContainer) {
+                this.characterContainer.setVisible(true);
+            }
         }
         
         // SE再生処理を追加
@@ -523,6 +616,8 @@ export class ConversationScene extends Phaser.Scene {
             this.showChoices(dialog.choices, dialog.choiceId);
         }
     }
+
+
 
     // 立ち絵の更新
     updateCharacterSprite(character, expression) {
@@ -1184,10 +1279,7 @@ export class ConversationScene extends Phaser.Scene {
     
     // 戻るボタンのクリーンアップ
     cleanupBackButton() {
-        if (this.uiManager) {
-            this.uiManager.cleanupConversationBackButton();
-            this.uiManager = null;
-        }
+
     }
     
     // 画面リサイズ時の対応

@@ -20,10 +20,10 @@ export const EventConfig = {
             background: 'orenokoto',             // 必要：conversationDataのbackgroundと一致
             bgm: 'Fantasy',                      // 必要：conversationDataのbgmと一致
             required: {
-                backgrounds: ['orenokoto'],      // 必要：背景画像の読み込みに必要
-                characters: ['hirokazu_g', 'mannga_a', 'mannga_b', 'mannga_c', 'mannga_d', 'mannga_e', 'mannga_f'],  // 必要：character+expressionの組み合わせ
-                bgm: ['Fantasy']                 // 必要：BGMファイルの読み込みに必要
-                // seセクションは不要：conversationDataにSEの指定がないため
+                backgrounds: ['orenokoto', 'mannga_a', 'mannga_b', 'mannga_c', 'mannga_d', 'mannga_e', 'mannga_f', 'mannga_g', 'mannga_h', 'mannga_i', 'mannga_j', 'mannga_k', 'mannga_l'],      // 必要：背景画像の読み込みに必要
+                characters: ['hirokazu_g'],  // 必要：character+expressionの組み合わせ
+                bgm: ['Fantasy'] ,
+                se: ['don', 'wadodon']                  // 必要：BGMファイルの読み込みに必要
             },
             conversationDataKey: 'oreno_koto',   // 必要：conversationDataのキーと一致
             areaName: 'oreno_koto'               // 必要：エリア名の指定
@@ -92,7 +92,7 @@ export const EventConfig = {
             background: 'dutu',                  // 必要：conversationDataのbackgroundと一致
             bgm: 'africa',                   // 必要：conversationDataのbgmと一致
             required: {
-                backgrounds: ['dutu'],           // 必要：背景画像の読み込みに必要
+                backgrounds: ['dutu','omiki','yorumofuketa'],           // 必要：背景画像の読み込みに必要
                 characters: ['hirokazu_a', 'hirokazu_b', 'koutarou_a', 'koutarou_c', 'daichi_b', 'daichi_a', 'dutu'],  // 必要：character+expressionの組み合わせ（重複除く）
                 bgm: ['africa']              // 必要：BGMファイルの読み込みに必要
                 // seセクションは不要：conversationDataにSEの指定がないため（taiko_2renは1箇所のみ）
