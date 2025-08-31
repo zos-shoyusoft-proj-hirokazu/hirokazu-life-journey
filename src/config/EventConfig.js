@@ -240,7 +240,7 @@ export const EventConfig = {
             bgm: 'unオーエン彼女なのか？',                       // 必要：conversationDataのbgmと一致
             required: {
                 backgrounds: ['taiikukann'],      // 必要：背景画像の読み込みに必要
-                characters: ['tatsuharu_a', 'hirokazu_o'],   // 必要：character+expressionの組み合わせ（重複除く）
+                characters: ['tatuharu_a', 'hirokazu_o'],   // 必要：character+expressionの組み合わせ（重複除く）
                 bgm: ['unオーエン彼女なのか？']                   // 必要：BGMファイルの読み込みに必要
                 // seセクションは不要：conversationDataにSEの指定がないため
             },
@@ -248,6 +248,7 @@ export const EventConfig = {
             areaName: 'mie_high_school'          // 必要：エリア名の指定
         },
     },
+
     
     // 竹田エリアのイベント設定
     taketa: {
@@ -257,10 +258,10 @@ export const EventConfig = {
             title: '昼休み鬼ごっこ',                // 必要：イベントのタイトル表示用
             type: 'conversation',                // 必要：イベントの種類を指定
             areaType: 'taketa',                  // 必要：エリアタイプを指定
-            background: 'nichijyou_b',              // 必要：conversationDataのbackgroundと一致
+            background: 'kyoushitu_b',              // 必要：conversationDataのbackgroundと一致
             bgm: 'professor_laytons',                      // 必要：conversationDataのbgmと一致
             required: {
-                backgrounds: ['nichijyou_b'],       // 必要：背景画像の読み込みに必要
+                backgrounds: ['kyoushitu_b'],       // 必要：背景画像の読み込みに必要
                 characters: [
                     'hirokazu_a', 
                     'daichi_a', 
@@ -425,10 +426,10 @@ export const EventConfig = {
             title: 'こうたろうのおしっこ事件',        // 必要：イベントのタイトル表示用
             type: 'conversation',                // 必要：イベントの種類を指定
             areaType: 'taketa',                  // 必要：エリアタイプを指定
-            background: 'nichijyou_3',              // 必要：conversationDataのbackgroundと一致
+            background: 'kyoushitu_b',              // 必要：conversationDataのbackgroundと一致
             bgm: 'metoroido',                      // 必要：conversationDataのbgmと一致
             required: {
-                backgrounds: ['nichijyou_3'],       // 必要：背景画像の読み込みに必要
+                backgrounds: ['kyoushitu_b'],       // 必要：背景画像の読み込みに必要
                 characters: [
                     'koutarou_b',
                     'hirokazu_a',
@@ -472,10 +473,10 @@ export const EventConfig = {
             title: '電車ないうんこおじさん事件',      // 必要：イベントのタイトル表示用
             type: 'conversation',                // 必要：イベントの種類を指定
             areaType: 'taketa',                  // 必要：エリアタイプを指定
-            background: 'kannnamu',              // 必要：conversationDataのbackgroundと一致
+            background: 'ktaketaeki',              // 必要：conversationDataのbackgroundと一致
             bgm: 'Fantasy',                      // 必要：conversationDataのbgmと一致
             required: {
-                backgrounds: ['kannnamu'],       // 必要：背景画像の読み込みに必要
+                backgrounds: ['taketaeki'],       // 必要：背景画像の読み込みに必要
                 characters: [
                     'hirokazu_a',
                     'daichi_a',
@@ -612,16 +613,16 @@ export const EventConfig = {
             title: 'ワックスつける',               // 必要：イベントのタイトル表示用
             type: 'conversation',                // 必要：イベントの種類を指定
             areaType: 'taketa',                  // 必要：エリアタイプを指定
-            background: 'kudou_back',              // 必要：conversationDataのbackgroundと一致
+            background: 'taketakukou',              // 必要：conversationDataのbackgroundと一致
             bgm: 'vitality',                      // 必要：conversationDataのbgmと一致
             required: {
-                backgrounds: ['kudou_back'],       // 必要：背景画像の読み込みに必要
+                backgrounds: ['taketakukou'],       // 必要：背景画像の読み込みに必要
                 characters: ['ooya_a', 'naoki_a'],  // 必要：character+expressionの組み合わせ（重複除く）
                 bgm: ['vitality']                  // 必要：BGMファイルの読み込みに必要
                 // seセクションは不要：conversationDataにSEの指定がないため
             },
             conversationDataKey: 'wax_on',        // 必要：conversationDataのキーと一致
-            areaName: 'classroom'                // 必要：エリア名の指定
+            areaName: 'taketa_high_school'       // 必要：エリア名の指定
         },
         
         // バレンタイン

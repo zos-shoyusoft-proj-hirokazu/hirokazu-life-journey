@@ -621,6 +621,7 @@ export class ConversationScene extends Phaser.Scene {
 
     // 立ち絵の更新
     updateCharacterSprite(character, expression) {
+        console.log('[ConversationScene] updateCharacterSprite called:', character, expression);
         if (!this.characterSprites) {
             this.characterSprites = {};
         }
@@ -633,7 +634,9 @@ export class ConversationScene extends Phaser.Scene {
         
         if (character && expression) {
             const spriteKey = this.resolveExistingSpriteKey(character, expression);
+            console.log('[ConversationScene] spriteKey resolved:', spriteKey);
             if (!spriteKey) {
+                console.warn('[ConversationScene] no spriteKey found, returning');
                 return; // 利用可能なテクスチャがない場合は表示しない
             }
             const width = this.sys?.game?.canvas?.width || this.sys?.game?.config?.width || 800;
@@ -686,6 +689,7 @@ export class ConversationScene extends Phaser.Scene {
 
     // 利用可能なテクスチャキーを解決（希望の表情が無ければフォールバック）
     resolveExistingSpriteKey(character, preferredExpression) {
+        console.log('[ConversationScene] resolveExistingSpriteKey called:', character, preferredExpression);
         const tryList = [];
         // まずは希望の表情
         tryList.push({ ch: character, ex: preferredExpression });
@@ -701,10 +705,13 @@ export class ConversationScene extends Phaser.Scene {
         // 実在する最初のキーを返す
         for (const { ch, ex } of tryList) {
             const key = `${ch}_${ex}`;
+            console.log('[ConversationScene] checking key:', key);
             if (this.textures && this.textures.exists && this.textures.exists(key)) {
+                console.log('[ConversationScene] found texture:', key);
                 return key;
             }
         }
+        console.log('[ConversationScene] no texture found for:', character, preferredExpression);
         return null;
     }
 

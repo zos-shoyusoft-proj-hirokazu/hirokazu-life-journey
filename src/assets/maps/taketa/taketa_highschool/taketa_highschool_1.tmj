@@ -514,14 +514,14 @@
                 {
                  "height":0,
                  "id":50,
-                 "name":"npc_s_1",
+                 "name":"\u304a\u304a\u3084_1",
                  "point":true,
                  "rotation":0,
                  "type":"npc",
                  "visible":true,
                  "width":0,
-                 "x":172,
-                 "y":674
+                 "x":156,
+                 "y":1032.66666666667
                 }, 
                 {
                  "height":0,

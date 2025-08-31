@@ -107,7 +107,14 @@ export class DynamicConversationScene extends Phaser.Scene {
         if (required) {
             // 背景画像
             required.backgrounds?.forEach(bg => {
-                this.load.image(bg, `assets/backgrounds/miemachi_bk/${bg}.png`);
+                // エリアタイプに応じて背景フォルダを分ける
+                let backgroundFolder = 'miemachi'; // デフォルト
+                if (this.eventConfig.areaType === 'taketa') {
+                    backgroundFolder = 'taketa';
+                } else if (this.eventConfig.areaType === 'japan') {
+                    backgroundFolder = 'japan';
+                }
+                this.load.image(bg, `assets/backgrounds/${backgroundFolder}/${bg}.png`);
             });
             
             // キャラクター画像

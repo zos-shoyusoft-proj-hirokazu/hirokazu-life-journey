@@ -1700,29 +1700,29 @@ export const miemachiConversationData = {
     // たつはる
     'tatuharu': {
         'background': 'taiikukann',
-        'bgm': 'curono',
+        'bgm': 'unオーエン彼女なのか？',
         'conversations': [
             {
                 'speaker': 'たつはる',
-                'character': 'tatsuharu',
+                'character': 'tatuharu',
                 'text': '俺この前、スラムダンク読んだわ',
                 'expression': 'a'
             },
             {
                 'speaker': 'たつはる',
-                'character': 'tatsuharu',
+                'character': 'tatuharu',
                 'text': '俺は',
                 'expression': 'a'
             },
             {
                 'speaker': 'たつはる',
-                'character': 'tatsuharu',
+                'character': 'tatuharu',
                 'text': '俺は強くなる...!',
                 'expression': 'a'
             },
             {
                 'speaker': 'たつはる',
-                'character': 'tatsuharu',
+                'character': 'tatuharu',
                 'text': 'ところでバス釣り行かね？',
                 'expression': 'a'
             },

@@ -121,7 +121,8 @@ export const StageConfig = {
                 },
                 npcs: [
                     { name: 'ひろかず_1', eventId: 'climbing_injury' },
-                    { name: 'npc_s_3' , eventId: 'wax_on' },
+                    { name: 'おおや_1', eventId: 'wax_on' },
+                    { name: 'npc_s_3'},
                 ],
                 tilesets: [
                     'pika_nos_tiles03_A2',

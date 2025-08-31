@@ -468,7 +468,7 @@ export const taketaConversationData = {
     
     // こうたろうのおしっこ事件
     'koutarou_toilet': {
-        'background': 'nichijyou_3',
+        'background': 'kyoushitu_b',
         'bgm': 'metoroido',
         'conversations': [
             {
@@ -934,7 +934,7 @@ export const taketaConversationData = {
     
     // 電車ないうんこおじさん事件
     'train_no_poop_man': {
-        'background': 'kannnamu',
+        'background': 'taketaeki',
         'bgm': 'Fantasy',
         'conversations': [
             {
@@ -1089,30 +1089,6 @@ export const taketaConversationData = {
                 'text': '12年後、ビデオカメラを修理されることはなかった、、、',
                 'expression': 'a'
             }
-            // {
-            //     'speaker': 'かなと',
-            //     'character': 'kanato',
-            //     'text': 'ってこともあったなぁ、、、',
-            //     'expression': 'b'
-            // },
-            // {
-            //     'speaker': 'ひろかず',
-            //     'character': 'hirokazu',
-            //     'text': 'ほんとに、申し訳なかったっす、、、',
-            //     'expression': 'h'
-            // },
-            // {
-            //     'speaker': 'かなと',
-            //     'character': 'kanato',
-            //     'text': 'まあ、今となっちゃあ、いい思い出だよ',
-            //     'expression': 'c'
-            // },
-            // {
-            //     'speaker': 'ひろかず',
-            //     'character': 'hirokazu',
-            //     'text': '感謝っす、、、',
-            //     'expression': 'h'
-            // }
         ]
     },
     
@@ -1432,7 +1408,7 @@ export const taketaConversationData = {
     
     // 電車の工藤くん
     'kannnamu_kudou': {
-        'background': 'train',
+        'background': 'kkannnamu',
         'bgm': 'Fantasy',
         'conversations': [
             {
@@ -2684,7 +2660,7 @@ export const taketaConversationData = {
     
     // ワックスつける
     'wax_on': {
-        'background': 'kudou_a',
+        'background': 'taketakukou',
         'bgm': 'vitality',
         'conversations': [
             {
@@ -2738,10 +2714,10 @@ export const taketaConversationData = {
         'bgm': 'rainbow_Seeker_II',
         'conversations': [
             {
-                'speaker': 'ナレーション',
+                'speaker': 'narrator',
                 'character': 'narrator',
-                'text': 'バレンタインデー',
-                'expression': 'a'
+                'text': 'バレンタインデーの日',
+                'expression': 'a',
             },
             {
                 'speaker': 'かなと',
