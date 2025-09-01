@@ -428,12 +428,21 @@ export class MapManager {
         console.log(`[MapManager] 壁オブジェクト作成: ${name}, サイズ: ${width}x${height}`);
     }
 
-    // NPCオブジェクト作成（専用）
+        // NPCオブジェクト作成（専用）
     createNPCObject(obj) {
         const name = obj.name || 'npc';
         
-        // 全てのNPCをMapManagerで作成（緑の四角として）
-        console.log(`[MapManager] NPCオブジェクト作成: ${name}`);
+        // StageConfigでスプライトが定義されているNPCは、MapManagerでは作成しない
+        if (this.scene.stageConfig && this.scene.stageConfig.currentFloor && this.scene.stageConfig.currentFloor.npcs) {
+            const stageNPC = this.scene.stageConfig.currentFloor.npcs.find(npc => npc.name === name);
+            if (stageNPC && stageNPC.sprite) {
+                console.log(`[MapManager] スプライト定義済みのNPCをスキップ: ${name} (StageSceneで管理)`);
+                return; // 緑の四角を作成しない
+            }
+        }
+        
+        // スプライトが定義されていないNPCのみ、MapManagerで作成
+        console.log(`[MapManager] 通常のNPCオブジェクト作成: ${name}`);
         
         const width = obj.width || 32;
         const height = obj.height || 32;
@@ -451,65 +460,18 @@ export class MapManager {
         sprite.setData('npcId', name);
         sprite.setData('npcType', 'npc');
         
-        // 緑の四角にもクリックイベントを設定（スプライトが読み込まれていない場合の保険）
+        // 緑の四角にもクリックイベントを設定
         sprite.setInteractive();
         sprite.on('pointerdown', () => {
             console.log(`[MapManager] NPC緑四角クリック: ${name}`);
             
-            // StageConfigでeventIdが設定されている場合はConversationScene、そうでない場合はDialogSystem
-            if (this.scene.stageConfig && this.scene.stageConfig.currentFloor && this.scene.stageConfig.currentFloor.npcs) {
-                const stageNPC = this.scene.stageConfig.currentFloor.npcs.find(npc => npc.name === name);
-                if (stageNPC && stageNPC.eventId) {
-                    console.log(`[MapManager] eventIdベースの会話開始: ${name} -> ${stageNPC.eventId}`);
-                    // ConversationSceneを開始
-                    if (this.scene.startConversation) {
-                        this.scene.startConversation(stageNPC.eventId);
-                    } else {
-                        console.error('[MapManager] startConversationメソッドが存在しません');
-                    }
-                } else {
-                    console.log(`[MapManager] DialogSystemで会話開始: ${name}`);
-                    // DialogSystemで名前から直接会話を表示
-                    if (this.scene.dialogSystem) {
-                        this.scene.dialogSystem.startDialog(name);
-                    } else {
-                        console.log('[MapManager] DialogSystemが初期化されていません');
-                    }
-                }
+            // DialogSystemで名前から直接会話を表示
+            if (this.scene.dialogSystem) {
+                this.scene.dialogSystem.startDialog(name);
             } else {
-                console.log(`[MapManager] DialogSystemで会話開始: ${name}`);
-                // DialogSystemで名前から直接会話を表示
-                if (this.scene.dialogSystem) {
-                    this.scene.dialogSystem.startDialog(name);
-                } else {
-                    console.log('[MapManager] DialogSystemが初期化されていません');
-                }
+                console.log('[MapManager] DialogSystemが初期化されていません');
             }
         });
-        
-        // StageConfigでスプライトが定義されている場合は、スプライトも表示
-        if (this.scene.stageConfig && this.scene.stageConfig.currentFloor && this.scene.stageConfig.currentFloor.npcs) {
-            const stageNPC = this.scene.stageConfig.currentFloor.npcs.find(npc => npc.name === name);
-            if (stageNPC && stageNPC.sprite) {
-                console.log(`[MapManager] スプライト表示: ${name} -> ${stageNPC.sprite}`);
-                
-                // スプライトシートを読み込み（まだ読み込まれていない場合）
-                if (!this.scene.textures.exists(name)) {
-                    this.scene.load.spritesheet(name, `assets/characters/npcs/${stageNPC.sprite}`, {
-                        frameWidth: 32,
-                        frameHeight: 32,
-                        spacing: 0,
-                        margin: 0
-                    });
-                    this.scene.load.once('complete', () => {
-                        this.createNPCSprite(sprite, name, stageNPC.sprite);
-                    });
-                    this.scene.load.start();
-                } else {
-                    this.createNPCSprite(sprite, name, stageNPC.sprite);
-                }
-            }
-        }
         
         // オブジェクト名のテキストラベルを追加（座標変換後の位置に設定）
         const label = this.scene.add.text(sprite.x, sprite.y - height/2 - 10, `${name} (npc)`, {
@@ -521,7 +483,40 @@ export class MapManager {
         label.setOrigin(0.5, 1);
         label.setDepth(1000);
         
-                console.log(`[MapManager] NPCオブジェクト作成（▢マーク）: ${name}, サイズ: ${width}x${height}`);
+        console.log(`[MapManager] NPCオブジェクト作成（▢マーク）: ${name}, サイズ: ${width}x${height}`);
+    }
+
+    // NPCオブジェクトデータを取得
+    getNPCObjectData(npcName) {
+        if (!this.map) {
+            console.warn('[MapManager] マップが読み込まれていません');
+            return null;
+        }
+
+        // オブジェクトレイヤー（通常 "オブジェクト" または "Objects"）を検索
+        const objectLayers = this.map.objects;
+        
+        for (let i = 0; i < objectLayers.length; i++) {
+            const layer = objectLayers[i];
+            if (layer.objects) {
+                for (let j = 0; j < layer.objects.length; j++) {
+                    const obj = layer.objects[j];
+                    if (obj.name === npcName) {
+                        // Tiledの座標系をPhaserの座標系に変換
+                        return {
+                            x: obj.x + (obj.width || 32) / 2,  // 中心位置に調整
+                            y: obj.y - (obj.height || 32) / 2, // Tiledでは左下が基準なのでPhaserの中心位置に調整
+                            width: obj.width || 32,
+                            height: obj.height || 32,
+                            properties: obj.properties || {}
+                        };
+                    }
+                }
+            }
+        }
+        
+        console.warn(`[MapManager] NPCオブジェクトが見つかりません: ${npcName}`);
+        return null;
     }
     
     // NPCスプライトを作成するメソッド
@@ -588,20 +583,7 @@ export class MapManager {
         }
     }
     
-    // NPCオブジェクトのデータを取得するメソッド
-    getNPCObjectData(npcName) {
-        if (this.tilemap && this.tilemap.layers) {
-            for (const layer of this.tilemap.layers) {
-                if (layer.type === 'objectgroup' && layer.objects) {
-                    const npcObject = layer.objects.find(obj => obj.type === 'npc' && obj.name === npcName);
-                    if (npcObject) {
-                        return npcObject;
-                    }
-                }
-            }
-        }
-        return null;
-    }
+
     
     // NPC用のテクスチャを作成
     createNPCTexture(textureKey, width, height) {

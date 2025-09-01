@@ -135,6 +135,98 @@ export class StageScene extends Phaser.Scene {
     
 
     
+    // NPCを作成
+    createNPCs() {
+        if (this.stageConfig && this.stageConfig.currentFloor && this.stageConfig.currentFloor.npcs) {
+            this.stageConfig.currentFloor.npcs.forEach(npc => {
+                if (npc.sprite) {
+                    console.log(`[StageScene] スプライトNPC作成: ${npc.name}`);
+                    
+                    // .tmjファイルからNPCオブジェクトデータを取得
+                    const npcObjectData = this.mapManager.getNPCObjectData(npc.name);
+                    
+                    if (npcObjectData) {
+                        // スプライトを作成
+                        const npcSprite = this.add.sprite(npcObjectData.x, npcObjectData.y, npc.name);
+                        
+                        // 必要に応じてサイズを調整
+                        npcSprite.setDisplaySize(32, 32);
+                        
+                        // 物理ボディを追加
+                        this.physics.add.existing(npcSprite);
+                        npcSprite.body.setSize(32, 32);
+                        
+                        // オブジェクト情報を保存
+                        npcSprite.setData('npcId', npc.name);
+                        npcSprite.setData('npcType', 'npc');
+                        
+                        // オブジェクトグループに追加
+                        if (this.mapManager.objectGroup) {
+                            this.mapManager.objectGroup.add(npcSprite);
+                        } else {
+                            console.warn('[StageScene] objectGroupが初期化されていません');
+                        }
+                        
+                        // クリックイベントを設定
+                        npcSprite.setInteractive();
+                        npcSprite.on('pointerdown', () => {
+                            console.log(`[StageScene] NPCスプライトクリック: ${npc.name}`);
+                            
+                            if (npc.eventId) {
+                                console.log(`[StageScene] eventIdベースの会話開始: ${npc.name} -> ${npc.eventId}`);
+                                this.startConversation(npc.eventId);
+                            } else {
+                                console.log(`[StageScene] DialogSystemで会話開始: ${npc.name}`);
+                                if (this.dialogSystem) {
+                                    this.dialogSystem.startDialog(npc.name);
+                                } else {
+                                    console.log('[StageScene] DialogSystemが初期化されていません');
+                                }
+                            }
+                        });
+                        
+                        // テキストラベルを追加
+                        const label = this.add.text(npcSprite.x, npcSprite.y - 16, `${npc.name} (npc)`, {
+                            fontSize: '12px',
+                            fill: '#ffffff',
+                            backgroundColor: '#000000',
+                            padding: { x: 2, y: 1 }
+                        });
+                        label.setOrigin(0.5, 1);
+                        label.setDepth(1000);
+                        
+                        console.log(`[StageScene] スプライトNPC作成完了: ${npc.name} (x: ${npcObjectData.x}, y: ${npcObjectData.y})`);
+                    } else {
+                        console.warn(`[StageScene] NPCオブジェクトデータが見つかりません: ${npc.name}`);
+                    }
+                }
+            });
+        }
+    }
+
+    // NPCとの当たり判定を設定
+    setupNPCCollisions() {
+        if (this.collisionManager && this.playerController && this.playerController.player && this.mapManager.objectGroup) {
+            // プレイヤーとNPCの当たり判定を設定
+            this.physics.add.collider(
+                this.playerController.player,
+                this.mapManager.objectGroup,
+                (player, npc) => {
+                    // NPCとの当たり判定処理
+                    if (npc.getData('npcType') === 'npc') {
+                        console.log(`[StageScene] プレイヤーがNPCと接触: ${npc.getData('npcId')}`);
+                    }
+                },
+                null,
+                this
+            );
+            
+            console.log('[StageScene] NPCとの当たり判定設定完了');
+        } else {
+            console.log('[StageScene] NPCとの当たり判定設定をスキップ（必要なコンポーネントが初期化されていません）');
+        }
+    }
+
     // 会話開始メソッド
     startConversation(eventId) {
         if (this._isInConversation) {
@@ -226,6 +318,12 @@ export class StageScene extends Phaser.Scene {
             }
             
             this.playerController.createPlayer(playerStartX, playerStartY);
+            
+            // NPCを作成（プレイヤー作成後）
+            this.createNPCs();
+            
+            // NPCとの当たり判定を設定
+            this.setupNPCCollisions();
             
             // タッチコントローラー作成
             this.touchControlManager = new TouchControlManager(this, this.playerController.player, 'se_touch');

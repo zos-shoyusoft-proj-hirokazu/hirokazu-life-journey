@@ -211,7 +211,6 @@ export const StageConfig = {
                     { name: 's-12', sprite: 'pipo-charachip007a.png' },
                     { name: 's-13', sprite: 'pipo-charachip022a.png' },
                     { name: 'あめかわ', sprite: 'pipo-charachip007a.png' },
-                    { name: 'ひろかず_2', sprite: '制服1冬服_男_01.png' },
                     { name: 'みやざー', sprite: 'pipo-charachip022a.png' },
                     { name: 'あきざわ', sprite: 'pipo-charachip022e.png' },
                     { name: 'しゅうへい', sprite: 'pipo-charachip024d.png' },
