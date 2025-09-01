@@ -8,8 +8,6 @@ export class PlayerController {
     }
 
     createPlayer(x, y) {
-        console.log('[PlayerController] プレイヤー作成開始');
-        
         // プレイヤー（新郎）作成 - スプライトシートを使用
         this.player = this.scene.physics.add.sprite(x, y, 'player_sprite');
         this.player.setDisplaySize(32, 32);
@@ -25,17 +23,11 @@ export class PlayerController {
         this.player.setBounce(0); // 跳ね返りを無効化（滑らかな動きのため）
         this.player.setDrag(200); // 慣性を追加して滑らかに停止
         
-        console.log('[PlayerController] プレイヤースプライト作成完了');
-        
         // アニメーションを設定
         this.setupPlayerAnimations();
-        
-        console.log('[PlayerController] プレイヤー作成完了');
     }
     
     setupPlayerAnimations() {
-        console.log('[PlayerController] アニメーション設定開始');
-        
         // プレイヤーのアニメーションを設定（3x4グリッド構成）
         if (!this.scene.anims.exists('player_walk_down')) {
             this.scene.anims.create({
@@ -44,7 +36,6 @@ export class PlayerController {
                 frameRate: 8,
                 repeat: -1
             });
-            console.log('[PlayerController] 下向きアニメーション作成完了');
         }
         
         if (!this.scene.anims.exists('player_walk_left')) {
@@ -54,7 +45,6 @@ export class PlayerController {
                 frameRate: 8,
                 repeat: -1
             });
-            console.log('[PlayerController] 左向きアニメーション作成完了');
         }
         
         if (!this.scene.anims.exists('player_walk_right')) {
@@ -64,7 +54,6 @@ export class PlayerController {
                 frameRate: 8,
                 repeat: -1
             });
-            console.log('[PlayerController] 右向きアニメーション作成完了');
         }
         
         if (!this.scene.anims.exists('player_walk_up')) {
@@ -74,10 +63,7 @@ export class PlayerController {
                 frameRate: 8,
                 repeat: -1
             });
-            console.log('[PlayerController] 上向きアニメーション作成完了');
         }
-        
-        console.log('[PlayerController] アニメーション設定完了');
     }
     
     // 主人公の状態を確認するメソッド（削除）
@@ -193,11 +179,8 @@ export class PlayerController {
     }
     
     handlePlayerAnimation(velocityX, velocityY) {
-        console.log(`[PlayerController] handlePlayerAnimation: vx=${velocityX}, vy=${velocityY}`);
-        
         // 移動していない場合はアニメーションを停止し、静止フレームを設定
         if (velocityX === 0 && velocityY === 0) {
-            console.log('[PlayerController] 停止中 - アニメーション停止');
             this.player.anims.stop();
             // 最後の移動方向に応じて静止フレームを設定
             if (this.lastDirection) {
@@ -223,22 +206,18 @@ export class PlayerController {
         if (Math.abs(velocityY) > Math.abs(velocityX)) {
             // 上下移動が優先
             if (velocityY < 0) {
-                console.log('[PlayerController] 上向きアニメーション再生');
                 this.player.anims.play('player_walk_up', true);
                 this.lastDirection = 'up';
             } else {
-                console.log('[PlayerController] 下向きアニメーション再生');
                 this.player.anims.play('player_walk_down', true);
                 this.lastDirection = 'down';
             }
         } else {
             // 左右移動が優先
             if (velocityX < 0) {
-                console.log('[PlayerController] 左向きアニメーション再生');
                 this.player.anims.play('player_walk_left', true);
                 this.lastDirection = 'left';
             } else {
-                console.log('[PlayerController] 右向きアニメーション再生');
                 this.player.anims.play('player_walk_right', true);
                 this.lastDirection = 'right';
             }

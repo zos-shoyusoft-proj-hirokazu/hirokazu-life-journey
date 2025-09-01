@@ -442,7 +442,6 @@ export class MapManager {
         }
         
         // スプライトが定義されていないNPCのみ、MapManagerで作成
-        console.log(`[MapManager] 通常のNPCオブジェクト作成: ${name}`);
         
         const width = obj.width || 32;
         const height = obj.height || 32;
@@ -463,16 +462,12 @@ export class MapManager {
         // 緑の四角にもクリックイベントを設定
         sprite.setInteractive();
         sprite.on('pointerdown', () => {
-            console.log(`[MapManager] NPC緑四角クリック: ${name}`);
-            
             // NPCをプレイヤーの方向に向ける（緑四角の場合）
             this.makeNPCLookAtPlayer(sprite);
             
             // DialogSystemで名前から直接会話を表示
             if (this.scene.dialogSystem) {
                 this.scene.dialogSystem.startDialog(name);
-            } else {
-                console.log('[MapManager] DialogSystemが初期化されていません');
             }
         });
         

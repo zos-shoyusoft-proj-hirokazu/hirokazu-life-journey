@@ -125,7 +125,6 @@ export class StageScene extends Phaser.Scene {
                 if (floor.npcs) {
                     floor.npcs.forEach(npc => {
                         if (npc.sprite) {
-                            console.log(`[StageScene] NPCスプライト読み込み: ${npc.name} -> ${npc.sprite}`);
                             // スプライトシートとして読み込み
                             this.load.spritesheet(npc.name, `assets/characters/npcs/${npc.sprite}`, {
                                 frameWidth: 32,  // 1人のキャラクターの幅
@@ -133,7 +132,6 @@ export class StageScene extends Phaser.Scene {
                                 spacing: 0,
                                 margin: 0
                             });
-                            console.log(`[StageScene] スプライトシート読み込み完了: ${npc.name} -> ${npc.sprite}`);
                         }
                     });
                 }
@@ -148,8 +146,6 @@ export class StageScene extends Phaser.Scene {
         if (this.stageConfig && this.stageConfig.currentFloor && this.stageConfig.currentFloor.npcs) {
             this.stageConfig.currentFloor.npcs.forEach(npc => {
                 if (npc.sprite) {
-                    console.log(`[StageScene] スプライトNPC作成: ${npc.name}`);
-                    
                     // .tmjファイルからNPCオブジェクトデータを取得
                     const npcObjectData = this.mapManager.getNPCObjectData(npc.name);
                     
@@ -159,9 +155,7 @@ export class StageScene extends Phaser.Scene {
                     
                     const npcSprite = this.add.sprite(x, y, npc.name);
                     
-                    // スプライトシートの情報をログ出力
-                    console.log(`[StageScene] NPCスプライト作成: ${npc.name}, テクスチャキー: ${npcSprite.texture.key}`);
-                    console.log(`[StageScene] スプライトシートフレーム数: ${npcSprite.texture.frameTotal}`);
+
                     
                     // 必要に応じてサイズを調整
                     npcSprite.setDisplaySize(32, 32);
@@ -187,26 +181,18 @@ export class StageScene extends Phaser.Scene {
                     
                     // クリックイベントを設定
                     npcSprite.setInteractive();
-                    npcSprite.on('pointerdown', () => {
-                        console.log(`[StageScene] NPCスプライトクリック: ${npc.name}`);
-                        
-                        // NPCをプレイヤーの方向に向ける
-                        console.log(`[StageScene] makeNPCLookAtPlayer呼び出し前: ${npc.name}`);
-                        this.makeNPCLookAtPlayer(npcSprite);
-                        console.log(`[StageScene] makeNPCLookAtPlayer呼び出し後: ${npc.name}`);
-                        
-                        if (npc.eventId) {
-                            console.log(`[StageScene] eventIdベースの会話開始: ${npc.name} -> ${npc.eventId}`);
-                            this.startConversation(npc.eventId);
-                        } else {
-                            console.log(`[StageScene] DialogSystemで会話開始: ${npc.name}`);
-                            if (this.dialogSystem) {
-                                this.dialogSystem.startDialog(npc.name);
+                                            npcSprite.on('pointerdown', () => {
+                            // NPCをプレイヤーの方向に向ける
+                            this.makeNPCLookAtPlayer(npcSprite);
+                            
+                            if (npc.eventId) {
+                                this.startConversation(npc.eventId);
                             } else {
-                                console.log('[StageScene] DialogSystemが初期化されていません');
+                                if (this.dialogSystem) {
+                                    this.dialogSystem.startDialog(npc.name);
+                                }
                             }
-                        }
-                    });
+                        });
                     
                     // テキストラベルを追加
                     const displayName = npc.displayName || npc.name;
@@ -219,11 +205,7 @@ export class StageScene extends Phaser.Scene {
                     label.setOrigin(0.5, 1);
                     label.setDepth(1000);
                     
-                    if (npcObjectData) {
-                        console.log(`[StageScene] スプライトNPC作成完了: ${npc.name} (x: ${npcObjectData.x}, y: ${npcObjectData.y})`);
-                    } else {
-                        console.log(`[StageScene] スプライトNPC作成完了: ${npc.name} (デフォルト位置 x: ${x}, y: ${y})`);
-                    }
+
                 }
             });
         }
@@ -738,20 +720,12 @@ export class StageScene extends Phaser.Scene {
     
     // NPCをプレイヤーの方向に向ける
     makeNPCLookAtPlayer(npcSprite) {
-        console.log('[StageScene] makeNPCLookAtPlayer呼び出し');
-        
         if (!this.playerController || !this.playerController.player) {
-            console.warn('[StageScene] playerControllerまたはplayerが見つかりません');
             return;
         }
         
         const player = this.playerController.player;
         const npc = npcSprite;
-        
-        console.log(`[StageScene] プレイヤー位置: (${player.x}, ${player.y})`);
-        console.log(`[StageScene] NPC位置: (${npc.x}, ${npc.y})`);
-        console.log(`[StageScene] NPCテクスチャキー: ${npc.texture.key}`);
-        console.log(`[StageScene] NPCフレーム総数: ${npc.texture.frameTotal}`);
         
         // プレイヤーとNPCの位置関係を計算
         const deltaX = player.x - npc.x;
@@ -760,45 +734,31 @@ export class StageScene extends Phaser.Scene {
         // 距離を計算
         const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
         
-        console.log(`[StageScene] 距離: ${distance}, deltaX: ${deltaX}, deltaY: ${deltaY}`);
-        
         if (distance > 0) {
             // 正規化された方向ベクトル
             const normalizedX = deltaX / distance;
             const normalizedY = deltaY / distance;
-            
-            console.log(`[StageScene] 正規化ベクトル: (${normalizedX}, ${normalizedY})`);
-            
-            // 現在のフレーム番号をログ出力
-            console.log(`[StageScene] 現在のNPCフレーム: ${npc.frame.name}`);
             
             // 方向に応じてフレームを設定
             if (Math.abs(normalizedY) > Math.abs(normalizedX)) {
                 // 上下方向が優先
                 if (normalizedY < 0) {
                     // プレイヤーが上にいる（NPCは上向き）
-                    console.log('[StageScene] プレイヤーが上 - NPCを上向きに設定 (フレーム9)');
                     npc.setFrame(9); // 上向きフレーム
                 } else {
                     // プレイヤーが下にいる（NPCは下向き）
-                    console.log('[StageScene] プレイヤーが下 - NPCを下向きに設定 (フレーム0)');
                     npc.setFrame(0); // 下向きフレーム
                 }
             } else {
                 // 左右方向が優先
                 if (normalizedX < 0) {
                     // プレイヤーが左にいる（NPCは左向き）
-                    console.log('[StageScene] プレイヤーが左 - NPCを左向きに設定 (フレーム3)');
                     npc.setFrame(3); // 左向きフレーム
                 } else {
                     // プレイヤーが右にいる（NPCは右向き）
-                    console.log('[StageScene] プレイヤーが右 - NPCを右向きに設定 (フレーム6)');
                     npc.setFrame(6); // 右向きフレーム
                 }
             }
-            
-            // フレーム変更後のフレーム番号をログ出力
-            console.log(`[StageScene] 変更後のNPCフレーム: ${npc.frame.name}`);
         }
     }
     
