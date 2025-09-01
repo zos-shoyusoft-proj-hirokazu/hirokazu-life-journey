@@ -108,6 +108,14 @@ export class StageScene extends Phaser.Scene {
         
         // NPCスプライトを動的に読み込み
         this.loadNPCSprites();
+        
+        // プレイヤー用スプライトシートを読み込み
+        this.load.spritesheet('player_sprite', 'assets/characters/player/pipo-charachip007a.png', {
+            frameWidth: 32,
+            frameHeight: 32,
+            spacing: 0,
+            margin: 0
+        });
     }
     
     loadNPCSprites() {
@@ -190,7 +198,8 @@ export class StageScene extends Phaser.Scene {
                         });
                         
                         // テキストラベルを追加
-                        const label = this.add.text(npcSprite.x, npcSprite.y - 16, `${npc.name} (npc)`, {
+                        const displayName = npc.displayName || npc.name;
+                        const label = this.add.text(npcSprite.x, npcSprite.y - 16, displayName, {
                             fontSize: '12px',
                             fill: '#ffffff',
                             backgroundColor: '#000000',
