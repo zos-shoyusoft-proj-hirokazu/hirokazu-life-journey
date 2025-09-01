@@ -152,13 +152,17 @@ export class StageScene extends Phaser.Scene {
                         // 必要に応じてサイズを調整
                         npcSprite.setDisplaySize(32, 32);
                         
-                        // 物理ボディを追加
+                        // 物理ボディを追加（静的なオブジェクトとして）
                         this.physics.add.existing(npcSprite);
                         npcSprite.body.setSize(32, 32);
+                        npcSprite.body.setImmovable(true); // 動かないようにする
+                        npcSprite.body.setCollideWorldBounds(false); // ワールド境界との衝突を無効化
                         
                         // オブジェクト情報を保存
                         npcSprite.setData('npcId', npc.name);
                         npcSprite.setData('npcType', 'npc');
+                        npcSprite.setData('objectType', 'npc'); // CollisionManager用
+                        npcSprite.setData('objectName', npc.name); // CollisionManager用
                         
                         // オブジェクトグループに追加
                         if (this.mapManager.objectGroup) {
@@ -204,28 +208,9 @@ export class StageScene extends Phaser.Scene {
         }
     }
 
-    // NPCとの当たり判定を設定
-    setupNPCCollisions() {
-        if (this.collisionManager && this.playerController && this.playerController.player && this.mapManager.objectGroup) {
-            // プレイヤーとNPCの当たり判定を設定
-            this.physics.add.collider(
-                this.playerController.player,
-                this.mapManager.objectGroup,
-                (player, npc) => {
-                    // NPCとの当たり判定処理
-                    if (npc.getData('npcType') === 'npc') {
-                        console.log(`[StageScene] プレイヤーがNPCと接触: ${npc.getData('npcId')}`);
-                    }
-                },
-                null,
-                this
-            );
-            
-            console.log('[StageScene] NPCとの当たり判定設定完了');
-        } else {
-            console.log('[StageScene] NPCとの当たり判定設定をスキップ（必要なコンポーネントが初期化されていません）');
-        }
-    }
+
+
+
 
     // 会話開始メソッド
     startConversation(eventId) {
@@ -321,9 +306,6 @@ export class StageScene extends Phaser.Scene {
             
             // NPCを作成（プレイヤー作成後）
             this.createNPCs();
-            
-            // NPCとの当たり判定を設定
-            this.setupNPCCollisions();
             
             // タッチコントローラー作成
             this.touchControlManager = new TouchControlManager(this, this.playerController.player, 'se_touch');

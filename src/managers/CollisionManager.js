@@ -245,13 +245,13 @@ export class CollisionManager {
                     // 壁はプレイヤーと衝突させる
                     this.scene.physics.add.collider(player, sprite);
                 } else if (objectType === 'npc') {
-                    // NPCはクリックで会話開始、衝突判定も設定
+                    // NPCはクリックで会話開始、物理的な衝突も設定（通り抜け不可）
                     sprite.setInteractive(); // クリック可能にする
                     sprite.on('pointerdown', () => {
                         console.log(`[CollisionManager] NPCをクリック: ${objectName}`);
                         this.startConversation(objectName);
                     });
-                    this.scene.physics.add.collider(player, sprite);
+                    this.scene.physics.add.collider(player, sprite); // 物理的な衝突を設定
                 } else if (objectType === 'move') {
                     // moveは重なりで移動のみ
                     
