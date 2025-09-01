@@ -153,64 +153,76 @@ export class StageScene extends Phaser.Scene {
                     // .tmjファイルからNPCオブジェクトデータを取得
                     const npcObjectData = this.mapManager.getNPCObjectData(npc.name);
                     
-                    if (npcObjectData) {
-                        // スプライトを作成
-                        const npcSprite = this.add.sprite(npcObjectData.x, npcObjectData.y, npc.name);
+                    // スプライトを作成（npcObjectDataが存在しない場合はデフォルト位置を使用）
+                    const x = npcObjectData ? npcObjectData.x : 100;
+                    const y = npcObjectData ? npcObjectData.y : 100;
+                    
+                    const npcSprite = this.add.sprite(x, y, npc.name);
+                    
+                    // スプライトシートの情報をログ出力
+                    console.log(`[StageScene] NPCスプライト作成: ${npc.name}, テクスチャキー: ${npcSprite.texture.key}`);
+                    console.log(`[StageScene] スプライトシートフレーム数: ${npcSprite.texture.frameTotal}`);
+                    
+                    // 必要に応じてサイズを調整
+                    npcSprite.setDisplaySize(32, 32);
+                    
+                    // 物理ボディを追加（静的なオブジェクトとして）
+                    this.physics.add.existing(npcSprite);
+                    npcSprite.body.setSize(32, 32);
+                    npcSprite.body.setImmovable(true); // 動かないようにする
+                    npcSprite.body.setCollideWorldBounds(false); // ワールド境界との衝突を無効化
+                    
+                    // オブジェクト情報を保存
+                    npcSprite.setData('npcId', npc.name);
+                    npcSprite.setData('npcType', 'npc');
+                    npcSprite.setData('objectType', 'npc'); // CollisionManager用
+                    npcSprite.setData('objectName', npc.name); // CollisionManager用
+                    
+                    // オブジェクトグループに追加
+                    if (this.mapManager.objectGroup) {
+                        this.mapManager.objectGroup.add(npcSprite);
+                    } else {
+                        console.warn('[StageScene] objectGroupが初期化されていません');
+                    }
+                    
+                    // クリックイベントを設定
+                    npcSprite.setInteractive();
+                    npcSprite.on('pointerdown', () => {
+                        console.log(`[StageScene] NPCスプライトクリック: ${npc.name}`);
                         
-                        // 必要に応じてサイズを調整
-                        npcSprite.setDisplaySize(32, 32);
+                        // NPCをプレイヤーの方向に向ける
+                        console.log(`[StageScene] makeNPCLookAtPlayer呼び出し前: ${npc.name}`);
+                        this.makeNPCLookAtPlayer(npcSprite);
+                        console.log(`[StageScene] makeNPCLookAtPlayer呼び出し後: ${npc.name}`);
                         
-                        // 物理ボディを追加（静的なオブジェクトとして）
-                        this.physics.add.existing(npcSprite);
-                        npcSprite.body.setSize(32, 32);
-                        npcSprite.body.setImmovable(true); // 動かないようにする
-                        npcSprite.body.setCollideWorldBounds(false); // ワールド境界との衝突を無効化
-                        
-                        // オブジェクト情報を保存
-                        npcSprite.setData('npcId', npc.name);
-                        npcSprite.setData('npcType', 'npc');
-                        npcSprite.setData('objectType', 'npc'); // CollisionManager用
-                        npcSprite.setData('objectName', npc.name); // CollisionManager用
-                        
-                        // オブジェクトグループに追加
-                        if (this.mapManager.objectGroup) {
-                            this.mapManager.objectGroup.add(npcSprite);
+                        if (npc.eventId) {
+                            console.log(`[StageScene] eventIdベースの会話開始: ${npc.name} -> ${npc.eventId}`);
+                            this.startConversation(npc.eventId);
                         } else {
-                            console.warn('[StageScene] objectGroupが初期化されていません');
-                        }
-                        
-                        // クリックイベントを設定
-                        npcSprite.setInteractive();
-                        npcSprite.on('pointerdown', () => {
-                            console.log(`[StageScene] NPCスプライトクリック: ${npc.name}`);
-                            
-                            if (npc.eventId) {
-                                console.log(`[StageScene] eventIdベースの会話開始: ${npc.name} -> ${npc.eventId}`);
-                                this.startConversation(npc.eventId);
+                            console.log(`[StageScene] DialogSystemで会話開始: ${npc.name}`);
+                            if (this.dialogSystem) {
+                                this.dialogSystem.startDialog(npc.name);
                             } else {
-                                console.log(`[StageScene] DialogSystemで会話開始: ${npc.name}`);
-                                if (this.dialogSystem) {
-                                    this.dialogSystem.startDialog(npc.name);
-                                } else {
-                                    console.log('[StageScene] DialogSystemが初期化されていません');
-                                }
+                                console.log('[StageScene] DialogSystemが初期化されていません');
                             }
-                        });
-                        
-                        // テキストラベルを追加
-                        const displayName = npc.displayName || npc.name;
-                        const label = this.add.text(npcSprite.x, npcSprite.y - 16, displayName, {
-                            fontSize: '12px',
-                            fill: '#ffffff',
-                            backgroundColor: '#000000',
-                            padding: { x: 2, y: 1 }
-                        });
-                        label.setOrigin(0.5, 1);
-                        label.setDepth(1000);
-                        
+                        }
+                    });
+                    
+                    // テキストラベルを追加
+                    const displayName = npc.displayName || npc.name;
+                    const label = this.add.text(npcSprite.x, npcSprite.y - 16, displayName, {
+                        fontSize: '12px',
+                        fill: '#ffffff',
+                        backgroundColor: '#000000',
+                        padding: { x: 2, y: 1 }
+                    });
+                    label.setOrigin(0.5, 1);
+                    label.setDepth(1000);
+                    
+                    if (npcObjectData) {
                         console.log(`[StageScene] スプライトNPC作成完了: ${npc.name} (x: ${npcObjectData.x}, y: ${npcObjectData.y})`);
                     } else {
-                        console.warn(`[StageScene] NPCオブジェクトデータが見つかりません: ${npc.name}`);
+                        console.log(`[StageScene] スプライトNPC作成完了: ${npc.name} (デフォルト位置 x: ${x}, y: ${y})`);
                     }
                 }
             });
@@ -722,6 +734,72 @@ export class StageScene extends Phaser.Scene {
     // 会話中かどうかの確認
     isConversationActive() {
         return this._isInConversation;
+    }
+    
+    // NPCをプレイヤーの方向に向ける
+    makeNPCLookAtPlayer(npcSprite) {
+        console.log('[StageScene] makeNPCLookAtPlayer呼び出し');
+        
+        if (!this.playerController || !this.playerController.player) {
+            console.warn('[StageScene] playerControllerまたはplayerが見つかりません');
+            return;
+        }
+        
+        const player = this.playerController.player;
+        const npc = npcSprite;
+        
+        console.log(`[StageScene] プレイヤー位置: (${player.x}, ${player.y})`);
+        console.log(`[StageScene] NPC位置: (${npc.x}, ${npc.y})`);
+        console.log(`[StageScene] NPCテクスチャキー: ${npc.texture.key}`);
+        console.log(`[StageScene] NPCフレーム総数: ${npc.texture.frameTotal}`);
+        
+        // プレイヤーとNPCの位置関係を計算
+        const deltaX = player.x - npc.x;
+        const deltaY = player.y - npc.y;
+        
+        // 距離を計算
+        const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+        
+        console.log(`[StageScene] 距離: ${distance}, deltaX: ${deltaX}, deltaY: ${deltaY}`);
+        
+        if (distance > 0) {
+            // 正規化された方向ベクトル
+            const normalizedX = deltaX / distance;
+            const normalizedY = deltaY / distance;
+            
+            console.log(`[StageScene] 正規化ベクトル: (${normalizedX}, ${normalizedY})`);
+            
+            // 現在のフレーム番号をログ出力
+            console.log(`[StageScene] 現在のNPCフレーム: ${npc.frame.name}`);
+            
+            // 方向に応じてフレームを設定
+            if (Math.abs(normalizedY) > Math.abs(normalizedX)) {
+                // 上下方向が優先
+                if (normalizedY < 0) {
+                    // プレイヤーが上にいる（NPCは上向き）
+                    console.log('[StageScene] プレイヤーが上 - NPCを上向きに設定 (フレーム9)');
+                    npc.setFrame(9); // 上向きフレーム
+                } else {
+                    // プレイヤーが下にいる（NPCは下向き）
+                    console.log('[StageScene] プレイヤーが下 - NPCを下向きに設定 (フレーム0)');
+                    npc.setFrame(0); // 下向きフレーム
+                }
+            } else {
+                // 左右方向が優先
+                if (normalizedX < 0) {
+                    // プレイヤーが左にいる（NPCは左向き）
+                    console.log('[StageScene] プレイヤーが左 - NPCを左向きに設定 (フレーム3)');
+                    npc.setFrame(3); // 左向きフレーム
+                } else {
+                    // プレイヤーが右にいる（NPCは右向き）
+                    console.log('[StageScene] プレイヤーが右 - NPCを右向きに設定 (フレーム6)');
+                    npc.setFrame(6); // 右向きフレーム
+                }
+            }
+            
+            // フレーム変更後のフレーム番号をログ出力
+            console.log(`[StageScene] 変更後のNPCフレーム: ${npc.frame.name}`);
+        }
     }
     
 

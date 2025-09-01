@@ -465,6 +465,9 @@ export class MapManager {
         sprite.on('pointerdown', () => {
             console.log(`[MapManager] NPC緑四角クリック: ${name}`);
             
+            // NPCをプレイヤーの方向に向ける（緑四角の場合）
+            this.makeNPCLookAtPlayer(sprite);
+            
             // DialogSystemで名前から直接会話を表示
             if (this.scene.dialogSystem) {
                 this.scene.dialogSystem.startDialog(name);
@@ -1316,5 +1319,49 @@ export class MapManager {
         this.mapScaleY = 1;
         this.scaledMapWidth = 0;
         this.scaledMapHeight = 0;
+    }
+    
+    // NPCをプレイヤーの方向に向ける（MapManager用）
+    makeNPCLookAtPlayer(npcSprite) {
+        if (!this.scene.playerController || !this.scene.playerController.player) {
+            return;
+        }
+        
+        const player = this.scene.playerController.player;
+        const npc = npcSprite;
+        
+        // プレイヤーとNPCの位置関係を計算
+        const deltaX = player.x - npc.x;
+        const deltaY = player.y - npc.y;
+        
+        // 距離を計算
+        const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+        
+        if (distance > 0) {
+            // 正規化された方向ベクトル
+            const normalizedX = deltaX / distance;
+            const normalizedY = deltaY / distance;
+            
+            // 方向に応じてフレームを設定（緑四角の場合は色を変更）
+            if (Math.abs(normalizedY) > Math.abs(normalizedX)) {
+                // 上下方向が優先
+                if (normalizedY < 0) {
+                    // プレイヤーが上にいる（NPCは下向き）
+                    npc.setFillStyle(0x00FF00, 0.8); // 明るい緑
+                } else {
+                    // プレイヤーが下にいる（NPCは上向き）
+                    npc.setFillStyle(0x00CC00, 0.8); // 暗い緑
+                }
+            } else {
+                // 左右方向が優先
+                if (normalizedX < 0) {
+                    // プレイヤーが左にいる（NPCは右向き）
+                    npc.setFillStyle(0x00AA00, 0.8); // より暗い緑
+                } else {
+                    // プレイヤーが右にいる（NPCは左向き）
+                    npc.setFillStyle(0x008800, 0.8); // 最も暗い緑
+                }
+            }
+        }
     }
 }
