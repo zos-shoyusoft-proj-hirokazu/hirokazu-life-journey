@@ -46,15 +46,9 @@ export class ConversationScene extends Phaser.Scene {
         // シーンキーを正規化（スペースを除去）
         if (this.originalSceneKey) {
             this.originalSceneKey = this.originalSceneKey.replace(/\s+/g, '');
-            console.log('[ConversationScene] シーンキーを正規化:', data.originalSceneKey, '→', this.originalSceneKey);
         }
         
-        console.log('[ConversationScene] init called with data:', data);
-        console.log('[ConversationScene] audioManager:', this.audioManager);
-        console.log('[ConversationScene] _pendingConversation set to:', this._pendingConversation);
-        console.log('[ConversationScene] originalSceneKey:', this.originalSceneKey);
-        console.log('[ConversationScene] areaName:', this.areaName);
-        console.log('[ConversationScene] conversationId:', this.conversationId);
+
     }
 
 
@@ -91,7 +85,7 @@ export class ConversationScene extends Phaser.Scene {
         import('../managers/UIManager.js').then(({ UIManager }) => {
             this.uiManager = new UIManager(this);
             this.uiManager.createConversationBackButton(this);
-            console.log('[ConversationScene] UIManager初期化完了、会話終了ボタン作成完了');
+
         }).catch(error => {
             console.error('[ConversationScene] UIManager初期化エラー:', error);
         });
@@ -196,7 +190,7 @@ export class ConversationScene extends Phaser.Scene {
         this.input.on('pointerdown', () => {
             // 選択肢表示中は会話を進めない
             if (this.currentChoiceButtons && this.currentChoiceButtons.length > 0) {
-                console.log('[ConversationScene] 選択肢表示中: 背景クリックで会話を進めません');
+
                 return;
             }
             this.nextDialog();
@@ -221,18 +215,16 @@ export class ConversationScene extends Phaser.Scene {
         } catch (_) { /* ignore */ }
 
         // start() からデータが渡されている場合はここで開始
-        console.log('[ConversationScene] _pendingConversation check:', this._pendingConversation);
+
         if (this._pendingConversation) {
             try {
-                console.log('[ConversationScene] startConversation called with:', this._pendingConversation);
+
                 this.startConversation(this._pendingConversation);
             } catch (e) {
                 console.error('[ConversationScene] pending conversation start error:', e);
             }
             this._pendingConversation = null;
-        } else {
-            console.log('[ConversationScene] _pendingConversation is null or undefined');
-        }
+        } 
     }
     
     // 会話を中断して元のシーンに戻る
@@ -241,7 +233,7 @@ export class ConversationScene extends Phaser.Scene {
             // イベントBGMを確実に停止（2重再生防止）
             try {
                 if (this._eventHtmlBgm) {
-                    console.log('[ConversationScene] イベントBGMを停止');
+
                     this._eventHtmlBgm.pause();
                     this._eventHtmlBgm = null;
                 }
@@ -275,7 +267,7 @@ export class ConversationScene extends Phaser.Scene {
                 const mainScene = this.scene.get('MiemachiStage') || this.scene.get('TaketastageStage') || this.scene.get('JapanStage');
                 if (mainScene && mainScene.conversationTrigger) {
                     mainScene.conversationTrigger.isConversationActive = false;
-                    console.log('[ConversationScene] ConversationTriggerのフラグをリセット');
+
                 }
             } catch (e) {
                 console.warn('[ConversationScene] ConversationTriggerフラグリセットエラー:', e);
@@ -400,7 +392,7 @@ export class ConversationScene extends Phaser.Scene {
         // エリア名を設定
         if (this.areaName) {
             this.currentConversation.areaName = this.areaName;
-            console.log(`[ConversationScene] エリア名を設定: ${this.areaName}`);
+
         }
         
         // 会話開始イベントを発火
@@ -411,19 +403,19 @@ export class ConversationScene extends Phaser.Scene {
             const mainScene = this.scene.get('mie_high_school') || this.scene.get('TaketastageStage') || this.scene.get('JapanStage');
             if (mainScene && mainScene.audioManager && mainScene.audioManager.bgm) {
                 this._originalBgmKey = mainScene.audioManager.bgm.key;
-                console.log(`[ConversationScene] 元のBGMキーを記憶: ${this._originalBgmKey}`);
+
             }
         } catch (e) {
             console.warn('[ConversationScene] 元のBGMキー取得エラー:', e);
         }
         
         // 背景とBGMの設定
-        console.log('[ConversationScene] 背景設定開始:', conversationData.background);
+
         if (conversationData.background) {
             this.updateBackground(conversationData.background);
         }
         
-        console.log('[ConversationScene] BGM設定開始:', conversationData.bgm);
+
         if (conversationData.bgm) {
             this.switchToEventBgm(conversationData.bgm);
         }
@@ -455,7 +447,7 @@ export class ConversationScene extends Phaser.Scene {
         
         // 選択肢表示中は会話を進めない
         if (this.currentChoiceButtons && this.currentChoiceButtons.length > 0) {
-            console.log('[ConversationScene] 選択肢表示中: 会話を進めません');
+
             return;
         }
         
@@ -589,16 +581,15 @@ export class ConversationScene extends Phaser.Scene {
         
         // 立ち絵リセット機能を追加
         if (dialog.speaker === 'reset') {
-            console.log('[ConversationScene] 立ち絵リセット実行');
-            console.log('[ConversationScene] reset character:', dialog.character, 'expression:', dialog.expression);
+
             this.cleanupCharacterSprites();
             // リセット後にキャラクターを表示
             if (dialog.character && dialog.expression) {
-                console.log('[ConversationScene] reset後、キャラクター表示開始');
+
                 this.updateCharacterSprite(dialog.character, dialog.expression);
                 if (this.characterContainer) {
                     this.characterContainer.setVisible(true);
-                    console.log('[ConversationScene] characterContainer表示設定完了');
+
                 } else {
                     console.warn('[ConversationScene] characterContainerがnullです');
                 }
@@ -642,7 +633,7 @@ export class ConversationScene extends Phaser.Scene {
 
     // 立ち絵の更新
     updateCharacterSprite(character, expression) {
-        console.log('[ConversationScene] updateCharacterSprite called:', character, expression);
+
         if (!this.characterSprites) {
             this.characterSprites = {};
         }
@@ -655,7 +646,7 @@ export class ConversationScene extends Phaser.Scene {
         
         if (character && expression) {
             const spriteKey = this.resolveExistingSpriteKey(character, expression);
-            console.log('[ConversationScene] spriteKey resolved:', spriteKey);
+
             if (!spriteKey) {
                 console.warn('[ConversationScene] no spriteKey found, returning');
                 return; // 利用可能なテクスチャがない場合は表示しない
@@ -710,7 +701,7 @@ export class ConversationScene extends Phaser.Scene {
 
     // 利用可能なテクスチャキーを解決（希望の表情が無ければフォールバック）
     resolveExistingSpriteKey(character, preferredExpression) {
-        console.log('[ConversationScene] resolveExistingSpriteKey called:', character, preferredExpression);
+
         const tryList = [];
         // まずは希望の表情
         tryList.push({ ch: character, ex: preferredExpression });
@@ -726,13 +717,13 @@ export class ConversationScene extends Phaser.Scene {
         // 実在する最初のキーを返す
         for (const { ch, ex } of tryList) {
             const key = `${ch}_${ex}`;
-            console.log('[ConversationScene] checking key:', key);
+
             if (this.textures && this.textures.exists && this.textures.exists(key)) {
-                console.log('[ConversationScene] found texture:', key);
+
                 return key;
             }
         }
-        console.log('[ConversationScene] no texture found for:', character, preferredExpression);
+
         return null;
     }
 
@@ -984,8 +975,7 @@ export class ConversationScene extends Phaser.Scene {
 
     // 背景を更新
     updateBackground(backgroundKey) {
-        console.log('[ConversationScene] updateBackground called with:', backgroundKey);
-        console.log('[ConversationScene] texture exists check:', this.textures.exists(backgroundKey));
+
         if (backgroundKey && this.textures.exists(backgroundKey)) {
             // 既存の背景を削除
             if (this.background) {
@@ -1029,7 +1019,7 @@ export class ConversationScene extends Phaser.Scene {
     
     // イベントBGMに切り替え
     async switchToEventBgm(eventBgmKey) {
-        console.log('[ConversationScene] switchToEventBgm called with:', eventBgmKey);
+
 
         // 元のBGMを停止
         this.stopOriginalBgm();
@@ -1043,12 +1033,12 @@ export class ConversationScene extends Phaser.Scene {
                 // AudioManagerから現在再生中のBGMオブジェクトを取得して保存
                 if (this.audioManager.bgm) {
                     this._eventHtmlBgm = this.audioManager.bgm;
-                    console.log('[ConversationScene] イベントBGMオブジェクトを保存:', this._eventHtmlBgm);
+
                 } else {
                     console.warn('[ConversationScene] AudioManagerからBGMオブジェクトが取得できません');
                 }
                 
-                console.log('[ConversationScene] イベントBGM開始:', eventBgmKey);
+
             } else {
                 console.warn('[ConversationScene] イベントBGM開始失敗:', eventBgmKey);
             }
@@ -1084,7 +1074,7 @@ export class ConversationScene extends Phaser.Scene {
             if (mainScene && mainScene.audioManager) {
                 const defaultKey = await mainScene.audioManager.getDefaultBgmKey();
                 this._originalBgmKey = defaultKey;
-                console.log(`[ConversationScene] 元のBGMキーを保存（非同期）: ${this._originalBgmKey}`);
+
             }
         } catch (error) {
             console.warn('[ConversationScene] 非同期BGMキー取得エラー:', error);
@@ -1095,27 +1085,27 @@ export class ConversationScene extends Phaser.Scene {
 
     // 元のBGMに戻す（ハードコードせず、会話開始前に覚えたキーで復帰）
     async restoreOriginalBgm() {
-        console.log('[ConversationScene] restoreOriginalBgm メソッド開始');
+
         try {
             // まず、現在のイベントBGMを確実に停止
             try {
                 // 保存されたイベントBGMを停止
                 if (this._eventHtmlBgm) {
-                    console.log('[ConversationScene] restoreOriginalBgm: 保存されたイベントBGMを停止');
+
                     this._eventHtmlBgm.pause();
                     this._eventHtmlBgm = null;
                 }
                 
                 // AudioManagerから直接現在のBGMを停止
                 if (this.audioManager && this.audioManager.bgm) {
-                    console.log('[ConversationScene] restoreOriginalBgm: AudioManagerの現在のBGMを停止');
+
                     this.audioManager.bgm.pause();
                     this.audioManager.bgm = null;
                 }
                 
                 if (this._eventBgmStarted) {
                     this._eventBgmStarted = false;
-                    console.log('[ConversationScene] イベントBGMフラグをリセット');
+
                 }
             } catch (e) {
                 console.warn('[ConversationScene] イベントBGM停止エラー:', e);
@@ -1127,13 +1117,13 @@ export class ConversationScene extends Phaser.Scene {
                 if (sceneManager) {
                     const originalScene = sceneManager.getScene(this.originalSceneKey);
                     if (originalScene && originalScene.audioManager) {
-                        console.log('[ConversationScene] 元のシーン', this.originalSceneKey, 'のBGMを復元します');
+
                         
                         // 元のシーンのBGMを再開（正しいキーを動的取得）
                         try {
                             const resumeKey = await originalScene.audioManager.getDefaultBgmKey();
                             originalScene.audioManager.playBgm(resumeKey, undefined, true);
-                            console.log('[ConversationScene] 元のシーンのBGMを再開しました:', this.originalSceneKey);
+
                         } catch (error) {
                             console.warn('[ConversationScene] BGM再開エラー:', error);
                         }
@@ -1148,7 +1138,7 @@ export class ConversationScene extends Phaser.Scene {
                 if (mainScene && mainScene.audioManager) {
                     // マップBGMを再開
                     try { 
-                        console.log('[ConversationScene] マップBGMを再開（キーを動的取得）');
+
                         const resumeKey = await mainScene.audioManager.getDefaultBgmKey();
                         mainScene.audioManager.playBgm(resumeKey, undefined, true);
                     } catch (error) { 
@@ -1162,48 +1152,46 @@ export class ConversationScene extends Phaser.Scene {
         } catch (error) {
             console.error('[ConversationScene] restoreOriginalBgm エラー:', error);
         }
-        console.log('[ConversationScene] restoreOriginalBgm メソッド完了');
+
     }
     
     // 会話終了
     endConversation() {
         try {
-            console.log('[ConversationScene] endConversation 開始');
+
             
             // 会話終了イベントを発火
             this.events.emit('conversationEnded');
-            console.log('[ConversationScene] 会話終了イベント発火完了');
+
             
             // エリアを完了済みに設定
             this.markAreaAsCompleted();
-            console.log('[ConversationScene] エリア完了設定完了');
+
             
             // BGMを元に戻す
-            console.log('[ConversationScene] restoreOriginalBgm 開始');
             this.restoreOriginalBgm();
-            console.log('[ConversationScene] restoreOriginalBgm 完了');
             
             // スプライトをクリーンアップ
             this.cleanupCharacterSprites();
-            console.log('[ConversationScene] スプライトクリーンアップ完了');
+
             
             // 戻るボタンをクリーンアップ
             this.cleanupBackButton();
-            console.log('[ConversationScene] 戻るボタンクリーンアップ完了');
+
             
             // テキストアニメーションタイマーをクリーンアップ
             if (this.currentTextTimer) {
                 this.currentTextTimer.destroy();
                 this.currentTextTimer = null;
             }
-            console.log('[ConversationScene] テキストタイマークリーンアップ完了');
+
             
             // UI要素をリセット（削除はしない）
             this.resetUI();
-            console.log('[ConversationScene] UIリセット完了');
+
             
             // 元のシーンに戻る
-            console.log('[ConversationScene] returnToOriginalScene 開始');
+
             this.returnToOriginalScene();
             
         } catch (error) {
@@ -1219,7 +1207,7 @@ export class ConversationScene extends Phaser.Scene {
 
     // 元のシーンに戻る
     returnToOriginalScene() {
-        console.log('[ConversationScene] 元のシーンに戻ります');
+
         
         // StageSceneの会話中フラグをリセット
         if (this.originalSceneKey === 'taketa_highschool') {
@@ -1227,7 +1215,7 @@ export class ConversationScene extends Phaser.Scene {
                 const stageScene = this.scene.manager.getScene('taketa_highschool');
                 if (stageScene && stageScene.setConversationActive) {
                     stageScene.setConversationActive(false);
-                    console.log('[ConversationScene] StageSceneの会話中フラグをリセットしました');
+
                 }
             } catch (e) {
                 console.warn('[ConversationScene] StageSceneのフラグリセットエラー:', e);
@@ -1237,7 +1225,7 @@ export class ConversationScene extends Phaser.Scene {
                 const stageScene = this.scene.manager.getScene('mie_high_school');
                 if (stageScene && stageScene.setConversationActive) {
                     stageScene.setConversationActive(false);
-                    console.log('[ConversationScene] StageSceneの会話中フラグをリセットしました（三重町）');
+
                 }
             } catch (e) {
                 console.warn('[ConversationScene] StageSceneのフラグリセットエラー（三重町）:', e);
@@ -1252,7 +1240,7 @@ export class ConversationScene extends Phaser.Scene {
             try {
                 // 元のシーンの状態を復元
                 if (this.currentState && (this.originalSceneKey === 'taketa_highschool' || this.originalSceneKey === 'mie_high_school')) {
-                    console.log('[ConversationScene] 保存された状態で復元:', this.currentState);
+
                     this.scene.stop();
                     this.scene.start(this.originalSceneKey, {
                         restoreState: true,
@@ -1280,7 +1268,7 @@ export class ConversationScene extends Phaser.Scene {
 
     // エリアを完了済みに設定
     markAreaAsCompleted() {
-        console.log('[ConversationScene] markAreaAsCompleted呼び出し開始');
+
         try {
             // 現在の会話データからエリア名を取得
             if (this.currentConversation && this.currentConversation.areaName) {
@@ -1288,15 +1276,15 @@ export class ConversationScene extends Phaser.Scene {
                 
                 // 完了状態を一時保存（ここが重要！）
                 this.completedAreaName = areaName;
-                console.log(`[ConversationScene] 完了状態を一時保存: ${areaName}`);
+
                 
                 // 元のシーンは探さない（停止されてるから）
-                console.log(`[ConversationScene] 完了状態を保存完了: ${areaName}`);
+
             }
         } catch (error) {
             console.error('[ConversationScene] エリア完了設定エラー:', error);
         }
-        console.log('[ConversationScene] markAreaAsCompleted完了');
+
     }
     
     // キャラクタースプライトのクリーンアップ
@@ -1467,7 +1455,7 @@ export class ConversationScene extends Phaser.Scene {
             }
         });
         
-        console.log('[ConversationScene] 選択肢ボタンの位置を調整しました');
+
     }
 
     // 会話ボックス上辺に名前ボックスを揃える（縦横共通）
@@ -1491,11 +1479,11 @@ export class ConversationScene extends Phaser.Scene {
     
     // SE再生用のメソッド
     playDialogSE(seKey) {
-        console.log('[ConversationScene] SE再生を試行:', seKey);
+
         
         // 直接this.audioManagerを使用（「借りる」設計なし）
         if (this.audioManager) {
-            console.log('[ConversationScene] AudioManager発見、SE再生:', seKey);
+
             this.audioManager.playSe(seKey);
         } else {
             console.warn('[ConversationScene] AudioManagerが見つかりません:', this.audioManager);
@@ -1507,11 +1495,11 @@ export class ConversationScene extends Phaser.Scene {
         // より確実な方法で背景操作を無効化
         this.input.on('pointerdown', (pointer) => {
             // 戻るボタン以外のクリック/タップを無効化
-            console.log('[ConversationScene] 背景クリックを検出:', pointer.x, pointer.y);
+    
             
             // 選択肢ボタンがある場合は、選択肢ボタンの領域外のクリックを無効化
             if (this.currentChoiceButtons && this.currentChoiceButtons.length > 0) {
-                console.log('[ConversationScene] 選択肢表示中: 選択肢ボタン領域外のクリックを無効化');
+
                 
                 // 選択肢ボタンの領域をチェック
                 const isInChoiceButtonArea = this.currentChoiceButtons.some(button => {
@@ -1527,7 +1515,7 @@ export class ConversationScene extends Phaser.Scene {
                 
                 // 選択肢ボタンの領域外の場合はクリックを無効化
                 if (!isInChoiceButtonArea) {
-                    console.log('[ConversationScene] 選択肢ボタン領域外のクリックを無効化');
+
                     return false; // イベントを停止
                 }
             }
@@ -1540,24 +1528,24 @@ export class ConversationScene extends Phaser.Scene {
                 pointer.y > backButtonArea.y + backButtonArea.height) {
                 
                 // 背景クリックを無効化
-                console.log('[ConversationScene] 背景クリックを無効化しました');
+
                 return false; // イベントを停止
             }
         });
         
-        console.log('[ConversationScene] 背景操作を無効化しました');
+
     }
     
     // 選択肢を表示
     showChoices(choices, choiceId) {
-        console.log('[ConversationScene] 選択肢を表示:', choices);
+
         
         // 既存の選択肢ボタンをクリア
         this.clearChoiceButtons();
         
         // 選択肢の数を記録
         const totalChoices = choices.length;
-        console.log(`[ConversationScene] 選択肢数: ${totalChoices}`);
+
         
         // 重複チェック
         if (this.currentChoiceButtons.length > 0) {
@@ -1570,7 +1558,7 @@ export class ConversationScene extends Phaser.Scene {
             this.currentChoiceButtons.push(button);
         });
         
-        console.log(`[ConversationScene] 選択肢ボタン作成完了: ${this.currentChoiceButtons.length}個`);
+
     }
     
     // 選択肢ボタンを作成
@@ -1589,7 +1577,7 @@ export class ConversationScene extends Phaser.Scene {
             verticalOffset += 30;
         }
         
-        console.log(`[ConversationScene] 選択肢ボタン作成: choiceCount=${choiceCount}, verticalOffset=${verticalOffset}, index=${index}`);
+
         
         const buttonX = width / 2;
         // 3つ以上の選択肢の時は、より上から開始して間隔を広げる
@@ -1640,9 +1628,7 @@ export class ConversationScene extends Phaser.Scene {
     
     // 選択を処理
     handleChoice(choice, choiceId) {
-        console.log('[ConversationScene] 選択:', choice.id, choice.result);
-        console.log('[ConversationScene] 会話ID:', this.conversationId);
-        console.log('[ConversationScene] 選択肢ID:', choiceId);
+
         
         // 選択を保存（ChoiceManagerを使用）
         if (this.conversationId) {
@@ -1652,13 +1638,13 @@ export class ConversationScene extends Phaser.Scene {
                 if (window.ChoiceManager) {
                     const choiceManager = new window.ChoiceManager();
                     choiceManager.saveChoice(this.conversationId, choiceId, choice.result);
-                    console.log('[ConversationScene] 選択を保存しました:', this.conversationId, choiceId, choice.result);
+
                 } else {
                     // フォールバック：動的インポート
                     import('./ChoiceManager.js').then(({ ChoiceManager }) => {
                         const choiceManager = new ChoiceManager();
                         choiceManager.saveChoice(this.conversationId, choiceId, choice.result);
-                        console.log('[ConversationScene] 選択を保存しました（動的インポート）:', this.conversationId, choiceId, choice.result);
+
                     }).catch(error => {
                         console.error('[ConversationScene] ChoiceManagerのインポートエラー:', error);
                     });
@@ -1790,7 +1776,7 @@ export class ConversationScene extends Phaser.Scene {
             });
         }
         this.currentChoiceButtons = [];
-        console.log('[ConversationScene] 選択肢ボタンをクリアしました');
+
     }
     
 } 

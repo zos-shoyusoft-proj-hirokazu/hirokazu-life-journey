@@ -1668,7 +1668,7 @@ export const miemachiConversationData = {
     // 大塚先輩
     'otsuka_senpai': {
         'background': 'taiikukann',
-        'bgm': 'curono',
+        'bgm': 'megarovania',
         'conversations': [
             {
                 'speaker': '大塚先輩',
