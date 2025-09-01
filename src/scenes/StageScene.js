@@ -105,7 +105,53 @@ export class StageScene extends Phaser.Scene {
                 this.load.audio(seKey, this.stageConfig.se[seKey]);
             });
         }
+        
+        // NPCスプライトを動的に読み込み
+        this.loadNPCSprites();
     }
+    
+    loadNPCSprites() {
+        // StageConfigからNPCスプライトを読み込み
+        if (this.stageConfig && this.stageConfig.floors) {
+            this.stageConfig.floors.forEach(floor => {
+                if (floor.npcs) {
+                    floor.npcs.forEach(npc => {
+                        if (npc.sprite) {
+                            console.log(`[StageScene] NPCスプライト読み込み: ${npc.name} -> ${npc.sprite}`);
+                            // スプライトシートとして読み込み
+                            this.load.spritesheet(npc.name, `assets/characters/npcs/${npc.sprite}`, {
+                                frameWidth: 32,  // 1人のキャラクターの幅
+                                frameHeight: 32, // 1人のキャラクターの高さ
+                                spacing: 0,
+                                margin: 0
+                            });
+                            console.log(`[StageScene] スプライトシート読み込み完了: ${npc.name} -> ${npc.sprite}`);
+                        }
+                    });
+                }
+            });
+        }
+    }
+    
+
+    
+    // 会話開始メソッド
+    startConversation(eventId) {
+        if (this._isInConversation) {
+            console.log('[StageScene] 既に会話中です');
+            return;
+        }
+        
+        console.log(`[StageScene] 会話開始: ${eventId}`);
+        this._isInConversation = true;
+        
+        // DynamicConversationSceneを起動
+        this.scene.launch('DynamicConversationScene', {
+            eventId: eventId,
+            originalSceneKey: this.scene.key
+        });
+    }
+
 
     create() {
         try {
@@ -257,6 +303,7 @@ export class StageScene extends Phaser.Scene {
             
             // AudioManagerを初期化
             this.audioManager = new AudioManager(this);
+
             
             // 竹田マップに戻るための関数を設定
             window.returnToTaketaMap = () => {
@@ -587,6 +634,8 @@ export class StageScene extends Phaser.Scene {
     isConversationActive() {
         return this._isInConversation;
     }
+    
+
 }
 
 // 設定ファイルベースでステージシーンを作成するヘルパー関数

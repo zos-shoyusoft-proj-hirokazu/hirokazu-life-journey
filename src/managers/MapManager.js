@@ -364,8 +364,8 @@ export class MapManager {
                 if (npcObjects.length > 0) {
                     console.log(`[MapManager] NPCオブジェクト ${npcObjects.length}個 を発見`);
                     console.log('[MapManager] NPCオブジェクトの詳細:', npcObjects.map(obj => ({ name: obj.name, type: obj.type, x: obj.x, y: obj.y })));
-                    npcObjects.forEach((obj, index) => {
-                        this.createNPCObject(obj, index);
+                    npcObjects.forEach((obj) => {
+                        this.createNPCObject(obj);
                     });
                 }
                 
@@ -429,36 +429,87 @@ export class MapManager {
     }
 
     // NPCオブジェクト作成（専用）
-    createNPCObject(obj, index) {
+    createNPCObject(obj) {
+        const name = obj.name || 'npc';
+        
+        // 全てのNPCをMapManagerで作成（緑の四角として）
+        console.log(`[MapManager] NPCオブジェクト作成: ${name}`);
+        
         const width = obj.width || 32;
         const height = obj.height || 32;
-        const name = obj.name || `npc_${index}`;
         
-        // NPCはスプライトとして作成（setFrameが使えるように）
-        // テクスチャが存在しない場合は代替画像を作成
-        let textureKey = 'npc_default';
-        if (!this.scene.textures.exists(textureKey)) {
-            this.createNPCTexture(textureKey, width, height);
-        }
-        
-        const sprite = this.scene.add.sprite(0, 0, textureKey);
-        sprite.setDisplaySize(width, height); // サイズを設定
+        // NPCオブジェクトは緑の矩形で表示（クリック可能）
+        const sprite = this.scene.add.rectangle(0, 0, width, height, 0x00FF00, 0.5);
         
         // 汎用処理で座標変換、物理ボディ設定、オブジェクト情報保存を実行
         this.processGenericObjectSetup(sprite, obj, 'npc', name);
         
-        // 当たり判定グループに追加（MapManager用）
+        // 当たり判定グループに追加
         this.objectGroup.add(sprite);
         
-        // NPC専用の衝突グループにも追加（CollisionManager用）
-        if (this.scene.collisionManager && 
-            this.scene.collisionManager.collisionGroups && 
-            this.scene.collisionManager.collisionGroups.npcs) {
-            this.scene.collisionManager.collisionGroups.npcs.add(sprite);
-        }
+        // NPCオブジェクトの特別な設定
+        sprite.setData('npcId', name);
+        sprite.setData('npcType', 'npc');
         
-        // NPCスプライトを保存
-        this.npcSprites.set(name, sprite);
+        // 緑の四角にもクリックイベントを設定（スプライトが読み込まれていない場合の保険）
+        sprite.setInteractive();
+        sprite.on('pointerdown', () => {
+            console.log(`[MapManager] NPC緑四角クリック: ${name}`);
+            
+            // StageConfigでeventIdが設定されている場合はConversationScene、そうでない場合はDialogSystem
+            if (this.scene.stageConfig && this.scene.stageConfig.currentFloor && this.scene.stageConfig.currentFloor.npcs) {
+                const stageNPC = this.scene.stageConfig.currentFloor.npcs.find(npc => npc.name === name);
+                if (stageNPC && stageNPC.eventId) {
+                    console.log(`[MapManager] eventIdベースの会話開始: ${name} -> ${stageNPC.eventId}`);
+                    // ConversationSceneを開始
+                    if (this.scene.startConversation) {
+                        this.scene.startConversation(stageNPC.eventId);
+                    } else {
+                        console.error('[MapManager] startConversationメソッドが存在しません');
+                    }
+                } else {
+                    console.log(`[MapManager] DialogSystemで会話開始: ${name}`);
+                    // DialogSystemで名前から直接会話を表示
+                    if (this.scene.dialogSystem) {
+                        this.scene.dialogSystem.startDialog(name);
+                    } else {
+                        console.log('[MapManager] DialogSystemが初期化されていません');
+                    }
+                }
+            } else {
+                console.log(`[MapManager] DialogSystemで会話開始: ${name}`);
+                // DialogSystemで名前から直接会話を表示
+                if (this.scene.dialogSystem) {
+                    this.scene.dialogSystem.startDialog(name);
+                } else {
+                    console.log('[MapManager] DialogSystemが初期化されていません');
+                }
+            }
+        });
+        
+        // StageConfigでスプライトが定義されている場合は、スプライトも表示
+        if (this.scene.stageConfig && this.scene.stageConfig.currentFloor && this.scene.stageConfig.currentFloor.npcs) {
+            const stageNPC = this.scene.stageConfig.currentFloor.npcs.find(npc => npc.name === name);
+            if (stageNPC && stageNPC.sprite) {
+                console.log(`[MapManager] スプライト表示: ${name} -> ${stageNPC.sprite}`);
+                
+                // スプライトシートを読み込み（まだ読み込まれていない場合）
+                if (!this.scene.textures.exists(name)) {
+                    this.scene.load.spritesheet(name, `assets/characters/npcs/${stageNPC.sprite}`, {
+                        frameWidth: 32,
+                        frameHeight: 32,
+                        spacing: 0,
+                        margin: 0
+                    });
+                    this.scene.load.once('complete', () => {
+                        this.createNPCSprite(sprite, name, stageNPC.sprite);
+                    });
+                    this.scene.load.start();
+                } else {
+                    this.createNPCSprite(sprite, name, stageNPC.sprite);
+                }
+            }
+        }
         
         // オブジェクト名のテキストラベルを追加（座標変換後の位置に設定）
         const label = this.scene.add.text(sprite.x, sprite.y - height/2 - 10, `${name} (npc)`, {
@@ -470,9 +521,88 @@ export class MapManager {
         label.setOrigin(0.5, 1);
         label.setDepth(1000);
         
-        console.log(`[MapManager] NPCオブジェクト作成: ${name}, サイズ: ${width}x${height}`);
+                console.log(`[MapManager] NPCオブジェクト作成（▢マーク）: ${name}, サイズ: ${width}x${height}`);
     }
-
+    
+    // NPCスプライトを作成するメソッド
+    createNPCSprite(npcObject, npcName) {
+        try {
+            // スプライトを作成（緑の四角の上に重ねる）
+            const npcSprite = this.scene.add.sprite(npcObject.x, npcObject.y, npcName);
+            npcSprite.setFrame(0); // スプライトシートの最初のフレーム
+            npcSprite.setDisplaySize(48, 48); // タイルサイズに合わせる
+            
+            // 物理ボディを追加（当たり判定用）
+            this.scene.physics.add.existing(npcSprite);
+            npcSprite.body.setSize(32, 32); // 当たり判定サイズ
+            
+            // クリックイベントを追加
+            npcSprite.setInteractive();
+            npcSprite.on('pointerdown', () => {
+                console.log(`[MapManager] NPCクリック: ${npcName}`);
+                
+                // StageConfigでeventIdが設定されている場合はConversationScene、そうでない場合はDialogSystem
+                if (this.scene.stageConfig && this.scene.stageConfig.currentFloor && this.scene.stageConfig.currentFloor.npcs) {
+                    const stageNPC = this.scene.stageConfig.currentFloor.npcs.find(npc => npc.name === npcName);
+                    if (stageNPC && stageNPC.eventId) {
+                        console.log(`[MapManager] eventIdベースの会話開始: ${npcName} -> ${stageNPC.eventId}`);
+                        // ConversationSceneを開始
+                        if (this.scene.startConversation) {
+                            this.scene.startConversation(stageNPC.eventId);
+                        } else {
+                            console.error('[MapManager] startConversationメソッドが存在しません');
+                        }
+                    } else {
+                        console.log(`[MapManager] DialogSystemで会話開始: ${npcName}`);
+                        // DialogSystemで名前から直接会話を表示
+                        if (this.scene.dialogSystem) {
+                            this.scene.dialogSystem.startDialog(npcName);
+                        } else {
+                            console.log('[MapManager] DialogSystemが初期化されていません');
+                        }
+                    }
+                } else {
+                    console.log(`[MapManager] DialogSystemで会話開始: ${npcName}`);
+                    // DialogSystemで名前から直接会話を表示
+                    if (this.scene.dialogSystem) {
+                        this.scene.dialogSystem.startDialog(npcName);
+                    } else {
+                        console.log('[MapManager] DialogSystemが初期化されていません');
+                    }
+                }
+            });
+            
+            // オブジェクト名のテキストラベルを追加
+            const label = this.scene.add.text(npcSprite.x, npcSprite.y - 24, `${npcName} (sprite)`, {
+                fontSize: '12px',
+                fill: '#ffffff',
+                backgroundColor: '#000000',
+                padding: { x: 2, y: 1 }
+            });
+            label.setOrigin(0.5, 1);
+            label.setDepth(1000);
+            
+            console.log(`[MapManager] NPCスプライト作成完了: ${npcName} at (${npcObject.x}, ${npcObject.y})`);
+        } catch (error) {
+            console.error(`[MapManager] NPCスプライト作成エラー: ${npcName}`, error);
+        }
+    }
+    
+    // NPCオブジェクトのデータを取得するメソッド
+    getNPCObjectData(npcName) {
+        if (this.tilemap && this.tilemap.layers) {
+            for (const layer of this.tilemap.layers) {
+                if (layer.type === 'objectgroup' && layer.objects) {
+                    const npcObject = layer.objects.find(obj => obj.type === 'npc' && obj.name === npcName);
+                    if (npcObject) {
+                        return npcObject;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+    
     // NPC用のテクスチャを作成
     createNPCTexture(textureKey, width, height) {
         const graphics = this.scene.add.graphics();

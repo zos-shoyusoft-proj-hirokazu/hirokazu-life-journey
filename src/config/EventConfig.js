@@ -650,13 +650,13 @@ export const EventConfig = {
             title: 'コンピュータ',                 // 必要：イベントのタイトル表示用
             type: 'conversation',                // 必要：イベントの種類を指定
             areaType: 'japan',                   // 必要：エリアタイプを指定
-            background: 'test_1',                // 必要：conversationDataのbackgroundと一致
-            bgm: 'curono',                       // 必要：conversationDataのbgmと一致
+            background: 'asokonnroom',            // 必要：conversationDataのbackgroundと一致
+            bgm: 'togetogetarumeiro',            // 必要：conversationDataのbgmと一致
             required: {
-                backgrounds: ['test_1'],          // 必要：背景画像の読み込みに必要
-                characters: ['hirokazu_a', 'hirokazu_b'],  // 必要：character+expressionの組み合わせ
-                bgm: ['curono']                   // 必要：BGMファイルの読み込みに必要
-                // seセクションは不要：conversationDataにSEの指定がないため
+                backgrounds: ['asokonnroom', 'xxxxxx'],  // 必要：背景画像の読み込みに必要
+                characters: ['narrator_a', 'hirokazu_a', 'hirokazu_b', 'hirokazu_c', 'hirokazu_d', 'hirokazu_e', 'hirokazu_g', 'hirokazu_i', 'hirokazu_k', 'hirokazu_l', 'daichi_a', 'daichi_b', 'daichi_c', 'daichi_d', 'daichi_e', 'takumi_a'],  // 必要：character+expressionの組み合わせ
+                bgm: ['togetogetarumeiro'],       // 必要：BGMファイルの読み込みに必要
+                se: ['don', 'wadodon']            // 必要：SEファイルの読み込みに必要
             },
             conversationDataKey: 'computer',      // 必要：conversationDataのキーと一致
             areaName: 'computer'                 // 必要：エリア名の指定
@@ -669,11 +669,11 @@ export const EventConfig = {
             type: 'conversation',                // 必要：イベントの種類を指定
             areaType: 'japan',                   // 必要：エリアタイプを指定
             background: 'test_1',                // 必要：conversationDataのbackgroundと一致
-            bgm: 'curono',                       // 必要：conversationDataのbgmと一致
+            bgm: 'rydeen',                       // 必要：conversationDataのbgmと一致
             required: {
                 backgrounds: ['test_1'],          // 必要：背景画像の読み込みに必要
-                characters: ['hirokazu_a', 'hirokazu_b', 'hirokazu_c'],  // 必要：character+expressionの組み合わせ
-                bgm: ['curono']                   // 必要：BGMファイルの読み込みに必要
+                characters: ['narrator_a', 'hirokazu_a', 'hirokazu_b', 'hirokazu_c', 'hirokazu_e', 'hirokazu_g', 'hirokazu_h', 'hirokazu_i', 'hirokazu_j', 'hirokazu_k', 'stranger_a'],  // 必要：character+expressionの組み合わせ
+                bgm: ['rydeen']                   // 必要：BGMファイルの読み込みに必要
                 // seセクションは不要：conversationDataにSEの指定がないため
             },
             conversationDataKey: 'breaking_car',  // 必要：conversationDataのキーと一致
@@ -686,10 +686,10 @@ export const EventConfig = {
             title: '特殊詐欺',                     // 必要：イベントのタイトル表示用
             type: 'conversation',                // 必要：イベントの種類を指定
             areaType: 'japan',                   // 必要：エリアタイプを指定
-            background: 'test_1',                // 必要：conversationDataのbackgroundと一致
+            background: 'kouenn',                // 必要：conversationDataのbackgroundと一致
             bgm: 'まどいの水源',            // 必要：conversationDataのbgmと一致
             required: {
-                backgrounds: ['test_1'],          // 必要：背景画像の読み込みに必要
+                backgrounds: ['kouenn', 'yakitori'],  // 必要：背景画像の読み込みに必要
                 characters: ['hirokazu_a', 'hirokazu_b', 'hirokazu_c', 'stranger_a'],  // 必要：character+expressionの組み合わせ
                 bgm: ['まどいの水源']        // 必要：BGMファイルの読み込みに必要
                 // seセクションは不要：conversationDataにSEの指定がないため
@@ -704,12 +704,12 @@ export const EventConfig = {
             title: '路上のペンキ',                  // 必要：イベントの種類を指定
             type: 'conversation',                // 必要：イベントの種類を指定
             areaType: 'japan',                   // 必要：エリアタイプを指定
-            background: 'test_1',                // 必要：conversationDataのbackgroundと一致
-            bgm: 'longing_Love',                       // 必要：conversationDataのbgmと一致
+            background: 'kouenn',                // 必要：conversationDataのbackgroundと一致
+            bgm: 'africa',                       // 必要：conversationDataのbgmと一致
             required: {
-                backgrounds: ['test_1'],          // 必要：背景画像の読み込みに必要
+                backgrounds: ['kouenn'],          // 必要：背景画像の読み込みに必要
                 characters: ['hirokazu_a', 'hirokazu_b'],  // 必要：character+expressionの組み合わせ
-                bgm: ['longing_Love']                   // 必要：BGMファイルの読み込みに必要
+                bgm: ['africa']                   // 必要：BGMファイルの読み込みに必要
                 // seセクションは不要：conversationDataにSEの指定がないため
             },
             conversationDataKey: 'rojyounopenki', // 必要：conversationDataのキーと一致
@@ -722,12 +722,12 @@ export const EventConfig = {
             title: 'テレアポ',                     // 必要：イベントのタイトル表示用
             type: 'conversation',                // 必要：イベントの種類を指定
             areaType: 'japan',                   // 必要：エリアタイプを指定
-            background: 'test_1',                // 必要：conversationDataのbackgroundと一致
-            bgm: 'curono',                       // 必要：conversationDataのbgmと一致
+            background: 'tereapobaito',           // 必要：conversationDataのbackgroundと一致
+            bgm: 'etude_op40_no3_toccatina',     // 必要：conversationDataのbgmと一致
             required: {
-                backgrounds: ['test_1'],          // 必要：背景画像の読み込みに必要
+                backgrounds: ['tereapobaito'],    // 必要：背景画像の読み込みに必要
                 characters: ['hirokazu_a', 'hirokazu_b'],  // 必要：character+expressionの組み合わせ
-                bgm: ['curono']                   // 必要：BGMファイルの読み込みに必要
+                bgm: ['etude_op40_no3_toccatina'] // 必要：BGMファイルの読み込みに必要
                 // seセクションは不要：conversationDataにSEの指定がないため
             },
             conversationDataKey: 'tereapo',       // 必要：conversationDataのキーと一致
@@ -740,12 +740,12 @@ export const EventConfig = {
             title: '初日の出',                     // 必要：イベントのタイトル表示用
             type: 'conversation',                // 必要：イベントの種類を指定
             areaType: 'japan',                   // 必要：イベントの種類を指定
-            background: 'test_1',                // 必要：conversationDataのbackgroundと一致
-            bgm: '紫電清霜',                       // 必要：conversationDataのbgmと一致
+            background: 'hatuhinode',            // 必要：conversationDataのbackgroundと一致
+            bgm: 'Spein',                        // 必要：conversationDataのbgmと一致
             required: {
-                backgrounds: ['test_1'],          // 必要：背景画像の読み込みに必要
+                backgrounds: ['hatuhinode'],      // 必要：背景画像の読み込みに必要
                 characters: ['hirokazu_a', 'hirokazu_b'],  // 必要：character+expressionの組み合わせ
-                bgm: ['紫電清霜']                   // 必要：BGMファイルの読み込みに必要
+                bgm: ['Spein']                    // 必要：BGMファイルの読み込みに必要
                 // seセクションは不要：conversationDataにSEの指定がないため
             },
             conversationDataKey: 'first_rising_sun',  // 必要：conversationDataのキーと一致

@@ -2,26 +2,302 @@
 export const japanConversationData = {
     // コンピュータエリア
     'computer': {
-        'background': 'test_1',
-        'bgm': 'curono',
+        'background': 'asokonnroom',
+        'bgm': 'togetogetarumeiro',
         'conversations': [
             {
-                'speaker': 'ひろかず',
-                'character': 'hirokazu',
-                'text': 'ここはコンピュータエリアだぜ☆',
-                'expression': 'a'
+                'speaker': 'narrator',
+                'character': 'narrator',
+                'text': 'ある深夜の夜、、、、',
+                'expression': 'a',
+                'se': 'don',
+                'background': 'xxxxxx'
+            },
+            {
+                'speaker': 'だいち',
+                'character': 'daichi',
+                'text': 'なんか疲れてそうだけど、大丈夫か？',
+                'expression': 'd'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
-                'text': '最新のテクノロジーが集まってる場所だな',
+                'text': 'んー、まあなんとかやってはいる！',
+                'expression': 'k'
+            },
+            {
+                'speaker': 'だいち',
+                'character': 'daichi',
+                'text': 'やりたいことってないの？',
+                'expression': 'd'
+            },
+            {
+                'speaker': 'ひろかず',
+                'character': 'hirokazu',
+                'text': 'やりたいこと、、、、、',
+                'expression': 'k'
+            },
+            {
+                'speaker': 'ひろかず',
+                'character': 'hirokazu',
+                'text': 'やっぱり絵を描きたいな',
+                'expression': 'g'
+            },
+            {
+                'speaker': 'だいち',
+                'character': 'daichi',
+                'text': '絵をきながら、ちゃんと収入がある形がいいよね',
+                'expression': 'e'
+            },
+            {
+                'speaker': 'ひろかず',
+                'character': 'hirokazu',
+                'text': 'まさしくその通りなんだよな',
+                'expression': 'e'
+            },
+            {
+                'speaker': 'だいち',
+                'character': 'daichi',
+                'text': 'エンジニアになって、実力がついてくれば時間に縛れず、絵を描く時間が取れるかもよ',
+                'expression': 'd'
+            },
+            {
+                'speaker': 'ひろかず',
+                'character': 'hirokazu',
+                'text': '一回、なろうとして挫折した過去があるから、厳しい気がする・・・',
+                'expression': 'e'
+            },
+            {
+                'speaker': 'だいち',
+                'character': 'daichi',
+                'text': 'んじゃ、僕がサポートするわ!!!',
+                'expression': 'd',
+                'se': 'don',
+            },
+            {
+                'speaker': 'ひろかず',
+                'character': 'hirokazu',
+                'text': 'まじか・・・・',
+                'expression': 'i'
+            },
+            {
+                'speaker': 'だいち',
+                'character': 'daichi',
+                'text': 'もう一回チャレンジしてみね？なおきとかも誘ってみんなでプロジェクトやったりしてみて、そこでポートフォリオ作って転職目指そうぜ！',
+                'expression': 'c'
+            },
+            {
+                'speaker': 'ひろかず',
+                'character': 'hirokazu',
+                'text': '・・・・、ありがとう・・・、すまねえな・・・',
+                'expression': 'g'
+            },
+            {
+                'speaker': 'だいち',
+                'character': 'daichi',
+                'text': 'やるからには、絶対何かしらいい形に持っていこう！',
                 'expression': 'b'
             },
             {
+                'speaker': 'narrator',
+                'character': 'narrator',
+                'text': 'とあるプロジェクトが初まる',
+                'expression': 'a',
+                'se': 'don',
+                'background': 'xxxxxx'
+            },
+            {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
-                'text': 'プログラミングとか、AIとか、いろんな技術があるぜ',
+                'text': '前勤めてた会社のシステム作らせてもらえそう！！',
+                'expression': 'l',
+                'se': 'don',
+            },
+            {
+                'speaker': 'だいち',
+                'character': 'daichi',
+                'text': 'お！いいね！いっちょやってみるか！！',
+                'expression': 'c'
+            },
+            {
+                'speaker': 'だいち',
+                'character': 'daichi',
+                'text': 'たくみっていう僕の友達も誘って一緒に頑張ろう！！',
+                'expression': 'c'
+            },
+            {
+                'speaker': 'ひろかず',
+                'character': 'hirokazu',
+                'text': 'やるぞーーー！！！',
+                'expression': 'l'
+            },
+            {
+                'speaker': 'narrator',
+                'character': 'narrator',
+                'text': 'とあるプロジェクトを初めて半年',
+                'expression': 'a',
+                'se': 'wadodon',
+                'background': 'xxxxxx'
+            },
+            {
+                'speaker': 'ひろかず',
+                'character': 'hirokazu',
+                'text': 'なんとなく形にはなってきたな',
+                'expression': 'l'
+            },
+            {
+                'speaker': 'だいち',
+                'character': 'daichi',
+                'text': 'そろそろ完璧な仕様を固めて形にしていきたいね',
+                'expression': 'c'
+            },
+            {
+                'speaker': 'たくみ',
+                'character': 'takumi',
+                'text': 'そうだね、これ導入できたらかなりでかい結果残せそう！！',
                 'expression': 'a'
+            },
+            {
+                'speaker': 'だいち',
+                'character': 'daichi',
+                'text': '週に3日ぐらい夜集まって、あとは各々作業してっていう感じでかなりの時間費やしたから実って欲しい・・',
+                'expression': 'd'
+            },
+            {
+                'speaker': 'narrator',
+                'character': 'narrator',
+                'text': 'とあるプロジェクトを初めて半年',
+                'expression': 'a',
+                'se': 'don',
+                'background': 'xxxxxx'
+            },
+            {
+                'speaker': 'ひろかず',
+                'character': 'hirokazu',
+                'text': '元々いた会社の、役員の人たちのところで紹介してきた！',
+                'expression': 'i'
+            },
+            {
+                'speaker': 'たくみ',
+                'character': 'takumi',
+                'text': '流石に緊張したなあ〜〜',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'だいち',
+                'character': 'daichi',
+                'text': '二人ともお疲れ様！どういった印象を持ってそうだった？',
+                'expression': 'd'
+            },
+            {
+                'speaker': 'ひろかず',
+                'character': 'hirokazu',
+                'text': 'まだなんとも言えないな〜〜',
+                'expression': 'i'
+            },
+            {
+                'speaker': 'たくみ',
+                'character': 'takumi',
+                'text': 'ちょっと掴めない感じだったから、わからないな〜〜',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'だいち',
+                'character': 'daichi',
+                'text': 'んー、そうか〜〜、とりあえず最終的な仕様も固まったことだしラストスパート！！',
+                'expression': 'd'
+            },
+            {
+                'speaker': 'narrator',
+                'character': 'narrator',
+                'text': '、、、',
+                'expression': 'a',
+                'background': 'xxxxxx'
+            },
+            {
+                'speaker': 'narrator',
+                'character': 'narrator',
+                'text': '、、、、、、、、、',
+                'expression': 'a',
+            },
+            {
+                'speaker': 'narrator',
+                'character': 'narrator',
+                'text': '、、、、、、、、、、、、、、',
+                'expression': 'a',
+            },
+            {
+                'speaker': 'narrator',
+                'character': 'narrator',
+                'text': 'それから、、、、、',
+                'expression': 'a',
+                'se': 'don'
+            },
+            {
+                'speaker': 'だいち',
+                'character': 'daichi',
+                'text': '・・・・・',
+                'expression': 'd'
+            },
+            {
+                'speaker': 'ひろかず',
+                'character': 'hirokazu',
+                'text': '・・・・・',
+                'expression': 'k'
+            },
+            {
+                'speaker': 'たくみ',
+                'character': 'takumi',
+                'text': '・・・・・',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'ひろかず',
+                'character': 'hirokazu',
+                'text': 'すまん、急にこのプロジェクト爆散することになった・・・',
+                'expression': 'k'
+            },
+            {
+                'speaker': 'だいち',
+                'character': 'daichi',
+                'text': 'おう・・・・',
+                'expression': 'd'
+            },
+            {
+                'speaker': 'たくみ',
+                'character': 'takumi',
+                'text': 'あひ・・・・・',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'ひろかず',
+                'character': 'hirokazu',
+                'text': 'なんかここまで付き合わせて、こんな結果になってしまってごめんな・・・',
+                'expression': 'k'
+            },
+            {
+                'speaker': 'だいち',
+                'character': 'daichi',
+                'text': 'まあ、仕方ない！こっちが急にシステム入れたら絶対効率良くなるって思って盲信してた部分が大きいからね',
+                'expression': 'd'
+            },
+            {
+                'speaker': 'たくみ',
+                'character': 'takumi',
+                'text': 'くやしいけど、こればっかりはどうしようもないね',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'ひろかず',
+                'character': 'hirokazu',
+                'text': '・・・・、、、、これにて、このプロジェクトを解散します！！(涙)',
+                'expression': 'g'
+            },
+            {
+                'speaker': 'だいち',
+                'character': 'daichi',
+                'text': '2年後にシャボンディ諸島で！！',
+                'expression': 'e'
             }
         ]
     },
@@ -29,7 +305,7 @@ export const japanConversationData = {
     // 故障車エリア
     'breaking_car': {
         'background': 'test_1',
-        'bgm': 'curono',
+        'bgm': 'rydeen',
         'conversations': [
             {
                 'speaker': 'ひろかず',
@@ -54,14 +330,14 @@ export const japanConversationData = {
     
     // 特殊詐欺エリア
     'special_scam': {
-        'background': 'test_1',
+        'background': 'kouenn',
         'bgm': 'まどいの水源',
         'conversations': [
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': '友達の結婚式よかったな、、、',
-                'expression': 'a'
+                'expression': 'b'
             },
             {
                 'speaker': 'ひろかず',
@@ -73,7 +349,7 @@ export const japanConversationData = {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'ふぅ、、、、、、',
-                'expression': 'c'
+                'expression': 'b'
             },
             {
                 'speaker': '知らないおじさん',
@@ -91,7 +367,7 @@ export const japanConversationData = {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'ここなんかはゆうめいですね、、、',
-                'expression': 'a'
+                'expression': 'i'
             },
             {
                 'speaker': '知らないおじさん',
@@ -133,25 +409,39 @@ export const japanConversationData = {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'ん？？？？言ったところと違うけど、まぁええか',
-                'expression': 'b'
+                'expression': 'i'
+            },
+            {
+                'speaker': 'narrator',
+                'character': 'narrator',
+                'text': '焼き鳥屋にて、、、',
+                'expression': 'a',
+                'background': 'yakitori'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'あっ、わかりました',
-                'expression': 'a'
+                'expression': 'i'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': '焼き鳥おいしいですね',
-                'expression': 'a'
+                'expression': 'h'
             },
             {
                 'speaker': '知らないおじさん',
                 'character': 'stranger',
                 'text': '美味しかったですね。',
                 'expression': 'a'
+            },
+            {
+                'speaker': 'narrator',
+                'character': 'narrator',
+                'text': 'それから、、、',
+                'expression': 'a',
+                'background': 'kouenn'
             },
             {
                 'speaker': '知らないおじさん',
@@ -163,19 +453,19 @@ export const japanConversationData = {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': '仕事とかあんまりうまくいってなくて、さらに家族もいろいろあって',
-                'expression': 'c'
+                'expression': 'h'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': '彼女とも大変で、そのうえ生活費出すのギリギリで、、、',
-                'expression': 'c'
+                'expression': 'h'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'うぅ、、、、くぅ、、、、',
-                'expression': 'c'
+                'expression': 'i'
             },
             {
                 'speaker': '知らないおじさん',
@@ -193,7 +483,7 @@ export const japanConversationData = {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'マジっすか',
-                'expression': 'a'
+                'expression': 'i'
             },
             {
                 'speaker': '知らないおじさん',
@@ -229,7 +519,7 @@ export const japanConversationData = {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'ど、、どうすかね、、、',
-                'expression': 'b'
+                'expression': 'j'
             },
             {
                 'speaker': '知らないおじさん',
@@ -289,91 +579,91 @@ export const japanConversationData = {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': '、、、うっ、、、',
-                'expression': 'c'
+                'expression': 'j'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': '状況を整理しよう、',
-                'expression': 'b'
+                'expression': 'j'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': '俺は（2022年）当時、貯金ゼロ、友達の祝儀３万とかでカツカツ、、、',
-                'expression': 'c'
+                'expression': 'j'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'しかも、今ニート、、、、',
-                'expression': 'c'
+                'expression': 'i'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'だが、お金は欲しい、、、',
-                'expression': 'b'
+                'expression': 'k'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'でも、お金を増やすにはお金がいる',
-                'expression': 'b'
+                'expression': 'k'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': '、、、どうしよう、、',
-                'expression': 'c'
+                'expression': 'k'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': '借りるしかないよな、、、、、、',
-                'expression': 'c'
+                'expression': 'k'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': '借りるしか、、、',
-                'expression': 'c'
+                'expression': 'i'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'ちょっと、待ってください',
-                'expression': 'a'
+                'expression': 'i'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': '俺今、カツカツなので、消費者金融をあたらせてください',
-                'expression': 'a'
+                'expression': 'i'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'ニートでも行ける消費者金融を探すか、、、',
-                'expression': 'b'
+                'expression': 'i'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'なかなか、ないか、、、',
-                'expression': 'b'
+                'expression': 'i'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'あった、ここだ、、、、',
-                'expression': 'a'
+                'expression': 'i'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'あっ、５０万、、、借りました',
-                'expression': 'a'
+                'expression': 'k'
             },
             {
                 'speaker': '知らないおじさん',
@@ -409,25 +699,25 @@ export const japanConversationData = {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'わかりました、',
-                'expression': 'a'
+                'expression': 'k'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'ガラガラ、、、、、',
-                'expression': 'a'
+                'expression': 'k'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': '５０万円の札束、、うわ、、、これが５０万なんだ、、、',
-                'expression': 'a'
+                'expression': 'k'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'これが５０万円なんすね、すごいっすね',
-                'expression': 'a'
+                'expression': 'k'
             },
             {
                 'speaker': '知らないおじさん',
@@ -463,13 +753,21 @@ export const japanConversationData = {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'じゃあ、これよろしくお願いしますね',
-                'expression': 'a'
+                'expression': 'i'
             },
             {
                 'speaker': '知らないおじさん',
                 'character': 'stranger',
                 'text': 'じゃあ、ドン・キホーテに行こうか',
                 'expression': 'a'
+            },
+            {
+                'speaker': 'narrator',
+                'character': 'narrator',
+                'text': '',
+                'expression': 'a',
+                'se': 'don',
+                'background': 'donnki'
             },
             {
                 'speaker': '知らないおじさん',
@@ -487,89 +785,89 @@ export const japanConversationData = {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'わかりました！！！',
+                'expression': 'i'
+            },
+            {
+                'speaker': 'narrator',
+                'character': 'narrator',
+                'text': '数分後、、、',
                 'expression': 'a'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
-                'text': '数分後、、、',
-                'expression': 'b'
-            },
-            {
-                'speaker': 'ひろかず',
-                'character': 'hirokazu',
                 'text': 'もうそろそろかな、、、',
-                'expression': 'b'
+                'expression': 'e'
             },
             {
-                'speaker': 'ひろかず',
-                'character': 'hirokazu',
+                'speaker': 'narrator',
+                'character': 'narrator',
                 'text': '数十分後、、、',
-                'expression': 'b'
+                'expression': 'a'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'まぁまぁまぁまぁ、、、金に換えるからなこれぐらいかかるんだろな',
-                'expression': 'b'
+                'expression': 'e'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'まぁ、いい人だったしな、、、、まぁ。。ないよな、、、そんなこと、、、',
-                'expression': 'c'
+                'expression': 'i'
             },
             {
-                'speaker': 'ひろかず',
-                'character': 'hirokazu',
+                'speaker': 'narrator',
+                'character': 'narrator',
                 'text': '３０分後、、、',
-                'expression': 'b'
+                'expression': 'a'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'あっ、、あへぇ、、あれ、、、おかしいな、、、、おそいな、、、',
-                'expression': 'c'
+                'expression': 'i'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'んん、、、あれ、、、あへぇぇ、、ほんとに、、、おそいな、、、おそ、、',
-                'expression': 'c'
+                'expression': 'h'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'あっ、、、、、あっあっ、、、ア、、、、いや、、、あっ、、、',
-                'expression': 'c'
+                'expression': 'h'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': '、、、、あっ、騙された、、、、、、、、、、、、、、',
-                'expression': 'c'
+                'expression': 'k'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'はっ、っは、、、、はぁ、はぁ、うぅ、、、、、はぁ、はぁ、、、、、、',
-                'expression': 'c'
+                'expression': 'i'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'あああああ、、、、、あああああああああああ、、、',
-                'expression': 'c'
+                'expression': 'i'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'とっ、とりあえず、ちょっと、顔見知りの居酒屋のオーナーにそっ、相談しよう',
-                'expression': 'c'
+                'expression': 'h'
             },
             {
-                'speaker': 'ひろかず',
-                'character': 'hirokazu',
+                'speaker': 'narrator',
+                'character': 'narrator',
                 'text': 'プルルルルルル',
                 'expression': 'a'
             },
@@ -577,13 +875,13 @@ export const japanConversationData = {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': '、、、、、あああああ、、だっ、、、、',
-                'expression': 'c'
+                'expression': 'h'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': '騙されました、どうしましょう、、',
-                'expression': 'c'
+                'expression': 'g'
             },
             {
                 'speaker': '親切な居酒屋の店主',
@@ -595,7 +893,15 @@ export const japanConversationData = {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': '、、、、、、、',
-                'expression': 'c'
+                'expression': 'k'
+            },
+            {
+                'speaker': 'narrator',
+                'character': 'narrator',
+                'text': '交番にて、、',
+                'expression': 'a',
+                'se': 'don',
+                'background': 'koubann'
             },
             {
                 'speaker': '交番',
@@ -607,19 +913,19 @@ export const japanConversationData = {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'うっ、、、うぅ、、、騙されました。。。。',
-                'expression': 'c'
+                'expression': 'h'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': '５０万をかりでぇ、、、そして、ドンキでお金渡して、、、、',
-                'expression': 'c'
+                'expression': 'h'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'うぅ、、、うっ、、、、、',
-                'expression': 'c'
+                'expression': 'h'
             },
             {
                 'speaker': '交番',
@@ -631,7 +937,7 @@ export const japanConversationData = {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'なっ、、ないです、、、、、',
-                'expression': 'c'
+                'expression': 'h'
             },
             {
                 'speaker': '交番',
@@ -643,13 +949,13 @@ export const japanConversationData = {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'えっ、、絵は得意なので、、、',
-                'expression': 'a'
+                'expression': 'h'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'うぅ、、かっ、、描きます、、、、',
-                'expression': 'c'
+                'expression': 'h'
             },
             {
                 'speaker': '交番',
@@ -679,177 +985,125 @@ export const japanConversationData = {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': '、、、、、しばらくして、、、',
-                'expression': 'c'
+                'expression': 'h'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'その５０万円は帰ってくることはなかった、、、',
-                'expression': 'c'
+                'expression': 'h'
             },
             {
-                'speaker': 'ひろかず',
-                'character': 'hirokazu',
+                'speaker': 'narrator',
+                'character': 'narrator',
                 'text': 'ひろかずは目の前が真っ暗になった',
                 'expression': 'c'
             }
         ]
     },
     
-    // 路上の噴水エリア
-    'rojyounopenki': {
-        'background': 'test_1',
-        'bgm': 'longing_Love',
-        'conversations': [
-            {
-                'speaker': 'ひろかず',
-                'character': 'hirokazu',
-                'text': '路上の噴水だな',
-                'expression': 'a'
-            },
-            {
-                'speaker': 'ひろかず',
-                'character': 'hirokazu',
-                'text': '街の景観を良くしてるぜ',
-                'expression': 'b'
-            },
-            {
-                'speaker': 'ひろかず',
-                'character': 'hirokazu',
-                'text': '夏は涼しそうだな',
-                'expression': 'a'
-            }
-        ]
-    },
-    
-    // テレビ塔エリア
-    'tereapo': {
-        'background': 'test_1',
-        'bgm': 'curono',
-        'conversations': [
-            {
-                'speaker': 'ひろかず',
-                'character': 'hirokazu',
-                'text': 'テレビ塔だ！',
-                'expression': 'a'
-            },
-            {
-                'speaker': 'ひろかず',
-                'character': 'hirokazu',
-                'text': '電波を送信してる重要な施設だな',
-                'expression': 'b'
-            },
-            {
-                'speaker': 'ひろかず',
-                'character': 'hirokazu',
-                'text': '街のランドマークになってるぜ☆',
-                'expression': 'a'
-            },
-            {
-                'type': 'choice',
-                'choiceId': 'tv_tower_choice',
-                'choices': [
-                    {
-                        'id': 'admire',
-                        'text': '素晴らしい施設だと思う',
-                        'result': 'correct',
-                        'nextMessages': [
-                            {
-                                'speaker': 'ひろかず',
-                                'character': 'hirokazu',
-                                'text': '本当に素晴らしい施設だよね！AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',
-                                'expression': 'a'
-                            },
-                            {
-                                'speaker': 'ひろかず',
-                                'character': 'hirokazu',
-                                'text': '街の発展に貢献してるAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',
-                                'expression': 'c'
-                            }
-                        ]
-                    },
-                    {
-                        'id': 'indifferent',
-                        'text': '別にどうでもいい',
-                        'result': 'wrong',
-                        'nextMessages': [
-                            {
-                                'speaker': 'ひろかず',
-                                'character': 'hirokazu',
-                                'text': 'そうかな...BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB',
-                                'expression': 'b'
-                            }
-                        ]
-                    },
-                    {
-                        'id': 'curious',
-                        'text': 'もっと詳しく知りたい',
-                        'result': 'correct',
-                        'nextMessages': [
-                            {
-                                'speaker': 'ひろかず',
-                                'character': 'hirokazu',
-                                'text': 'もっと詳しく調べてみよう！CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC',
-                                'expression': 'c'
-                            },
-                            {
-                                'speaker': 'ひろかず',
-                                'character': 'hirokazu',
-                                'text': '歴史や技術について知りたいなCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC',
-                                'expression': 'a'
-                            }
-                        ]
-                    }
-                ]
-            },
-            // 選択肢後の共通会話
-            {
-                'speaker': 'ナレーター',
-                'character': 'narrator',
-                'text': 'テレビ塔についての会話が終わったDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD',
-                'expression': 'a'
-            },
-            {
-                'speaker': 'ひろかず',
-                'character': 'hirokazu',
-                'text': 'テレビ塔は街のシンボルだなDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD',
-                'expression': 'a'
-            },
-            {
-                'speaker': 'ひろかず',
-                'character': 'hirokazu',
-                'text': '次はどこに行こうか',
-                'expression': 'b'
-            }
-        ]
-    },
-    
-    // 初日の出エリア
-    'first_rising_sun': {
-        'background': 'test_1',
-        'bgm': '紫電清霜',
-        'conversations': [
-            {
-                'speaker': 'ひろかず',
-                'character': 'hirokazu',
-                'text': '初日の出を見る場所だな',
-                'expression': 'a'
-            },
-            {
-                'speaker': 'ひろかず',
-                'character': 'hirokazu',
-                'text': '新年の始まりを祝う場所だぜ',
-                'expression': 'b'
-            },
-            {
-                'speaker': 'ひろかず',
-                'character': 'hirokazu',
-                'text': 'みんなで集まってお祝いするんだな',
-                'expression': 'a'
-            }
-        ]
-    },
-    
+    // // テレビ塔エリア
+    // 'tereapo': {
+    //     'background': 'test_1',
+    //     'bgm': 'curono',
+    //     'conversations': [
+    //         {
+    //             'speaker': 'ひろかず',
+    //             'character': 'hirokazu',
+    //             'text': 'テレビ塔だ！',
+    //             'expression': 'a'
+    //         },
+    //         {
+    //             'speaker': 'ひろかず',
+    //             'character': 'hirokazu',
+    //             'text': '電波を送信してる重要な施設だな',
+    //             'expression': 'b'
+    //         },
+    //         {
+    //             'speaker': 'ひろかず',
+    //             'character': 'hirokazu',
+    //             'text': '街のランドマークになってるぜ☆',
+    //             'expression': 'a'
+    //         },
+    //         {
+    //             'type': 'choice',
+    //             'choiceId': 'tv_tower_choice',
+    //             'choices': [
+    //                 {
+    //                     'id': 'admire',
+    //                     'text': '素晴らしい施設だと思う',
+    //                     'result': 'correct',
+    //                     'nextMessages': [
+    //                         {
+    //                             'speaker': 'ひろかず',
+    //                             'character': 'hirokazu',
+    //                             'text': '本当に素晴らしい施設だよね！AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',
+    //                             'expression': 'a'
+    //                         },
+    //                         {
+    //                             'speaker': 'ひろかず',
+    //                             'character': 'hirokazu',
+    //                             'text': '街の発展に貢献してるAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',
+    //                             'expression': 'c'
+    //                         }
+    //                     ]
+    //                 },
+    //                 {
+    //                     'id': 'indifferent',
+    //                     'text': '別にどうでもいい',
+    //                     'result': 'wrong',
+    //                     'nextMessages': [
+    //                         {
+    //                             'speaker': 'ひろかず',
+    //                             'character': 'hirokazu',
+    //                             'text': 'そうかな...BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB',
+    //                             'expression': 'b'
+    //                         }
+    //                     ]
+    //                 },
+    //                 {
+    //                     'id': 'curious',
+    //                     'text': 'もっと詳しく知りたい',
+    //                     'result': 'correct',
+    //                     'nextMessages': [
+    //                         {
+    //                             'speaker': 'ひろかず',
+    //                             'character': 'hirokazu',
+    //                             'text': 'もっと詳しく調べてみよう！CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC',
+    //                             'expression': 'c'
+    //                         },
+    //                         {
+    //                             'speaker': 'ひろかず',
+    //                             'character': 'hirokazu',
+    //                             'text': '歴史や技術について知りたいなCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC',
+    //                             'expression': 'a'
+    //                         }
+    //                     ]
+    //                 }
+    //             ]
+        //     },
+        //     // 選択肢後の共通会話
+        //     {
+        //         'speaker': 'ナレーター',
+        //         'character': 'narrator',
+        //         'text': 'テレビ塔についての会話が終わったDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD',
+        //         'expression': 'a'
+        //     },
+        //     {
+        //         'speaker': 'ひろかず',
+        //         'character': 'hirokazu',
+        //         'text': 'テレビ塔は街のシンボルだなDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD',
+        //         'expression': 'a'
+        //     },
+        //     {
+        //         'speaker': 'ひろかず',
+        //         'character': 'hirokazu',
+        //         'text': '次はどこに行こうか',
+        //         'expression': 'b'
+        //     }
+    //     // ]
+    // },
+   
     // 荒地エリア
     'arechi': {
         'background': 'test_1',
@@ -876,36 +1130,10 @@ export const japanConversationData = {
         ]
     },
     
-    // グレーバイトエリア
-    'gray_bytes': {
-        'background': 'test_1',
-        'bgm': 'curono',
-        'conversations': [
-            {
-                'speaker': 'ひろかず',
-                'character': 'hirokazu',
-                'text': 'グレーバイト...',
-                'expression': 'b'
-            },
-            {
-                'speaker': 'ひろかず',
-                'character': 'hirokazu',
-                'text': '何か秘密がありそうだな',
-                'expression': 'a'
-            },
-            {
-                'speaker': 'ひろかず',
-                'character': 'hirokazu',
-                'text': '調査してみるか？',
-                'expression': 'c'
-            }
-        ]
-    },
-    
     // テレアポ
-    'telephone_appointment': {
-        'background': 'test_1',
-        'bgm': 'curono',
+    'tereapo': {
+        'background': 'tereapobaito',
+        'bgm': 'etude_op40_no3_toccatina',
         'conversations': [
             {
                 'speaker': 'ひろかず',
@@ -1085,9 +1313,9 @@ export const japanConversationData = {
     },
     
     // 路上のペンキ
-    'road_paint': {
-        'background': 'test_1',
-        'bgm': 'curono',
+    'rojyounopenki': {
+        'background': 'kouenn',
+        'bgm': 'africa',
         'conversations': [
             {
                 'speaker': 'ひろかず',
@@ -1219,9 +1447,9 @@ export const japanConversationData = {
     },
     
     // 初日の出
-    'first_sunrise': {
-        'background': 'test_1',
-        'bgm': 'curono',
+    'first_rising_sun': {
+        'background': 'hatuhinode',
+        'bgm': 'Spein',
         'conversations': [
             {
                 'speaker': 'ひろかず',
