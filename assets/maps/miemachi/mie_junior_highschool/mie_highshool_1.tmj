@@ -1,4 +1,12 @@
 { "compressionlevel":-1,
+ "editorsettings":
+    {
+     "export":
+        {
+         "format":"json",
+         "target":"mie_highshool_1.tmj"
+        }
+    },
  "height":35,
  "infinite":false,
  "layers":[
@@ -864,8 +872,8 @@
                  "type":"npc",
                  "visible":true,
                  "width":0,
-                 "x":932,
-                 "y":560
+                 "x":942.666666666667,
+                 "y":688
                 }, 
                 {
                  "height":0,
@@ -876,8 +884,8 @@
                  "type":"npc",
                  "visible":true,
                  "width":0,
-                 "x":1094.66666666667,
-                 "y":192
+                 "x":1104,
+                 "y":314.666666666667
                 }, 
                 {
                  "height":0,
@@ -900,8 +908,8 @@
                  "type":"npc",
                  "visible":true,
                  "width":0,
-                 "x":1108,
-                 "y":456
+                 "x":1140,
+                 "y":550.666666666667
                 }, 
                 {
                  "height":0,
@@ -912,8 +920,8 @@
                  "type":"npc",
                  "visible":true,
                  "width":0,
-                 "x":833.333333333333,
-                 "y":76
+                 "x":984,
+                 "y":133.333333333333
                 }, 
                 {
                  "height":0,
