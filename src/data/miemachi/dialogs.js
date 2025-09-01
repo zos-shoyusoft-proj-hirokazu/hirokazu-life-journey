@@ -54,4 +54,306 @@ export const Stage1DialogData = {
             }
         ]
     },
+    
+    // 三重中学校のNPCダイアログ
+    'npc_1': {
+        name: '生徒A',
+        displayName: '生徒A',
+        character: 'npc_1',
+        messages: [
+            {
+                speaker: '生徒A',
+                text: 'こんにちは！今日も元気ですね'
+            },
+            {
+                speaker: '生徒A',
+                text: '何か面白い話はありますか？'
+            }
+        ]
+    },
+    'npc_2': {
+        name: '生徒B',
+        displayName: '生徒B',
+        character: 'npc_2',
+        messages: [
+            {
+                speaker: '生徒B',
+                text: 'お疲れさまです！'
+            },
+            {
+                speaker: '生徒B',
+                text: '今日も一日頑張りましょう'
+            }
+        ]
+    },
+    'npc_3': {
+        name: '生徒C',
+        displayName: '生徒C',
+        character: 'npc_3',
+        messages: [
+            {
+                speaker: '生徒C',
+                text: 'こんにちは！'
+            },
+            {
+                speaker: '生徒C',
+                text: '一緒に話しましょう'
+            }
+        ]
+    },
+    'npc_4': {
+        name: '生徒D',
+        displayName: '生徒D',
+        character: 'npc_4',
+        messages: [
+            {
+                speaker: '生徒D',
+                text: 'おはようございます'
+            },
+            {
+                speaker: '生徒D',
+                text: '今日もよろしくお願いします'
+            }
+        ]
+    },
+    'npc_5': {
+        name: '生徒E',
+        displayName: '生徒E',
+        character: 'npc_5',
+        messages: [
+            {
+                speaker: '生徒E',
+                text: '何かお手伝いできることはありますか？'
+            },
+            {
+                speaker: '生徒E',
+                text: '困ったことがあれば声をかけてください'
+            }
+        ]
+    },
+    'npc_6': {
+        name: '生徒F',
+        displayName: '生徒F',
+        character: 'npc_6',
+        messages: [
+            {
+                speaker: '生徒F',
+                text: '今日もいい天気ですね'
+            },
+            {
+                speaker: '生徒F',
+                text: '気分がいいです'
+            }
+        ]
+    },
+    'npc_7': {
+        name: '生徒G',
+        displayName: '生徒G',
+        character: 'npc_7',
+        messages: [
+            {
+                speaker: '生徒G',
+                text: 'こんにちは！'
+            },
+            {
+                speaker: '生徒G',
+                text: '何か楽しいことがあったら教えてね'
+            }
+        ]
+    },
+    'npc_8': {
+        name: '生徒H',
+        displayName: '生徒H',
+        character: 'npc_8',
+        messages: [
+            {
+                speaker: '生徒H',
+                text: 'お疲れさまです'
+            },
+            {
+                speaker: '生徒H',
+                text: '明日もよろしくお願いします'
+            }
+        ]
+    },
+    'npc_9': {
+        name: '生徒I',
+        displayName: '生徒I',
+        character: 'npc_9',
+        messages: [
+            {
+                speaker: '生徒I',
+                text: '今日も一日お疲れ様でした'
+            },
+            {
+                speaker: '生徒I',
+                text: 'また明日会いましょう'
+            }
+        ]
+    },
+    'npc_10': {
+        name: '生徒J',
+        displayName: '生徒J',
+        character: 'npc_10',
+        messages: [
+            {
+                speaker: '生徒J',
+                text: 'こんにちは！'
+            },
+            {
+                speaker: '生徒J',
+                text: '今日も頑張りましょう'
+            }
+        ]
+    },
+    'npc_11': {
+        name: '生徒K',
+        displayName: '生徒K',
+        character: 'npc_11',
+        messages: [
+            {
+                speaker: '生徒K',
+                text: 'おはようございます'
+            },
+            {
+                speaker: '生徒K',
+                text: '今日も元気に過ごしましょう'
+            }
+        ]
+    },
+    'npc_12': {
+        name: '生徒L',
+        displayName: '生徒L',
+        character: 'npc_12',
+        messages: [
+            {
+                speaker: '生徒L',
+                text: '何か面白い話はありますか？'
+            },
+            {
+                speaker: '生徒L',
+                text: '一緒に話しましょう'
+            }
+        ]
+    },
+    'npc_13': {
+        name: '生徒M',
+        displayName: '生徒M',
+        character: 'npc_13',
+        messages: [
+            {
+                speaker: '生徒M',
+                text: 'こんにちは！'
+            },
+            {
+                speaker: '生徒M',
+                text: '今日もいい天気ですね'
+            }
+        ]
+    },
+    'npc_14': {
+        name: '生徒N',
+        displayName: '生徒N',
+        character: 'npc_14',
+        messages: [
+            {
+                speaker: '生徒N',
+                text: 'お疲れさまです'
+            },
+            {
+                speaker: '生徒N',
+                text: '何かお手伝いできることはありますか？'
+            }
+        ]
+    },
+    'npc_15': {
+        name: '生徒O',
+        displayName: '生徒O',
+        character: 'npc_15',
+        messages: [
+            {
+                speaker: '生徒O',
+                text: '今日も一日お疲れ様でした'
+            },
+            {
+                speaker: '生徒O',
+                text: '明日もよろしくお願いします'
+            }
+        ]
+    },
+    'npc_16': {
+        name: '生徒P',
+        displayName: '生徒P',
+        character: 'npc_16',
+        messages: [
+            {
+                speaker: '生徒P',
+                text: 'こんにちは！'
+            },
+            {
+                speaker: '生徒P',
+                text: '何か楽しいことがあったら教えてね'
+            }
+        ]
+    },
+    'npc_17': {
+        name: '生徒Q',
+        displayName: '生徒Q',
+        character: 'npc_17',
+        messages: [
+            {
+                speaker: '生徒Q',
+                text: 'おはようございます'
+            },
+            {
+                speaker: '生徒Q',
+                text: '今日も頑張りましょう'
+            }
+        ]
+    },
+    'npc_18': {
+        name: '生徒R',
+        displayName: '生徒R',
+        character: 'npc_18',
+        messages: [
+            {
+                speaker: '生徒R',
+                text: 'こんにちは！'
+            },
+            {
+                speaker: '生徒R',
+                text: '一緒に話しましょう'
+            }
+        ]
+    },
+    'npc_19': {
+        name: '生徒S',
+        displayName: '生徒S',
+        character: 'npc_19',
+        messages: [
+            {
+                speaker: '生徒S',
+                text: '今日もいい天気ですね'
+            },
+            {
+                speaker: '生徒S',
+                text: '気分がいいです'
+            }
+        ]
+    },
+    'npc_20': {
+        name: '生徒T',
+        displayName: '生徒T',
+        character: 'npc_20',
+        messages: [
+            {
+                speaker: '生徒T',
+                text: 'お疲れさまです'
+            },
+            {
+                speaker: '生徒T',
+                text: 'また明日会いましょう'
+            }
+        ]
+    }
 };
