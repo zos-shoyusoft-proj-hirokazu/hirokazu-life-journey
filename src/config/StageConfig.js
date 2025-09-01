@@ -158,9 +158,7 @@ export const StageConfig = {
                     { name: 'npc_p_1', displayName: '生徒D', sprite: 'pipo-charachip022a.png' },
                     { name: 'npc_e_3', displayName: '生徒E', sprite: 'pipo-charachip024d.png' },
                     { name: 'npc_s_3', displayName: '生徒F', sprite: 'pipo-charachip022a.png' },
-                    { name: 'npc_s_2', displayName: '生徒G', sprite: 'pipo-charachip022e.png' },
-                    { name: 'npc_1', displayName: '生徒H', sprite: 'pipo-charachip007a.png' },
-                    { name: 'npc_2', displayName: '生徒I', sprite: 'pipo-charachip022a.png' },
+                    { name: 'npc_s_2', displayName: '生徒G', sprite: 'pipo-charachip022e.png' }
                 ],
                 tilesets: [
                     'pika_nos_tiles03_A2',
@@ -213,11 +211,7 @@ export const StageConfig = {
                     { name: 's-12', displayName: '生徒F', sprite: 'pipo-charachip007a.png' },
                     { name: 's-13', displayName: '生徒G', sprite: 'pipo-charachip022a.png' },
                     { name: 'あめかわ', displayName: 'あめかわ', sprite: 'pipo-charachip007a.png' },
-                    { name: 'みやざー', displayName: 'みやざー', sprite: 'pipo-charachip022a.png' },
-                    { name: 'あきざわ', displayName: 'あきざわ', sprite: 'pipo-charachip022e.png' },
-                    { name: 'しゅうへい', displayName: 'しゅうへい', sprite: 'pipo-charachip024d.png' },
-                    { name: 'なおき', displayName: 'なおき', sprite: 'pipo-charachip026.png' },
-                    { name: 'まさとに', displayName: 'まさとに', sprite: 'pipo-charachip007a.png' }
+                    { name: 'みやざー', displayName: 'みやざー', sprite: 'pipo-charachip022a.png' }
                 ],
                 tilesets: [
                     'pika_nos_tiles03_A2',

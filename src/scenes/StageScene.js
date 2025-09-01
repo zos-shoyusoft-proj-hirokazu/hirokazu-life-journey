@@ -110,7 +110,7 @@ export class StageScene extends Phaser.Scene {
         this.loadNPCSprites();
         
         // プレイヤー用スプライトシートを読み込み
-        this.load.spritesheet('player_sprite', 'assets/characters/player/pipo-charachip007a.png', {
+        this.load.spritesheet('player_sprite', 'assets/characters/npcs/男_ギャング.png', {
             frameWidth: 32,
             frameHeight: 32,
             spacing: 0,
@@ -317,7 +317,7 @@ export class StageScene extends Phaser.Scene {
             this.createNPCs();
             
             // タッチコントローラー作成
-            this.touchControlManager = new TouchControlManager(this, this.playerController.player, 'se_touch');
+            this.touchControlManager = new TouchControlManager(this, this.playerController, 'se_touch');
             
             // カメラ設定（stage2と同じ方法）
             this.cameraManager = new CameraManager(this);

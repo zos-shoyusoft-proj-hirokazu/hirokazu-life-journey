@@ -76,7 +76,7 @@ export class Stage3 extends Phaser.Scene {
         this.playerController.createPlayer(100, 100);
 
         // タッチコントロールマネージャーを初期化
-        this.touchControlManager = new TouchControlManager(this, this.playerController.player, 'se_touch_stage3');
+        this.touchControlManager = new TouchControlManager(this, this.playerController, 'se_touch_stage3');
 
         // UI要素を作成
         this.uiManager = new UIManager();

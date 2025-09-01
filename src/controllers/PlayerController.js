@@ -8,47 +8,76 @@ export class PlayerController {
     }
 
     createPlayer(x, y) {
-        // プレイヤー（新郎）作成 - 物理オブジェクトとして
-        // 黒色の1x1ピクセルのテクスチャを作成
-        if (!this.scene.textures.exists('player_placeholder')) {
-            // より確実なテクスチャ作成
-            const canvas = document.createElement('canvas');
-            canvas.width = 1;
-            canvas.height = 1;
-            const ctx = canvas.getContext('2d');
-            ctx.fillStyle = '#000000';  // 黒色で塗りつぶし
-            ctx.fillRect(0, 0, 1, 1);
-            
-            this.scene.textures.addCanvas('player_placeholder', canvas);
-        }
+        console.log('[PlayerController] プレイヤー作成開始');
         
-        this.player = this.scene.physics.add.sprite(x, y, 'player_placeholder');
-        this.player.setDisplaySize(30, 30);
+        // プレイヤー（新郎）作成 - スプライトシートを使用
+        this.player = this.scene.physics.add.sprite(x, y, 'player_sprite');
+        this.player.setDisplaySize(32, 32);
         
         // 主人公を最前面に表示（レイヤーより手前）
         this.player.setDepth(40);
         
-        // 透明度を完全に不透明に設定
-        this.player.setAlpha(1.0);
+        // 初期フレームを設定（下向き）
+        this.player.setFrame(0);
         
-        // 色調を黒色に設定
-        this.player.clearTint();
-        this.player.setTint(0x000000);  // 黒色
-
         // プレイヤーの物理設定
         this.player.setCollideWorldBounds(true); // 画面端で止まる
         this.player.setBounce(0); // 跳ね返りを無効化（滑らかな動きのため）
         this.player.setDrag(200); // 慣性を追加して滑らかに停止
         
-        // シーン遷移時の問題を防ぐため、少し遅延してから設定を再適用
-        this.scene.time.delayedCall(100, () => {
-            if (this.player) {
-                this.player.setDepth(40);
-                this.player.setAlpha(1.0);
-                this.player.clearTint();
-                this.player.setTint(0x000000);  // 黒色を再設定
-            }
-        });
+        console.log('[PlayerController] プレイヤースプライト作成完了');
+        
+        // アニメーションを設定
+        this.setupPlayerAnimations();
+        
+        console.log('[PlayerController] プレイヤー作成完了');
+    }
+    
+    setupPlayerAnimations() {
+        console.log('[PlayerController] アニメーション設定開始');
+        
+        // プレイヤーのアニメーションを設定（3x4グリッド構成）
+        if (!this.scene.anims.exists('player_walk_down')) {
+            this.scene.anims.create({
+                key: 'player_walk_down',
+                frames: this.scene.anims.generateFrameNumbers('player_sprite', { start: 0, end: 2 }),
+                frameRate: 8,
+                repeat: -1
+            });
+            console.log('[PlayerController] 下向きアニメーション作成完了');
+        }
+        
+        if (!this.scene.anims.exists('player_walk_left')) {
+            this.scene.anims.create({
+                key: 'player_walk_left',
+                frames: this.scene.anims.generateFrameNumbers('player_sprite', { start: 3, end: 5 }),
+                frameRate: 8,
+                repeat: -1
+            });
+            console.log('[PlayerController] 左向きアニメーション作成完了');
+        }
+        
+        if (!this.scene.anims.exists('player_walk_right')) {
+            this.scene.anims.create({
+                key: 'player_walk_right',
+                frames: this.scene.anims.generateFrameNumbers('player_sprite', { start: 6, end: 8 }),
+                frameRate: 8,
+                repeat: -1
+            });
+            console.log('[PlayerController] 右向きアニメーション作成完了');
+        }
+        
+        if (!this.scene.anims.exists('player_walk_up')) {
+            this.scene.anims.create({
+                key: 'player_walk_up',
+                frames: this.scene.anims.generateFrameNumbers('player_sprite', { start: 9, end: 11 }),
+                frameRate: 8,
+                repeat: -1
+            });
+            console.log('[PlayerController] 上向きアニメーション作成完了');
+        }
+        
+        console.log('[PlayerController] アニメーション設定完了');
     }
     
     // 主人公の状態を確認するメソッド（削除）
@@ -157,6 +186,62 @@ export class PlayerController {
             // 実際の速度設定
             this.player.setVelocityX(velocityX);
             this.player.setVelocityY(velocityY);
+            
+            // アニメーション処理
+            this.handlePlayerAnimation(velocityX, velocityY);
+        }
+    }
+    
+    handlePlayerAnimation(velocityX, velocityY) {
+        console.log(`[PlayerController] handlePlayerAnimation: vx=${velocityX}, vy=${velocityY}`);
+        
+        // 移動していない場合はアニメーションを停止し、静止フレームを設定
+        if (velocityX === 0 && velocityY === 0) {
+            console.log('[PlayerController] 停止中 - アニメーション停止');
+            this.player.anims.stop();
+            // 最後の移動方向に応じて静止フレームを設定
+            if (this.lastDirection) {
+                switch (this.lastDirection) {
+                    case 'up':
+                        this.player.setFrame(9); // 上向き静止フレーム
+                        break;
+                    case 'down':
+                        this.player.setFrame(0); // 下向き静止フレーム
+                        break;
+                    case 'left':
+                        this.player.setFrame(3); // 左向き静止フレーム
+                        break;
+                    case 'right':
+                        this.player.setFrame(6); // 右向き静止フレーム
+                        break;
+                }
+            }
+            return;
+        }
+        
+        // 移動方向に応じてアニメーションを再生
+        if (Math.abs(velocityY) > Math.abs(velocityX)) {
+            // 上下移動が優先
+            if (velocityY < 0) {
+                console.log('[PlayerController] 上向きアニメーション再生');
+                this.player.anims.play('player_walk_up', true);
+                this.lastDirection = 'up';
+            } else {
+                console.log('[PlayerController] 下向きアニメーション再生');
+                this.player.anims.play('player_walk_down', true);
+                this.lastDirection = 'down';
+            }
+        } else {
+            // 左右移動が優先
+            if (velocityX < 0) {
+                console.log('[PlayerController] 左向きアニメーション再生');
+                this.player.anims.play('player_walk_left', true);
+                this.lastDirection = 'left';
+            } else {
+                console.log('[PlayerController] 右向きアニメーション再生');
+                this.player.anims.play('player_walk_right', true);
+                this.lastDirection = 'right';
+            }
         }
     }
 
@@ -165,6 +250,9 @@ export class PlayerController {
         if (this.player) {
             this.player.setVelocityX(vx);
             this.player.setVelocityY(vy);
+            
+            // タッチ操作でもアニメーションを処理
+            this.handlePlayerAnimation(vx, vy);
         }
     }
 

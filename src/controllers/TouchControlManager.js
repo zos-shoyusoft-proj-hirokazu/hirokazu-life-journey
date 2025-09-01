@@ -99,8 +99,11 @@ export class TouchControlManager {
         
         // タッチイベントの設定
         touchArea.on('pointerdown', (pointer) => {
+            console.log(`[TouchControlManager] タッチエリアクリック: pointer.id=${pointer.id}, x=${pointer.x}, y=${pointer.y}`);
             if (this.currentPointerId === null) {
                 this.startStickControl(pointer);
+            } else {
+                console.log(`[TouchControlManager] 既に別のポインターがアクティブ: ${this.currentPointerId}`);
             }
         });
         
@@ -122,6 +125,8 @@ export class TouchControlManager {
     }
     
     startStickControl(pointer) {
+        console.log(`[TouchControlManager] startStickControl呼び出し: pointer.id=${pointer.id}, x=${pointer.x}, y=${pointer.y}`);
+        
         this.isStickActive = true;
         this.currentPointerId = pointer.id;
         
@@ -164,6 +169,8 @@ export class TouchControlManager {
     }
 
     updateStick(touchX, touchY) {
+        console.log(`[TouchControlManager] updateStick呼び出し: touchX=${touchX}, touchY=${touchY}`);
+        
         // 中心からの距離を計算
         const deltaX = touchX - this.centerX;
         const deltaY = touchY - this.centerY;
@@ -196,10 +203,12 @@ export class TouchControlManager {
         const inputMagnitude = Math.sqrt(normalizedX * normalizedX + normalizedY * normalizedY);
         
         if (inputMagnitude < deadZone) {
-            // PlayerControllerと同じ方法で停止（プレイヤーが存在する場合のみ）
-            if (this.player && this.player.setVelocityX) {
-                this.player.setVelocityX(0);
-                this.player.setVelocityY(0);
+            // PlayerControllerのsetVelocityメソッドを呼ぶ（アニメーション処理を含む）
+            console.log('[TouchControlManager] 停止処理: setVelocity(0, 0)');
+            if (this.player && this.player.setVelocity) {
+                this.player.setVelocity(0, 0);
+            } else {
+                console.warn('[TouchControlManager] 停止時: PlayerController.setVelocityが見つかりません');
             }
             return;
         }
@@ -209,10 +218,15 @@ export class TouchControlManager {
         const velocityX = normalizedX * speed;
         const velocityY = normalizedY * speed;
         
-        // PlayerControllerと同じ方法で設定（プレイヤーが存在する場合のみ）
-        if (this.player && this.player.setVelocityX) {
-            this.player.setVelocityX(velocityX);
-            this.player.setVelocityY(velocityY);
+        // PlayerControllerのsetVelocityメソッドを呼ぶ（アニメーション処理を含む）
+        console.log(`[TouchControlManager] setVelocity呼び出し: vx=${velocityX}, vy=${velocityY}`);
+        if (this.player && this.player.setVelocity) {
+            console.log('[TouchControlManager] PlayerController.setVelocity呼び出し中...');
+            this.player.setVelocity(velocityX, velocityY);
+        } else {
+            console.warn('[TouchControlManager] PlayerController.setVelocityが見つかりません');
+            console.log('[TouchControlManager] this.player:', this.player);
+            console.log('[TouchControlManager] this.player.setVelocity:', this.player ? this.player.setVelocity : 'undefined');
         }
     }
     
@@ -225,10 +239,9 @@ export class TouchControlManager {
         this.currentInput.x = 0;
         this.currentInput.y = 0;
         
-        // プレイヤーを停止（プレイヤーが存在する場合のみ）
-        if (this.player && this.player.setVelocityX) {
-            this.player.setVelocityX(0);
-            this.player.setVelocityY(0);
+        // プレイヤーを停止（PlayerControllerのsetVelocityメソッドを呼ぶ）
+        if (this.player && this.player.setVelocity) {
+            this.player.setVelocity(0, 0);
         }
     }
     

@@ -142,7 +142,7 @@ export class Stage1 extends Phaser.Scene {
             this.inputManager.setupKeyboard(this, this.playerController);
 
             // タッチコントロールマネージャーを初期化
-            this.touchControlManager = new TouchControlManager(this, this.playerController.player, 'se_touch_stage1');
+            this.touchControlManager = new TouchControlManager(this, this.playerController, 'se_touch_stage1');
 
             // UI要素を作成
             this.uiManager = new UIManager();
