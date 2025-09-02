@@ -182,8 +182,13 @@ export class DialogSystem {
             return;
         }
 
-        // UI要素の位置を再計算して更新
-        this.setupUI();
+        // ダイアログが表示中の場合は位置とサイズのみ調整
+        if (this.isActive) {
+            this.adjustDialogBoxSize();
+        } else {
+            // ダイアログが表示されていない場合はUI全体を再構築
+            this.setupUI();
+        }
     }
 
     setupInput() {
@@ -242,15 +247,68 @@ export class DialogSystem {
             text: message
         });
         
-        // 名前ボックスを更新
+        // 名前ボックスを更新（サイズを自動調整）
         if (this.nameBox) {
             this.nameBox.setText(speaker);
+            // 名前ボックスのサイズを自動調整
+            this.nameBox.setStyle({
+                fontSize: '16px',
+                fill: '#ffff00',
+                backgroundColor: '#000000',
+                padding: { x: 10, y: 5 }
+            });
         } else {
             console.warn('[DialogSystem] 名前ボックスが存在しません');
         }
         
         // メッセージテキストを更新
         this.dialogText.setText(message);
+        
+        // ダイアログボックスのサイズを動的に調整
+        this.adjustDialogBoxSize();
+    }
+
+    // ダイアログボックスのサイズを動的に調整
+    adjustDialogBoxSize() {
+        if (!this.dialogContainer || !this.dialogText || !this.nameBox) {
+            return;
+        }
+        
+        const camera = this.scene.cameras.main;
+        const gameWidth = camera.width || 800;
+        const gameHeight = camera.height || 600;
+        
+        // テキストの高さを計算
+        const textHeight = this.dialogText.height;
+        const nameHeight = this.nameBox.height;
+        
+        // 必要な高さを計算（余白を含む）
+        const requiredHeight = Math.max(120, nameHeight + textHeight + 60);
+        
+        // ダイアログボックスの位置を再計算
+        const margin = 20;
+        const dialogY = gameHeight - requiredHeight - margin - 20;
+        
+        // 背景のサイズを調整
+        const bg = this.dialogContainer.list[0]; // 背景は最初の要素
+        if (bg && bg.setSize) {
+            bg.setSize(gameWidth - 20, requiredHeight);
+            bg.setPosition(gameWidth / 2, dialogY + requiredHeight / 2);
+        }
+        
+        // 名前ボックスの位置を調整
+        this.nameBox.setPosition(30, dialogY + 15);
+        
+        // テキストの位置を調整
+        this.dialogText.setPosition(30, dialogY + 45);
+        
+        // 続行インジケーターの位置を調整
+        if (this.continueIndicator) {
+            this.continueIndicator.setPosition(
+                gameWidth - margin,
+                dialogY + requiredHeight / 2 - margin
+            );
+        }
     }
 
     nextDialog() {

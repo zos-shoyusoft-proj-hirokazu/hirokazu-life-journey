@@ -30,7 +30,7 @@ export const StageConfig = {
                     map: 'assets/audio/bgm/enter13.mp3'
                 },
                 npcs: [
-                    { name: 'tatuharu', displayName: 'たつはる', eventId: 'tatuharu', sprite: 'pipo-charachip022a.png' },
+                    { name: 'tatuharu', displayName: 'たつはる', eventId: 'tatuharu', sprite: '制服2夏服_男_01.png' },
                     { name: 'npc_1', displayName: '生徒A', sprite: '制服1夏服_女_01.png' },
                     { name: 'npc_2', displayName: '生徒B', sprite: '制服1夏服_男_01.png' },
                     { name: 'npc_3', displayName: '生徒C', sprite: '制服1夏服_女_04.png' },
@@ -74,10 +74,10 @@ export const StageConfig = {
                     map: 'assets/audio/bgm/テクノトリス.mp3'
                 },
                 npcs: [
-                    { name: 'uchida', displayName: '内田', sprite: 'pipo-charachip022e.png' },
-                    { name: 'ootuka', displayName: '大塚', eventId: 'otsuka_senpai', sprite: 'pipo-charachip024d.png' },
-                    { name: 'okagami', displayName: '岡上', sprite: 'pipo-charachip026.png' },
-                    { name: 'だいち_2', displayName: 'だいち', eventId: 'daichi_conversation', sprite: 'pipo-charachip024d.png' },
+                    { name: 'uchida', displayName: '内田', sprite: '制服2夏服_男_12.png' },
+                    { name: 'ootuka', displayName: '大塚', eventId: 'otsuka_senpai', sprite: '制服2夏服_男_04.png' },
+                    { name: 'okagami', displayName: '岡上', sprite: '先生_男_02.png' },
+                    { name: 'だいち_2', displayName: 'だいち', eventId: 'daichi_conversation', sprite: '制服2夏服_男_04.png' },
                     { name: 'ひろかず_2', displayName: 'ひろかず', sprite: '制服1冬服_男_01.png' },
                     { name: 'npc_1', displayName: '生徒A', sprite: '制服1夏服_男_12.png' },
                     { name: 'npc_2', displayName: '生徒B', sprite: '制服1夏服_女_01.png' },
@@ -150,8 +150,8 @@ export const StageConfig = {
                     map: 'assets/audio/bgm/はるかなる故郷.mp3'  // 2階・3階と同じBGMを使用
                 },
                 npcs: [
-                    { name: 'ひろかず_1', displayName: 'ひろかず', eventId: 'climbing_injury', sprite: 'pipo-charachip007a.png' },
-                    { name: 'おおや_1', displayName: 'おおや', eventId: 'wax_on', sprite: 'pipo-charachip022a.png' },
+                    { name: 'ひろかず_1', displayName: 'ひろかず', eventId: 'climbing_injury', sprite: '制服1冬服_男_12.png' },
+                    { name: 'おおや_1', displayName: 'おおや', eventId: 'wax_on', sprite: '制服2冬服_男_12.png' },
                     { name: 'npc_e_2', displayName: '生徒A', sprite: '制服2夏服_女_01.png' },
                     { name: 'npc_e_1', displayName: '生徒B', sprite: '制服2夏服_男_01.png' },
                     { name: 'npc_p_2', displayName: '生徒C', sprite: '制服2夏服_女_04.png' },
@@ -196,22 +196,22 @@ export const StageConfig = {
                     map: 'assets/audio/bgm/field_of_hopes_and_dreams.mp3'  // 1階と同じBGMを使用
                 },
                 npcs: [
-                    { name: 'anndou', displayName: '安藤', eventId: 'classroom_lock_incident', sprite: 'pipo-charachip022a.png' },
-                    { name: 'こうたろう_2', displayName: 'こうたろう', eventId: 'koutarou_toilet', sprite: 'pipo-charachip007a.png' },
-                    { name: 'だいち_2', displayName: 'だいち', eventId: 'culture_festival_apology', sprite: 'pipo-charachip024d.png' },
-                    { name: 'まみっち', displayName: 'まみっち', eventId: 'black_clothes', sprite: 'pipo-charachip022e.png' },
-                    { name: 'ひろかず_2', displayName: 'ひろかず', eventId: 'broadcast', sprite: '制服1冬服_男_01.png' },
-                    { name: 'かなと_2', displayName: 'かなと', eventId: 'valentine', sprite: 'pipo-charachip026.png' },
-                    { name: 'あべ', displayName: 'あべ', sprite: 'pipo-charachip022a.png' },
+                    { name: 'anndou', displayName: '安藤', eventId: 'classroom_lock_incident', sprite: '先生_男_02.png' },
+                    { name: 'こうたろう_2', displayName: 'こうたろう', eventId: 'koutarou_toilet', sprite: '制服2夏服_男_01.png' },
+                    { name: 'だいち_2', displayName: 'だいち', eventId: 'culture_festival_apology', sprite: '制服2夏服_男_04.png' },
+                    { name: 'まみっち', displayName: 'まみっち', eventId: 'black_clothes', sprite: '先生_女_04.png' },
+                    { name: 'ひろかず_2', displayName: 'ひろかず', eventId: 'broadcast', sprite: '制服1冬服_男_12.png' },
+                    { name: 'かなと_2', displayName: 'かなと', eventId: 'valentine', sprite: '制服2夏服_男_01.png' },
+                    { name: 'あべ', displayName: 'あべ', sprite: '制服2冬服_男_04.png' },
                     { name: 's-2', displayName: '生徒A', sprite: '制服2夏服_女_17.png' },
                     { name: 's-3', displayName: '生徒B', sprite: '制服2夏服_男_10.png' },
-                    { name: 's-8', displayName: '生徒C', sprite: '制服2夏服_女_01.png' },
-                    { name: 's-9', displayName: '生徒D', sprite: '制服2夏服_男_12.png' },
-                    { name: 's-11', displayName: '生徒E', sprite: '制服2夏服_女_04.png' },
-                    { name: 's-12', displayName: '生徒F', sprite: '制服2夏服_男_01.png' },
-                    { name: 's-13', displayName: '生徒G', sprite: '制服2夏服_女_12.png' },
-                    { name: 'あめかわ', displayName: 'あめかわ', sprite: 'pipo-charachip007a.png' },
-                    { name: 'みやざー', displayName: 'みやざー', sprite: 'pipo-charachip022a.png' }
+                    { name: 's-8', displayName: 'えとう', sprite: '制服2冬服_男_04.png' },
+                    { name: 's-9', displayName: '生徒C', sprite: '制服2夏服_男_12.png' },
+                    { name: 's-11', displayName: 'まさと', sprite: '制服2夏服_男_12.png' },
+                    { name: 's-12', displayName: 'ふじた', sprite: '制服2夏服_男_01.png' },
+                    { name: 's-13', displayName: 'かのん', sprite: '制服2夏服_女_12.png' },
+                    { name: 'あめかわ', displayName: 'あめかわ', sprite: '制服2夏服_男_12.png' },
+                    { name: 'みやざー', displayName: 'みやざー', sprite: '先生_男_04.png' }
                 ],
                 tilesets: [
                     'pika_nos_tiles03_A2',
@@ -246,10 +246,10 @@ export const StageConfig = {
                     map: 'assets/audio/bgm/Pollyanna.mp3'  // 1階と同じBGMを使用
                 },
                 npcs: [
-                    { name: 'かなと_3', displayName: 'かなと', eventId: 'drama_filming', sprite: 'pipo-charachip026.png' },
-                    { name: 'ひろかず_3', displayName: 'ひろかず', eventId: 'videocamera_broken', sprite: 'pipo-charachip007a.png' },
-                    { name: 'だいち_3', displayName: 'だいち', eventId: 'gospellers_song', sprite: 'pipo-charachip024d.png' },
-                    { name: 'こうたろう_3', displayName: 'こうたろう', eventId: 'lunch_tag', sprite: 'pipo-charachip007a.png' },
+                    { name: 'かなと_3', displayName: 'かなと', eventId: 'drama_filming', sprite: '制服2夏服_男_01.png' },
+                    { name: 'ひろかず_3', displayName: 'ひろかず', eventId: 'videocamera_broken', sprite: '制服1冬服_男_12.png' },
+                    { name: 'だいち_3', displayName: 'だいち', eventId: 'gospellers_song', sprite: '制服2夏服_男_04.png' },
+                    { name: 'こうたろう_3', displayName: 'こうたろう', eventId: 'lunch_tag', sprite: '制服2夏服_男_01.png' },
                     { name: 'あきざわ', displayName: 'あきざわ', sprite: '制服2冬服_男_01.png' },
                     { name: 'しゅうへい', displayName: 'しゅうへい', sprite: '制服2冬服_男_04.png' },
                     { name: 'なおき', displayName: 'なおき', sprite: '制服2冬服_男_06.png' },
