@@ -2709,6 +2709,51 @@ export const taketaConversationData = {
                 'character': 'naoki',
                 'text': '（ぼうずやん、、、わかるか）',
                 'expression': 'a'
+            },
+            {
+                'type': 'choice',
+                'choiceId': 'wax_on_choice',
+                'choices': [
+                    {
+                        'id': 'praise',
+                        'text': 'いいじゃん！似合ってる！',
+                        'result': 'correct',
+                        'nextMessages': [
+                            {
+                                'speaker': 'おおや',
+                                'character': 'ooya',
+                                'text': 'ほんと？うれしい！',
+                                'expression': 'a'
+                            }
+                        ]
+                    },
+                    {
+                        'id': 'point_out',
+                        'text': 'いや、それワックス以前の問題では…',
+                        'result': 'wrong',
+                        'nextMessages': [
+                            {
+                                'speaker': 'なおき',
+                                'character': 'naoki',
+                                'text': 'たしかに…でも言わないであげて…',
+                                'expression': 'b'
+                            }
+                        ]
+                    },
+                    {
+                        'id': 'neutral',
+                        'text': '気づかなかった…でも新しい挑戦いいね',
+                        'result': 'wrong',
+                        'nextMessages': [
+                            {
+                                'speaker': 'おおや',
+                                'character': 'ooya',
+                                'text': '次はもっと分かりやすい変化にしてみるわ！',
+                                'expression': 'a'
+                            }
+                        ]
+                    }
+                ]
             }
         ]
     },

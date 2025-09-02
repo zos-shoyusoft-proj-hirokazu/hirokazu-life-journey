@@ -116,6 +116,9 @@ export class StageScene extends Phaser.Scene {
             spacing: 0,
             margin: 0
         });
+        
+        // 吹き出し用アイコンを読み込む
+        this.load.image('speech_bubble', 'assets/ui/speech_bubble.png');
     }
     
     loadNPCSprites() {
@@ -179,20 +182,42 @@ export class StageScene extends Phaser.Scene {
                         console.warn('[StageScene] objectGroupが初期化されていません');
                     }
                     
-                    // クリックイベントを設定
-                    npcSprite.setInteractive();
-                                            npcSprite.on('pointerdown', () => {
-                            // NPCをプレイヤーの方向に向ける
-                            this.makeNPCLookAtPlayer(npcSprite);
+                    // EventID付きNPCのみに吹き出しを表示する判定
+                    if (npc.eventId) {
+                        // 検索用にeventIdを保持
+                        npcSprite.setData('eventId', npc.eventId);
+                        // 動的インポートでChoiceManagerを取得
+                        import('../managers/ChoiceManager.js').then(({ ChoiceManager }) => {
+                            const choiceManager = ChoiceManager.getInstance();
                             
-                            if (npc.eventId) {
-                                this.startConversation(npc.eventId);
-                            } else {
-                                if (this.dialogSystem) {
-                                    this.dialogSystem.startDialog(npc.name);
-                                }
+                            // 吹き出し表示条件：
+                            // - 選択肢があるイベント → 正解('correct')が一度も記録されていなければ表示
+                            // - 選択肢がないイベント → 初回完了で消したいので、'event_completed_{eventId}' を見る
+                            const hasCorrect = choiceManager.isEventCleared(npc.eventId);
+                            const noChoiceCompleted = localStorage.getItem('event_completed_' + npc.eventId) === 'true';
+                            if (!hasCorrect && !noChoiceCompleted) {
+                                this.createSpeechBubble(npc.name, npcSprite);
                             }
                         });
+                    }
+                    
+                    // クリックイベントを設定
+                    npcSprite.setInteractive();
+                    npcSprite.on('pointerdown', () => {
+                        // NPCをプレイヤーの方向に向ける
+                        this.makeNPCLookAtPlayer(npcSprite);
+                        
+                        if (npc.eventId) {
+                            // 会話開始
+                            this.startConversation(npc.eventId);
+
+                            // 会話終了時の吹き出し処理は常時リスナーで行うため、ここでは何もしない
+                        } else {
+                            if (this.dialogSystem) {
+                                this.dialogSystem.startDialog(npc.name);
+                            }
+                        }
+                    });
                     
                     // テキストラベルを追加
                     const displayName = npc.displayName || npc.name;
@@ -214,6 +239,75 @@ export class StageScene extends Phaser.Scene {
 
 
 
+
+    // 吹き出しをNPCの上に出す
+    createSpeechBubble(npcName, npcSprite) {
+        console.log('[StageScene] createSpeechBubble呼び出し:', { npcName, npcSpriteName: npcSprite.getData('objectName') });
+        const bubble = this.add.image(npcSprite.x, npcSprite.y - 28, 'speech_bubble');
+        bubble.setScale(0.6);
+        bubble.setDepth(1001);
+        bubble.setData('npcName', npcName);
+        bubble.setData('bubbleType', 'speech');
+        console.log('[StageScene] 吹き出し作成完了:', { npcName, bubbleId: bubble.getData('npcName') });
+
+        // ふわふわアニメ
+        this.tweens.add({
+            targets: bubble,
+            y: bubble.y - 4,
+            duration: 800,
+            yoyo: true,
+            repeat: -1,
+            ease: 'Sine.easeInOut'
+        });
+        return bubble;
+    }
+
+    removeSpeechBubbleByNpcName(npcName) {
+        console.log('[StageScene] removeSpeechBubbleByNpcName開始:', npcName);
+        let found = false;
+        let deletedCount = 0;
+        // 削除前の吹き出し一覧を確認
+        const bubblesBefore = this.children.list
+            .filter(child => child?.getData && child.getData('bubbleType') === 'speech')
+            .map(child => ({ npcName: child.getData('npcName'), exists: !!child, active: child.active }));
+        console.log('[StageScene] 削除前の吹き出し一覧:', bubblesBefore);
+        
+        this.children.list.forEach(child => {
+            if (child?.getData && child.getData('bubbleType') === 'speech' && child.getData('npcName') === npcName) {
+                console.log('[StageScene] 吹き出し削除対象発見:', npcName, 'child:', child);
+                console.log('[StageScene] 削除前のchild状態:', { active: child.active, visible: child.visible, destroyed: child.destroyed });
+                // より確実な削除処理
+                child.setVisible(false);
+                child.setActive(false);
+                child.removeFromDisplayList();
+                child.destroy();
+                found = true;
+                deletedCount++;
+                console.log('[StageScene] 削除後のchild状態:', { active: child.active, visible: child.visible, destroyed: child.destroyed });
+            }
+        });
+        
+        // 削除後の吹き出し一覧を確認
+        const bubblesAfter = this.children.list
+            .filter(child => child?.getData && child.getData('bubbleType') === 'speech')
+            .map(child => ({ npcName: child.getData('npcName'), exists: !!child, active: child.active }));
+        console.log('[StageScene] 削除後の吹き出し一覧:', bubblesAfter);
+        console.log('[StageScene] 削除された吹き出し数:', deletedCount);
+        if (!found) {
+            console.log('[StageScene] 削除対象の吹き出しが見つかりませんでした:', npcName);
+            console.log('[StageScene] 現在の吹き出し一覧:', this.children.list
+                .filter(child => child?.getData && child.getData('bubbleType') === 'speech')
+                .map(child => ({ npcName: child.getData('npcName'), exists: !!child })));
+        }
+        
+        // 削除処理完了後の最終確認
+        setTimeout(() => {
+            const finalBubbles = this.children.list
+                .filter(child => child?.getData && child.getData('bubbleType') === 'speech')
+                .map(child => ({ npcName: child.getData('npcName'), exists: !!child, active: child.active }));
+            console.log('[StageScene] 削除処理完了後の最終吹き出し一覧:', finalBubbles);
+        }, 100);
+    }
 
     // 会話開始メソッド
     startConversation(eventId) {
@@ -309,6 +403,54 @@ export class StageScene extends Phaser.Scene {
             
             // NPCを作成（プレイヤー作成後）
             this.createNPCs();
+
+            // 会話終了の通知を常時受け取り、吹き出しを再評価
+            try { 
+                if (this._onConversationEndedBound) {
+                    console.log('[StageScene] 既存のイベントリスナーを削除');
+                    this.events.off('conversation-ended', this._onConversationEndedBound); 
+                }
+            } catch (_) {
+                // イベントリスナーの削除に失敗した場合は無視
+            }
+            console.log('[StageScene] conversation-endedイベントリスナー設定');
+            this._onConversationEndedBound = (payload) => {
+                console.log('[StageScene] _onConversationEndedBound実行回数カウント');
+                console.log('[StageScene] conversation-ended受信:', payload);
+                const { eventId, cleared } = payload || {};
+                if (!eventId) return;
+                // 対応NPCを検索
+                const npcSprite = this.children.list.find(child => child?.getData && child.getData('npcType') === 'npc' && child.getData('eventId') === eventId);
+                console.log('[StageScene] 対応NPC検索結果:', npcSprite ? '見つかった' : '見つからない', eventId);
+                if (!npcSprite) return;
+                // NPCの表示名を正しく取得（createNPCsで設定された名前）
+                // objectNameとnpcNameの両方を確認
+                const objectName = npcSprite.getData('objectName');
+                const npcName = npcSprite.getData('npcName') || objectName;
+                console.log('[StageScene] NPC名の詳細:', { objectName, npcName });
+                console.log('[StageScene] NPC名:', npcName, 'cleared:', cleared);
+                
+                // 選択肢ありイベントの場合はclearedをチェック
+                // 選択肢なしイベントの場合はlocalStorageのevent_completedフラグをチェック
+                const noChoiceCompleted = localStorage.getItem('event_completed_' + eventId) === 'true';
+                const shouldRemoveBubble = cleared || noChoiceCompleted;
+                
+                console.log('[StageScene] 吹き出し削除判定:', { 
+                    cleared, 
+                    noChoiceCompleted, 
+                    shouldRemoveBubble 
+                });
+                
+                if (shouldRemoveBubble) {
+                    console.log('[StageScene] 吹き出し削除実行:', npcName);
+                    this.removeSpeechBubbleByNpcName(npcName);
+                    console.log('[StageScene] removeSpeechBubbleByNpcName呼び出し完了');
+                } else {
+                    console.log('[StageScene] 吹き出し作成実行:', npcName);
+                    this.createSpeechBubble(npcName, npcSprite);
+                }
+            };
+            this.events.on('conversation-ended', this._onConversationEndedBound);
             
             // タッチコントローラー作成
             this.touchControlManager = new TouchControlManager(this, this.playerController, 'se_touch');

@@ -20,8 +20,13 @@ export class ConversationScene extends Phaser.Scene {
         // 選択肢ボタン配列を初期化
         this.currentChoiceButtons = [];
         
+        // ChoiceManagerのインスタンスを初期化
+        this.choiceManager = null;
+        
         // UIManagerを初期化
         this.uiManager = null;
+        // この会話に選択肢が含まれていたかを記録
+        this._hasAnyChoices = false;
     }
 
     init(data) {
@@ -389,6 +394,9 @@ export class ConversationScene extends Phaser.Scene {
         this.currentConversation = conversationData;
         this.currentConversationIndex = 0;
         
+        // 選択肢フラグを初期化
+        this._hasAnyChoices = false;
+        
         // エリア名を設定
         if (this.areaName) {
             this.currentConversation.areaName = this.areaName;
@@ -440,6 +448,10 @@ export class ConversationScene extends Phaser.Scene {
 
     // 次の会話に進む
     nextDialog() {
+        console.log('[ConversationScene] nextDialog開始:', {
+            currentIndex: this.currentConversationIndex,
+            totalLength: this.currentConversation.conversations.length
+        });
         if (this.isTextAnimating) {
             this.completeTextAnimation();
             return;
@@ -455,12 +467,17 @@ export class ConversationScene extends Phaser.Scene {
         if (this.currentConversationIndex < this.currentConversation.conversations.length) {
             this.showDialog();
         } else {
+            console.log('[ConversationScene] 会話終了、endConversation呼び出し');
             this.endConversation();
         }
     }
 
     // 会話表示
     showDialog() {
+        console.log('[ConversationScene] showDialog開始:', {
+            currentIndex: this.currentConversationIndex,
+            totalLength: this.currentConversation.conversations.length
+        });
         const dialog = this.currentConversation.conversations[this.currentConversationIndex];
         // ナレーション判定：speaker未指定 or characterがnarrator
         const isNarration = !dialog.speaker || dialog.character === 'narrator';
@@ -625,6 +642,8 @@ export class ConversationScene extends Phaser.Scene {
         
         // 選択肢処理を追加
         if (dialog.type === 'choice') {
+            // 会話内に選択肢が存在することを記録
+            this._hasAnyChoices = true;
             this.showChoices(dialog.choices, dialog.choiceId);
         }
     }
@@ -1172,12 +1191,76 @@ export class ConversationScene extends Phaser.Scene {
     }
     
     // 会話終了
-    endConversation() {
+    async endConversation() {
+        console.log('[ConversationScene] endConversation開始');
         try {
 
             
-            // 会話終了イベントを発火
+            // 会話終了イベントを発火（ローカル）
             this.events.emit('conversationEnded');
+
+            // StageScene へ会話結果を通知し、吹き出し等を再評価してもらう
+            try {
+                console.log('[ConversationScene] 会話結果通知開始');
+                const sceneManager = this.scene.manager;
+                const originalScene = this.originalSceneKey ? sceneManager.getScene(this.originalSceneKey) : null;
+                console.log('[ConversationScene] originalScene:', originalScene ? '見つかった' : '見つからない', this.originalSceneKey);
+
+                let cleared = false;
+                let hasChoices = !!this._hasAnyChoices;
+
+                // ChoiceManagerから正解判定（存在すれば）
+                if (hasChoices) {
+                    try {
+                        // ChoiceManagerのシングルトンインスタンスを使用
+                        if (!this.choiceManager) {
+                            if (window.ChoiceManager) {
+                                this.choiceManager = window.ChoiceManager.getInstance();
+                            } else {
+                                const mod = await import('../managers/ChoiceManager.js');
+                                this.choiceManager = mod.ChoiceManager.getInstance();
+                            }
+                        }
+                        if (this.choiceManager && this.conversationId) {
+                            cleared = !!this.choiceManager.isEventCleared(this.conversationId);
+                            console.log('[ConversationScene] 選択肢ありイベント判定:', {
+                                conversationId: this.conversationId,
+                                cleared: cleared,
+                                choices: this.choiceManager.choices[this.conversationId]
+                            });
+                        }
+                    } catch (e) {
+                        console.warn('[ConversationScene] ChoiceManager判定失敗:', e);
+                    }
+                } else {
+                    cleared = true; // 選択肢なしは正解扱い
+                    console.log('[ConversationScene] 選択肢なしイベント:', { conversationId: this.conversationId, cleared });
+                }
+
+                // 選択肢無しイベントのみ、完了＝緑を保存
+                if (!hasChoices && this.conversationId) {
+                    try { 
+                        localStorage.setItem('event_completed_' + this.conversationId, 'true'); 
+                    } catch (_) {
+                        // localStorageの保存に失敗した場合は無視
+                    }
+                }
+
+                if (originalScene && originalScene.events && this.conversationId) {
+                    console.log('[ConversationScene] conversation-endedイベント発火:', {
+                        eventId: this.conversationId,
+                        cleared,
+                        hasChoices
+                    });
+                    originalScene.events.emit('conversation-ended', {
+                        eventId: this.conversationId,
+                        cleared,
+                        hasChoices
+                    });
+                }
+            } catch (e) {
+                console.warn('[ConversationScene] 会話結果通知エラー:', e);
+            }
 
             
             // エリアを完了済みに設定
@@ -1643,28 +1726,36 @@ export class ConversationScene extends Phaser.Scene {
     }
     
     // 選択を処理
-    handleChoice(choice, choiceId) {
-
+    async handleChoice(choice, choiceId) {
+        console.log('[ConversationScene] handleChoice開始:', {
+            conversationId: this.conversationId,
+            choiceId: choiceId,
+            result: choice.result
+        });
         
         // 選択を保存（ChoiceManagerを使用）
         if (this.conversationId) {
-            // ChoiceManagerを直接使用（動的インポートを避ける）
-            try {
-                // グローバルにChoiceManagerが利用可能かチェック
+            // ChoiceManagerのシングルトンインスタンスを取得
+            if (!this.choiceManager) {
                 if (window.ChoiceManager) {
-                    const choiceManager = new window.ChoiceManager();
-                    choiceManager.saveChoice(this.conversationId, choiceId, choice.result);
-
+                    this.choiceManager = window.ChoiceManager.getInstance();
                 } else {
                     // フォールバック：動的インポート
-                    import('./ChoiceManager.js').then(({ ChoiceManager }) => {
-                        const choiceManager = new ChoiceManager();
-                        choiceManager.saveChoice(this.conversationId, choiceId, choice.result);
-
-                    }).catch(error => {
-                        console.error('[ConversationScene] ChoiceManagerのインポートエラー:', error);
-                    });
+                    const { ChoiceManager } = await import('./ChoiceManager.js');
+                    this.choiceManager = ChoiceManager.getInstance();
                 }
+            }
+            
+            try {
+                this.choiceManager.saveChoice(this.conversationId, choiceId, choice.result);
+                console.log('[ConversationScene] 選択保存完了:', {
+                    conversationId: this.conversationId,
+                    choiceId: choiceId,
+                    result: choice.result
+                });
+                
+                // 保存後の状態を確認
+                console.log('[ConversationScene] 保存後のChoiceManager状態:', this.choiceManager.choices);
             } catch (error) {
                 console.error('[ConversationScene] 選択保存エラー:', error);
             }

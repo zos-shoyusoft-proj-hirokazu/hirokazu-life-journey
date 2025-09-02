@@ -5,6 +5,14 @@ export class ChoiceManager {
         this.storageKey = 'game_choices';
     }
     
+    // シングルトンインスタンス
+    static getInstance() {
+        if (!ChoiceManager._instance) {
+            ChoiceManager._instance = new ChoiceManager();
+        }
+        return ChoiceManager._instance;
+    }
+    
     // ローカルストレージから選択を読み込み
     loadChoices() {
         try {
@@ -18,6 +26,7 @@ export class ChoiceManager {
     
     // 選択を保存
     saveChoice(conversationId, choiceId, selectedOption) {
+        console.log('[ChoiceManager] saveChoice呼び出し:', { conversationId, choiceId, selectedOption });
         if (!conversationId) {
             console.error('[ChoiceManager] conversationIdが未定義です！');
             return;
@@ -27,6 +36,7 @@ export class ChoiceManager {
             this.choices[conversationId] = {};
         }
         this.choices[conversationId][choiceId] = selectedOption;
+        console.log('[ChoiceManager] 保存後のchoices:', this.choices);
         this.saveToStorage();
     }
     
@@ -62,12 +72,13 @@ export class ChoiceManager {
             return false;
         }
         
-        // エンディング条件：何らかの選択をした場合（現在は選択データがあるかどうかのみチェック）
-        
-        // 代替条件：何らかの選択があればエンディングボタンを表示
-        const hasAnyChoice = Object.keys(this.choices).length > 0;
-        if (hasAnyChoice) {
-            return true;
+        // エンディング条件：正解の選択をした場合のみ
+        for (const [, eventChoices] of Object.entries(this.choices)) {
+            for (const [, result] of Object.entries(eventChoices)) {
+                if (result === 'correct') {
+                    return true; // 正解が1つでもあればエンディング
+                }
+            }
         }
         
         return false;
@@ -82,6 +93,27 @@ export class ChoiceManager {
     // デバッグ用：全選択データを表示
     debugChoices() {
         console.log('[ChoiceManager] 現在の選択データ:', this.choices);
+    }
+    
+    // イベント(eventId)内で1つでも 'correct' が記録されていれば「達成」とみなす
+    isEventCleared(eventId) {
+        console.log('[ChoiceManager] isEventCleared呼び出し:', { eventId, choices: this.choices });
+        const eventChoices = this.choices[eventId];
+        console.log('[ChoiceManager] eventChoices:', eventChoices);
+        if (!eventChoices) {
+            console.log('[ChoiceManager] eventChoicesが存在しない、falseを返す');
+            return false;
+        }
+        const values = Object.values(eventChoices);
+        console.log('[ChoiceManager] eventChoicesの値:', values);
+        const hasCorrect = values.some(v => v === 'correct');
+        console.log('[ChoiceManager] hasCorrect:', hasCorrect);
+        return hasCorrect;
+    }
+    
+    // イベントに選択肢が存在するか（記録の有無で判断）
+    hasAnyChoiceRecorded(eventId) {
+        return !!this.choices[eventId] && Object.keys(this.choices[eventId]).length > 0;
     }
 }
 

@@ -140,6 +140,29 @@ export class AreaSelectionManager {
         
         // デバッグログ：setupAreas完了
         console.log('[AreaSelectionManager] setupAreas完了');
+
+        // 会話終了イベントを受け取り、該当エリアの色を更新
+        try { 
+            if (this._onConvEndedBound) this.scene.events.off('conversation-ended', this._onConvEndedBound); 
+        } catch(_) {
+            // イベントリスナーの削除に失敗した場合は無視
+        }
+        this._onConvEndedBound = ({ eventId, cleared, hasChoices }) => {
+            console.log('[AreaSelectionManager] conversation-ended受信:', { eventId, cleared, hasChoices });
+            if (!eventId) return;
+            // 選択肢なし → 完了(緑)に保存、選択肢あり → 保存はしない（色は_choiceデータで決定）
+            if (!hasChoices) {
+                try { 
+                    localStorage.setItem('event_completed_' + eventId, 'true'); 
+                } catch(_) {
+                    // localStorageの保存に失敗した場合は無視
+                }
+            }
+            console.log('[AreaSelectionManager] updateAreaCompletionDisplay呼び出し:', eventId);
+            console.log('[AreaSelectionManager] 利用可能なareaName一覧:', this.areaSprites.map(m => m.getData('areaName')));
+            this.updateAreaCompletionDisplay(eventId);
+        };
+        this.scene.events.on('conversation-ended', this._onConvEndedBound);
     }
 
 
@@ -243,8 +266,8 @@ export class AreaSelectionManager {
         const isEllipse = area.ellipse || false;
         const rotation = area.rotation || 0;
         
-        // 完了状態をチェック
-        const isCompleted = this.completionManager.isAreaCompleted(area.name);
+        // 会話イベントに基づく色決定
+        const { color: initialColor, completed: isCompleted } = this._computeAreaColor(area);
         
         // train_no_poop_manの完了状態をデバッグ
         if (area.name === 'train_no_poop_man') {
@@ -277,26 +300,28 @@ export class AreaSelectionManager {
         // 背景形状（オブジェクトの実際の範囲と形状に合わせる）
         let background;
 
-        if (isCompleted) {
-            // 完了済みエリア：緑色で光らせる
+        if (initialColor) {
+            // 完了/不正解などの色を付ける
             if (isEllipse) {
-                background = this.scene.add.ellipse(rotatedCenterX, rotatedCenterY, objectWidth, objectHeight, 0x00FF00, 0.3);
+                background = this.scene.add.ellipse(rotatedCenterX, rotatedCenterY, objectWidth, objectHeight, initialColor, initialColor === 0xFF0000 ? 0.25 : 0.3);
             } else {
-                background = this.scene.add.rectangle(rotatedCenterX, rotatedCenterY, objectWidth, objectHeight, 0x00FF00, 0.3);
+                background = this.scene.add.rectangle(rotatedCenterX, rotatedCenterY, objectWidth, objectHeight, initialColor, initialColor === 0xFF0000 ? 0.25 : 0.3);
             }
             
 
             
-            // 緑色の光るエフェクトを追加
-            background.setAlpha(0.7); // より見やすいアルファ値に設定
-            this.scene.tweens.add({
-                targets: background,
-                alpha: 1.0,
-                duration: 1500,
-                yoyo: true,
-                repeat: -1,
-                ease: 'Sine.easeInOut'
-            });
+            // 緑は光らせる、赤は点滅させない
+            if (initialColor === 0x00FF00) {
+                background.setAlpha(0.7);
+                this.scene.tweens.add({
+                    targets: background,
+                    alpha: 1.0,
+                    duration: 1500,
+                    yoyo: true,
+                    repeat: -1,
+                    ease: 'Sine.easeInOut'
+                });
+            }
             
 
         } else {
@@ -323,8 +348,8 @@ export class AreaSelectionManager {
         // テキストラベル（矩形の上部に配置）
         const label = this.scene.add.text(objectX + objectWidth/2, objectY - labelOffset, area.description, {
             fontSize: fontSize,
-            fill: isCompleted ? '#00AA00' : '#000000', // 完了済みは緑色
-            backgroundColor: isCompleted ? '#90EE90' : '#FFFFFF', // 完了済みは薄緑色
+            fill: initialColor === 0x00FF00 ? '#00AA00' : (initialColor === 0xFF0000 ? '#AA0000' : '#000000'),
+            backgroundColor: initialColor === 0x00FF00 ? '#90EE90' : (initialColor === 0xFF0000 ? '#FFCCCC' : '#FFFFFF'),
             padding: { x: 3 * currentScale, y: 1 * currentScale },
             borderRadius: 2 * currentScale
         });
@@ -334,7 +359,7 @@ export class AreaSelectionManager {
         label.setData('isCompleted', isCompleted);
         
         // 完了済みエリアには完了マークを追加
-        if (isCompleted) {
+        if (initialColor === 0x00FF00) {
             const checkmarkSize = Math.max(8, Math.floor(12 * currentScale));
             const checkmark = this.scene.add.text(
                 objectX + objectWidth/2, 
@@ -423,17 +448,11 @@ export class AreaSelectionManager {
                 this.touchStartTime = Date.now();
             }
             
-            // 他のオブジェクトの色を戻す
-            this.resetAllObjectColors();
+            // 他のエリアクリック時は色をリセットしない
+            // 会話終了時の結果色を維持する
             
-            // オブジェクト自体を赤くする
-            background.setFillStyle(0xFF0000, 0.7);
-            
-            // 赤く広がるエフェクトを表示（オブジェクトサイズから開始）
-            const area = background.getData('area');
-            const centerX = area.x + (area.width || 100) / 2;
-            const centerY = area.y + (area.height || 100) / 2;
-            this.visualFeedback.showObjectRipple(centerX, centerY, area.width || 100, area.height || 100, 0xFF0000);
+            // クリック時の一時的な色変更は行わない
+            // 会話終了後の結果色のみを表示する
         });
         
         background.on('pointerup', () => {
@@ -545,17 +564,22 @@ export class AreaSelectionManager {
             // マーカーコンテナ内の背景オブジェクトを取得
             const background = marker.getAt(0); // 最初の要素（背景）
             if (background && background.setFillStyle) {
-                // 完了済みエリアかどうかをチェック
-                const areaName = marker.getData('areaName');
-                const isCompleted = this.completionManager.isAreaCompleted(areaName);
-                
-                if (isCompleted) {
-                    // 完了済みエリアは緑色を維持
-                    background.setFillStyle(0x00FF00, 0.3);
+                // 最新の状態で色を再評価（赤/緑/無色）
+                const area = background.getData('area');
+                const { color, completed } = this._computeAreaColor(area);
+                const isGreen = color === 0x00FF00;
+                const isRed = color === 0xFF0000;
+                background.setFillStyle(color || 0x4169E1, isRed ? 0.25 : (color ? 0.3 : 0.1));
+                if (isGreen) {
+                    this.scene.tweens.add({ targets: background, alpha: 0.6, duration: 1500, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
                 } else {
-                    // 未完了エリアは青色に戻す
-                    background.setFillStyle(0x4169E1, 0.1);
+                    try { 
+                        this.scene.tweens.killTweensOf(background); 
+                    } catch(_) {
+                        // ツイーンの停止に失敗した場合は無視
+                    }
                 }
+                background.setData('isCompleted', !!completed);
             }
         });
     }
@@ -570,7 +594,10 @@ export class AreaSelectionManager {
                 if (background && background.setFillStyle) {
                     const backgroundArea = background.getData('area');
                     if (backgroundArea && backgroundArea.name === this.selectedArea.name) {
-                        background.setFillStyle(0x4169E1, 0.1);
+                        const { color, completed } = this._computeAreaColor(backgroundArea);
+                        const isRed = color === 0xFF0000;
+                        background.setFillStyle(color || 0x4169E1, isRed ? 0.25 : (color ? 0.3 : 0.1));
+                        background.setData('isCompleted', !!completed);
                     }
                 }
             });
@@ -643,8 +670,8 @@ export class AreaSelectionManager {
             }
             this.isConfirmDialogActive = false;
             this.currentDialog = null;
-            // 選択されたオブジェクトの色を戻す（確認画面のボタンクリック時のみ）
-            this.resetSelectedObjectColor();
+            // 確認ダイアログ終了時は色をリセットしない
+            // 会話終了時にconversation-endedイベントで適切に色が更新される
         };
         
         // ボタンイベント
@@ -1106,52 +1133,25 @@ export class AreaSelectionManager {
 
     // 完了状態の表示を更新
     updateAreaCompletionDisplay(areaName) {
-        console.log(`[AreaSelectionManager] updateAreaCompletionDisplay開始: ${areaName}`);
-        console.log(`[AreaSelectionManager] areaSprites数: ${this.areaSprites.length}`);
-        
+        console.log('[AreaSelectionManager] updateAreaCompletionDisplay開始:', areaName);
         // 該当エリアのマーカーを見つけて更新
         this.areaSprites.forEach(marker => {
             if (marker && marker.getData('areaName') === areaName) {
-                            // より安全なチェックを追加
-            if (!marker.children) {
-                // 子要素が存在しない場合は、ログを出力してスキップ
-                console.warn(`[AreaSelectionManager] マーカー ${areaName} の子要素が存在しません`);
-                return;
-            }
-                
-                // Phaser 3.60以降の方法で子要素を取得
-                let childrenEntries = [];
-                try {
-                    if (marker.children.entries) {
-                        childrenEntries = marker.children.entries;
-                    } else if (marker.children.list) {
-                        childrenEntries = marker.children.list;
-                    } else if (Array.isArray(marker.children)) {
-                        childrenEntries = marker.children;
-                    } else {
-                        console.warn(`[AreaSelectionManager] マーカーの子要素の形式が不明: ${areaName}`);
-                        return;
-                    }
-                } catch (e) {
-                    console.warn(`[AreaSelectionManager] マーカーの子要素の取得に失敗: ${areaName}`, e.message);
-                    return;
-                }
+                console.log('[AreaSelectionManager] マーカー発見:', areaName);
                 
                 const background = marker.getAt(0); // 背景オブジェクト
                 const label = marker.getAt(1); // ラベルオブジェクト
                 
                 if (background && label) {
-                    // 背景を緑色に変更
+                    // ChoiceManagerの結果で色決定
                     const area = background.getData('area');
-                    if (area) {
-                        const isEllipse = area.ellipse || false;
-                        if (isEllipse) {
-                            background.setFillStyle(0x00FF00, 0.3);
-                        } else {
-                            background.setFillStyle(0x00FF00, 0.3);
-                        }
-                        
-                        // 緑色の光るエフェクトを追加
+                    const { color, completed } = this._computeAreaColor(area);
+                    const isGreen = color === 0x00FF00;
+                    const isRed = color === 0xFF0000;
+                    console.log('[AreaSelectionManager] 色判定結果:', { color, completed, isGreen, isRed });
+
+                    background.setFillStyle(color || 0x4169E1, isRed ? 0.25 : (color ? 0.3 : 0.1));
+                    if (isGreen) {
                         this.scene.tweens.add({
                             targets: background,
                             alpha: 0.6,
@@ -1160,47 +1160,83 @@ export class AreaSelectionManager {
                             repeat: -1,
                             ease: 'Sine.easeInOut'
                         });
-                        
-                        background.setData('isCompleted', true);
-                    }
-                    
-                    // ラベルを緑色に変更
-                    label.setStyle({ 
-                        fill: '#00AA00',
-                        backgroundColor: '#90EE90'
-                    });
-                    label.setData('isCompleted', true);
-                    
-                    // 完了マークを追加
-                    if (childrenEntries.length < 3) { // 完了マークがまだない場合
-                        const currentScale = this.scene.mapManager?.mapScaleX || 1;
-                        const checkmarkSize = Math.max(8, Math.floor(12 * currentScale));
-                        
-                        // エリアの中心座標を計算
-                        const centerX = area.x + (area.width || 100) / 2;
-                        
-                        const checkmark = this.scene.add.text(
-                            centerX, 
-                            area.y - Math.max(15, 15 * currentScale) - checkmarkSize/2, 
-                            '✓', 
-                            {
-                                fontSize: checkmarkSize + 'px',
-                                fill: '#00FF00',
-                                fontWeight: 'bold'
-                            }
-                        );
-                        checkmark.setOrigin(0.5, 0.5);
-                        checkmark.setData('markerType', 'areaMarker');
-                        checkmark.setData('areaName', areaName);
-                        
-                        // 完了マークをマーカーに追加
-                        if (marker && marker.add) {
-                            marker.add(checkmark);
+                    } else {
+                        try { 
+                            this.scene.tweens.killTweensOf(background); 
+                        } catch(_) {
+                            // ツイーンの停止に失敗した場合は無視
                         }
+                    }
+                    background.setData('isCompleted', !!completed);
+
+                    // ラベル色
+                    label.setStyle({
+                        fill: isGreen ? '#00AA00' : (isRed ? '#AA0000' : '#000000'),
+                        backgroundColor: isGreen ? '#90EE90' : (isRed ? '#FFCCCC' : '#FFFFFF')
+                    });
+                    label.setData('isCompleted', !!completed);
+                    
+                    // 完了マークの追加/削除
+                    if (isGreen && !marker.getData('hasCheckmark')) {
+                        const checkmark = this.scene.add.text(0, 0, '✓', {
+                            fontSize: '16px',
+                            fill: '#00AA00',
+                            fontFamily: 'Arial'
+                        });
+                        checkmark.setOrigin(0.5);
+                        checkmark.setPosition(background.x + (background.width || 50) / 2, background.y - 10);
+                        marker.add(checkmark);
+                        marker.setData('hasCheckmark', true);
+                    } else if (!isGreen && marker.getData('hasCheckmark')) {
+                        const checkmark = marker.getAt(2);
+                        if (checkmark) {
+                            checkmark.destroy();
+                        }
+                        marker.setData('hasCheckmark', false);
                     }
                 }
             }
         });
+    }
+
+    // ChoiceManagerの記録に基づいて色と完了状態を返す
+    _computeAreaColor(area) {
+        try {
+            if (!area) return { color: null, completed: false };
+            const eventId = area.conversationId || area.name;
+            // 選択肢のあるイベントで正解が記録されていれば緑、何か不正解のみ記録されていれば赤
+            // 1) 直接ChoiceManagerがあればそれを使用
+            try {
+                if (window.ChoiceManager) {
+                    const cm = new window.ChoiceManager();
+                    const hasAny = cm.hasAnyChoiceRecorded(eventId);
+                    const cleared = cm.isEventCleared(eventId);
+                    if (cleared) return { color: 0x00FF00, completed: true };
+                    if (hasAny) return { color: 0xFF0000, completed: false };
+                }
+            } catch (_) {
+                // ChoiceManagerの判定に失敗した場合は無視
+            }
+            // 2) フォールバック: 直接localStorageから判定
+            try {
+                const raw = localStorage.getItem('game_choices');
+                if (raw) {
+                    const choices = JSON.parse(raw) || {};
+                    const eventChoices = choices[eventId] || {};
+                    const values = Object.values(eventChoices);
+                    if (values.includes('correct')) return { color: 0x00FF00, completed: true };
+                    if (values.length > 0) return { color: 0xFF0000, completed: false };
+                }
+            } catch (_) {
+                // localStorageの読み取りに失敗した場合は無視
+            }
+            // 選択肢がないイベントは localStorage の完了フラグ
+            const lsCompleted = localStorage.getItem('event_completed_' + eventId) === 'true';
+            if (lsCompleted) return { color: 0x00FF00, completed: true };
+            return { color: null, completed: false };
+        } catch (e) {
+            return { color: null, completed: false };
+        }
     }
 
 

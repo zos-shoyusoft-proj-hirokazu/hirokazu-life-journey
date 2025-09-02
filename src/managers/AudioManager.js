@@ -839,7 +839,7 @@ export class AudioManager {
             
             // 会話用BGMを再生
             console.log(`[AudioManager] BGM再生試行: ${audioKey}, loadedSounds確認:`, this.loadedSounds.has(audioKey));
-            console.log(`[AudioManager] loadedSoundsの内容:`, Array.from(this.loadedSounds));
+            console.log('[AudioManager] loadedSoundsの内容:', Array.from(this.loadedSounds));
             if (this.loadedSounds.has(audioKey)) {
                 try {
                     // HTMLAudioを直接使用（Phaserの問題を回避）

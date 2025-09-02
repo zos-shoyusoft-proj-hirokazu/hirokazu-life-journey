@@ -338,6 +338,57 @@ export const japanConversationData = {
                 'expression': 'c'
             },
             {
+                'type': 'choice',
+                'choiceId': 'breaking_car_choice',
+                'choices': [
+                    {
+                        'id': 'inspect',
+                        'text': '整備記録や走行距離をちゃんと確認する',
+                        'result': 'correct',
+                        'nextMessages': [
+                            {
+                                'speaker': '友人ズ',
+                                'character': 'frends',
+                                'text': 'そうだな、激安には理由があるし慎重にいこう',
+                                'expression': 'a'
+                            },
+                            {
+                                'speaker': 'ひろかず',
+                                'character': 'hirokazu',
+                                'text': 'たしかに。事故歴や消耗品も見とくか',
+                                'expression': 'b'
+                            }
+                        ]
+                    },
+                    {
+                        'id': 'rush',
+                        'text': '安いし即決で買う！',
+                        'result': 'wrong',
+                        'nextMessages': [
+                            {
+                                'speaker': '友人ズ',
+                                'character': 'frends',
+                                'text': 'え、ほんとに？ ちょっと不安かも…',
+                                'expression': 'b'
+                            }
+                        ]
+                    },
+                    {
+                        'id': 'walkaway',
+                        'text': 'やめとく。別の車を探す',
+                        'result': 'wrong',
+                        'nextMessages': [
+                            {
+                                'speaker': 'ひろかず',
+                                'character': 'hirokazu',
+                                'text': 'まぁ無理はしないのも選択だな。別候補も見てみるか',
+                                'expression': 'a'
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
                 'speaker': 'narrator',
                 'character': 'narrator',
                 'text': 'その後、この激安BMWを購入し、ブイブイいわせていたという、、、',
