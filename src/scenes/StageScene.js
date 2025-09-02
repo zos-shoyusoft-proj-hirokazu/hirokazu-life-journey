@@ -243,8 +243,8 @@ export class StageScene extends Phaser.Scene {
     // 吹き出しをNPCの上に出す
     createSpeechBubble(npcName, npcSprite) {
         console.log('[StageScene] createSpeechBubble呼び出し:', { npcName, npcSpriteName: npcSprite.getData('objectName') });
-        const bubble = this.add.image(npcSprite.x, npcSprite.y - 28, 'speech_bubble');
-        bubble.setScale(0.6);
+        const bubble = this.add.image(npcSprite.x, npcSprite.y - 35, 'speech_bubble');
+        bubble.setScale(0.9); // 0.6から0.9に拡大
         bubble.setDepth(1001);
         bubble.setData('npcName', npcName);
         bubble.setData('bubbleType', 'speech');

@@ -1689,37 +1689,39 @@ export class ConversationScene extends Phaser.Scene {
         
         const button = this.add.container(buttonX, buttonY);
         
-        // ボタン背景
+        // ボタン背景（より大きく、文字が入りやすく）
         const background = this.add.graphics();
         background.fillStyle(0x2a2a2a, 0.9);
-        background.fillRoundedRect(-100, -25, 200, 50, 8);
+        background.fillRoundedRect(-150, -30, 300, 60, 10);
         button.add(background);
         
-        // ボタンテキスト
+        // ボタンテキスト（フォントサイズを大きく、改行対応）
         const text = this.add.text(0, 0, choice.text, {
-            fontSize: '16px',
+            fontSize: '18px',
             fill: '#ffffff',
-            fontFamily: 'Arial'
+            fontFamily: 'Arial',
+            wordWrap: { width: 280, useAdvancedWrap: true },
+            align: 'center'
         }).setOrigin(0.5);
         button.add(text);
         
-        // インタラクティブ設定
-        button.setInteractive(new Phaser.Geom.Rectangle(-100, -25, 200, 50), Phaser.Geom.Rectangle.Contains);
+        // インタラクティブ設定（背景に合わせて拡大）
+        button.setInteractive(new Phaser.Geom.Rectangle(-150, -30, 300, 60), Phaser.Geom.Rectangle.Contains);
         
         // クリックイベント
         button.on('pointerdown', () => {
             this.handleChoice(choice, choiceId);
         });
         
-        // ホバー効果
+        // ホバー効果（新しいサイズに合わせて更新）
         button.on('pointerover', () => {
             background.fillStyle(0x4a4a4a, 0.9);
-            background.fillRoundedRect(-100, -25, 200, 50, 8);
+            background.fillRoundedRect(-150, -30, 300, 60, 10);
         });
         
         button.on('pointerout', () => {
             background.fillStyle(0x2a2a2a, 0.9);
-            background.fillRoundedRect(-100, -25, 200, 50, 8);
+            background.fillRoundedRect(-150, -30, 300, 60, 10);
         });
         
         return button;
