@@ -67,21 +67,22 @@ export class ChoiceManager {
             return false;
         }
         
-        // 選択データが空の場合はエンディング条件を満たさない
-        if (Object.keys(this.choices).length === 0) {
-            return false;
-        }
+        // 選択肢があるイベントのリスト（全て正解になっている必要がある）
+        const choiceEvents = [
+            'breaking_car',    // 日本：故障車エリア
+            'wax_on'          // 竹田：ワックスを付けるイベント
+        ];
         
-        // エンディング条件：正解の選択をした場合のみ
-        for (const [, eventChoices] of Object.entries(this.choices)) {
-            for (const [, result] of Object.entries(eventChoices)) {
-                if (result === 'correct') {
-                    return true; // 正解が1つでもあればエンディング
-                }
+        // 選択肢があるイベントが全て正解になっているかチェック
+        for (const eventId of choiceEvents) {
+            if (!this.isEventCleared(eventId)) {
+                console.log('[ChoiceManager] エンディング条件未達成:', eventId, 'が未クリア');
+                return false; // 1つでも未クリアならエンディング条件を満たさない
             }
         }
         
-        return false;
+        console.log('[ChoiceManager] エンディング条件達成: 全ての選択肢イベントがクリア済み');
+        return true; // 全ての選択肢イベントがクリア済み
     }
     
     // 全選択データをリセット
