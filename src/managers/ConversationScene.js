@@ -1770,7 +1770,10 @@ export class ConversationScene extends Phaser.Scene {
         
         // 選択に応じたメッセージを表示
         if (choice.nextMessages) {
+            console.log('[ConversationScene] nextMessages発見:', choice.nextMessages);
             this.showChoiceMessages(choice.nextMessages);
+        } else {
+            console.log('[ConversationScene] nextMessagesが存在しません');
         }
         
         // 選択後のメッセージを表示してから次の会話に進む
@@ -1779,13 +1782,17 @@ export class ConversationScene extends Phaser.Scene {
     
     // 選択後のメッセージを表示
     showChoiceMessages(messages) {
+        console.log('[ConversationScene] showChoiceMessages開始:', messages);
         // 選択後のメッセージを順番に表示してから、共通会話に進む
         this.displayChoiceMessagesSequentially(messages, 0);
     }
     
     // 選択後のメッセージを順番に表示
     displayChoiceMessagesSequentially(messages, index) {
+        console.log('[ConversationScene] displayChoiceMessagesSequentially:', { index, totalLength: messages.length });
+        
         if (index >= messages.length) {
+            console.log('[ConversationScene] 全ての選択後メッセージ表示完了、共通会話に移行');
             // 全ての選択後メッセージが表示されたら、共通会話に進む
             this.skipToCommonDialog();
             return;
@@ -1793,10 +1800,15 @@ export class ConversationScene extends Phaser.Scene {
         
         // 現在のメッセージを表示
         const message = messages[index];
+        console.log('[ConversationScene] 選択後メッセージ表示:', message);
         this.displaySingleMessage(message);
+        
+        // 既存のリスナーを一時的に無効化
+        this.input.removeAllListeners('pointerdown');
         
         // 次のメッセージを表示する準備
         this.input.once('pointerdown', () => {
+            console.log('[ConversationScene] クリック検出、次のメッセージに進む');
             this.displayChoiceMessagesSequentially(messages, index + 1);
         });
     }
@@ -1834,12 +1846,43 @@ export class ConversationScene extends Phaser.Scene {
             if (this.nameboxDecoFrame) this.nameboxDecoFrame.setVisible(false);
             if (this.nameboxDecoShine) this.nameboxDecoShine.setVisible(false);
         } else {
-            if (this.namebox) this.namebox.setVisible(true);
+            if (this.namebox) {
+                this.namebox.setVisible(true);
+                // 枠線を復活
+                this.namebox.setStrokeStyle(2, 0x888888, 0.8);
+            }
             if (this.nameText) this.nameText.setVisible(true);
             this.nameText.setText(message.speaker || '');
             if (message.speaker) {
                 this.adjustNameboxWidth(message.speaker);
             }
+            // 装飾フレームの表示
+            if (this.nameboxDecoFrame) {
+                this.nameboxDecoFrame.setVisible(true);
+            }
+            if (this.nameboxDecoShine) {
+                this.nameboxDecoShine.setVisible(true);
+            }
+        }
+        
+        // テキストボックスの表示
+        if (this.textbox) {
+            this.textbox.setVisible(true);
+            // 枠線を復活
+            this.textbox.setStrokeStyle(2, 0xFFFFFF, 1.0);
+        }
+        if (this.dialogText) {
+            this.dialogText.setVisible(true);
+        }
+        if (this.dialogContainer) {
+            this.dialogContainer.setVisible(true);
+        }
+        // テキストボックスの装飾表示
+        if (this.textboxDecoFrame) {
+            this.textboxDecoFrame.setVisible(true);
+        }
+        if (this.textboxDecoShine) {
+            this.textboxDecoShine.setVisible(true);
         }
         
         // テキストのアニメーション表示
@@ -1869,6 +1912,16 @@ export class ConversationScene extends Phaser.Scene {
             }
             commonDialogIndex++;
         }
+        
+        // 通常のリスナーを復元
+        this.input.removeAllListeners('pointerdown');
+        this.input.on('pointerdown', () => {
+            // 選択肢表示中は会話を進めない
+            if (this.currentChoiceButtons && this.currentChoiceButtons.length > 0) {
+                return;
+            }
+            this.nextDialog();
+        });
         
         // 共通会話から開始
         this.currentConversationIndex = commonDialogIndex;
