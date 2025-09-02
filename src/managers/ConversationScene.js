@@ -126,11 +126,11 @@ export class ConversationScene extends Phaser.Scene {
         // テキスト表示用（高さを動的に調整）
         const leftPad = isPortrait ? 0 : 20; // 縦は左に20px寄せる → 左パディング0
         const rightPad = 20;                 // 右側は従来どおり20px
-        const textWrapWidth = Math.min((this.textbox?.displayWidth || (width - 60)) - (leftPad + rightPad), 600); // ボックス内幅基準
-        const fontSize = width < 600 ? '18px' : '24px'; // スマホでは小さいフォント
+        const textWrapWidth = Math.min((this.textbox?.displayWidth || (width - 60)) - (leftPad + rightPad), 800); // ボックス内幅基準（横持ち対応）
+        const fontSize = width < 600 ? '18px' : '22px'; // スマホでは小さいフォント
         // テキストはテキストボックスの左上から少し内側に配置
         const _boxW = this.textbox?.displayWidth || (width - 60);
-        const _boxH = this.textbox?.displayHeight || (isPortrait ? 140 : 90);
+        const _boxH = this.textbox?.displayHeight || (isPortrait ? 140 : 120); // 横持ち時の高さを増加
         const textX0 = (this.textbox?.x || width / 2) - _boxW / 2 + leftPad;
         const textY0 = (this.textbox?.y || (height - (isPortrait ? 70 : 60))) - _boxH / 2 + 7;
         this.dialogText = this.add.text(textX0, textY0, '', {
@@ -1369,10 +1369,10 @@ export class ConversationScene extends Phaser.Scene {
             const isPortraitNow = height > width;
             const leftPad = isPortraitNow ? 0 : 20; // 縦は左に20px寄せる → 左パディング0
             const rightPad = 20;
-            const textWrapWidth = Math.min((this.textbox?.displayWidth || (width - 60)) - (leftPad + rightPad), 600);
+            const textWrapWidth = Math.min((this.textbox?.displayWidth || (width - 60)) - (leftPad + rightPad), 800);
             const fontSize = width < 600 ? '18px' : '24px';
             const _boxW = this.textbox?.displayWidth || (width - 60);
-            const _boxH = this.textbox?.displayHeight || (isPortraitNow ? 140 : 90);
+            const _boxH = this.textbox?.displayHeight || (isPortraitNow ? 140 : 120); // 横持ち時の高さを増加
             const textX0 = (this.textbox?.x || width / 2) - _boxW / 2 + leftPad;
             const textY0 = (this.textbox?.y || (height - (isPortraitNow ? 70 : 60))) - _boxH / 2 + 2;
             this.dialogText.setPosition(textX0, textY0);
