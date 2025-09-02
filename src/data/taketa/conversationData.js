@@ -266,7 +266,7 @@ export const taketaConversationData = {
     
     // 教室の入り口鍵かけ事件
     'classroom_lock_incident': {
-        'background': 'kudou_back',
+        'background': 'kyoushitu_b',
         'bgm': 'Jounetsu_Tairiku',
         'conversations': [
             {

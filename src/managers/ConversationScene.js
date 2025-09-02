@@ -862,8 +862,24 @@ export class ConversationScene extends Phaser.Scene {
                 const sprite = this.characterSprites[charKey];
                 if (charKey === activeCharacter) {
                     sprite.setTint(0xFFFFFF); // 通常の色
+                    sprite.setAlpha(1.0); // 完全に不透明
+                    // 光らせるエフェクトを追加
+                    sprite.setScale(sprite.scaleX * 1.05, sprite.scaleY * 1.05); // 少し大きく
+                    // 光るアニメーション
+                    this.tweens.add({
+                        targets: sprite,
+                        alpha: 0.9,
+                        duration: 800,
+                        yoyo: true,
+                        repeat: -1,
+                        ease: 'Sine.easeInOut'
+                    });
                 } else {
-                    sprite.setTint(0x888888); // 暗くする
+                    sprite.setTint(0x666666); // より暗くする
+                    sprite.setAlpha(0.6); // 半透明にする
+                    sprite.setScale(sprite.scaleX / 1.05, sprite.scaleY / 1.05); // 元のサイズに戻す
+                    // 光るアニメーションを停止
+                    this.tweens.killTweensOf(sprite);
                 }
             });
         }

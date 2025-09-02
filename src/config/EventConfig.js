@@ -385,10 +385,10 @@ export const EventConfig = {
             title: '教室の入り口鍵かけ事件',          // 必要：イベントのタイトル表示用
             type: 'conversation',                // 必要：イベントの種類を指定
             areaType: 'taketa',                  // 必要：エリアタイプを指定
-            background: 'kudou_back',         // 必要：conversationDataのbackgroundと一致
+            background: 'kyoushitu_b',         // 必要：conversationDataのbackgroundと一致
             bgm: 'Jounetsu_Tairiku',             // 必要：conversationDataのbgmと一致
             required: {
-                backgrounds: ['kudou_back'],   // 必要：背景画像の読み込みに必要
+                backgrounds: ['kyoushitu_b'],   // 必要：背景画像の読み込みに必要
                 characters: [
                     'hirokazu_a',
                     'kudou_b',
