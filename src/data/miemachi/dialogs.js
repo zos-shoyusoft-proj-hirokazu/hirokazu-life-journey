@@ -54,6 +54,24 @@ export const Stage1DialogData = {
             }
         ]
     },
+
+    // ひろかずのdaialog9/2
+    'ひろかず_2': {
+        name: 'ひろかず',
+        displayName: 'ひろかず',
+        character: 'ひろかず_2',
+        messages: [
+            {
+                speaker: 'ひろかず',
+                text: 'スラムダンクの桜木花道の髪型いいな。'
+            },
+            {
+                speaker: 'ひろかず',
+                text: '赤毛か、、、やるしかねぇ！！'
+            },
+        ]
+    },
+
     
     // 三重中学校のNPCダイアログ
     'npc_1': {

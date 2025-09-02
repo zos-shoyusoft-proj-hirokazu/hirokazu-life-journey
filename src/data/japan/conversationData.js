@@ -304,27 +304,45 @@ export const japanConversationData = {
     
     // 故障車エリア
     'breaking_car': {
-        'background': 'test_1',
+        'background': 'donnki',
         'bgm': 'rydeen',
         'conversations': [
             {
-                'speaker': 'ひろかず',
-                'character': 'hirokazu',
-                'text': '故障した車があるな...',
-                'expression': 'b'
+                'speaker': 'narrator',
+                'character': 'narrator',
+                'text': '〜大学時代〜',
+                'expression': 'a',
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
-                'text': 'メンテナンスが必要だな',
+                'text': '車欲しくね？、みんなで金出し合って買うか〜',
+                'expression': 'b'
+            },
+            {
+                'speaker': '友人ズ',
+                'character': 'frends',
+                'text': 'いいね〜、何買うかな',
                 'expression': 'a'
             },
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
-                'text': '安全第一で修理しないとな',
+                'text': 'このBMWクソ安いな笑',
                 'expression': 'c'
-            }
+            },
+            {
+                'speaker': 'ひろかず',
+                'character': 'hirokazu',
+                'text': '外車だからかっこいいし、これしかねえだろ！！',
+                'expression': 'c'
+            },
+            {
+                'speaker': 'narrator',
+                'character': 'narrator',
+                'text': 'その後、この激安BMWを購入し、ブイブイいわせていたという、、、',
+                'expression': 'a',
+            },
         ]
     },
     

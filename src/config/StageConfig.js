@@ -78,7 +78,7 @@ export const StageConfig = {
                     { name: 'ootuka', displayName: '大塚', eventId: 'otsuka_senpai', sprite: 'pipo-charachip024d.png' },
                     { name: 'okagami', displayName: '岡上', sprite: 'pipo-charachip026.png' },
                     { name: 'だいち_2', displayName: 'だいち', eventId: 'daichi_conversation', sprite: 'pipo-charachip024d.png' },
-                    { name: 'ひろかず_2', displayName: 'ひろかず', eventId: 'broadcast', sprite: '制服1冬服_男_01.png' },
+                    { name: 'ひろかず_2', displayName: 'ひろかず', sprite: '制服1冬服_男_01.png' },
                     { name: 'npc_1', displayName: '生徒A', sprite: '制服1夏服_男_12.png' },
                     { name: 'npc_2', displayName: '生徒B', sprite: '制服1夏服_女_01.png' },
                     { name: 'npc_3', displayName: '生徒C', sprite: '制服1夏服_男_01.png' },
