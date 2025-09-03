@@ -182,7 +182,7 @@
         {
          "columns":30,
          "firstgid":1,
-         "image":"..\/..\/taild\/\u3082\u3068\/miemachi\/miemachi.png",
+         "image":"miemachi.png",
          "imageheight":1080,
          "imagewidth":1924,
          "margin":0,
@@ -195,7 +195,7 @@
         {
          "columns":30,
          "firstgid":481,
-         "image":"..\/miemachi.png",
+         "image":"miemachi.png",
          "imageheight":1080,
          "imagewidth":1924,
          "margin":0,
