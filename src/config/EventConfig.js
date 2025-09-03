@@ -93,7 +93,7 @@ export const EventConfig = {
             bgm: 'africa',                   // 必要：conversationDataのbgmと一致
             required: {
                 backgrounds: ['dutu','omiki','yorumofuketa'],           // 必要：背景画像の読み込みに必要
-                characters: ['hirokazu_a', 'hirokazu_b', 'koutarou_a', 'koutarou_c', 'daichi_b', 'daichi_a', 'dutu'],  // 必要：character+expressionの組み合わせ（重複除く）
+                characters: ['hirokazu_a', 'hirokazu_b', 'hirokazu', 'koutarou_a', 'koutarou_c', 'daichi_b', 'daichi_a', 'dutu'],  // 必要：character+expressionの組み合わせ（重複除く）
                 bgm: ['africa']  ,
                 se: ['don', 'wadodon','outou']               // 必要：BGMファイルの読み込みに必要
                 // seセクションは不要：conversationDataにSEの指定がないため（taiko_2renは1箇所のみ）
@@ -222,7 +222,7 @@ export const EventConfig = {
             bgm: 'megarovania',                       // 必要：conversationDataのbgmと一致
             required: {
                 backgrounds: ['taiikukann'],      // 必要：背景画像の読み込みに必要
-                characters: ['ootuka_a', 'hirokazu_o'],  // 必要：character+expressionの組み合わせ（重複除く）
+                characters: ['ootuka_a', 'hirokazu_o', 'hirokazu'],  // 必要：character+expressionの組み合わせ（重複除く）
                 bgm: ['megarovania']                   // 必要：BGMファイルの読み込みに必要
                 // seセクションは不要：conversationDataにSEの指定がないため
             },

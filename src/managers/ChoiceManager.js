@@ -70,7 +70,9 @@ export class ChoiceManager {
         // 選択肢があるイベントのリスト（全て正解になっている必要がある）
         const choiceEvents = [
             'breaking_car',    // 日本：故障車エリア
-            'wax_on'          // 竹田：ワックスを付けるイベント
+            'wax_on',         // 竹田：ワックスを付けるイベント
+            'otsuka_senpai',  // 三重：大塚先輩イベント（一生ついていきます）
+            'drinking_dutu'   // 三重：ドンキの謎酒イベント（木の下にはく）
         ];
         
         // 選択肢があるイベントが全て正解になっているかチェック

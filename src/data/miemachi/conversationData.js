@@ -1238,17 +1238,44 @@ export const miemachiConversationData = {
                 'expression': 'c'
             },
             {
-                'speaker': 'ひろかず',
-                'character': 'hirokazu',
-                'text': '木の下に吐こオロロロロロ✨',
-                'se': 'outo',
-                'expression': 'c'
-            },
-            {
-                'speaker': 'だいち',
-                'character': 'daichi',
-                'text': '大きく成長しろよ',
-                'expression': 'c'
+                'type': 'choice',
+                'choiceId': 'vomit_choice',
+                'choices': [
+                    {
+                        'id': 'under_tree',
+                        'text': '木の下にはく',
+                        'result': 'correct',
+                        'nextMessages': [
+                            {
+                                'speaker': 'ひろかず',
+                                'character': 'hirokazu',
+                                'text': '木の下に吐こオロロロロロ✨',
+                                'se': 'outo',
+                                'expression': 'c'
+                            },
+                            {
+                                'speaker': 'だいち',
+                                'character': 'daichi',
+                                'text': '大きく成長しろよ',
+                                'expression': 'c'
+                            }
+                        ]
+                    },
+                    {
+                        'id': 'on_ant',
+                        'text': 'アリの上にはく',
+                        'result': 'wrong',
+                        'nextMessages': [
+                            {
+                                'speaker': 'ひろかず',
+                                'character': 'hirokazu',
+                                'text': 'アリの上に吐こオロロロロロ✨',
+                                'se': 'outo',
+                                'expression': 'c'
+                            }
+                        ]
+                    }
+                ]
             },
             {
                 'speaker': 'だいち',
@@ -1689,10 +1716,61 @@ export const miemachiConversationData = {
                 'expression': 'a'
             },
             {
-                'speaker': 'ひろかず',
-                'character': 'hirokazu',
-                'text': '一生ついていきます！',
-                'expression': 'o'
+                'type': 'choice',
+                'choiceId': 'hirokazu_choice',
+                'choices': [
+                    {
+                        'id': 'lifetime',
+                        'text': '一生ついていきます!!!!!',
+                        'result': 'correct',
+                        'nextMessages': [
+                            {
+                                'speaker': 'ひろかず',
+                                'character': 'hirokazu',
+                                'text': '一生ついていきます！',
+                                'expression': 'o'
+                            }
+                        ]
+                    },
+                    {
+                        'id': 'sometimes',
+                        'text': 'まじめに部活をする',
+                        'result': 'wrong',
+                        'nextMessages': [
+                            {
+                                'speaker': 'ひろかず',
+                                'character': 'hirokazu',
+                                'text': 'おかがみがあり得ないくらいキレるので、戻りましょう',
+                                'expression': 'o'
+                            },
+                            {
+                                'speaker': '大塚先輩',
+                                'character': 'ootuka',
+                                'text': 'いや、俺は行く',
+                                'expression': 'a'
+                            }
+                        ]
+                    },
+                    {
+                        'id': 'never',
+                        'text': 'おかがみにチクる',
+                        'result': 'wrong',
+                        'nextMessages': [
+                            {
+                                'speaker': 'ひろかず',
+                                'character': 'hirokazu',
+                                'text': 'おかがみにいいますよ',
+                                'expression': 'o'
+                            },
+                            {
+                                'speaker': '大塚先輩',
+                                'character': 'ootuka',
+                                'text': 'おまえとは馬が合いそうにないな',
+                                'expression': 'a'
+                            }
+                        ]
+                    }
+                ]
             }
         ]
     },

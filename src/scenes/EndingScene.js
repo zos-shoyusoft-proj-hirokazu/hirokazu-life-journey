@@ -230,7 +230,7 @@ export class EndingScene extends Phaser.Scene {
         console.log('[EndingScene] YouTube動画表示開始');
         
         // オープニング動画と同じ動画IDを使用
-        const videoId = 'mIBAvillNOg';
+        const videoId = 'GiJQxEIiGwQ';
         
         console.log('[EndingScene] エンディング動画表示開始');
         
