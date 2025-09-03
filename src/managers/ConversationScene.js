@@ -506,8 +506,8 @@ export class ConversationScene extends Phaser.Scene {
             this.layoutVisibleCharacters();
         }
 
-        // 名前の表示（ナレーション時は非表示）
-        if (isNarration) {
+        // 名前の表示（ナレーション時とreset時は非表示）
+        if (isNarration || dialog.speaker === 'reset') {
             this.nameText.setText('');
             if (this.namebox) this.namebox.setVisible(false);
             if (this.nameText) this.nameText.setVisible(false);
