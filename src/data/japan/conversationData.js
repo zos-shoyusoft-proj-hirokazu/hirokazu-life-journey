@@ -1766,7 +1766,7 @@ export const japanConversationData = {
     // 初日の出
     'first_rising_sun': {
         'background': 'hatuhinode',
-        'bgm': 'Spein',
+        'bgm': 'Spain',
         'conversations': [
             {
                 'speaker': 'ひろかず',

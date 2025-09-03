@@ -766,11 +766,11 @@ export const EventConfig = {
             type: 'conversation',                // 必要：イベントの種類を指定
             areaType: 'japan',                   // 必要：イベントの種類を指定
             background: 'hatuhinode',            // 必要：conversationDataのbackgroundと一致
-            bgm: 'Spein',                        // 必要：conversationDataのbgmと一致
+            bgm: 'Spain',                        // 必要：conversationDataのbgmと一致
             required: {
                 backgrounds: ['hatuhinode'],      // 必要：背景画像の読み込みに必要
                 characters: ['hirokazu_c', 'hirokazu_i', 'hirokazu_k', 'koutarou_a', 'koutarou_c', 'kanato_c', 'daichi_d', 'narrator_a'],  // 必要：character+expressionの組み合わせ
-                bgm: ['Spein']                    // 必要：BGMファイルの読み込みに必要
+                bgm: ['Spain']                    // 必要：BGMファイルの読み込みに必要
                 // seセクションは不要：conversationDataにSEの指定がないため
             },
             conversationDataKey: 'first_rising_sun',  // 必要：conversationDataのキーと一致
