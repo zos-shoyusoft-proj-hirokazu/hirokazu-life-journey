@@ -170,34 +170,32 @@ export class AreaSelectionManager {
     getAreaDescription(areaName) {
         // エリアの説明を取得
         const descriptions = {
-            'Trial': 'トライアル',
-            'Flash_land_mie': 'フラッシュランド三重',
-            'oreno_koto': '俺のこと',
+            'oreno_koto': '俺',
             'momoiro_jyogakuenn': '２匹の狼と獲物',
             'drinking_dutu': 'づつ',
-            'Weeds_burn': '雑草がもえるぅぅ',
+            'Weeds_burn': '雑草ファイヤー',
             'mie_high_school': '三重中学校',
             'raizu': 'ライズ',
-            'snack_street_night': '三重町の歓楽街',
-            'souce': 'ソース',
+            'snack_street_night': '三重町の大歓楽街',
+            'souce': 'しょうゆ',
             'koutaroupoteto': 'こうたろうポテト',
             'seven': 'セブン',
+            'tanabata': '七夕川流し',
             // 竹田ステージのエリア説明
-            'train_no_poop_man': '電車ないうんこおじさん事件',
+            'train_no_poop_man': 'うんこおじさん事件',
             'kannnamu_kudou': '電車の工藤くん',
             'taketa_high_school': '竹田高校',
-            'galaxy_water': '銀河の水',
+            'galaxy_water': '銀河水',
             'udefuriojisann': 'ウデフリオジサン',
-            'working_go_to_home_miemachi': '飲み会後三重町まで歩く',
+            'working_go_to_home_miemachi': '飲み会後三重町まで歩くぞ',
             // 日本ステージのエリア説明
             'computer': 'エンジニア',
             'breaking_car': 'BMW',
-            'special_scam': 'あやしいおじさん',
+            'special_scam': '特殊詐欺',
             'rojyounopenki': '路上のペンキ',
             'tereapo': 'テレアポ',
             'first_rising_sun': '初日の出',
-            'arechi': '荒地',
-            'gray_bytes': 'グレーバイト'
+            'arechi': '荒地'
         };
         
         return descriptions[areaName] || areaName;

@@ -1740,6 +1740,86 @@ export const miemachiConversationData = {
             }
         ]
     },
+    
+    // 七夕イベント
+    'tanabata': {
+        'background': 'bunngoriver',
+        'bgm': 'blinding_lights',
+        'conversations': [
+            {
+                'speaker': 'だいち',
+                'character': 'daichi',
+                'text': 'この豊後川とかいうところに願い事書いて、笹を流せば願い事かなうってよ',
+                'expression': 'e'
+            },
+            {
+                'speaker': 'なおき',
+                'character': 'naoki',
+                'text': 'じゃあ、この０点のテストの回答を流そう',
+                'expression': 'c'
+            },
+            {
+                'speaker': 'かなと',
+                'character': 'kanato',
+                'text': 'いや、それ俺のな',
+                'expression': 'c'
+            },
+            {
+                'speaker': 'ナレーター',
+                'character': 'narrator',
+                'text': '、、、、、',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'だいち',
+                'character': 'daichi',
+                'text': 'おらぁ、、、、、！！！！！',
+                'expression': 'e'
+            },
+            {
+                'speaker': 'なおき,かなと',
+                'character': 'naoki,kanato',
+                'text': '、、、、、、',
+                'expression': 'c,c'
+            },
+            {
+                'speaker': 'だいち',
+                'character': 'daichi',
+                'text': 'で?、０点の答案って、どういう意味の願い事になんの？',
+                'expression': 'e'
+            },
+            {
+                'speaker': 'なおき',
+                'character': 'naoki',
+                'text': 'さぁ？',
+                'expression': 'c'
+            },
+            {
+                'speaker': 'かなと',
+                'character': 'kanato',
+                'text': '０点が願い事みたいになってんじゃん',
+                'expression': 'c'
+            },
+            {
+                'speaker': 'かなと',
+                'character': 'kanato',
+                'text': 'また、０点とったらどうすんだよ',
+                'expression': 'c'
+            },
+            {
+                'speaker': 'だいち',
+                'character': 'daichi',
+                'text': '笑うしないな',
+                'expression': 'c'
+            },
+            {
+                'speaker': 'かなと',
+                'character': 'kanato',
+                'text': 'くたばれ、この野郎',
+                'expression': 'c'
+            }
+        ]
+    },
 };
 
 // 三重町ステージ会話データを管理するクラス

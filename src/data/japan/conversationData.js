@@ -136,8 +136,7 @@ export const japanConversationData = {
                 'character': 'narrator',
                 'text': 'とあるプロジェクトを初めて半年',
                 'expression': 'a',
-                'se': 'wadodon',
-                'background': 'xxxxxx'
+                'se': 'wadodon'
             },
             {
                 'speaker': 'ひろかず',
@@ -297,7 +296,8 @@ export const japanConversationData = {
                 'speaker': 'だいち',
                 'character': 'daichi',
                 'text': '2年後にシャボンディ諸島で！！',
-                'expression': 'e'
+                'expression': 'e',
+                'se': 'wadodon'
             }
         ]
     },
@@ -1175,26 +1175,212 @@ export const japanConversationData = {
    
     // 荒地エリア
     'arechi': {
-        'background': 'test_1',
-        'bgm': 'bloody_tears',
+        'background': 'nichijyou_3',
+        'bgm': 'rainbow_Seeker_II',
         'conversations': [
             {
-                'speaker': 'ひろかず',
-                'character': 'hirokazu',
-                'text': 'ここは荒地だな...',
+                'speaker': 'かなと',
+                'character': 'kanato',
+                'text': 'さてさて、我々zossoft',
+                'expression': 'c'
+            },
+            {
+                'speaker': 'かなと',
+                'character': 'kanato',
+                'text': 'ここのイベント（荒地）は実はめっちゃ書きたいものがあったんですけどね',
+                'expression': 'd'
+            },
+            {
+                'speaker': 'かなと',
+                'character': 'kanato',
+                'text': 'まぁ、書きたいけど書けないって事があるんですわ',
+                'expression': 'c'
+            },
+            {
+                'speaker': 'かなと',
+                'character': 'kanato',
+                'text': '一応結婚式で使うゲームですからね、一応',
+                'expression': 'd'
+            },
+            {
+                'speaker': 'こうたろう',
+                'character': 'koutarou',
+                'text': 'まことに遺憾です',
+                'expression': 'c'
+            },
+            {
+                'speaker': 'なおき',
+                'character': 'naoki',
+                'text': '結構間引いたしな、書きたいイベントもわっさわっさで、もっとあるからな',
+                'expression': 'c'
+            },
+            {
+                'speaker': 'だいち',
+                'character': 'daichi',
+                'text': 'どうしても書きたかったものは濁したしな',
+                'expression': 'e'
+            },
+            {
+                'speaker': 'かなと',
+                'character': 'kanato',
+                'text': 'それでも、このゲーム作ってたら山のように、',
+                'expression': 'c'
+            },
+            {
+                'speaker': 'かなと',
+                'character': 'kanato',
+                'text': 'イベントが出てくるわ出てくるわで',
+                'expression': 'd'
+            },
+            {
+                'speaker': 'かなと',
+                'character': 'kanato',
+                'text': '普通にプレイしていたら30分から１時間はかかるんじゃないか？',
+                'expression': 'c'
+            },
+            {
+                'speaker': 'こうたろう',
+                'character': 'koutarou',
+                'text': '全部書いていたら、きりがないわけで、、、',
                 'expression': 'b'
             },
             {
-                'speaker': 'ひろかず',
-                'character': 'hirokazu',
-                'text': '開発が進んでいない場所だぜ',
+                'speaker': 'だいち',
+                'character': 'daichi',
+                'text': 'ギリギリを見極めるのが難しかったっす',
+                'expression': 'f'
+            },
+            {
+                'speaker': 'かなと',
+                'character': 'kanato',
+                'text': 'ぶっちゃけ、作るのに苦労しましたわ、３か月ですよ、３か月',
+                'expression': 'c'
+            },
+            {
+                'speaker': 'かなと',
+                'character': 'kanato',
+                'text': '感謝が欲しいです',
+                'expression': 'd'
+            },
+            {
+                'speaker': 'こうたろう',
+                'character': 'koutarou',
+                'text': 'まぁ、それはともかくここを読んでくれているということは、',
+                'expression': 'c'
+            },
+            {
+                'speaker': 'こうたろう',
+                'character': 'koutarou',
+                'text': '遊んでくれているわけですよ、そこの君',
+                'expression': 'b'
+            },
+            {
+                'speaker': 'かなと',
+                'character': 'kanato',
+                'text': 'そのことにとても感謝したいです。',
+                'expression': 'c'
+            },
+            {
+                'speaker': 'かなと',
+                'character': 'kanato',
+                'text': '遊んでもらって、ゲームは完成するもんですからね',
+                'expression': 'd'
+            },
+            {
+                'speaker': 'なおき',
+                'character': 'naoki',
+                'text': 'お前玄人みたいなこと言っているけど、ゲーム作ったのはじめてだろ',
+                'expression': 'c'
+            },
+            {
+                'speaker': 'かなと',
+                'character': 'kanato',
+                'text': 'はい、そうです',
+                'expression': 'c'
+            },
+            {
+                'speaker': 'なおき',
+                'character': 'naoki',
+                'text': 'おらぁ！！！、玄人ぶるな',
                 'expression': 'a'
             },
             {
-                'speaker': 'ひろかず',
-                'character': 'hirokazu',
-                'text': '将来は何か建つかもしれないな',
+                'speaker': 'かなと',
+                'character': 'kanato',
+                'text': 'すみません',
                 'expression': 'c'
+            },
+            {
+                'speaker': 'かなと',
+                'character': 'kanato',
+                'text': '、、、、、、',
+                'expression': 'd'
+            },
+            {
+                'speaker': 'かなと',
+                'character': 'kanato',
+                'text': '全員とは言わないから、来た人の３割はプレイしてくれたらいいな',
+                'expression': 'c'
+            },
+            {
+                'speaker': 'だいち',
+                'character': 'daichi',
+                'text': 'その方がひろかずも怒られないですみそうだからな',
+                'expression': 'b'
+            },
+            {
+                'speaker': 'かなと',
+                'character': 'kanato',
+                'text': 'プレイの母数が減ればその分、見る人も少ないしな',
+                'expression': 'c'
+            },
+            {
+                'speaker': 'こうたろう',
+                'character': 'koutarou',
+                'text': 'エピソードはえらんだつもりだけどな、、、',
+                'expression': 'c'
+            },
+            {
+                'speaker': 'なおき',
+                'character': 'naoki',
+                'text': '',
+                'expression': 'd'
+            },
+            {
+                'speaker': 'ナレーター',
+                'character': 'narrator',
+                'text': '、、、、、',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'ナレーター',
+                'character': 'narrator',
+                'text': 'ここで謝辞を述べさせていただきます。',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'ナレーター',
+                'character': 'narrator',
+                'text': 'このたびはプレイしていただき、ありがとうございました。',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'ナレーター',
+                'character': 'narrator',
+                'text': 'zossoft一同、悪戦苦闘しながら、作成しましたが、皆様に楽しんでいただけたなら幸いです。',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'ナレーター',
+                'character': 'narrator',
+                'text': 'プレイしてくださり、心より感謝申し上げます。',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'ナレーター',
+                'character': 'narrator',
+                'text': 'zossoft一同',
+                'expression': 'a'
             }
         ]
     },

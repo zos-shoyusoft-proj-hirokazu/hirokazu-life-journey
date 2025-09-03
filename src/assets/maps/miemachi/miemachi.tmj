@@ -153,6 +153,18 @@
                  "width":237.69696969697,
                  "x":900.181818181818,
                  "y":221.515151515152
+                }, 
+                {
+                 "ellipse":true,
+                 "height":315.151515151515,
+                 "id":34,
+                 "name":"tanabata",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":287.878787878788,
+                 "x":1584.84848484848,
+                 "y":557.575757575758
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -161,7 +173,7 @@
          "y":0
         }],
  "nextlayerid":3,
- "nextobjectid":34,
+ "nextobjectid":35,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",
@@ -170,7 +182,7 @@
         {
          "columns":30,
          "firstgid":1,
-         "image":"..\/miemachi.png",
+         "image":"miemachi.png",
          "imageheight":1080,
          "imagewidth":1924,
          "margin":0,

@@ -883,20 +883,12 @@ export class ConversationScene extends Phaser.Scene {
                     sprite.setTint(0xFFFFFF); // 通常の色
                     sprite.setAlpha(1.0); // 完全に不透明
                     // 光らせるエフェクトを追加
-                    sprite.setScale(sprite.scaleX * 1.05, sprite.scaleY * 1.05); // 少し大きく
-                    // 光るアニメーション
-                    this.tweens.add({
-                        targets: sprite,
-                        alpha: 0.9,
-                        duration: 800,
-                        yoyo: true,
-                        repeat: -1,
-                        ease: 'Sine.easeInOut'
-                    });
+                    sprite.setScale(sprite.scaleX * 1.2, sprite.scaleY * 1.2); // より大きく
+                    // 点滅なし、静かな強調効果
                 } else {
                     sprite.setTint(0x666666); // より暗くする
-                    sprite.setAlpha(0.6); // 半透明にする
-                    sprite.setScale(sprite.scaleX / 1.05, sprite.scaleY / 1.05); // 元のサイズに戻す
+                    sprite.setAlpha(0.8); // 半透明にする
+                    sprite.setScale(sprite.scaleX / 1.2, sprite.scaleY / 1.2); // 元のサイズに戻す
                     // 光るアニメーションを停止
                     this.tweens.killTweensOf(sprite);
                 }

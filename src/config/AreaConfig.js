@@ -66,7 +66,8 @@ export const AreaConfig = {
             { name: 'snack_street_night', scene: null, conversationId: 'snack_street_night' },
             { name: 'souce', scene: null, conversationId: 'souce' },
             { name: 'koutaroupoteto', scene: null, conversationId: 'koutaroupoteto' },
-            { name: 'seven', scene: null, conversationId: 'seven' }
+            { name: 'seven', scene: null, conversationId: 'seven' },
+            { name: 'tanabata', scene: null, conversationId: 'tanabata' }
         ]
     },
     
