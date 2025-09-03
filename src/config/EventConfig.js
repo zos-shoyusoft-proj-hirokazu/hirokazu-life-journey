@@ -707,10 +707,17 @@ export const EventConfig = {
             background: 'kouenn',                // 必要：conversationDataのbackgroundと一致
             bgm: 'まどいの水源',            // 必要：conversationDataのbgmと一致
             required: {
-                backgrounds: ['kouenn', 'yakitori'],  // 必要：背景画像の読み込みに必要
-                characters: ['hirokazu_a', 'hirokazu_b', 'hirokazu_c', 'stranger_a'],  // 必要：character+expressionの組み合わせ
-                bgm: ['まどいの水源']        // 必要：BGMファイルの読み込みに必要
-                // seセクションは不要：conversationDataにSEの指定がないため
+                backgrounds: ['kouenn', 'yakitori', 'donnki', 'koubann'],  // 必要：背景画像の読み込みに必要
+                characters: [
+                    'hirokazu_a', 'hirokazu_b', 'hirokazu_c', 'hirokazu_e', 'hirokazu_g', 'hirokazu_h', 'hirokazu_i', 'hirokazu_k', 'hirokazu_l',
+                    'stranger_a',
+                    'narrator_a',
+                    'owner_a',
+                    'police_a',
+                    'h_a', 'h_b', 'h_c'
+                ],  // 必要：character+expressionの組み合わせ
+                bgm: ['まどいの水源'],        // 必要：BGMファイルの読み込みに必要
+                se: ['don','pururu', 'garagara']                     // 必要：SEファイルの読み込みに必要
             },
             conversationDataKey: 'special_scam',  // 必要：conversationDataのキーと一致
             areaName: 'special_scam'             // 必要：エリア名の指定
@@ -726,7 +733,7 @@ export const EventConfig = {
             bgm: 'africa',                       // 必要：conversationDataのbgmと一致
             required: {
                 backgrounds: ['kouenn'],          // 必要：背景画像の読み込みに必要
-                characters: ['hirokazu_a', 'hirokazu_b'],  // 必要：character+expressionの組み合わせ
+                characters: ['hirokazu_e', 'hirokazu_k', 'police_a'],  // 必要：character+expressionの組み合わせ
                 bgm: ['africa']                   // 必要：BGMファイルの読み込みに必要
                 // seセクションは不要：conversationDataにSEの指定がないため
             },
@@ -744,7 +751,7 @@ export const EventConfig = {
             bgm: 'etude_op40_no3_toccatina',     // 必要：conversationDataのbgmと一致
             required: {
                 backgrounds: ['tereapobaito'],    // 必要：背景画像の読み込みに必要
-                characters: ['hirokazu_a', 'hirokazu_b'],  // 必要：character+expressionの組み合わせ
+                characters: ['hirokazu_a', 'hirokazu_b', 'narrator_a'],  // 必要：character+expressionの組み合わせ
                 bgm: ['etude_op40_no3_toccatina'] // 必要：BGMファイルの読み込みに必要
                 // seセクションは不要：conversationDataにSEの指定がないため
             },
@@ -762,7 +769,7 @@ export const EventConfig = {
             bgm: 'Spein',                        // 必要：conversationDataのbgmと一致
             required: {
                 backgrounds: ['hatuhinode'],      // 必要：背景画像の読み込みに必要
-                characters: ['hirokazu_a', 'hirokazu_b'],  // 必要：character+expressionの組み合わせ
+                characters: ['hirokazu_c', 'hirokazu_i', 'hirokazu_k', 'koutarou_a', 'koutarou_c', 'kanato_c', 'daichi_d', 'narrator_a'],  // 必要：character+expressionの組み合わせ
                 bgm: ['Spein']                    // 必要：BGMファイルの読み込みに必要
                 // seセクションは不要：conversationDataにSEの指定がないため
             },
