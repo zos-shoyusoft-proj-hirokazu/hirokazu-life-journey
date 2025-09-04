@@ -146,7 +146,7 @@
 .game-title h1 {
     font-size: 3.5rem;
     margin-bottom: 15px;
-    background: linear-gradient(45deg, #ffd700, #ffeb3b, #ffc107, #ff9800, #ff5722, #ffd700);
+    background: linear-gradient(45deg, #ffd700, #ffeb3b, #87ceeb, #ff9800, #ff5722, #ffd700);
     background-size: 300% 300%;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
