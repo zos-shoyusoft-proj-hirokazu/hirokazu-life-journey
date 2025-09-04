@@ -5,7 +5,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #e8f4fd 0%, #f0f8ff 50%, #e6f3ff 100%);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -146,17 +146,16 @@
 .game-title h1 {
     font-size: 3.5rem;
     margin-bottom: 15px;
-    background: linear-gradient(45deg, #ffeb3b, #ff9800, #4caf50, #2196f3, #e91e63, #ffeb3b);
+    background: linear-gradient(45deg, #2c3e50, #34495e, #2980b9, #8e44ad, #e74c3c, #2c3e50);
     background-size: 300% 300%;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
     text-shadow: 
-        0 0 30px rgba(255, 235, 59, 1),
-        0 0 50px rgba(255, 152, 0, 0.8),
-        0 0 70px rgba(76, 175, 80, 0.6),
-        0 0 90px rgba(33, 150, 243, 0.4),
-        0 4px 8px rgba(0, 0, 0, 0.3);
+        0 0 20px rgba(44, 62, 80, 0.8),
+        0 0 40px rgba(52, 73, 94, 0.6),
+        0 0 60px rgba(41, 128, 185, 0.4),
+        0 4px 8px rgba(0, 0, 0, 0.2);
     animation: titleGlow 3s ease-in-out infinite alternate, gradientShift 4s ease-in-out infinite;
     font-weight: 900;
     letter-spacing: 3px;
@@ -169,23 +168,21 @@
 @keyframes titleGlow {
     from { 
         text-shadow: 
-            0 0 30px rgba(255, 235, 59, 1),
-            0 0 50px rgba(255, 152, 0, 0.8),
-            0 0 70px rgba(76, 175, 80, 0.6),
-            0 0 90px rgba(33, 150, 243, 0.4),
-            0 4px 8px rgba(0, 0, 0, 0.3);
+            0 0 20px rgba(44, 62, 80, 0.8),
+            0 0 40px rgba(52, 73, 94, 0.6),
+            0 0 60px rgba(41, 128, 185, 0.4),
+            0 4px 8px rgba(0, 0, 0, 0.2);
         transform: scale(1);
-        filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.8));
+        filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
     }
     to { 
         text-shadow: 
-            0 0 50px rgba(255, 235, 59, 1),
-            0 0 70px rgba(255, 152, 0, 1),
-            0 0 90px rgba(76, 175, 80, 0.8),
-            0 0 110px rgba(33, 150, 243, 0.6),
-            0 6px 12px rgba(0, 0, 0, 0.2);
+            0 0 30px rgba(44, 62, 80, 1),
+            0 0 50px rgba(52, 73, 94, 0.8),
+            0 0 70px rgba(41, 128, 185, 0.6),
+            0 6px 12px rgba(0, 0, 0, 0.1);
         transform: scale(1.05);
-        filter: drop-shadow(0 0 30px rgba(255, 255, 255, 1));
+        filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.6));
     }
 }
 
