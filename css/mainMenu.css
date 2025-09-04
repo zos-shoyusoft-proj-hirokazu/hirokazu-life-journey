@@ -136,36 +136,65 @@
 
 .game-title {
     flex: 1;
-    text-align: left;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 .game-title h1 {
-    font-size: 3rem;
+    font-size: 3.5rem;
     margin-bottom: 15px;
+    background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #ff6b6b, #4ecdc4);
+    background-size: 300% 300%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
     text-shadow: 
-        0 4px 8px rgba(0, 0, 0, 0.8),
-        0 0 30px rgba(255, 255, 255, 0.4);
-    animation: titleGlow 4s ease-in-out infinite alternate;
-    font-weight: bold;
-    letter-spacing: 2px;
-    color: #ffffff;
-    text-transform: uppercase;
+        0 0 20px rgba(255, 107, 107, 0.8),
+        0 0 40px rgba(78, 205, 196, 0.6),
+        0 0 60px rgba(69, 183, 209, 0.4),
+        0 4px 8px rgba(0, 0, 0, 0.9);
+    animation: titleGlow 3s ease-in-out infinite alternate, gradientShift 4s ease-in-out infinite;
+    font-weight: 900;
+    letter-spacing: 3px;
     position: relative;
     z-index: 20;
+    text-align: center;
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
 }
 
 @keyframes titleGlow {
     from { 
         text-shadow: 
-            0 4px 8px rgba(0, 0, 0, 0.8),
-            0 0 30px rgba(255, 255, 255, 0.4);
+            0 0 20px rgba(255, 107, 107, 0.8),
+            0 0 40px rgba(78, 205, 196, 0.6),
+            0 0 60px rgba(69, 183, 209, 0.4),
+            0 4px 8px rgba(0, 0, 0, 0.9);
         transform: scale(1);
+        filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
     }
     to { 
         text-shadow: 
-            0 4px 8px rgba(0, 0, 0, 0.8),
-            0 0 40px rgba(255, 255, 255, 0.7);
-        transform: scale(1.03);
+            0 0 30px rgba(255, 107, 107, 1),
+            0 0 50px rgba(78, 205, 196, 0.8),
+            0 0 70px rgba(69, 183, 209, 0.6),
+            0 6px 12px rgba(0, 0, 0, 0.9);
+        transform: scale(1.05);
+        filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.6));
+    }
+}
+
+@keyframes gradientShift {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
     }
 }
 
