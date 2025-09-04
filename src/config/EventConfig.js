@@ -282,6 +282,7 @@ export const EventConfig = {
                 backgrounds: ['nichijyou_d'],       // 必要：背景画像の読み込みに必要
                 characters: [
                     'hirokazu_a', 
+                    'adachi_a',
                     'daichi_a', 
                     'naoki_a', 
                     'kanato_a', 
@@ -521,7 +522,7 @@ export const EventConfig = {
                     'hirokazu_a', 
                     'kanato_a', 
                     'kanato_c', 
-                    'daichi_a',
+                    'daichi_a','daichi_c',
                     'koutarou_b',
                     'adachi_a',
                     'masato_a'],  // 必要：character+expressionの組み合わせ（重複除く）
@@ -539,11 +540,11 @@ export const EventConfig = {
             type: 'conversation',                // 必要：イベントの種類を指定
             areaType: 'taketa',                  // 必要：エリアタイプを指定
             background: 'kannnamu',              // 必要：conversationDataのbackgroundと一致
-            bgm: 'Fantasy',                      // 必要：conversationDataのbgmと一致
+            bgm: 'papa_dont_preach',                      // 必要：conversationDataのbgmと一致
             required: {
                 backgrounds: ['kannnamu'],       // 必要：背景画像の読み込みに必要
                 characters: ['hirokazu_a', 'kudou_a', 'naoki_a', 'kanato_b', 'daichi_c'],  // 必要：character+expressionの組み合わせ（重複除く）
-                bgm: ['Fantasy']                  // 必要：BGMファイルの読み込みに必要
+                bgm: ['papa_dont_preach']                  // 必要：BGMファイルの読み込みに必要
                 // seセクションは不要：conversationDataにSEの指定がないため
             },
             conversationDataKey: 'kannnamu_kudou',  // 必要：conversationDataのキーと一致

@@ -42,7 +42,7 @@ export const Stage1DialogData = {
             },
             {
                 speaker: 'おかがみ',
-                text: 'ボコっ！ (殴る音)'
+                text: 'ボコっ！ '
             },
             {
                 speaker: 'ひろかず',

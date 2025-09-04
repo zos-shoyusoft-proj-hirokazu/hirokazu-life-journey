@@ -174,6 +174,62 @@ export const taketaConversationData = {
                 'expression': 'a'
             },
             {
+                'speaker': 'だいち',
+                'character': 'daichi',
+                'text': 'あっ、、、、',
+                'expression': 'c'
+            },
+            {
+                'type': 'choice',
+                'choiceId': 'lunch_tag_choice',
+                'choices': [
+                    {
+                        'id': 'continue_playing',
+                        'text': 'だいちが更に余計なことを思い出す',
+                        'result': 'correct',
+                        'nextMessages': [
+                            {
+                                'speaker': 'だいち',
+                                'character': 'daichi',
+                                'text': 'なつかしいな、、',
+                                'expression': 'a'
+                            },
+                            {
+                                'speaker': 'だいち',
+                                'character': 'daichi',
+                                'text': '前歯が特徴的だから、更に',
+                                'expression': 'a'
+                            },
+                            {
+                                'speaker': 'だいち',
+                                'character': 'daichi',
+                                'text': 'front tooth（フロントトゥース）っていうのもあるな',
+                                'expression': 'a'
+                            },
+                            {
+                                'speaker': 'しゅうへい',
+                                'character': 'adachi',
+                                'text': 'いったい、、、誰の話だ。。。。。',
+                                'expression': 'a'
+                            }
+                        ]
+                    },
+                    {
+                        'id': 'stop_playing',
+                        'text': 'だいちが余計なことを思い出さない',
+                        'result': 'wrong',
+                        'nextMessages': [
+                            {
+                                'speaker': 'だいち',
+                                'character': 'daichi',
+                                'text': 'やっぱなんでもない、、',
+                                'expression': 'a'
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
                 'text': 'おにさんこちら！！！！',
@@ -232,6 +288,57 @@ export const taketaConversationData = {
             {
                 'speaker': 'ひろかず',
                 'character': 'hirokazu',
+                'text': 'どうする？',
+                'expression': 'a'
+            },
+            {
+                'type': 'choice',
+                'choiceId': 'gospellers_song_choice',
+                'choices': [
+                    {
+                        'id': 'sing_vaguely',
+                        'text': 'うろ覚えで歌ってみる',
+                        'result': 'correct',
+                        'nextMessages': [
+                            {
+                                'speaker': 'ひろかず',
+                                'character': 'hirokazu',
+                                'text': 'うろ覚えで歌ってみるぞ！',
+                                'expression': 'a'
+                            }
+                        ]
+                    },
+                    {
+                        'id': 'sing_anyway',
+                        'text': 'とりあえず、歌ってみる',
+                        'result': 'correct',
+                        'nextMessages': [
+                            {
+                                'speaker': 'ひろかず',
+                                'character': 'hirokazu',
+                                'text': 'とりあえず歌ってみる！',
+                                'expression': 'a'
+                            }
+                        ]
+                    },
+                    {
+                        'id': 'dont_sing',
+                        'text': '歌わない',
+                        'result': 'wrong',
+                        'nextMessages': [
+                            {
+                                'speaker': 'ひろかず',
+                                'character': 'hirokazu',
+                                'text': 'やっぱり歌わないでおこう',
+                                'expression': 'b'
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                'speaker': 'ひろかず',
+                'character': 'hirokazu',
                 'text': 'そんなに歌詞わからんかったわ',
                 'expression': 'a'
             },
@@ -260,6 +367,42 @@ export const taketaConversationData = {
                 'character': 'hirokazu',
                 'text': 'クライミングでケガした',
                 'expression': 'j'
+            },
+            {
+                'speaker': 'だいち',
+                'character': 'daichi',
+                'text': '中指と指？',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'こうたろう',
+                'character': 'koutarou',
+                'text': '使いすぎたか、、、',
+                'expression': 'd'
+            },
+            {
+                'speaker': 'ひろかず',
+                'character': 'hirokazu',
+                'text': 'そうそう、、、使いすぎた',
+                'expression': 'j'
+            },
+            {
+                'speaker': 'narrator',
+                'character': 'narrator',
+                'text': '、、、',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'narrator',
+                'character': 'narrator',
+                'text': '、、、、、、、、、',
+                'expression': 'a'
+            },
+            {
+                'speaker': 'narrator',
+                'character': 'narrator',
+                'text': '、、、、、、、、、、、、、、',
+                'expression': 'a'
             }
         ]
     },
@@ -1390,7 +1533,7 @@ export const taketaConversationData = {
     // 電車の工藤くん
     'kannnamu_kudou': {
         'background': 'kannnamu',
-        'bgm': 'Fantasy',
+        'bgm': 'papa_dont_preach',
         'conversations': [
             {
                 'speaker': 'ひろかず',
@@ -1595,11 +1738,50 @@ export const taketaConversationData = {
                 'expression': 'a'
             },
             {
-                'speaker': 'ひろかず',
-                'character': 'hirokazu',
-                'text': '歩いて帰るぞ！！！',
-                'expression': 'd',
-                'background': 'taketamachi'
+                'speaker': 'なおき',
+                'character': 'naoki',
+                'text': 'どうやって帰る？',
+                'expression': 'b'
+            },
+            {
+                'type': 'choice',
+                'choiceId': 'go_home_choice',
+                'choices': [
+                    {
+                        'id': 'walk_home',
+                        'text': '歩いて帰る',
+                        'result': 'correct',
+                        'nextMessages': [
+                            {
+                                'speaker': 'ひろかず',
+                                'character': 'hirokazu',
+                                'text': '歩いて帰るぞ！！！',
+                                'expression': 'd',
+                                'background': 'taketamachi'
+                            }
+                        ]
+                    },
+                    {
+                        'id': 'use_taxi',
+                        'text': 'タクシーを使う',
+                        'result': 'wrong',
+                        'nextMessages': [
+                            {
+                                'speaker': 'ひろかず',
+                                'character': 'hirokazu',
+                                'text': 'タクシーで帰るぞ！',
+                                'expression': 'a',
+                                'background': 'taketamachi'
+                            },
+                            {
+                                'speaker': 'なおき',
+                                'character': 'hirokazu',
+                                'text': 'だからねぇーぞ',
+                                'expression': 'a'
+                            }
+                        ]
+                    }
+                ]
             },
             {
                 'speaker': 'だいち',

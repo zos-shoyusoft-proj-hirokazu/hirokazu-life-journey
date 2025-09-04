@@ -72,7 +72,10 @@ export class ChoiceManager {
             'breaking_car',    // 日本：故障車エリア
             'wax_on',         // 竹田：ワックスを付けるイベント
             'otsuka_senpai',  // 三重：大塚先輩イベント（一生ついていきます）
-            'drinking_dutu'   // 三重：ドンキの謎酒イベント（木の下にはく）
+            'drinking_dutu',  // 三重：ドンキの謎酒イベント（木の下にはく）
+            'gospellers_song', // 竹田：ゴスペラーズの歌イベント（歌う選択肢）
+            'working_go_to_home_miemachi', // 竹田：帰り方選択イベント（歩いて帰る）
+            'lunch_tag'       // 竹田：昼休み鬼ごっこイベント（まだやる）
         ];
         
         // 選択肢があるイベントが全て正解になっているかチェック

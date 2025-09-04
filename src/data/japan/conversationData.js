@@ -10,8 +10,7 @@ export const japanConversationData = {
                 'character': 'narrator',
                 'text': 'ある深夜の夜、、、、',
                 'expression': 'a',
-                'se': 'don',
-                'background': 'xxxxxx'
+                'se': 'don'
             },
             {
                 'speaker': 'だいち',
@@ -103,8 +102,7 @@ export const japanConversationData = {
                 'character': 'narrator',
                 'text': 'とあるプロジェクトが初まる',
                 'expression': 'a',
-                'se': 'don',
-                'background': 'xxxxxx'
+                'se': 'don'
             },
             {
                 'speaker': 'ひろかず',
@@ -167,8 +165,7 @@ export const japanConversationData = {
                 'character': 'narrator',
                 'text': 'とあるプロジェクトを初めて半年',
                 'expression': 'a',
-                'se': 'don',
-                'background': 'xxxxxx'
+                'se': 'don'
             },
             {
                 'speaker': 'ひろかず',
@@ -210,8 +207,7 @@ export const japanConversationData = {
                 'speaker': 'narrator',
                 'character': 'narrator',
                 'text': '、、、',
-                'expression': 'a',
-                'background': 'xxxxxx'
+                'expression': 'a'
             },
             {
                 'speaker': 'narrator',
@@ -344,7 +340,7 @@ export const japanConversationData = {
                     {
                         'id': 'inspect',
                         'text': '整備記録や走行距離をちゃんと確認する',
-                        'result': 'correct',
+                        'result': 'wrong',
                         'nextMessages': [
                             {
                                 'speaker': '友人ズ',
@@ -363,12 +359,18 @@ export const japanConversationData = {
                     {
                         'id': 'rush',
                         'text': '安いし即決で買う！',
-                        'result': 'wrong',
+                        'result': 'correct',
                         'nextMessages': [
                             {
                                 'speaker': '友人ズ',
                                 'character': 'frends',
                                 'text': 'え、ほんとに？ ちょっと不安かも…',
+                                'expression': 'b'
+                            },
+                            {
+                                'speaker': 'ひろかず',
+                                'character': 'hirokazu',
+                                'text': 'こういうのは、買っとけばええんよ',
                                 'expression': 'b'
                             }
                         ]
@@ -383,6 +385,12 @@ export const japanConversationData = {
                                 'character': 'hirokazu',
                                 'text': 'まぁ無理はしないのも選択だな。別候補も見てみるか',
                                 'expression': 'a'
+                            },
+                            {
+                                'speaker': 'narrator',
+                                'character': 'narrator',
+                                'text': 'とはいえ、結局このBMWを買ったそうな、、、',
+                                'expression': 'a'
                             }
                         ]
                     }
@@ -394,6 +402,18 @@ export const japanConversationData = {
                 'text': 'その後、この激安BMWを購入し、ブイブイいわせていたという、、、',
                 'expression': 'a',
             },
+            {
+                'speaker': 'narrator',
+                'character': 'narrator',
+                'text': 'そして、そのあとBMWをぶつけて大破させたそうな、、、',
+                'expression': 'a',
+            },
+            {
+                'speaker': 'narrator',
+                'character': 'narrator',
+                'text': '、、、、、',
+                'expression': 'a',
+            }
         ]
     },
     

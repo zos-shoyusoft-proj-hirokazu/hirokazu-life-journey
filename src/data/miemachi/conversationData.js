@@ -1126,6 +1126,57 @@ export const miemachiConversationData = {
                 'expression': 'a'
             },
             {
+                'speaker': 'ひろかず',
+                'character': 'hirokazu',
+                'text': 'どうする？',
+                'expression': 'a'
+            },
+            {
+                'type': 'choice',
+                'choiceId': 'drinking_dutu_choice',
+                'choices': [
+                    {
+                        'id': 'buy_one_each',
+                        'text': '1人一本ずつ買う！！！',
+                        'result': 'correct',
+                        'nextMessages': [
+                            {
+                                'speaker': 'ひろかず',
+                                'character': 'hirokazu',
+                                'text': '1人一本ずつ買うぞ！',
+                                'expression': 'b'
+                            }
+                        ]
+                    },
+                    {
+                        'id': 'buy_together',
+                        'text': '1人一本ずつ買う！！！',
+                        'result': 'correct',
+                        'nextMessages': [
+                            {
+                                'speaker': 'ひろかず',
+                                'character': 'hirokazu',
+                                'text': '1人一本ずつ買うぞ！',
+                                'expression': 'b'
+                            }
+                        ]
+                    },
+                    {
+                        'id': 'dont_buy',
+                        'text': '1人一本ずつ買う！！！',
+                        'result': 'correct',
+                        'nextMessages': [
+                            {
+                                'speaker': 'ひろかず',
+                                'character': 'hirokazu',
+                                'text': '1人一本ずつ買うぞ！',
+                                'expression': 'b'
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
                 'speaker': 'こうたろう',
                 'character': 'koutarou',
                 'text': 'いや1人一本ずつのやつかそれ？',
