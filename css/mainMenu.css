@@ -146,16 +146,16 @@
 .game-title h1 {
     font-size: 3.5rem;
     margin-bottom: 15px;
-    background: linear-gradient(45deg, #2c3e50, #34495e, #2980b9, #8e44ad, #e74c3c, #2c3e50);
+    background: linear-gradient(45deg, #ffd700, #ffeb3b, #ffc107, #ff9800, #ff5722, #ffd700);
     background-size: 300% 300%;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
     text-shadow: 
-        0 0 20px rgba(44, 62, 80, 0.8),
-        0 0 40px rgba(52, 73, 94, 0.6),
-        0 0 60px rgba(41, 128, 185, 0.4),
-        0 4px 8px rgba(0, 0, 0, 0.2);
+        0 0 20px rgba(255, 215, 0, 0.8),
+        0 0 40px rgba(255, 235, 59, 0.6),
+        0 0 60px rgba(255, 193, 7, 0.4),
+        0 4px 8px rgba(0, 0, 0, 0.3);
     animation: titleGlow 3s ease-in-out infinite alternate, gradientShift 4s ease-in-out infinite;
     font-weight: 900;
     letter-spacing: 3px;
@@ -168,19 +168,19 @@
 @keyframes titleGlow {
     from { 
         text-shadow: 
-            0 0 20px rgba(44, 62, 80, 0.8),
-            0 0 40px rgba(52, 73, 94, 0.6),
-            0 0 60px rgba(41, 128, 185, 0.4),
-            0 4px 8px rgba(0, 0, 0, 0.2);
+            0 0 20px rgba(255, 215, 0, 0.8),
+            0 0 40px rgba(255, 235, 59, 0.6),
+            0 0 60px rgba(255, 193, 7, 0.4),
+            0 4px 8px rgba(0, 0, 0, 0.3);
         transform: scale(1);
         filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
     }
     to { 
         text-shadow: 
-            0 0 30px rgba(44, 62, 80, 1),
-            0 0 50px rgba(52, 73, 94, 0.8),
-            0 0 70px rgba(41, 128, 185, 0.6),
-            0 6px 12px rgba(0, 0, 0, 0.1);
+            0 0 30px rgba(255, 215, 0, 1),
+            0 0 50px rgba(255, 235, 59, 0.8),
+            0 0 70px rgba(255, 193, 7, 0.6),
+            0 6px 12px rgba(0, 0, 0, 0.2);
         transform: scale(1.05);
         filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.6));
     }
